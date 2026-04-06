@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — 804 AVENUE Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#04060C;--bg-surface:#0C1222;--bg-card:#111B2E;
+  --success:#10B981;--danger:#EF4444;
+  --text-primary:#F1F5F9;--text-secondary:#94A3B8;--text-tertiary:#64748B;
+  --sidebar-w:260px;
+  --font-heading:'Syne',sans-serif;--font-body:'Space Grotesk',sans-serif;--font-ui:'Inter',sans-serif;
+}
+html{font-size:15px}
+body{background:var(--bg-deep);color:var(--text-primary);font-family:var(--font-body);min-height:100vh;display:flex}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:var(--font-body);border:none;outline:none}
+input,select,textarea{font-family:var(--font-body);outline:none}
+
+/* ─── SIDEBAR ─── */
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:transform .3s ease}
+.sidebar-logo{padding:28px 24px 24px;display:flex;align-items:center;gap:12px}
+.sidebar-logo .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--cyan));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-weight:800;font-size:16px;color:#fff}
+.sidebar-logo span{font-family:var(--font-heading);font-weight:700;font-size:1.15rem;letter-spacing:1.5px;color:var(--text-primary)}
+.sidebar-nav{flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.sidebar-nav a{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;font-size:.9rem;font-weight:500;color:var(--text-secondary);transition:all .2s}
+.sidebar-nav a:hover{background:rgba(59,130,246,.08);color:var(--text-primary)}
+.sidebar-nav a.active{background:rgba(59,130,246,.15);color:var(--accent);font-weight:600}
+.sidebar-nav a svg{width:20px;height:20px;flex-shrink:0;opacity:.7}
+.sidebar-nav a.active svg{opacity:1}
+.nav-label{padding:8px 16px 6px;font-size:.7rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-tertiary);font-family:var(--font-ui)}
+.sidebar-bottom{padding:16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.sidebar-bottom .avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--cyan));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:#fff}
+.sidebar-bottom .user-info{flex:1}
+.sidebar-bottom .user-info .name{font-size:.85rem;font-weight:600;color:var(--text-primary)}
+.sidebar-bottom .user-info .role{font-size:.7rem;color:var(--text-tertiary)}
+.sidebar-bottom .logout-btn{width:34px;height:34px;border-radius:8px;background:rgba(239,68,68,.1);display:flex;align-items:center;justify-content:center;transition:background .2s}
+.sidebar-bottom .logout-btn:hover{background:rgba(239,68,68,.2)}
+.sidebar-bottom .logout-btn svg{width:18px;height:18px;color:var(--danger)}
+
+/* ─── MAIN ─── */
+.main{margin-left:var(--sidebar-w);flex:1;padding:32px 36px;min-height:100vh}
+.top-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px}
+.top-bar h1{font-family:var(--font-heading);font-size:1.65rem;font-weight:700;letter-spacing:.5px}
+.btn-primary{background:var(--accent);color:#fff;padding:10px 22px;border-radius:10px;font-size:.88rem;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:all .2s;box-shadow:0 0 20px rgba(59,130,246,.25)}
+.btn-primary:hover{background:#2563EB;box-shadow:0 0 30px rgba(59,130,246,.4)}
+.btn-outline{background:transparent;color:var(--text-secondary);padding:10px 22px;border-radius:10px;font-size:.88rem;font-weight:600;border:1px solid var(--border);display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:rgba(239,68,68,.12);color:var(--danger);padding:10px 22px;border-radius:10px;font-size:.88rem;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:all .2s;border:1px solid rgba(239,68,68,.2)}
+.btn-danger:hover{background:rgba(239,68,68,.22)}
+
+/* ─── FILTERS ─── */
+.filters{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin-bottom:24px}
+.filter-group{display:flex;flex-direction:column;gap:5px;flex:1;min-width:170px}
+.filter-group label{font-size:.72rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-tertiary);font-family:var(--font-ui)}
+.filter-group select,.filter-group input[type="text"]{background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text-primary);font-size:.85rem;width:100%;transition:border-color .2s}
+.filter-group select:focus,.filter-group input[type="text"]:focus{border-color:var(--accent)}
+.filter-group select option{background:var(--bg-surface)}
+.btn-filter{background:rgba(59,130,246,.12);color:var(--accent);padding:10px 20px;border-radius:8px;font-size:.85rem;font-weight:600;height:38px;transition:background .2s;white-space:nowrap}
+.btn-filter:hover{background:rgba(59,130,246,.22)}
+
+/* ─── TABLE ─── */
+.table-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead{background:rgba(59,130,246,.06)}
+th{padding:14px 18px;font-size:.75rem;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-tertiary);font-family:var(--font-ui);font-weight:600;text-align:left;white-space:nowrap}
+td{padding:14px 18px;font-size:.88rem;color:var(--text-secondary);border-top:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:var(--accent-10)}
+td.name{color:var(--text-primary);font-weight:600}
+.thumb{width:52px;height:36px;border-radius:6px;background:var(--bg-surface);object-fit:cover;display:block}
+.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:600;font-family:var(--font-ui)}
+.badge-completed{background:rgba(16,185,129,.12);color:var(--success)}
+.badge-progress{background:rgba(59,130,246,.12);color:var(--accent)}
+.badge-planning{background:rgba(100,116,139,.15);color:var(--text-tertiary)}
+.actions{display:flex;gap:8px}
+.action-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.action-btn.edit{background:rgba(59,130,246,.1);color:var(--accent)}
+.action-btn.edit:hover{background:rgba(59,130,246,.2)}
+.action-btn.del{background:rgba(239,68,68,.1);color:var(--danger)}
+.action-btn.del:hover{background:rgba(239,68,68,.2)}
+.action-btn svg{width:16px;height:16px}
+
+/* ─── MOBILE HAMBURGER ─── */
+.hamburger{display:none;position:fixed;top:18px;left:18px;z-index:200;width:42px;height:42px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.hamburger span{display:block;width:20px;height:2px;background:var(--text-primary);border-radius:2px;transition:all .3s}
+.overlay{display:none;position:fixed;inset:0;background:rgba(4,6,12,.7);z-index:90}
+
+/* ─── DELETE MODAL ─── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(4,6,12,.8);z-index:300;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:420px;width:90%;text-align:center}
+.modal h3{font-family:var(--font-heading);font-size:1.2rem;margin-bottom:8px}
+.modal p{color:var(--text-secondary);font-size:.9rem;margin-bottom:24px}
+.modal-actions{display:flex;gap:12px;justify-content:center}
+.modal-actions button{padding:10px 24px;border-radius:10px;font-weight:600;font-size:.88rem}
+.modal-cancel{background:var(--bg-surface);color:var(--text-secondary);border:1px solid var(--border)}
+.modal-cancel:hover{border-color:var(--accent);color:var(--text-primary)}
+.modal-confirm{background:var(--danger);color:#fff}
+.modal-confirm:hover{background:#DC2626}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .hamburger{display:flex}
+  .overlay.open{display:block}
+  .main{margin-left:0;padding:24px 18px;padding-top:72px}
+}
+@media(max-width:640px){
+  .filters{flex-direction:column}
+  .filter-group{min-width:100%}
+  .table-wrap{overflow-x:auto}
+  table{min-width:800px}
+}
+</style>
+</head>
+<body>
+
+<!-- Hamburger -->
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div class="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">8</div>
+    <span>804 AVENUE</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Main</div>
+    <a href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Dashboard
+    </a>
+    <a href="../properties/list.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Properties
+    </a>
+    <a href="list.html" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Projects
+    </a>
+    <a href="../inquiries/list.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Inquiries
+    </a>
+    <div class="nav-label">System</div>
+    <a href="../settings/general.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+    <a href="../settings/team.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Team
+    </a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="avatar">A</div>
+    <div class="user-info">
+      <div class="name">Admin</div>
+      <div class="role">Super Admin</div>
+    </div>
+    <a href="../login.html" class="logout-btn" title="Logout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </a>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="top-bar">
+    <h1>Projects</h1>
+    <a href="add.html" class="btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Project
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <div class="filter-group">
+      <label>Type</label>
+      <select id="filterType">
+        <option>All Types</option>
+        <option>Construction</option>
+        <option>Renovation</option>
+        <option>Interior</option>
+        <option>Exterior</option>
+        <option>Signage</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Year</label>
+      <select id="filterYear">
+        <option>All Years</option>
+        <option>2024</option>
+        <option>2023</option>
+        <option>2022</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Status</label>
+      <select id="filterStatus">
+        <option>All Status</option>
+        <option>Completed</option>
+        <option>In Progress</option>
+        <option>Planning</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Search</label>
+      <input type="text" id="searchInput" placeholder="Search projects…">
+    </div>
+    <button class="btn-filter" onclick="filterProjects()">Search</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table id="projectsTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Thumb</th>
+          <th>Project Name</th>
+          <th>Type</th>
+          <th>Location</th>
+          <th>Year</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-type="Construction" data-year="2024" data-status="Completed">
+          <td>1</td>
+          <td><div class="thumb" style="background:linear-gradient(135deg,#1a2a4a,#0f1b33)"></div></td>
+          <td class="name">Villa Construction, Abu Dhabi</td>
+          <td>Construction</td>
+          <td>Abu Dhabi, UAE</td>
+          <td>2024</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td><div class="actions">
+            <a href="edit.html" class="action-btn edit" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+            <button class="action-btn del" title="Delete" onclick="openDeleteModal('Villa Construction, Abu Dhabi')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div></td>
+        </tr>
+        <tr data-type="Interior" data-year="2024" data-status="In Progress">
+          <td>2</td>
+          <td><div class="thumb" style="background:linear-gradient(135deg,#1a3344,#0f2233)"></div></td>
+          <td class="name">Luxury Apartment Interior, Dubai</td>
+          <td>Interior</td>
+          <td>Dubai, UAE</td>
+          <td>2024</td>
+          <td><span class="badge badge-progress">In Progress</span></td>
+          <td><div class="actions">
+            <a href="edit.html" class="action-btn edit" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+            <button class="action-btn del" title="Delete" onclick="openDeleteModal('Luxury Apartment Interior, Dubai')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div></td>
+        </tr>
+        <tr data-type="Renovation" data-year="2023" data-status="Completed">
+          <td>3</td>
+          <td><div class="thumb" style="background:linear-gradient(135deg,#1a2a3a,#0f1a2a)"></div></td>
+          <td class="name">Office Renovation, Sharjah</td>
+          <td>Renovation</td>
+          <td>Sharjah, UAE</td>
+          <td>2023</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td><div class="actions">
+            <a href="edit.html" class="action-btn edit" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+            <button class="action-btn del" title="Delete" onclick="openDeleteModal('Office Renovation, Sharjah')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div></td>
+        </tr>
+        <tr data-type="Exterior" data-year="2023" data-status="Completed">
+          <td>4</td>
+          <td><div class="thumb" style="background:linear-gradient(135deg,#1a2244,#0f1533)"></div></td>
+          <td class="name">Landscape Design, Al Ain</td>
+          <td>Exterior</td>
+          <td>Al Ain, UAE</td>
+          <td>2023</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td><div class="actions">
+            <a href="edit.html" class="action-btn edit" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+            <button class="action-btn del" title="Delete" onclick="openDeleteModal('Landscape Design, Al Ain')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div></td>
+        </tr>
+        <tr data-type="Construction" data-year="2024" data-status="In Progress">
+          <td>5</td>
+          <td><div class="thumb" style="background:linear-gradient(135deg,#1a3344,#0f2233)"></div></td>
+          <td class="name">Commercial Tower, Dubai Marina</td>
+          <td>Construction</td>
+          <td>Dubai Marina, UAE</td>
+          <td>2024</td>
+          <td><span class="badge badge-progress">In Progress</span></td>
+          <td><div class="actions">
+            <a href="edit.html" class="action-btn edit" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+            <button class="action-btn del" title="Delete" onclick="openDeleteModal('Commercial Tower, Dubai Marina')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div></td>
+        </tr>
+        <tr data-type="Interior" data-year="2023" data-status="Completed">
+          <td>6</td>
+          <td><div class="thumb" style="background:linear-gradient(135deg,#1a2a4a,#0f1b33)"></div></td>
+          <td class="name">Restaurant Fit-out, JBR</td>
+          <td>Interior</td>
+          <td>JBR, Dubai, UAE</td>
+          <td>2023</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td><div class="actions">
+            <a href="edit.html" class="action-btn edit" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+            <button class="action-btn del" title="Delete" onclick="openDeleteModal('Restaurant Fit-out, JBR')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div></td>
+        </tr>
+        <tr data-type="Signage" data-year="2024" data-status="Planning">
+          <td>7</td>
+          <td><div class="thumb" style="background:linear-gradient(135deg,#1a2244,#0f1533)"></div></td>
+          <td class="name">Corporate Signage, DIFC</td>
+          <td>Signage</td>
+          <td>DIFC, Dubai, UAE</td>
+          <td>2024</td>
+          <td><span class="badge badge-planning">Planning</span></td>
+          <td><div class="actions">
+            <a href="edit.html" class="action-btn edit" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+            <button class="action-btn del" title="Delete" onclick="openDeleteModal('Corporate Signage, DIFC')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div></td>
+        </tr>
+        <tr data-type="Renovation" data-year="2022" data-status="Completed">
+          <td>8</td>
+          <td><div class="thumb" style="background:linear-gradient(135deg,#1a2a3a,#0f1a2a)"></div></td>
+          <td class="name">Heritage Building Restoration, Bastakiya</td>
+          <td>Renovation</td>
+          <td>Bastakiya, Dubai, UAE</td>
+          <td>2022</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td><div class="actions">
+            <a href="edit.html" class="action-btn edit" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+            <button class="action-btn del" title="Delete" onclick="openDeleteModal('Heritage Building Restoration, Bastakiya')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div></td>
+        </tr>
+        <tr data-type="Exterior" data-year="2024" data-status="Planning">
+          <td>9</td>
+          <td><div class="thumb" style="background:linear-gradient(135deg,#1a3344,#0f2233)"></div></td>
+          <td class="name">Waterfront Pavilion, Yas Island</td>
+          <td>Exterior</td>
+          <td>Yas Island, Abu Dhabi</td>
+          <td>2024</td>
+          <td><span class="badge badge-planning">Planning</span></td>
+          <td><div class="actions">
+            <a href="edit.html" class="action-btn edit" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+            <button class="action-btn del" title="Delete" onclick="openDeleteModal('Waterfront Pavilion, Yas Island')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" style="margin-bottom:16px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    <h3>Delete Project</h3>
+    <p>Are you sure you want to delete <strong id="deleteProjectName"></strong>? This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeDeleteModal()">Cancel</button>
+      <button class="modal-confirm" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.querySelector('.overlay').classList.toggle('open');
+}
+
+function openDeleteModal(name){
+  document.getElementById('deleteProjectName').textContent=name;
+  document.getElementById('deleteModal').classList.add('show');
+}
+function closeDeleteModal(){
+  document.getElementById('deleteModal').classList.remove('show');
+}
+function confirmDelete(){
+  closeDeleteModal();
+}
+
+function filterProjects(){
+  const type=document.getElementById('filterType').value;
+  const year=document.getElementById('filterYear').value;
+  const status=document.getElementById('filterStatus').value;
+  const search=document.getElementById('searchInput').value.toLowerCase();
+  const rows=document.querySelectorAll('#projectsTable tbody tr');
+  rows.forEach(row=>{
+    const rType=row.dataset.type;
+    const rYear=row.dataset.year;
+    const rStatus=row.dataset.status;
+    const rName=row.querySelector('.name').textContent.toLowerCase();
+    let show=true;
+    if(type!=='All Types'&&rType!==type)show=false;
+    if(year!=='All Years'&&rYear!==year)show=false;
+    if(status!=='All Status'&&rStatus!==status)show=false;
+    if(search&&!rName.includes(search))show=false;
+    row.style.display=show?'':'none';
+  });
+}
+
+document.getElementById('searchInput').addEventListener('keyup',e=>{if(e.key==='Enter')filterProjects()});
+</script>
+</body>
+</html>

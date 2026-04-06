@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — 804 AVENUE Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#04060C;--bg-surface:#0C1222;--bg-card:#111B2E;--bg-elevated:#182039;--bg-glass:rgba(12,18,34,0.65);
+  --success:#10B981;--warning:#F59E0B;--danger:#EF4444;
+  --text-primary:#F1F5F9;--text-secondary:#94A3B8;--text-tertiary:#64748B;--text-inverse:#04060C;
+  --radius:12px;--sidebar-w:260px;
+}
+html{height:100%}
+body{min-height:100%;font-family:'Inter',sans-serif;background:var(--bg-deep);color:var(--text-primary);-webkit-font-smoothing:antialiased}
+
+/* ═══════════ SIDEBAR ═══════════ */
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);
+  background:var(--bg-surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:100;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.sidebar-brand{padding:28px 24px 20px;border-bottom:1px solid var(--border)}
+.sidebar-brand .logo-row{display:flex;align-items:baseline;gap:6px;margin-bottom:2px}
+.sidebar-brand .t804{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:#fff}
+.sidebar-brand .tavenue{font-family:'Syne',sans-serif;font-weight:700;font-size:1.5rem;color:var(--accent)}
+.sidebar-brand .panel-label{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-tertiary);margin-top:2px}
+
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.nav-item{
+  display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;
+  text-decoration:none;color:var(--text-secondary);
+  font-family:'Syne',sans-serif;font-size:.88rem;font-weight:600;
+  transition:background .2s,color .2s;margin-bottom:2px;
+}
+.nav-item svg{width:20px;height:20px;flex-shrink:0;opacity:.6;transition:opacity .2s}
+.nav-item:hover{background:var(--bg-elevated);color:var(--text-primary)}
+.nav-item:hover svg{opacity:.85}
+.nav-item.active{background:var(--accent);color:#fff}
+.nav-item.active svg{opacity:1}
+
+.sidebar-footer{
+  padding:16px 16px 20px;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+.avatar-circle{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--accent);display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;color:#fff;flex-shrink:0;
+}
+.user-info{flex:1;min-width:0}
+.user-info .name{font-size:.85rem;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-info .role{font-size:.72rem;color:var(--text-tertiary)}
+.logout-btn{
+  background:none;border:none;cursor:pointer;color:var(--text-tertiary);padding:6px;border-radius:8px;
+  transition:color .2s,background .2s;display:flex;
+}
+.logout-btn:hover{color:var(--danger);background:rgba(239,68,68,0.1)}
+.logout-btn svg{width:18px;height:18px}
+
+/* ═══════════ MAIN ═══════════ */
+.main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column}
+
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:var(--bg-card);border-bottom:1px solid var(--border);
+  padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;
+}
+.topbar h1{font-family:'Space Grotesk',sans-serif;font-size:1.35rem;font-weight:700}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.hamburger{
+  display:none;background:none;border:none;color:var(--text-primary);cursor:pointer;padding:4px;
+}
+.hamburger svg{width:24px;height:24px}
+.icon-btn{
+  width:40px;height:40px;border-radius:10px;border:1px solid var(--border);
+  background:var(--bg-surface);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-secondary);position:relative;transition:border-color .2s,color .2s;
+}
+.icon-btn:hover{border-color:var(--border-active);color:var(--text-primary)}
+.icon-btn svg{width:20px;height:20px}
+.notif-dot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--danger)}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:#fff}
+
+.content{padding:32px;flex:1}
+
+/* ═══════════ KPI CARDS ═══════════ */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:28px}
+.kpi{
+  background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--accent);
+  border-radius:var(--radius);padding:22px 24px;display:flex;align-items:center;gap:18px;
+  transition:border-color .25s,transform .2s;
+}
+.kpi:hover{border-color:var(--border-active);transform:translateY(-2px)}
+.kpi-icon{
+  width:48px;height:48px;border-radius:10px;
+  background:var(--accent-10);display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.kpi-icon svg{width:24px;height:24px;color:var(--accent)}
+.kpi-value{font-family:'Space Grotesk',sans-serif;font-size:1.85rem;font-weight:700;line-height:1}
+.kpi-label{font-size:.82rem;color:var(--text-secondary);margin-top:4px}
+
+/* ═══════════ ROW 2 ═══════════ */
+.row2{display:grid;grid-template-columns:1fr 320px;gap:20px;margin-bottom:28px}
+
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.card-header{
+  padding:18px 24px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-header h2{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700}
+.card-header a{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:600;color:var(--accent);text-decoration:none;transition:color .2s}
+.card-header a:hover{color:var(--cyan)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{
+  padding:12px 24px;text-align:left;
+  font-family:'Syne',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--text-tertiary);
+  background:var(--bg-elevated);border-bottom:1px solid var(--border);
+}
+.tbl td{padding:14px 24px;font-size:.88rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--accent-10)}
+.badge{
+  display:inline-block;padding:4px 12px;border-radius:20px;
+  font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.5px;
+}
+.badge-new{background:var(--accent-10);color:var(--accent)}
+.badge-progress{background:rgba(6,182,212,0.12);color:var(--cyan)}
+.badge-closed{background:rgba(100,116,139,0.15);color:var(--text-tertiary)}
+
+/* QUICK ACTIONS */
+.quick-actions{padding:24px;display:flex;flex-direction:column;gap:12px}
+.qa-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:8px}
+.qa-btn{
+  padding:13px 20px;border-radius:10px;
+  font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;
+  text-decoration:none;display:flex;align-items:center;gap:10px;
+  cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s;
+  border:none;text-align:left;
+}
+.qa-btn:active{transform:scale(.98)}
+.qa-btn svg{width:18px;height:18px;flex-shrink:0}
+.qa-btn.filled{background:var(--accent);color:#fff;box-shadow:0 0 16px var(--accent-20)}
+.qa-btn.filled:hover{background:var(--accent-hover);box-shadow:0 0 24px var(--accent-glow)}
+.qa-btn.outline{background:transparent;color:var(--text-secondary);border:1px solid var(--border)}
+.qa-btn.outline:hover{border-color:var(--border-active);color:var(--text-primary);background:var(--bg-elevated)}
+
+/* ═══════════ ROW 3 — MINI PROPERTY CARDS ═══════════ */
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.prop-mini{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;transition:border-color .25s,transform .2s;
+}
+.prop-mini:hover{border-color:var(--border-active);transform:translateY(-2px)}
+.prop-thumb{
+  height:140px;
+  background:linear-gradient(135deg,var(--bg-elevated),var(--bg-surface));
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.prop-thumb svg{width:48px;height:48px;color:var(--text-tertiary);opacity:.4}
+.prop-tag{
+  position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:6px;
+  font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+}
+.prop-tag.sale{background:var(--accent-15);color:var(--accent)}
+.prop-tag.rent{background:rgba(6,182,212,0.15);color:var(--cyan)}
+.prop-body{padding:16px 18px}
+.prop-body h3{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:4px}
+.prop-body .loc{font-size:.8rem;color:var(--text-tertiary);margin-bottom:10px;display:flex;align-items:center;gap:4px}
+.prop-body .loc svg{width:14px;height:14px}
+.prop-body .price{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;color:var(--accent)}
+
+/* ═══════════ OVERLAY ═══════════ */
+.overlay{
+  display:none;position:fixed;inset:0;background:rgba(4,6,12,0.6);z-index:90;
+}
+.overlay.show{display:block}
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media(max-width:1100px){
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .row2{grid-template-columns:1fr}
+  .row3{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .hamburger{display:flex}
+  .topbar{padding:0 20px}
+  .content{padding:20px}
+  .kpi-row{grid-template-columns:1fr}
+  .row3{grid-template-columns:1fr}
+  .tbl th,.tbl td{padding:10px 14px;font-size:.82rem}
+}
+</style>
+</head>
+<body>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay"></div>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo-row">
+      <span class="t804">804</span>
+      <span class="tavenue">AVENUE</span>
+    </div>
+    <div class="panel-label">Admin Panel</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="index.html" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Dashboard
+    </a>
+    <a href="properties/list.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      Properties
+    </a>
+    <a href="projects/list.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V8l7-5 7 5v12"/><path d="M9 20v-6h6v6"/><path d="M9 10h1"/><path d="M14 10h1"/></svg>
+      Projects
+    </a>
+    <a href="inquiries/list.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Inquiries
+    </a>
+    <a href="settings/general.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      General Settings
+    </a>
+    <a href="settings/team.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Team Members
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="avatar-circle">AU</div>
+    <div class="user-info">
+      <div class="name">Admin User</div>
+      <div class="role">Super Admin</div>
+    </div>
+    <button class="logout-btn" onclick="logout()" title="Logout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
+  </div>
+</aside>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="main">
+  <header class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <h1>Dashboard</h1>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" title="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <div class="topbar-avatar">AU</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ROW 1: KPI CARDS -->
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        </div>
+        <div>
+          <div class="kpi-value">12</div>
+          <div class="kpi-label">Total Properties</div>
+        </div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V8l7-5 7 5v12"/><path d="M9 20v-6h6v6"/></svg>
+        </div>
+        <div>
+          <div class="kpi-value">9</div>
+          <div class="kpi-label">Total Projects</div>
+        </div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div>
+          <div class="kpi-value">24</div>
+          <div class="kpi-label">New Inquiries</div>
+        </div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div>
+          <div class="kpi-value">8</div>
+          <div class="kpi-label">Active Listings</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2: TABLE + QUICK ACTIONS -->
+    <div class="row2">
+      <div class="card">
+        <div class="card-header">
+          <h2>Recent Inquiries</h2>
+          <a href="inquiries/list.html">View All &rarr;</a>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr><th>Name</th><th>Property</th><th>Date</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ahmed Hassan</td>
+              <td>Luxury Villa — Palm Hills</td>
+              <td>Mar 27, 2026</td>
+              <td><span class="badge badge-new">New</span></td>
+            </tr>
+            <tr>
+              <td>Sarah Mitchell</td>
+              <td>Office Tower — Downtown</td>
+              <td>Mar 26, 2026</td>
+              <td><span class="badge badge-new">New</span></td>
+            </tr>
+            <tr>
+              <td>Omar Farouk</td>
+              <td>Penthouse Suite — Marina</td>
+              <td>Mar 25, 2026</td>
+              <td><span class="badge badge-progress">In Progress</span></td>
+            </tr>
+            <tr>
+              <td>Lisa Chen</td>
+              <td>Commercial Plot — Zone B</td>
+              <td>Mar 24, 2026</td>
+              <td><span class="badge badge-progress">In Progress</span></td>
+            </tr>
+            <tr>
+              <td>Khalid Ramos</td>
+              <td>Residential Flat — Block 7</td>
+              <td>Mar 22, 2026</td>
+              <td><span class="badge badge-closed">Closed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="border:none;background:transparent">
+        <div class="quick-actions">
+          <div class="qa-title">Quick Actions</div>
+          <a href="properties/list.html" class="qa-btn filled">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Property
+          </a>
+          <a href="projects/list.html" class="qa-btn filled">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Project
+          </a>
+          <a href="inquiries/list.html" class="qa-btn outline">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Inquiries
+          </a>
+          <a href="settings/general.html" class="qa-btn outline">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            Settings
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 3: RECENT PROPERTIES -->
+    <div style="margin-bottom:16px">
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:16px">Recent Properties</h2>
+      <div class="row3">
+        <div class="prop-mini">
+          <div class="prop-thumb">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span class="prop-tag sale">For Sale</span>
+          </div>
+          <div class="prop-body">
+            <h3>Luxury Villa — Palm Hills</h3>
+            <div class="loc">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Palm Hills, Cairo
+            </div>
+            <div class="price">$1,250,000</div>
+          </div>
+        </div>
+        <div class="prop-mini">
+          <div class="prop-thumb">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span class="prop-tag rent">For Rent</span>
+          </div>
+          <div class="prop-body">
+            <h3>Office Tower — Downtown</h3>
+            <div class="loc">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Downtown, Dubai
+            </div>
+            <div class="price">$8,500 /mo</div>
+          </div>
+        </div>
+        <div class="prop-mini">
+          <div class="prop-thumb">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span class="prop-tag sale">For Sale</span>
+          </div>
+          <div class="prop-body">
+            <h3>Penthouse Suite — Marina</h3>
+            <div class="loc">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Marina Bay, Abu Dhabi
+            </div>
+            <div class="price">$2,750,000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+const hamburger = document.getElementById('hamburgerBtn');
+
+hamburger.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('show');
+});
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('show');
+});
+
+function logout() {
+  sessionStorage.removeItem('804_admin_auth');
+  window.location.href = 'login.html';
+}
+</script>
+</body>
+</html>

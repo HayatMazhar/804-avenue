@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Properties — 804 Avenue Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#04060C;--bg-surface:#0C1222;--bg-card:#111B2E;--bg-elevated:#182039;
+  --success:#10B981;--danger:#EF4444;
+  --text-primary:#F1F5F9;--text-secondary:#94A3B8;--text-tertiary:#64748B;
+  --sidebar-w:260px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg-deep);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
+button,a{font-family:'Syne',sans-serif}
+a{text-decoration:none;color:inherit}
+
+/* ─── SIDEBAR ─── */
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.sidebar-brand{padding:28px 24px 20px;border-bottom:1px solid var(--border)}
+.sidebar-brand .logo{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+.sidebar-brand .logo-804{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;letter-spacing:2px}
+.sidebar-brand .logo-avenue{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--accent);letter-spacing:2px}
+.sidebar-brand .sub{font-family:'Inter',sans-serif;font-size:11px;color:var(--text-tertiary);letter-spacing:3px;text-transform:uppercase;margin-top:2px}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.sidebar-nav a{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;font-size:14px;font-weight:500;color:var(--text-secondary);transition:all .2s;margin-bottom:2px}
+.sidebar-nav a:hover{color:var(--text-primary);background:rgba(59,130,246,.06)}
+.sidebar-nav a.active{color:#fff;background:var(--accent);box-shadow:0 4px 16px rgba(59,130,246,.25)}
+.sidebar-nav a svg{width:18px;height:18px;flex-shrink:0}
+.sidebar-footer{padding:16px 16px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.sidebar-footer .avatar{width:36px;height:36px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:#fff;flex-shrink:0}
+.sidebar-footer .info{flex:1;min-width:0}
+.sidebar-footer .info .name{font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-footer .info .role{font-size:11px;color:var(--text-tertiary)}
+.sidebar-footer .logout{color:var(--text-tertiary);transition:color .2s;flex-shrink:0}
+.sidebar-footer .logout:hover{color:var(--danger)}
+.sidebar-footer .logout svg{width:18px;height:18px}
+
+/* ─── MAIN ─── */
+.main{margin-left:var(--sidebar-w);min-height:100vh;background:var(--bg-deep);padding:32px}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px}
+.top-bar h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
+.top-bar h1 span{color:var(--accent)}
+.btn{font-family:'Syne',sans-serif;font-weight:600;font-size:14px;border:none;cursor:pointer;border-radius:10px;padding:10px 22px;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(59,130,246,.3)}
+.btn-primary:hover{background:var(--accent-hover);box-shadow:0 6px 24px rgba(59,130,246,.4);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--text-secondary);border:1px solid var(--border-active)}
+.btn-outline:hover{color:var(--text-primary);border-color:var(--accent);background:rgba(59,130,246,.06)}
+.btn svg{width:16px;height:16px}
+
+/* ─── FILTER ─── */
+.filter-bar{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;align-items:end}
+.filter-bar .field{display:flex;flex-direction:column;gap:5px}
+.filter-bar .field label{font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:1px;font-family:'Syne',sans-serif}
+.filter-bar input,.filter-bar select{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text-primary);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;min-width:140px}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--accent)}
+.filter-bar input::placeholder{color:var(--text-tertiary)}
+.filter-bar select option{background:var(--bg-card);color:var(--text-primary)}
+.filter-bar .search-input{min-width:220px}
+
+/* ─── TABLE ─── */
+.table-wrap{background:var(--bg-card);border-radius:14px;border:1px solid var(--border);overflow:hidden}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+thead{background:var(--bg-elevated)}
+th{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:1.2px;padding:14px 16px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--border)}
+td{padding:14px 16px;font-size:13px;color:var(--text-secondary);border-bottom:1px solid var(--border);white-space:nowrap;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--accent-10)}
+td.title-cell{color:var(--text-primary);font-weight:600}
+.thumb{width:48px;height:36px;border-radius:6px;background:var(--bg-elevated);object-fit:cover;border:1px solid var(--border)}
+.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Syne',sans-serif;letter-spacing:.5px}
+.badge-active{background:rgba(16,185,129,.12);color:var(--success)}
+.badge-inactive{background:rgba(100,116,139,.12);color:var(--text-tertiary)}
+.badge-sold{background:rgba(59,130,246,.12);color:var(--accent)}
+.actions{display:flex;gap:6px}
+.act-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);transition:all .2s}
+.act-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,.06)}
+.act-btn.del:hover{border-color:var(--danger);color:var(--danger);background:rgba(239,68,68,.06)}
+.act-btn svg{width:14px;height:14px}
+
+/* ─── PAGINATION ─── */
+.pagination{display:flex;align-items:center;justify-content:space-between;margin-top:20px;flex-wrap:wrap;gap:12px}
+.pagination .info{font-size:13px;color:var(--text-tertiary)}
+.pagination .pages{display:flex;gap:4px}
+.pagination .pages button{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.pagination .pages button:hover{border-color:var(--accent);color:var(--accent)}
+.pagination .pages button.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 10px rgba(59,130,246,.3)}
+
+/* ─── HAMBURGER ─── */
+.hamburger{display:none;position:fixed;top:18px;left:16px;z-index:200;width:40px;height:40px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border);cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.hamburger span{display:block;width:20px;height:2px;background:var(--text-primary);border-radius:2px;transition:all .3s}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;backdrop-filter:blur(4px)}
+
+/* ─── DELETE MODAL ─── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:420px;width:90%;text-align:center}
+.modal .icon{width:56px;height:56px;border-radius:14px;background:rgba(239,68,68,.1);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.modal .icon svg{width:28px;height:28px;color:var(--danger)}
+.modal h3{font-size:18px;margin-bottom:8px}
+.modal p{font-size:13px;color:var(--text-secondary);margin-bottom:24px;line-height:1.6}
+.modal .modal-actions{display:flex;gap:12px;justify-content:center}
+.btn-danger{background:var(--danger);color:#fff;box-shadow:0 4px 16px rgba(239,68,68,.3)}
+.btn-danger:hover{background:#dc2626;transform:translateY(-1px)}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:24px 16px;padding-top:68px}
+  .hamburger{display:flex}
+  .overlay.show{display:block}
+  .filter-bar .field{flex:1;min-width:120px}
+  .filter-bar .search-input{min-width:0;width:100%}
+}
+@media(max-width:600px){
+  .top-bar{flex-direction:column;align-items:flex-start}
+  .pagination{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<!-- Hamburger -->
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+  <span></span><span></span><span></span>
+</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo"><span class="logo-804">804</span><span class="logo-avenue">AVENUE</span></div>
+    <div class="sub">Admin Panel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Dashboard
+    </a>
+    <a href="list.html" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Properties
+    </a>
+    <a href="../projects/list.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V8l7-5 7 5v12"/><path d="M9 20v-4h6v4"/></svg>
+      Projects
+    </a>
+    <a href="../inquiries/list.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Inquiries
+    </a>
+    <a href="../settings/general.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      Settings
+    </a>
+    <a href="../settings/team.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Team
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="avatar">AU</div>
+    <div class="info">
+      <div class="name">Admin User</div>
+      <div class="role">Administrator</div>
+    </div>
+    <a href="../login.html" class="logout" title="Logout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </a>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="top-bar">
+    <h1>Properties <span>Management</span></h1>
+    <a href="add.html" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Property
+    </a>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="field" style="flex:1">
+      <label>Search</label>
+      <input type="text" class="search-input" id="searchInput" placeholder="Search properties...">
+    </div>
+    <div class="field">
+      <label>Purpose</label>
+      <select id="filterPurpose">
+        <option value="">All Purpose</option>
+        <option>Sale</option>
+        <option>Rent</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Type</label>
+      <select id="filterType">
+        <option value="">All Types</option>
+        <option>Apartment</option>
+        <option>Villa</option>
+        <option>Townhouse</option>
+        <option>Penthouse</option>
+        <option>Office</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Status</label>
+      <select id="filterStatus">
+        <option value="">All Status</option>
+        <option>Active</option>
+        <option>Inactive</option>
+        <option>Sold</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="filterTable()" style="align-self:flex-end">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div class="table-scroll">
+      <table id="propertiesTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Purpose</th>
+            <th>Price (AED)</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><div class="thumb"></div></td>
+            <td class="title-cell">Luxury 2BR Apartment, Al Reem Island</td>
+            <td>Apartment</td>
+            <td>Sale</td>
+            <td>1,200,000</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td>2026-03-15</td>
+            <td><div class="actions">
+              <a href="edit.html" class="act-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+              <button class="act-btn del" title="Delete" onclick="openDeleteModal('Luxury 2BR Apartment, Al Reem Island')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><div class="thumb"></div></td>
+            <td class="title-cell">Modern Studio, Marina Square</td>
+            <td>Apartment</td>
+            <td>Rent</td>
+            <td>55,000/yr</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td>2026-03-12</td>
+            <td><div class="actions">
+              <a href="edit.html" class="act-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+              <button class="act-btn del" title="Delete" onclick="openDeleteModal('Modern Studio, Marina Square')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><div class="thumb"></div></td>
+            <td class="title-cell">5BR Villa, Saadiyat Island</td>
+            <td>Villa</td>
+            <td>Sale</td>
+            <td>8,500,000</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td>2026-03-10</td>
+            <td><div class="actions">
+              <a href="edit.html" class="act-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+              <button class="act-btn del" title="Delete" onclick="openDeleteModal('5BR Villa, Saadiyat Island')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><div class="thumb"></div></td>
+            <td class="title-cell">3BR Townhouse, Yas Acres</td>
+            <td>Townhouse</td>
+            <td>Sale</td>
+            <td>2,800,000</td>
+            <td><span class="badge badge-sold">Sold</span></td>
+            <td>2026-03-08</td>
+            <td><div class="actions">
+              <a href="edit.html" class="act-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+              <button class="act-btn del" title="Delete" onclick="openDeleteModal('3BR Townhouse, Yas Acres')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><div class="thumb"></div></td>
+            <td class="title-cell">Penthouse, Etihad Towers</td>
+            <td>Penthouse</td>
+            <td>Sale</td>
+            <td>15,000,000</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td>2026-03-05</td>
+            <td><div class="actions">
+              <a href="edit.html" class="act-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+              <button class="act-btn del" title="Delete" onclick="openDeleteModal('Penthouse, Etihad Towers')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td><div class="thumb"></div></td>
+            <td class="title-cell">1BR Apt, Al Raha Beach</td>
+            <td>Apartment</td>
+            <td>Rent</td>
+            <td>48,000/yr</td>
+            <td><span class="badge badge-inactive">Inactive</span></td>
+            <td>2026-02-28</td>
+            <td><div class="actions">
+              <a href="edit.html" class="act-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+              <button class="act-btn del" title="Delete" onclick="openDeleteModal('1BR Apt, Al Raha Beach')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td><div class="thumb"></div></td>
+            <td class="title-cell">Office Space, ADGM Tower</td>
+            <td>Office</td>
+            <td>Rent</td>
+            <td>180,000/yr</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td>2026-02-20</td>
+            <td><div class="actions">
+              <a href="edit.html" class="act-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+              <button class="act-btn del" title="Delete" onclick="openDeleteModal('Office Space, ADGM Tower')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td><div class="thumb"></div></td>
+            <td class="title-cell">4BR Villa, Al Jubail Island</td>
+            <td>Villa</td>
+            <td>Sale</td>
+            <td>5,200,000</td>
+            <td><span class="badge badge-sold">Sold</span></td>
+            <td>2026-02-14</td>
+            <td><div class="actions">
+              <a href="edit.html" class="act-btn" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></a>
+              <button class="act-btn del" title="Delete" onclick="openDeleteModal('4BR Villa, Al Jubail Island')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+            </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <div class="info">Showing <strong>1–8</strong> of <strong>24</strong> properties</div>
+    <div class="pages">
+      <button>&laquo;</button>
+      <button class="active">1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>&raquo;</button>
+    </div>
+  </div>
+</main>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+    </div>
+    <h3>Delete Property</h3>
+    <p>Are you sure you want to delete <strong id="deletePropertyName"></strong>? This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+function openDeleteModal(name){
+  document.getElementById('deletePropertyName').textContent=name;
+  document.getElementById('deleteModal').classList.add('show');
+}
+function closeDeleteModal(){
+  document.getElementById('deleteModal').classList.remove('show');
+}
+function confirmDelete(){
+  closeDeleteModal();
+}
+
+function filterTable(){
+  const search=document.getElementById('searchInput').value.toLowerCase();
+  const purpose=document.getElementById('filterPurpose').value;
+  const type=document.getElementById('filterType').value;
+  const status=document.getElementById('filterStatus').value;
+  const rows=document.querySelectorAll('#propertiesTable tbody tr');
+  rows.forEach(row=>{
+    const cells=row.querySelectorAll('td');
+    const title=cells[2].textContent.toLowerCase();
+    const rType=cells[3].textContent;
+    const rPurpose=cells[4].textContent;
+    const rStatus=cells[6].textContent.trim();
+    let show=true;
+    if(search&&!title.includes(search))show=false;
+    if(purpose&&rPurpose!==purpose)show=false;
+    if(type&&rType!==type)show=false;
+    if(status&&rStatus!==status)show=false;
+    row.style.display=show?'':'none';
+  });
+}
+
+document.getElementById('searchInput').addEventListener('keyup',function(e){
+  if(e.key==='Enter')filterTable();
+});
+</script>
+</body>
+</html>

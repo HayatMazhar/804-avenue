@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inquiry Detail — 804 AVENUE Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg-deep);color:var(--text-primary);min-height:100vh;display:flex}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit;border:none;outline:none}
+input,select,textarea{font-family:inherit;outline:none}
+
+.sidebar{width:var(--sidebar-w);height:100vh;position:fixed;top:0;left:0;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:transform .3s ease}
+.sidebar-logo{padding:28px 24px;border-bottom:1px solid var(--border)}
+.sidebar-logo h1{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;letter-spacing:2px;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sidebar-logo span{display:block;font-family:'Inter',sans-serif;font-size:.65rem;color:var(--text-tertiary);letter-spacing:3px;text-transform:uppercase;margin-top:4px;font-weight:500}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;color:var(--text-secondary);font-size:.875rem;font-weight:500;margin-bottom:4px;transition:all .2s ease}
+.nav-item:hover{color:var(--text-primary);background:var(--bg-card)}
+.nav-item.active{color:#fff;background:linear-gradient(135deg,var(--accent-20),var(--cyan-glow));border:1px solid var(--border-hover)}
+.nav-item svg{width:20px;height:20px;flex-shrink:0}
+.sidebar-footer{padding:16px 12px;border-top:1px solid var(--border)}
+.nav-item.logout:hover{color:var(--danger)}
+
+.main{margin-left:var(--sidebar-w);flex:1;padding:32px;min-height:100vh;max-width:900px}
+
+.page-header{display:flex;align-items:center;gap:14px;margin-bottom:28px;flex-wrap:wrap}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary);font-size:.85rem;font-weight:500;padding:8px 14px;border-radius:8px;border:1px solid var(--border);transition:all .2s}
+.back-link:hover{color:var(--text-primary);border-color:var(--border-hover);background:var(--bg-card)}
+.back-link svg{width:16px;height:16px}
+.page-title{font-family:'Space Grotesk',sans-serif;font-size:1.75rem;font-weight:700;letter-spacing:-.5px}
+.hamburger{display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text-primary)}
+.hamburger svg{width:22px;height:22px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90}
+
+/* Card */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:28px;margin-bottom:24px}
+.card-title{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 32px}
+.field label{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-tertiary);font-weight:600;margin-bottom:6px}
+.field .val{font-size:.9rem;color:var(--text-primary);line-height:1.5}
+.field.full{grid-column:1/-1}
+
+.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.badge-new{background:var(--accent-15);color:var(--accent)}
+
+/* Form elems */
+.form-row{display:flex;align-items:flex-end;gap:12px;margin-top:10px;flex-wrap:wrap}
+select,.input-field,textarea{width:100%;padding:10px 14px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:.85rem;transition:border-color .2s}
+select:focus,.input-field:focus,textarea:focus{border-color:var(--border-hover)}
+select{cursor:pointer;appearance:auto}
+textarea{resize:vertical;min-height:100px}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:.85rem;font-weight:600;transition:all .2s ease}
+.btn-accent{background:var(--accent);color:#fff}.btn-accent:hover{background:var(--accent-hover)}
+.btn-danger{background:rgba(239,68,68,.12);color:var(--danger);border:1px solid rgba(239,68,68,.2)}.btn-danger:hover{background:var(--danger);color:#fff}
+
+/* Notes */
+.note-item{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
+.note-meta{display:flex;justify-content:space-between;margin-bottom:8px;font-size:.75rem;color:var(--text-tertiary)}
+.note-text{font-size:.85rem;color:var(--text-secondary);line-height:1.6}
+
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg-elevated);border:1px solid var(--border-hover);border-radius:10px;padding:14px 22px;font-size:.85rem;color:var(--text-primary);box-shadow:0 8px 32px rgba(0,0,0,.4);transform:translateY(100px);opacity:0;transition:all .35s ease;z-index:500}
+.toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .overlay.show{display:block}
+  .main{margin-left:0;padding:20px 16px}
+  .hamburger{display:flex}
+  .page-title{font-size:1.3rem}
+  .field-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h1>804 AVENUE</h1>
+    <span>Admin Dashboard</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="../index.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Dashboard
+    </a>
+    <a href="../properties/list.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Properties
+    </a>
+    <a href="../projects/list.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V10l7-5 7 5v10"/><path d="M9 20v-6h6v6"/></svg>
+      Projects
+    </a>
+    <a href="list.html" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Inquiries
+    </a>
+    <a href="../settings/general.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Settings
+    </a>
+    <a href="../settings/team.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Team
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="../login.html" class="nav-item logout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout
+    </a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="page-header">
+    <button class="hamburger" onclick="toggleSidebar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <a href="list.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Back</a>
+    <h1 class="page-title">Inquiry #1041</h1>
+  </div>
+
+  <!-- Inquiry Detail Card -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Inquiry Details
+    </div>
+    <div class="field-grid">
+      <div class="field">
+        <label>Full Name</label>
+        <div class="val">Fatima Al Mazrouei</div>
+      </div>
+      <div class="field">
+        <label>Email Address</label>
+        <div class="val">fatima.m@gmail.com</div>
+      </div>
+      <div class="field">
+        <label>Phone Number</label>
+        <div class="val">+971 50 882 1456</div>
+      </div>
+      <div class="field">
+        <label>Service Requested</label>
+        <div class="val">Property Valuation</div>
+      </div>
+      <div class="field">
+        <label>Date Submitted</label>
+        <div class="val">March 25, 2026 — 10:34 AM</div>
+      </div>
+      <div class="field">
+        <label>Current Status</label>
+        <div class="val"><span class="badge badge-new">New</span></div>
+      </div>
+      <div class="field full">
+        <label>Message</label>
+        <div class="val">I need a comprehensive property valuation for my villa in Saadiyat Island. The property is approximately 4,500 sq ft with 5 bedrooms, a private pool, and garden. I am considering selling within the next 3-6 months and would like to understand the current market value. Could you also advise on any improvements that might increase the property's value before listing?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Update -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Update Status
+    </div>
+    <div class="form-row">
+      <div style="flex:1;min-width:200px">
+        <label style="display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-tertiary);font-weight:600;margin-bottom:6px">Status</label>
+        <select id="statusSelect">
+          <option value="new" selected>New</option>
+          <option value="in_progress">In Progress</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+      <button class="btn btn-accent" onclick="updateStatus()">Update Status</button>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Notes
+    </div>
+
+    <div class="note-item">
+      <div class="note-meta">
+        <span style="color:var(--text-secondary);font-weight:500">Ahmed Al Mansoori</span>
+        <span>Mar 25, 2026 — 11:20 AM</span>
+      </div>
+      <div class="note-text">Client called to confirm her interest in a property valuation. She mentioned the villa has recently undergone minor renovations including new landscaping. Scheduled an initial assessment visit for March 28.</div>
+    </div>
+
+    <div style="margin-top:16px">
+      <label style="display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-tertiary);font-weight:600;margin-bottom:6px">Add Note</label>
+      <textarea id="noteText" placeholder="Write a note about this inquiry..."></textarea>
+      <div style="margin-top:10px;text-align:right">
+        <button class="btn btn-accent" onclick="saveNote()">Save Note</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danger Zone -->
+  <div style="margin-top:8px">
+    <button class="btn btn-danger" onclick="deleteInquiry()" style="padding:12px 24px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14H7L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      Delete Inquiry
+    </button>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show')}
+
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+function updateStatus(){
+  const s=document.getElementById('statusSelect').value;
+  showToast('Status updated to: '+s.replace('_',' ').replace(/\b\w/g,c=>c.toUpperCase()));
+}
+
+function saveNote(){
+  const txt=document.getElementById('noteText').value.trim();
+  if(!txt) return showToast('Please enter a note');
+  const container=document.querySelector('.card:nth-child(3) .card-title').parentElement;
+  const noteEl=document.createElement('div');noteEl.className='note-item';
+  const now=new Date();
+  noteEl.innerHTML='<div class="note-meta"><span style="color:var(--text-secondary);font-weight:500">Admin</span><span>'+now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' — '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})+'</span></div><div class="note-text">'+txt+'</div>';
+  container.querySelector('div[style*="margin-top:16px"]').before(noteEl);
+  document.getElementById('noteText').value='';
+  showToast('Note saved successfully');
+}
+
+function deleteInquiry(){
+  if(confirm('Are you sure you want to permanently delete this inquiry? This action cannot be undone.')){
+    showToast('Inquiry deleted');
+    setTimeout(()=>window.location.href='list.html',1500);
+  }
+}
+</script>
+</body>
+</html>

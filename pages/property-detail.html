@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxury 2BR Apartment — Al Reem Island | 804 Avenue</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/shared.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg-deep);color:var(--text-primary);line-height:1.6;overflow-x:hidden}
+
+/* ─── NAVBAR ─── */
+.navbar{position:fixed;top:0;left:0;width:100%;z-index:1000;padding:16px 0;transition:all .4s ease}
+.navbar.scrolled{background:var(--bg-glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 0}
+.nav-inner{max-width:1320px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text-primary)}
+.nav-logo-icon{color:var(--accent)}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1.15}
+.nav-logo-main{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;letter-spacing:.5px}
+.logo-804{color:var(--accent)}
+.logo-avenue{color:var(--text-primary)}
+.nav-logo-sub{font-family:'Inter',sans-serif;font-size:9.5px;color:var(--text-tertiary);letter-spacing:1.5px;text-transform:uppercase}
+.nav-links{display:flex;list-style:none;gap:6px}
+.nav-links a{font-family:'Syne',sans-serif;font-size:13.5px;font-weight:500;color:var(--text-secondary);text-decoration:none;padding:8px 16px;border-radius:var(--radius-sm);transition:all .3s ease;position:relative}
+.nav-links a:hover,.nav-links a.active{color:var(--text-primary);background:var(--accent-10)}
+.nav-links a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--accent);border-radius:2px}
+.nav-right{display:flex;align-items:center;gap:14px}
+.nav-phone{font-family:'Syne',sans-serif;font-size:13px;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .3s}
+.nav-phone:hover{color:var(--accent)}
+.nav-cta{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;padding:9px 22px;background:var(--accent);color:#fff;border-radius:var(--radius-sm);text-decoration:none;transition:all .3s;border:none}
+.nav-cta:hover{background:var(--accent-hover);box-shadow:0 0 20px var(--accent-glow)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{width:22px;height:2px;background:var(--text-primary);border-radius:2px;transition:all .3s}
+.mobile-nav{display:none;position:fixed;top:70px;left:0;width:100%;background:var(--bg-surface);border-bottom:1px solid var(--border);flex-direction:column;padding:16px 32px;z-index:999}
+.mobile-nav a{font-family:'Syne',sans-serif;font-size:15px;color:var(--text-secondary);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);transition:color .3s}
+.mobile-nav a:last-child{border:none}
+.mobile-nav a:hover,.mobile-nav a.active{color:var(--accent)}
+.mobile-nav.open{display:flex}
+
+/* ─── BREADCRUMB ─── */
+.detail-breadcrumb{max-width:1320px;margin:0 auto;padding:100px 32px 20px;display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-tertiary)}
+.detail-breadcrumb a{color:var(--text-secondary);text-decoration:none;transition:color .3s}
+.detail-breadcrumb a:hover{color:var(--accent)}
+.detail-breadcrumb svg{width:14px;height:14px;stroke:var(--text-tertiary)}
+
+/* ─── GALLERY ─── */
+.gallery-section{max-width:1320px;margin:0 auto;padding:0 32px 40px}
+.gallery-wrap{display:grid;grid-template-columns:1fr 240px;gap:14px}
+.gallery-main{position:relative;border-radius:var(--radius-lg);overflow:hidden;height:480px;background:var(--bg-card);border:1px solid var(--border)}
+.gallery-main img{width:100%;height:100%;object-fit:cover;transition:opacity .4s ease}
+.gallery-main .placeholder-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg-elevated),var(--bg-card))}
+.gallery-main .gallery-badge{position:absolute;top:20px;left:20px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;padding:6px 16px;border-radius:6px;background:var(--accent);color:#fff;text-transform:uppercase;letter-spacing:.8px}
+.gallery-main .gallery-share{position:absolute;top:20px;right:20px;display:flex;gap:8px}
+.gallery-share button{width:40px;height:40px;border-radius:50%;background:rgba(4,6,12,.6);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);transition:all .3s}
+.gallery-share button:hover{background:var(--accent-20);border-color:var(--accent);color:var(--accent)}
+.gallery-share button svg{width:18px;height:18px}
+.gallery-thumbs{display:flex;flex-direction:column;gap:10px}
+.gallery-thumb{height:calc((480px - 30px)/4);border-radius:var(--radius);overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .3s;background:var(--bg-card)}
+.gallery-thumb.active{border-color:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
+.gallery-thumb:hover{border-color:var(--border-accent)}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover}
+
+/* ─── DETAIL LAYOUT ─── */
+.detail-section{max-width:1320px;margin:0 auto;padding:0 32px 80px}
+.detail-layout{display:grid;grid-template-columns:1fr 380px;gap:40px;align-items:start}
+
+/* ─── LEFT COLUMN ─── */
+.detail-left{}
+.detail-price{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:700;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.detail-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.4rem,2.5vw,1.8rem);font-weight:600;margin-bottom:12px}
+.detail-badge{display:inline-flex;align-items:center;gap:6px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;background:var(--accent);color:#fff;text-transform:uppercase;letter-spacing:.8px;margin-bottom:24px}
+.detail-specs{display:flex;flex-wrap:wrap;gap:20px;padding:24px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:32px}
+.spec-item{display:flex;align-items:center;gap:10px}
+.spec-icon{width:44px;height:44px;border-radius:var(--radius);background:var(--accent-10);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.spec-icon svg{width:20px;height:20px;stroke:var(--accent)}
+.spec-info{display:flex;flex-direction:column}
+.spec-label{font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.8px;font-family:'Syne',sans-serif;font-weight:600}
+.spec-value{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--text-primary)}
+
+/* Description */
+.detail-block{margin-bottom:40px}
+.detail-block h2{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:600;margin-bottom:16px}
+.detail-block h2 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.detail-block p{color:var(--text-secondary);line-height:1.8;font-size:15px}
+
+/* Features Grid */
+.features-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.feature-item{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);transition:all .3s}
+.feature-item:hover{border-color:var(--border-accent);background:var(--bg-elevated)}
+.feature-item svg{width:20px;height:20px;stroke:var(--accent);flex-shrink:0}
+.feature-item span{font-size:14px;color:var(--text-secondary)}
+
+/* Map */
+.map-placeholder{width:100%;height:280px;border-radius:var(--radius-lg);background:var(--bg-card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+.map-placeholder svg{width:48px;height:48px;stroke:var(--text-tertiary);opacity:.4}
+.map-placeholder span{font-size:14px;color:var(--text-tertiary)}
+
+/* Similar Properties */
+.similar-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.similar-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .4s;text-decoration:none;color:inherit}
+.similar-card:hover{transform:translateY(-6px);border-color:var(--border-accent);box-shadow:0 12px 40px var(--accent-10)}
+.similar-card-img{height:160px;background:var(--bg-card);overflow:hidden;position:relative}
+.similar-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.similar-card:hover .similar-card-img img{transform:scale(1.06)}
+.similar-card-img .sim-badge{position:absolute;top:10px;left:10px;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;padding:4px 10px;border-radius:5px;text-transform:uppercase;letter-spacing:.6px}
+.sim-badge.sale{background:var(--accent);color:#fff}
+.sim-badge.rent{background:var(--cyan);color:#fff}
+.similar-card-body{padding:16px}
+.similar-card-body h4{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;margin-bottom:6px}
+.similar-card-body .sim-location{font-size:12px;color:var(--text-tertiary);margin-bottom:10px;display:flex;align-items:center;gap:4px}
+.similar-card-body .sim-location svg{width:12px;height:12px;stroke:var(--accent)}
+.similar-card-body .sim-price{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ─── RIGHT COLUMN — AGENT CARD ─── */
+.agent-card{position:sticky;top:90px;background:var(--bg-glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border-accent);border-radius:var(--radius-lg);padding:32px 28px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.agent-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.agent-avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#fff;flex-shrink:0}
+.agent-info h3{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:2px}
+.agent-info p{font-size:13px;color:var(--text-tertiary)}
+.agent-info .agent-rating{display:flex;align-items:center;gap:4px;margin-top:4px;font-size:13px;color:var(--text-secondary)}
+.agent-info .agent-rating svg{width:14px;height:14px;fill:var(--warning);stroke:none}
+
+.agent-actions{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.btn-call{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;padding:13px 20px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-call:hover{background:var(--accent-hover);box-shadow:0 0 20px var(--accent-glow)}
+.btn-whatsapp{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;padding:13px 20px;background:#25D366;color:#fff;border:none;border-radius:var(--radius-sm);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-whatsapp:hover{background:#20BD5A;box-shadow:0 0 20px rgba(37,211,102,.35)}
+.btn-email{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;padding:13px 20px;background:transparent;color:var(--text-primary);border:1px solid var(--border-accent);border-radius:var(--radius-sm);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-email:hover{background:var(--accent-10);box-shadow:0 0 12px var(--accent-15)}
+.btn-call svg,.btn-whatsapp svg,.btn-email svg{width:18px;height:18px}
+
+/* Enquiry Form */
+.enquiry-form h3{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:16px}
+.enquiry-form .form-group{margin-bottom:14px}
+.enquiry-form input,.enquiry-form textarea,.enquiry-form select{width:100%;font-family:'Inter',sans-serif;font-size:13px;padding:11px 14px;background:var(--bg-card);color:var(--text-primary);border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;transition:border-color .3s;resize:vertical}
+.enquiry-form input::placeholder,.enquiry-form textarea::placeholder{color:var(--text-tertiary)}
+.enquiry-form input:focus,.enquiry-form textarea:focus{border-color:var(--accent)}
+.enquiry-form textarea{min-height:90px}
+.enquiry-form .btn-submit{width:100%;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);cursor:pointer;transition:all .3s}
+.enquiry-form .btn-submit:hover{background:var(--accent-hover);box-shadow:0 0 20px var(--accent-glow)}
+
+/* ─── FOOTER ─── */
+.footer{position:relative;background:var(--bg-surface);padding:70px 0 0;margin-top:40px}
+.footer::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--accent),var(--cyan),var(--accent),transparent)}
+.footer-inner{max-width:1320px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:48px}
+.footer-brand p{font-size:14px;color:var(--text-secondary);margin-top:16px;line-height:1.7}
+.footer-col h4{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:20px;text-transform:uppercase;letter-spacing:1px}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:10px}
+.footer-col ul li a{font-size:14px;color:var(--text-secondary);text-decoration:none;transition:color .3s}
+.footer-col ul li a:hover{color:var(--accent)}
+.footer-contact-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;font-size:14px;color:var(--text-secondary)}
+.footer-contact-item svg{width:16px;height:16px;stroke:var(--accent);flex-shrink:0;margin-top:3px}
+.footer-socials{display:flex;gap:10px;margin-top:20px}
+.footer-socials a{width:38px;height:38px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);text-decoration:none;transition:all .3s}
+.footer-socials a:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-10)}
+.footer-socials a svg{width:16px;height:16px}
+.footer-bottom{max-width:1320px;margin:0 auto;padding:24px 32px;margin-top:48px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text-tertiary)}
+.footer-bottom a{color:var(--text-secondary);text-decoration:none;transition:color .3s}
+.footer-bottom a:hover{color:var(--accent)}
+
+/* ─── WHATSAPP FLOAT ─── */
+.whatsapp-float{position:fixed;bottom:28px;right:28px;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.35);z-index:900;transition:transform .3s,box-shadow .3s;text-decoration:none}
+.whatsapp-float:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(37,211,102,.5)}
+.whatsapp-float svg{width:28px;height:28px;fill:#fff}
+
+/* ─── BACK TO TOP ─── */
+.back-to-top{position:fixed;bottom:28px;right:96px;width:44px;height:44px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:900;opacity:0;visibility:hidden;transition:all .3s}
+.back-to-top.visible{opacity:1;visibility:visible}
+.back-to-top:hover{border-color:var(--accent);background:var(--accent-10)}
+.back-to-top svg{width:18px;height:18px;stroke:var(--text-secondary)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+.detail-layout{grid-template-columns:1fr;gap:32px}
+.agent-card{position:static}
+.gallery-wrap{grid-template-columns:1fr 180px}
+.footer-inner{grid-template-columns:1fr 1fr;gap:36px}
+}
+@media(max-width:768px){
+.nav-links,.nav-right .nav-phone{display:none}
+.hamburger{display:flex}
+.nav-right{gap:10px}
+.gallery-wrap{grid-template-columns:1fr;gap:10px}
+.gallery-main{height:300px}
+.gallery-thumbs{flex-direction:row}
+.gallery-thumb{height:80px;flex:1}
+.features-grid{grid-template-columns:1fr}
+.similar-grid{grid-template-columns:1fr}
+.footer-inner{grid-template-columns:1fr}
+.footer-bottom{flex-direction:column;gap:10px;text-align:center}
+.detail-specs{gap:14px}
+}
+</style>
+</head>
+<body>
+
+<!-- ════ NAVBAR ════ -->
+<nav class="navbar" id="navbar"><div class="nav-inner">
+  <a href="../index.html" class="nav-logo">
+    <svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+    <div class="nav-logo-text"><span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span><span class="nav-logo-sub">Properties &amp; Contracting</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="properties.html" class="active">Properties</a></li>
+    <li><a href="contracting.html">Contracting</a></li>
+    <li><a href="maintenance.html">Maintenance</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right"><a href="tel:+971504399804" class="nav-phone"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+971 50 43 99 804</a><a href="contact.html" class="nav-cta">Get a Quote</a></div>
+  <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</div></nav>
+<div class="mobile-nav" id="mobileNav"><a href="../index.html" onclick="closeMobile()">Home</a><a href="properties.html" class="active" onclick="closeMobile()">Properties</a><a href="contracting.html" onclick="closeMobile()">Contracting</a><a href="maintenance.html" onclick="closeMobile()">Maintenance</a><a href="about.html" onclick="closeMobile()">About</a><a href="contact.html" onclick="closeMobile()">Contact</a></div>
+
+<!-- ════ BREADCRUMB ════ -->
+<div class="detail-breadcrumb">
+  <a href="../index.html">Home</a>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  <a href="properties.html">Properties</a>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  <span>Luxury 2BR Apartment</span>
+</div>
+
+<!-- ════ GALLERY ════ -->
+<section class="gallery-section">
+  <div class="gallery-wrap">
+    <div class="gallery-main" id="galleryMain">
+      <img id="mainImage" src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80" alt="Luxury 2BR Apartment — Living Room">
+      <span class="gallery-badge">For Sale</span>
+      <div class="gallery-share">
+        <button aria-label="Favorite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+        <button aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+      </div>
+    </div>
+    <div class="gallery-thumbs">
+      <div class="gallery-thumb active" data-index="0" onclick="switchThumb(this,0)">
+        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&q=80" alt="Living Room">
+      </div>
+      <div class="gallery-thumb" data-index="1" onclick="switchThumb(this,1)">
+        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80" alt="Kitchen">
+      </div>
+      <div class="gallery-thumb" data-index="2" onclick="switchThumb(this,2)">
+        <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=400&q=80" alt="Bedroom">
+      </div>
+      <div class="gallery-thumb" data-index="3" onclick="switchThumb(this,3)">
+        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=80" alt="Bathroom">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ DETAIL SECTION ════ -->
+<section class="detail-section">
+  <div class="detail-layout">
+
+    <!-- LEFT COLUMN -->
+    <div class="detail-left">
+      <div class="detail-price">AED 1,200,000</div>
+      <h1 class="detail-title">Luxury 2BR Apartment — Al Reem Island</h1>
+      <span class="detail-badge">For Sale</span>
+
+      <!-- Specs -->
+      <div class="detail-specs">
+        <div class="spec-item">
+          <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg></div>
+          <div class="spec-info"><span class="spec-label">Bedrooms</span><span class="spec-value">2</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12h16M4 12v4a4 4 0 004 4h8a4 4 0 004-4v-4M6 12V5a2 2 0 012-2h0a2 2 0 012 2v7"/></svg></div>
+          <div class="spec-info"><span class="spec-label">Bathrooms</span><span class="spec-value">2</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
+          <div class="spec-info"><span class="spec-label">Area</span><span class="spec-value">1,200 sqft</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          <div class="spec-info"><span class="spec-label">Floor</span><span class="spec-value">14th</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+          <div class="spec-info"><span class="spec-label">Parking</span><span class="spec-value">1 Space</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="spec-info"><span class="spec-label">Year Built</span><span class="spec-value">2022</span></div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="detail-block">
+        <h2>Property <em>Description</em></h2>
+        <p>This stunning luxury 2-bedroom apartment is located in the heart of Al Reem Island, one of Abu Dhabi's most prestigious addresses. The property offers breathtaking views of the city skyline and the Arabian Gulf, with floor-to-ceiling windows that flood the living spaces with natural light.</p>
+        <br>
+        <p>The apartment features premium finishes throughout, including marble flooring, Italian kitchen cabinetry, and designer bathroom fixtures. The open-plan living and dining area flows seamlessly onto a spacious balcony, perfect for entertaining or relaxing while enjoying the panoramic views. Both bedrooms are generously sized with built-in wardrobes and en-suite bathrooms.</p>
+        <br>
+        <p>Residents enjoy access to world-class amenities including an infinity pool, state-of-the-art gymnasium, landscaped gardens, children's play area, and 24/7 security with concierge services. The building is within walking distance of The Galleria Mall, premium restaurants, and waterfront promenades.</p>
+      </div>
+
+      <!-- Features -->
+      <div class="detail-block">
+        <h2>Key <em>Features</em></h2>
+        <div class="features-grid">
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>Central Air Conditioning</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>Built-in Wardrobes</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>Balcony with Sea View</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>Swimming Pool Access</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>24/7 Security &amp; CCTV</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>Gymnasium &amp; Fitness Center</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>Concierge Services</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>Covered Parking</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div class="detail-block">
+        <h2>Location <em>Map</em></h2>
+        <div class="map-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Al Reem Island, Abu Dhabi, UAE</span>
+        </div>
+      </div>
+
+      <!-- Similar Properties -->
+      <div class="detail-block">
+        <h2>Similar <em>Properties</em></h2>
+        <div class="similar-grid">
+          <a href="property-detail.html" class="similar-card">
+            <div class="similar-card-img">
+              <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=80" alt="Penthouse Suite">
+              <span class="sim-badge sale">For Sale</span>
+            </div>
+            <div class="similar-card-body">
+              <h4>Penthouse Suite</h4>
+              <div class="sim-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Corniche, Abu Dhabi</div>
+              <div class="sim-price">AED 5,800,000</div>
+            </div>
+          </a>
+          <a href="property-detail.html" class="similar-card">
+            <div class="similar-card-img">
+              <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=400&q=80" alt="1BR Apartment">
+              <span class="sim-badge rent">For Rent</span>
+            </div>
+            <div class="similar-card-body">
+              <h4>1BR Apartment</h4>
+              <div class="sim-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Al Raha Beach, Abu Dhabi</div>
+              <div class="sim-price">AED 60,000/yr</div>
+            </div>
+          </a>
+          <a href="property-detail.html" class="similar-card">
+            <div class="similar-card-img">
+              <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80" alt="3BR Townhouse">
+              <span class="sim-badge sale">For Sale</span>
+            </div>
+            <div class="similar-card-body">
+              <h4>3BR Townhouse</h4>
+              <div class="sim-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Yas Island, Abu Dhabi</div>
+              <div class="sim-price">AED 2,200,000</div>
+            </div>
+          </a>
+          <a href="property-detail.html" class="similar-card">
+            <div class="similar-card-img">
+              <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&q=80" alt="2BR Apartment">
+              <span class="sim-badge rent">For Rent</span>
+            </div>
+            <div class="similar-card-body">
+              <h4>2BR Apartment</h4>
+              <div class="sim-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Al Muroor, Abu Dhabi</div>
+              <div class="sim-price">AED 75,000/yr</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN — AGENT CARD -->
+    <div class="detail-right">
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-avatar">AM</div>
+          <div class="agent-info">
+            <h3>Ahmad Mansoor</h3>
+            <p>Senior Property Consultant</p>
+            <div class="agent-rating">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span>5.0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="agent-actions">
+          <a href="tel:+971504399804" class="btn-call">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            Call Agent
+          </a>
+          <a href="https://wa.me/971504399804" class="btn-whatsapp" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.612.638l4.71-1.248A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.143 0-4.144-.664-5.793-1.803l-.404-.263-3.065.812.826-3.026-.288-.458A9.956 9.956 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
+            WhatsApp
+          </a>
+          <a href="mailto:info@804avenue.com" class="btn-email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Send Email
+          </a>
+        </div>
+
+        <form class="enquiry-form" onsubmit="handleEnquiry(event)">
+          <h3>Send an Enquiry</h3>
+          <div class="form-group">
+            <input type="text" placeholder="Your Full Name" required>
+          </div>
+          <div class="form-group">
+            <input type="email" placeholder="Email Address" required>
+          </div>
+          <div class="form-group">
+            <input type="tel" placeholder="Phone Number" required>
+          </div>
+          <div class="form-group">
+            <textarea placeholder="I'm interested in this property. Please share more details..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Send Enquiry</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="nav-logo" style="margin-bottom:8px">
+        <svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+        <div class="nav-logo-text"><span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span><span class="nav-logo-sub">Properties &amp; Contracting</span></div>
+      </a>
+      <p>Your trusted partner in real estate and contracting services across Abu Dhabi and the UAE. Building futures, creating homes.</p>
+      <div class="footer-socials">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg></a>
+        <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="contracting.html">Contracting</a></li>
+        <li><a href="maintenance.html">Maintenance</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Property Sales</a></li>
+        <li><a href="#">Property Rentals</a></li>
+        <li><a href="#">General Contracting</a></li>
+        <li><a href="#">Interior Fit-out</a></li>
+        <li><a href="#">Property Management</a></li>
+        <li><a href="#">Maintenance</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact Us</h4>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Abu Dhabi, United Arab Emirates</span>
+      </div>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        <span>+971 50 43 99 804</span>
+      </div>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span>info@804avenue.com</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2025 804 Avenue Properties and Contracting. All Rights Reserved.</span>
+    <div>
+      <a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/971504399804" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 32 32"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16.004c0 3.5 1.132 6.738 3.052 9.376L1.06 31.2l6.076-1.952a15.93 15.93 0 008.868 2.676C24.828 31.924 32 24.748 32 16.004S24.828 0 16.004 0zm9.31 22.618c-.39 1.1-2.274 2.1-3.14 2.178-.788.072-1.762.102-2.844-.18a26.092 26.092 0 01-2.576-.952c-4.532-1.952-7.492-6.54-7.72-6.844-.228-.302-1.86-2.474-1.86-4.72s1.178-3.352 1.596-3.81c.418-.458.912-.572 1.216-.572.304 0 .608.002.874.016.28.014.656-.106.026 1.614-.342.928-1.178 2.854-1.282 3.06-.104.208-.174.45-.034.722.14.274.208.444.416.684.208.24.436.536.622.72.208.208.424.434.664.674.24.24.48.502.722.674.24.174.514.34.79.214.274-.126.092-.304 1.358-3.02.128-.274.064-.514-.034-.722-.098-.208-.874-2.106-1.198-2.882-.314-.76-.636-.658-.874-.672-.226-.012-.486-.014-.746-.014s-.684.096-1.042.48c-.358.382-1.368 1.336-1.368 3.26s1.4 3.782 1.596 4.04c.194.26 2.752 4.202 6.672 5.892.932.402 1.66.642 2.228.822.936.298 1.788.256 2.462.156.75-.112 2.314-.946 2.64-1.86z"/></svg>
+</a>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<script src="../assets/js/shared.js"></script>
+<script>
+// Navbar scroll
+window.addEventListener('scroll',function(){
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40);
+  document.getElementById('backToTop').classList.toggle('visible',window.scrollY>500);
+});
+
+// Mobile menu
+const hamburger=document.getElementById('hamburger');
+const mobileNav=document.getElementById('mobileNav');
+hamburger.addEventListener('click',function(){mobileNav.classList.toggle('open');this.classList.toggle('active')});
+function closeMobile(){mobileNav.classList.remove('open');hamburger.classList.remove('active')}
+
+// Back to top
+document.getElementById('backToTop').addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
+
+// Gallery thumb swap
+var galleryImages=[
+  'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80',
+  'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80',
+  'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=80',
+  'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80'
+];
+function switchThumb(el,index){
+  document.querySelectorAll('.gallery-thumb').forEach(function(t){t.classList.remove('active')});
+  el.classList.add('active');
+  var main=document.getElementById('mainImage');
+  if(main && galleryImages[index]){main.src=galleryImages[index];}
+}
+
+// Enquiry form
+function handleEnquiry(e){
+  e.preventDefault();
+  const btn=e.target.querySelector('.btn-submit');
+  const origText=btn.textContent;
+  btn.textContent='Sending...';
+  btn.style.opacity='0.7';
+  setTimeout(function(){
+    btn.textContent='Enquiry Sent!';
+    btn.style.background='#06B6D4';
+    btn.style.opacity='1';
+    e.target.reset();
+    setTimeout(function(){btn.textContent=origText;btn.style.background=''},2500);
+  },1200);
+}
+
+// Favorite button in gallery
+document.querySelectorAll('.gallery-share button').forEach(function(btn,i){
+  if(i===0){
+    btn.addEventListener('click',function(){
+      const svg=this.querySelector('svg');
+      if(svg.getAttribute('fill')==='none'||!svg.getAttribute('fill')){
+        svg.setAttribute('fill','var(--accent)');svg.style.stroke='var(--accent)';
+      }else{
+        svg.setAttribute('fill','none');svg.style.stroke='';
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>

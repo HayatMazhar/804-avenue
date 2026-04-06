@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Villa Construction Abu Dhabi | 804 Avenue Projects</title>
+<meta name="description" content="Explore our Villa Construction project in Abu Dhabi — a complete residential build by 804 Avenue Properties and Contracting.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/shared.css">
+<style>
+/* ─── Gallery ─── */
+.gallery{margin-top:-20px;padding-bottom:60px}
+.gallery-main{position:relative;width:100%;height:480px;border-radius:var(--radius-md);overflow:hidden;margin-bottom:12px;border:1px solid var(--border)}
+.gallery-main img{width:100%;height:100%;object-fit:cover;transition:opacity .4s var(--ease)}
+.gallery-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gallery-thumb{position:relative;height:110px;border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;border:2px solid transparent;transition:var(--transition);opacity:.6}
+.gallery-thumb:hover{opacity:.85}
+.gallery-thumb.active{border-color:var(--accent);opacity:1;box-shadow:0 0 20px var(--accent-glow)}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover}
+
+/* ─── Detail layout ─── */
+.detail-section{padding-bottom:80px}
+.detail-grid{display:grid;grid-template-columns:1fr 380px;gap:48px;align-items:start}
+.detail-left{}
+.detail-right{position:sticky;top:100px}
+
+/* ─── Content styling ─── */
+.detail-type-badge{display:inline-block;font-family:var(--font-nav);font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:6px 16px;border-radius:6px;background:var(--accent);color:#fff;margin-bottom:16px}
+.detail-title{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;color:var(--text-primary);line-height:1.15;margin-bottom:20px;letter-spacing:-0.02em}
+.detail-desc{font-size:.95rem;color:var(--text-secondary);line-height:1.8;margin-bottom:16px}
+
+/* ─── Service tags ─── */
+.service-tags{display:flex;flex-wrap:wrap;gap:8px;margin:28px 0 36px}
+.service-tag{font-family:var(--font-nav);font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:7px 16px;border:1.5px solid var(--border-accent);border-radius:var(--radius-sm);color:var(--accent);transition:var(--transition)}
+.service-tag:hover{background:var(--accent-10);box-shadow:0 0 16px var(--accent-glow)}
+
+/* ─── Challenges section ─── */
+.challenges{margin-top:8px;padding:32px;background:var(--bg-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:var(--radius-md)}
+.challenges-title{font-family:var(--font-display);font-size:1.15rem;font-weight:700;color:var(--text-primary);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.challenges-title svg{color:var(--accent)}
+.challenge-item{margin-bottom:20px}
+.challenge-item:last-child{margin-bottom:0}
+.challenge-label{font-family:var(--font-nav);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.challenge-text{font-size:.88rem;color:var(--text-secondary);line-height:1.7}
+
+/* ─── Project info card ─── */
+.info-card{background:var(--bg-glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden}
+.info-card-header{padding:24px 28px;border-bottom:1px solid var(--border);background:var(--accent-10)}
+.info-card-header h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.01em}
+.info-card-body{padding:8px 0}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:16px 28px;border-bottom:1px solid var(--border-subtle);transition:background var(--transition-fast)}
+.info-row:last-child{border-bottom:none}
+.info-row:hover{background:var(--accent-10)}
+.info-row-label{font-family:var(--font-nav);font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-tertiary);display:flex;align-items:center;gap:8px}
+.info-row-label svg{color:var(--accent);flex-shrink:0}
+.info-row-value{font-family:var(--font-body);font-size:.88rem;font-weight:500;color:var(--text-primary)}
+.info-card-footer{padding:20px 28px;border-top:1px solid var(--border)}
+.info-card-footer .btn-primary{width:100%;justify-content:center}
+
+/* ─── Related Projects ─── */
+.related-section{padding:80px 0;background:var(--bg-surface);position:relative;overflow:hidden}
+.related-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),var(--cyan),transparent)}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.related-card{position:relative;border-radius:var(--radius-md);overflow:hidden;background:var(--bg-card);border:1px solid var(--border-subtle);transition:var(--transition)}
+.related-card:hover{border-color:var(--border-accent);transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.4),0 0 40px var(--accent-10)}
+.related-card-img{height:200px;overflow:hidden}
+.related-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.related-card:hover .related-card-img img{transform:scale(1.06)}
+.related-card-body{padding:20px 22px}
+.related-card-type{font-family:var(--font-nav);font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.related-card-name{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:4px}
+.related-card-loc{font-size:.78rem;color:var(--text-tertiary);display:flex;align-items:center;gap:4px}
+.related-card-loc svg{color:var(--accent);flex-shrink:0}
+
+/* ─── CTA ─── */
+.cta-banner{position:relative;padding:90px 0;text-align:center;overflow:hidden;
+  background:linear-gradient(135deg,var(--bg-surface),var(--bg-deep))}
+.cta-banner::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,var(--accent-15),transparent 60%);pointer-events:none}
+.cta-banner::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),var(--cyan),transparent)}
+.cta-banner .container{position:relative;z-index:1}
+.cta-title{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:var(--text-primary);margin-bottom:12px;letter-spacing:-0.02em}
+.cta-sub{font-size:1rem;color:var(--text-secondary);max-width:500px;margin:0 auto 32px;line-height:1.7}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* ─── Responsive ─── */
+@media(max-width:1024px){
+  .detail-grid{grid-template-columns:1fr;gap:32px}
+  .detail-right{position:static}
+  .related-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .gallery-main{height:280px}
+  .gallery-thumbs{grid-template-columns:repeat(4,1fr);gap:8px}
+  .gallery-thumb{height:72px}
+  .related-grid{grid-template-columns:1fr}
+  .cta-btns{flex-direction:column;align-items:center}
+  .info-row{flex-direction:column;align-items:flex-start;gap:4px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+      <div class="nav-logo-text">
+        <span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span>
+        <span class="nav-logo-sub">Properties &amp; Contracting</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="properties.html">Properties</a></li>
+      <li><a href="contracting.html">Contracting</a></li>
+      <li><a href="maintenance.html">Maintenance</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="tel:+971504399804" class="nav-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        +971 50 43 99 804
+      </a>
+      <a href="contact.html" class="nav-cta">Get a Quote</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="../index.html" onclick="closeMobile()">Home</a>
+  <a href="properties.html" onclick="closeMobile()">Properties</a>
+  <a href="contracting.html" onclick="closeMobile()">Contracting</a>
+  <a href="maintenance.html" onclick="closeMobile()">Maintenance</a>
+  <a href="about.html" onclick="closeMobile()">About</a>
+  <a href="contact.html" onclick="closeMobile()">Contact</a>
+  <a href="contact.html" class="btn-primary" onclick="closeMobile()" style="margin-top:16px"><span>Get a Quote</span></a>
+</div>
+
+<!-- ═══ PAGE HERO / BREADCRUMB ═══ -->
+<section class="page-hero" style="padding-bottom:40px">
+  <div class="container">
+    <div class="breadcrumb fade-up">
+      <a href="../index.html">Home</a>
+      <span class="sep">/</span>
+      <a href="projects.html">Projects</a>
+      <span class="sep">/</span>
+      <span>Villa Construction Abu Dhabi</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ IMAGE GALLERY ═══ -->
+<section class="gallery">
+  <div class="container">
+    <div class="gallery-main fade-up">
+      <img id="mainImage" src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80" alt="Villa Construction — Main View">
+    </div>
+    <div class="gallery-thumbs fade-up">
+      <div class="gallery-thumb active" onclick="swapImage(this)" data-src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80">
+        <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400&q=80" alt="Exterior view">
+      </div>
+      <div class="gallery-thumb" onclick="swapImage(this)" data-src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80" alt="Front facade">
+      </div>
+      <div class="gallery-thumb" onclick="swapImage(this)" data-src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80">
+        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=80" alt="Interior living area">
+      </div>
+      <div class="gallery-thumb" onclick="swapImage(this)" data-src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80">
+        <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&q=80" alt="Pool area">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DETAIL CONTENT ═══ -->
+<section class="detail-section">
+  <div class="container">
+    <div class="detail-grid">
+
+      <!-- Left: Project details -->
+      <div class="detail-left">
+        <span class="detail-type-badge fade-up">Construction</span>
+        <h1 class="detail-title fade-up">Villa Construction — Abu Dhabi</h1>
+
+        <p class="detail-desc fade-up">This premium residential villa project in Abu Dhabi represents one of our most comprehensive construction undertakings. Built from the ground up on a 5,000 sqft plot, the project involved complete civil works including foundation engineering, structural framework, and finishing — all executed to the highest UAE building standards and client specifications.</p>
+
+        <p class="detail-desc fade-up">The villa features a modern architectural design with clean geometric lines, floor-to-ceiling glass panels, and premium stone cladding. Interior spaces were designed for contemporary luxury living, with open-plan layouts, smart home integration, and bespoke finishes throughout the four bedrooms, living areas, and private pool terrace.</p>
+
+        <div class="service-tags fade-up">
+          <span class="service-tag">Civil Works</span>
+          <span class="service-tag">Structural Engineering</span>
+          <span class="service-tag">MEP Systems</span>
+          <span class="service-tag">Stone Cladding</span>
+          <span class="service-tag">Glass Installation</span>
+          <span class="service-tag">Interior Finishing</span>
+          <span class="service-tag">Landscaping</span>
+          <span class="service-tag">Pool Construction</span>
+        </div>
+
+        <div class="challenges fade-up">
+          <h3 class="challenges-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            Challenges &amp; Solutions
+          </h3>
+
+          <div class="challenge-item">
+            <div class="challenge-label">Challenge</div>
+            <p class="challenge-text">The plot presented complex soil conditions requiring specialized foundation work, combined with a tight 10-month delivery timeline demanded by the client for an upcoming family relocation.</p>
+          </div>
+
+          <div class="challenge-item">
+            <div class="challenge-label">Solution</div>
+            <p class="challenge-text">We deployed geotechnical analysis early in the planning phase and implemented a raft foundation system with pile reinforcement. Parallel workstreams for civil and MEP rough-in, along with pre-fabricated structural elements, enabled us to deliver 3 weeks ahead of schedule while maintaining full quality compliance.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Sticky info card -->
+      <div class="detail-right">
+        <div class="info-card fade-up">
+          <div class="info-card-header">
+            <h3>Project Information</h3>
+          </div>
+          <div class="info-card-body">
+            <div class="info-row">
+              <span class="info-row-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                Type
+              </span>
+              <span class="info-row-value">Construction</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Location
+              </span>
+              <span class="info-row-value">Abu Dhabi, UAE</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                Year
+              </span>
+              <span class="info-row-value">2024</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                Status
+              </span>
+              <span class="info-row-value" style="color:var(--success)">Completed</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Duration
+              </span>
+              <span class="info-row-value">10 Months</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Client
+              </span>
+              <span class="info-row-value">Private Client</span>
+            </div>
+          </div>
+          <div class="info-card-footer">
+            <a href="contact.html" class="btn-primary"><span>Start a Similar Project</span></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RELATED PROJECTS ═══ -->
+<section class="related-section">
+  <div class="container">
+    <div class="section-tag fade-up">More Work</div>
+    <h2 class="section-title fade-up">Related <em>Projects</em></h2>
+    <div class="related-grid">
+
+      <a href="project-detail.html" class="related-card fade-up">
+        <div class="related-card-img">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Office Interior Fit-Out" loading="lazy">
+        </div>
+        <div class="related-card-body">
+          <div class="related-card-type">Interior</div>
+          <div class="related-card-name">Office Interior Fit-Out</div>
+          <div class="related-card-loc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Al Ghaith Tower</div>
+        </div>
+      </a>
+
+      <a href="project-detail.html" class="related-card fade-up">
+        <div class="related-card-img">
+          <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&q=80" alt="Apartment Interior" loading="lazy">
+        </div>
+        <div class="related-card-body">
+          <div class="related-card-type">Interior</div>
+          <div class="related-card-name">Apartment Interior</div>
+          <div class="related-card-loc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Al Reem Island</div>
+        </div>
+      </a>
+
+      <a href="project-detail.html" class="related-card fade-up">
+        <div class="related-card-img">
+          <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80" alt="Commercial Renovation" loading="lazy">
+        </div>
+        <div class="related-card-body">
+          <div class="related-card-type">Renovation</div>
+          <div class="related-card-name">Commercial Renovation</div>
+          <div class="related-card-loc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mussafah</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-banner">
+  <div class="container">
+    <h2 class="cta-title fade-up">Ready to Build Something Exceptional?</h2>
+    <p class="cta-sub fade-up">Get in touch with our team to discuss your construction, renovation, or fit-out project.</p>
+    <div class="cta-btns fade-up">
+      <a href="contact.html" class="btn-primary"><span>Get a Free Quote</span></a>
+      <a href="projects.html" class="btn-outline">View All Projects</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div style="margin-bottom:16px"><a href="../index.html" class="nav-logo"><svg class="nav-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg><div class="nav-logo-text"><span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span><span class="nav-logo-sub">Properties &amp; Contracting</span></div></a></div>
+        <p class="footer-tagline">Delivering Excellence &amp; Trust — Abu Dhabi's integrated partner for real estate, construction, and property maintenance.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-icon" aria-label="Instagram"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" class="social-icon" aria-label="LinkedIn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="#" class="social-icon" aria-label="Facebook"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+          <a href="https://wa.me/971504399804" target="_blank" class="social-icon" aria-label="WhatsApp"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Real Estate</h4><ul><li><a href="properties.html">Buy Property</a></li><li><a href="properties.html">Rent Property</a></li><li><a href="properties.html">Investment</a></li><li><a href="properties.html">Commercial</a></li></ul></div>
+      <div class="footer-col"><h4>Contracting</h4><ul><li><a href="contracting.html">General Contracting</a></li><li><a href="contracting.html">Interior Fit-Out</a></li><li><a href="contracting.html">Renovation</a></li><li><a href="maintenance.html">Maintenance</a></li><li><a href="projects.html">Our Projects</a></li></ul></div>
+      <div class="footer-col"><h4>Contact Us</h4><ul><li><a href="#">Office #540, 5th Floor, Al Ghaith Tower, Abu Dhabi, UAE</a></li><li><a href="tel:+971504399804">+971 50 43 99 804</a></li><li><a href="mailto:info@804avenue.com">info@804avenue.com</a></li><li><a href="#">www.804avenue.ae</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><div class="footer-copy">&copy; 2025 804 Avenue Properties and Contracting. All Rights Reserved.</div></div>
+  </div>
+</footer>
+
+<a href="https://wa.me/971504399804" target="_blank" class="whatsapp-float" aria-label="WhatsApp"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+<button class="back-to-top" id="backToTop" aria-label="Back to top"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg></button>
+
+<script src="../assets/js/shared.js"></script>
+<script>
+function swapImage(thumb) {
+  var mainImg = document.getElementById('mainImage');
+  var newSrc = thumb.getAttribute('data-src');
+  mainImg.style.opacity = '0';
+  setTimeout(function() {
+    mainImg.src = newSrc;
+    mainImg.onload = function() { mainImg.style.opacity = '1'; };
+  }, 300);
+  document.querySelectorAll('.gallery-thumb').forEach(function(t) {
+    t.classList.remove('active');
+  });
+  thumb.classList.add('active');
+}
+</script>
+</body>
+</html>

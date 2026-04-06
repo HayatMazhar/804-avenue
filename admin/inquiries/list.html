@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inquiries — 804 AVENUE Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-deep:#04060C;--bg-surface:#0C1222;--bg-card:#111B2E;--bg-elevated:#182039;
+  --success:#10B981;--warning:#F59E0B;--danger:#EF4444;
+  --text-primary:#F1F5F9;--text-secondary:#94A3B8;--text-tertiary:#64748B;
+  --sidebar-w:260px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg-deep);color:var(--text-primary);min-height:100vh;display:flex}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit;border:none;outline:none}
+input,select,textarea{font-family:inherit;outline:none}
+
+/* Sidebar */
+.sidebar{width:var(--sidebar-w);height:100vh;position:fixed;top:0;left:0;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:transform .3s ease}
+.sidebar-logo{padding:28px 24px;border-bottom:1px solid var(--border)}
+.sidebar-logo h1{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;letter-spacing:2px;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sidebar-logo span{display:block;font-family:'Inter',sans-serif;font-size:.65rem;color:var(--text-tertiary);letter-spacing:3px;text-transform:uppercase;margin-top:4px;font-weight:500}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;color:var(--text-secondary);font-size:.875rem;font-weight:500;margin-bottom:4px;transition:all .2s ease}
+.nav-item:hover{color:var(--text-primary);background:var(--bg-card)}
+.nav-item.active{color:#fff;background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(6,182,212,.08));border:1px solid var(--border-hover)}
+.nav-item svg{width:20px;height:20px;flex-shrink:0}
+.sidebar-footer{padding:16px 12px;border-top:1px solid var(--border)}
+.nav-item.logout:hover{color:var(--danger)}
+
+/* Main */
+.main{margin-left:var(--sidebar-w);flex:1;padding:32px;min-height:100vh}
+
+/* Header */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px}
+.page-title{font-family:'Space Grotesk',sans-serif;font-size:1.75rem;font-weight:700;letter-spacing:-.5px}
+.hamburger{display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text-primary)}
+.hamburger svg{width:22px;height:22px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90}
+
+/* Filter Tabs */
+.filter-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.filter-tab{padding:8px 18px;border-radius:8px;font-size:.8rem;font-weight:500;background:var(--bg-card);color:var(--text-secondary);border:1px solid var(--border);transition:all .2s ease;cursor:pointer}
+.filter-tab:hover{color:var(--text-primary);border-color:var(--border-hover)}
+.filter-tab.active{background:linear-gradient(135deg,var(--accent),var(--accent-hover));color:#fff;border-color:transparent}
+
+/* Bulk Actions */
+.bulk-bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.bulk-bar .count{font-size:.8rem;color:var(--text-tertiary)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-size:.8rem;font-weight:600;transition:all .2s ease}
+.btn-accent{background:var(--accent);color:#fff}.btn-accent:hover{background:var(--accent-hover)}
+.btn-danger{background:rgba(239,68,68,.12);color:var(--danger);border:1px solid rgba(239,68,68,.2)}.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-secondary{background:var(--bg-card);color:var(--text-secondary);border:1px solid var(--border)}.btn-secondary:hover{color:var(--text-primary);border-color:var(--border-hover)}
+
+/* Table */
+.table-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+thead{background:var(--bg-elevated)}
+th{padding:14px 16px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-tertiary);text-align:left;border-bottom:1px solid var(--border)}
+td{padding:14px 16px;font-size:.85rem;color:var(--text-secondary);border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--accent-10)}
+.msg-truncate{max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+
+/* Badge */
+.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.badge-new{background:rgba(59,130,246,.14);color:var(--accent)}
+.badge-progress{background:rgba(6,182,212,.14);color:var(--cyan)}
+.badge-closed{background:rgba(100,116,139,.18);color:var(--text-tertiary)}
+
+/* Checkbox */
+.ck{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+
+/* View link */
+.view-link{color:var(--accent);font-weight:600;font-size:.8rem;transition:color .2s}.view-link:hover{color:var(--cyan)}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg-elevated);border:1px solid var(--border-hover);border-radius:10px;padding:14px 22px;font-size:.85rem;color:var(--text-primary);box-shadow:0 8px 32px rgba(0,0,0,.4);transform:translateY(100px);opacity:0;transition:all .35s ease;z-index:500}
+.toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .overlay.show{display:block}
+  .main{margin-left:0;padding:20px 16px}
+  .hamburger{display:flex}
+  .page-title{font-size:1.3rem}
+}
+</style>
+</head>
+<body>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h1>804 AVENUE</h1>
+    <span>Admin Dashboard</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="../index.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Dashboard
+    </a>
+    <a href="../properties/list.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Properties
+    </a>
+    <a href="../projects/list.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V10l7-5 7 5v10"/><path d="M9 20v-6h6v6"/></svg>
+      Projects
+    </a>
+    <a href="list.html" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      Inquiries
+    </a>
+    <a href="../settings/general.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Settings
+    </a>
+    <a href="../settings/team.html" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Team
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="../login.html" class="nav-item logout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout
+    </a>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="page-header">
+    <div style="display:flex;align-items:center;gap:14px">
+      <button class="hamburger" onclick="toggleSidebar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <h1 class="page-title">Inquiries</h1>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button class="filter-tab active" data-filter="all">All <span style="opacity:.5;margin-left:4px">(8)</span></button>
+    <button class="filter-tab" data-filter="new">New <span style="opacity:.5;margin-left:4px">(3)</span></button>
+    <button class="filter-tab" data-filter="in progress">In Progress <span style="opacity:.5;margin-left:4px">(3)</span></button>
+    <button class="filter-tab" data-filter="closed">Closed <span style="opacity:.5;margin-left:4px">(2)</span></button>
+  </div>
+
+  <!-- Bulk Actions -->
+  <div class="bulk-bar">
+    <span class="count" id="selectedCount">0 selected</span>
+    <button class="btn btn-secondary" onclick="markRead()">Mark Read</button>
+    <button class="btn btn-danger" onclick="bulkDelete()">Delete</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th><input type="checkbox" class="ck" id="selectAll" onchange="toggleAll(this)"></th>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Service</th>
+          <th>Message</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="inquiryBody">
+        <tr data-status="new">
+          <td><input type="checkbox" class="ck row-ck" onchange="updateCount()"></td>
+          <td style="color:var(--text-tertiary)">#1041</td>
+          <td style="color:var(--text-primary);font-weight:500">Fatima Al Mazrouei</td>
+          <td>fatima.m@gmail.com</td>
+          <td>+971 50 882 1456</td>
+          <td>Property Valuation</td>
+          <td><span class="msg-truncate">I need a comprehensive property valuation for my villa in Saadiyat Island…</span></td>
+          <td>Mar 25, 2026</td>
+          <td><span class="badge badge-new">New</span></td>
+          <td><a href="detail.html" class="view-link">View</a></td>
+        </tr>
+        <tr data-status="in progress">
+          <td><input type="checkbox" class="ck row-ck" onchange="updateCount()"></td>
+          <td style="color:var(--text-tertiary)">#1040</td>
+          <td style="color:var(--text-primary);font-weight:500">Omar Hassan</td>
+          <td>omar.h@outlook.com</td>
+          <td>+971 55 443 9901</td>
+          <td>Interior Design</td>
+          <td><span class="msg-truncate">Looking to renovate my apartment in Al Reem with a modern minimalist style…</span></td>
+          <td>Mar 23, 2026</td>
+          <td><span class="badge badge-progress">In Progress</span></td>
+          <td><a href="detail.html" class="view-link">View</a></td>
+        </tr>
+        <tr data-status="new">
+          <td><input type="checkbox" class="ck row-ck" onchange="updateCount()"></td>
+          <td style="color:var(--text-tertiary)">#1039</td>
+          <td style="color:var(--text-primary);font-weight:500">Ahmed Al Dhaheri</td>
+          <td>ahmed.d@yahoo.com</td>
+          <td>+971 52 774 3320</td>
+          <td>Property Management</td>
+          <td><span class="msg-truncate">I own three apartments in Al Raha Beach and need full property management…</span></td>
+          <td>Mar 22, 2026</td>
+          <td><span class="badge badge-new">New</span></td>
+          <td><a href="detail.html" class="view-link">View</a></td>
+        </tr>
+        <tr data-status="in progress">
+          <td><input type="checkbox" class="ck row-ck" onchange="updateCount()"></td>
+          <td style="color:var(--text-tertiary)">#1038</td>
+          <td style="color:var(--text-primary);font-weight:500">Layla Ibrahim</td>
+          <td>layla.i@hotmail.com</td>
+          <td>+971 56 901 2234</td>
+          <td>Contracting</td>
+          <td><span class="msg-truncate">We require a general contractor for our commercial building project in MBZ…</span></td>
+          <td>Mar 20, 2026</td>
+          <td><span class="badge badge-progress">In Progress</span></td>
+          <td><a href="detail.html" class="view-link">View</a></td>
+        </tr>
+        <tr data-status="closed">
+          <td><input type="checkbox" class="ck row-ck" onchange="updateCount()"></td>
+          <td style="color:var(--text-tertiary)">#1037</td>
+          <td style="color:var(--text-primary);font-weight:500">Rashid Al Suwaidi</td>
+          <td>rashid.s@gmail.com</td>
+          <td>+971 50 223 8877</td>
+          <td>Property Buying</td>
+          <td><span class="msg-truncate">Interested in purchasing a 2BR apartment in Yas Island area with sea view…</span></td>
+          <td>Mar 18, 2026</td>
+          <td><span class="badge badge-closed">Closed</span></td>
+          <td><a href="detail.html" class="view-link">View</a></td>
+        </tr>
+        <tr data-status="new">
+          <td><input type="checkbox" class="ck row-ck" onchange="updateCount()"></td>
+          <td style="color:var(--text-tertiary)">#1036</td>
+          <td style="color:var(--text-primary);font-weight:500">Noura Al Ketbi</td>
+          <td>noura.k@protonmail.com</td>
+          <td>+971 54 118 6643</td>
+          <td>Maintenance</td>
+          <td><span class="msg-truncate">AC unit in the living room stopped working and there's a water leak in the…</span></td>
+          <td>Mar 16, 2026</td>
+          <td><span class="badge badge-new">New</span></td>
+          <td><a href="detail.html" class="view-link">View</a></td>
+        </tr>
+        <tr data-status="in progress">
+          <td><input type="checkbox" class="ck row-ck" onchange="updateCount()"></td>
+          <td style="color:var(--text-tertiary)">#1035</td>
+          <td style="color:var(--text-primary);font-weight:500">Khalid Bin Jaber</td>
+          <td>khalid.bj@gmail.com</td>
+          <td>+971 55 670 4412</td>
+          <td>Interior Design</td>
+          <td><span class="msg-truncate">Need kitchen and bathroom remodeling for my penthouse in Al Maryah Island…</span></td>
+          <td>Mar 14, 2026</td>
+          <td><span class="badge badge-progress">In Progress</span></td>
+          <td><a href="detail.html" class="view-link">View</a></td>
+        </tr>
+        <tr data-status="closed">
+          <td><input type="checkbox" class="ck row-ck" onchange="updateCount()"></td>
+          <td style="color:var(--text-tertiary)">#1034</td>
+          <td style="color:var(--text-primary);font-weight:500">Mariam Al Shamsi</td>
+          <td>mariam.sh@icloud.com</td>
+          <td>+971 52 330 9981</td>
+          <td>Property Selling</td>
+          <td><span class="msg-truncate">I want to sell my 3BR townhouse in Al Bloom Gardens and need an appraisal…</span></td>
+          <td>Mar 11, 2026</td>
+          <td><span class="badge badge-closed">Closed</span></td>
+          <td><a href="detail.html" class="view-link">View</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show')}
+
+// Filter tabs
+document.querySelectorAll('.filter-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const filter=tab.dataset.filter;
+    document.querySelectorAll('#inquiryBody tr').forEach(row=>{
+      if(filter==='all') row.style.display='';
+      else row.style.display=row.dataset.status===filter?'':'none';
+    });
+  });
+});
+
+// Checkbox
+function toggleAll(el){document.querySelectorAll('.row-ck').forEach(c=>{c.checked=el.checked});updateCount()}
+function updateCount(){
+  const checked=document.querySelectorAll('.row-ck:checked').length;
+  document.getElementById('selectedCount').textContent=checked+' selected';
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+function markRead(){
+  const checked=document.querySelectorAll('.row-ck:checked').length;
+  if(!checked) return showToast('No inquiries selected');
+  showToast(checked+' inquiries marked as read');
+  document.querySelectorAll('.row-ck').forEach(c=>c.checked=false);
+  document.getElementById('selectAll').checked=false;updateCount();
+}
+
+function bulkDelete(){
+  const checked=document.querySelectorAll('.row-ck:checked');
+  if(!checked.length) return showToast('No inquiries selected');
+  if(!confirm('Are you sure you want to delete '+checked.length+' selected inquiries?')) return;
+  checked.forEach(c=>c.closest('tr').remove());
+  document.getElementById('selectAll').checked=false;updateCount();
+  showToast(checked.length+' inquiries deleted');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Properties | 804 Avenue Properties &amp; Contracting</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/shared.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg-deep);color:var(--text-primary);line-height:1.6;overflow-x:hidden}
+
+/* ─── NAVBAR ─── */
+.navbar{position:fixed;top:0;left:0;width:100%;z-index:1000;padding:16px 0;transition:all .4s ease}
+.navbar.scrolled{background:var(--bg-glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:10px 0}
+.nav-inner{max-width:1320px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text-primary)}
+.nav-logo-icon{color:var(--accent)}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1.15}
+.nav-logo-main{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;letter-spacing:.5px}
+.logo-804{color:var(--accent)}
+.logo-avenue{color:var(--text-primary)}
+.nav-logo-sub{font-family:'Inter',sans-serif;font-size:9.5px;color:var(--text-tertiary);letter-spacing:1.5px;text-transform:uppercase}
+.nav-links{display:flex;list-style:none;gap:6px}
+.nav-links a{font-family:'Syne',sans-serif;font-size:13.5px;font-weight:500;color:var(--text-secondary);text-decoration:none;padding:8px 16px;border-radius:var(--radius-sm);transition:all .3s ease;position:relative}
+.nav-links a:hover,.nav-links a.active{color:var(--text-primary);background:var(--accent-10)}
+.nav-links a.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--accent);border-radius:2px}
+.nav-right{display:flex;align-items:center;gap:14px}
+.nav-phone{font-family:'Syne',sans-serif;font-size:13px;color:var(--text-secondary);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .3s}
+.nav-phone:hover{color:var(--accent)}
+.nav-cta{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;padding:9px 22px;background:var(--accent);color:#fff;border-radius:var(--radius-sm);text-decoration:none;transition:all .3s;border:none}
+.nav-cta:hover{background:var(--accent-hover);box-shadow:0 0 20px var(--accent-glow)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{width:22px;height:2px;background:var(--text-primary);border-radius:2px;transition:all .3s}
+.mobile-nav{display:none;position:fixed;top:70px;left:0;width:100%;background:var(--bg-surface);border-bottom:1px solid var(--border);flex-direction:column;padding:16px 32px;z-index:999}
+.mobile-nav a{font-family:'Syne',sans-serif;font-size:15px;color:var(--text-secondary);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);transition:color .3s}
+.mobile-nav a:last-child{border:none}
+.mobile-nav a:hover,.mobile-nav a.active{color:var(--accent)}
+.mobile-nav.open{display:flex}
+
+/* ─── PAGE HERO ─── */
+.page-hero{position:relative;padding:160px 0 80px;background:var(--bg-deep);overflow:hidden;text-align:center}
+.page-hero::before{content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,var(--accent-10) 0%,var(--cyan-glow) 40%,transparent 70%);pointer-events:none}
+.page-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.2rem,5vw,3.4rem);font-weight:700;margin-bottom:16px;position:relative}
+.page-hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.breadcrumb{display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;color:var(--text-tertiary);position:relative}
+.breadcrumb a{color:var(--text-secondary);text-decoration:none;transition:color .3s}
+.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb svg{width:14px;height:14px;stroke:var(--text-tertiary)}
+
+/* ─── FILTER BAR ─── */
+.filter-section{position:sticky;top:60px;z-index:100;background:var(--bg-surface);border-bottom:1px solid var(--border);padding:20px 0;transition:top .3s}
+.filter-inner{max-width:1320px;margin:0 auto;padding:0 32px}
+.filter-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.filter-group{display:flex;flex-direction:column;gap:4px}
+.filter-group label{font-family:'Syne',sans-serif;font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:1px}
+.filter-group select,.filter-group input{font-family:'Inter',sans-serif;font-size:13px;padding:10px 14px;background:var(--bg-card);color:var(--text-primary);border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;min-width:150px;transition:border-color .3s;appearance:none;-webkit-appearance:none;cursor:pointer}
+.filter-group select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+.filter-group select:focus,.filter-group input:focus{border-color:var(--accent)}
+.filter-group select option{background:var(--bg-card);color:var(--text-primary)}
+.filter-actions{display:flex;gap:10px;align-items:flex-end;margin-left:auto}
+.btn-search{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;padding:10px 28px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);cursor:pointer;transition:all .3s}
+.btn-search:hover{background:var(--accent-hover);box-shadow:0 0 20px var(--accent-glow)}
+.btn-reset{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;padding:10px 20px;background:transparent;color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .3s}
+.btn-reset:hover{border-color:var(--border-accent);color:var(--text-primary)}
+
+/* ─── RESULTS BAR ─── */
+.results-bar{max-width:1320px;margin:0 auto;padding:24px 32px 0;display:flex;align-items:center;justify-content:space-between}
+.results-count{font-family:'Inter',sans-serif;font-size:14px;color:var(--text-secondary)}
+.results-count span{color:var(--accent);font-weight:600}
+.view-toggle{display:flex;gap:6px}
+.view-btn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;color:var(--text-tertiary);transition:all .3s}
+.view-btn.active,.view-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-10)}
+.view-btn svg{width:18px;height:18px}
+
+/* ─── PROPERTY GRID ─── */
+.properties-section{max-width:1320px;margin:0 auto;padding:28px 32px 60px}
+.properties-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.properties-grid.list-view{grid-template-columns:1fr}
+.properties-grid.list-view .property-card{display:grid;grid-template-columns:340px 1fr;max-width:100%}
+.properties-grid.list-view .property-card .card-image{height:100%;min-height:240px}
+
+/* ─── PROPERTY CARD ─── */
+.property-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .4s ease;cursor:pointer;position:relative}
+.property-card:hover{transform:translateY(-6px);border-color:var(--border-accent);box-shadow:0 12px 40px var(--accent-10),0 0 0 1px var(--accent-15)}
+.card-image{position:relative;height:220px;background:var(--bg-elevated);overflow:hidden}
+.card-image img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.property-card:hover .card-image img{transform:scale(1.05)}
+.card-image .placeholder-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg-elevated),var(--bg-card))}
+.card-image img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.property-card:hover .card-image img{transform:scale(1.06)}
+.card-image .placeholder-img svg{width:48px;height:48px;stroke:var(--text-tertiary);opacity:.4}
+.card-badge{position:absolute;top:14px;left:14px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;text-transform:uppercase;letter-spacing:.8px}
+.badge-sale{background:var(--accent);color:#fff}
+.badge-rent{background:var(--cyan);color:#fff}
+.card-favorite{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(4,6,12,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s}
+.card-favorite:hover{background:var(--accent-20);border-color:var(--accent)}
+.card-favorite svg{width:16px;height:16px;stroke:var(--text-secondary);fill:none;transition:all .3s}
+.card-favorite:hover svg{stroke:var(--accent)}
+.card-body{padding:22px}
+.card-location{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-tertiary);display:flex;align-items:center;gap:5px;margin-bottom:8px}
+.card-location svg{width:13px;height:13px;stroke:var(--accent)}
+.card-title{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;color:var(--text-primary);margin-bottom:14px;line-height:1.35}
+.card-specs{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.card-spec{display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--text-secondary)}
+.card-spec svg{width:14px;height:14px;stroke:var(--text-tertiary)}
+.card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--border)}
+.card-price{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.card-price small{font-size:12px;font-weight:400;-webkit-text-fill-color:var(--text-tertiary);color:var(--text-tertiary)}
+.card-link{font-family:'Syne',sans-serif;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:4px;transition:gap .3s}
+.card-link:hover{gap:8px}
+.card-link svg{width:14px;height:14px}
+
+/* ─── PAGINATION ─── */
+.pagination{display:flex;align-items:center;justify-content:center;gap:8px;padding:40px 0 20px}
+.page-btn{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;padding:10px 18px;background:var(--bg-card);color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .3s;text-decoration:none}
+.page-btn:hover{border-color:var(--border-accent);color:var(--text-primary)}
+.page-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.page-btn.disabled{opacity:.4;pointer-events:none}
+
+/* ─── FOOTER ─── */
+.footer{position:relative;background:var(--bg-surface);padding:70px 0 0;margin-top:40px}
+.footer::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--accent),var(--cyan),var(--accent),transparent)}
+.footer-inner{max-width:1320px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:48px}
+.footer-brand p{font-size:14px;color:var(--text-secondary);margin-top:16px;line-height:1.7}
+.footer-col h4{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:20px;text-transform:uppercase;letter-spacing:1px}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:10px}
+.footer-col ul li a{font-size:14px;color:var(--text-secondary);text-decoration:none;transition:color .3s}
+.footer-col ul li a:hover{color:var(--accent)}
+.footer-contact-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;font-size:14px;color:var(--text-secondary)}
+.footer-contact-item svg{width:16px;height:16px;stroke:var(--accent);flex-shrink:0;margin-top:3px}
+.footer-socials{display:flex;gap:10px;margin-top:20px}
+.footer-socials a{width:38px;height:38px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);text-decoration:none;transition:all .3s}
+.footer-socials a:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-10)}
+.footer-socials a svg{width:16px;height:16px}
+.footer-bottom{max-width:1320px;margin:0 auto;padding:24px 32px;margin-top:48px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text-tertiary)}
+.footer-bottom a{color:var(--text-secondary);text-decoration:none;transition:color .3s}
+.footer-bottom a:hover{color:var(--accent)}
+
+/* ─── WHATSAPP FLOAT ─── */
+.whatsapp-float{position:fixed;bottom:28px;right:28px;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.35);z-index:900;transition:transform .3s,box-shadow .3s;text-decoration:none}
+.whatsapp-float:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(37,211,102,.5)}
+.whatsapp-float svg{width:28px;height:28px;fill:#fff}
+
+/* ─── BACK TO TOP ─── */
+.back-to-top{position:fixed;bottom:28px;right:96px;width:44px;height:44px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:900;opacity:0;visibility:hidden;transition:all .3s}
+.back-to-top.visible{opacity:1;visibility:visible}
+.back-to-top:hover{border-color:var(--accent);background:var(--accent-10)}
+.back-to-top svg{width:18px;height:18px;stroke:var(--text-secondary)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+.properties-grid{grid-template-columns:repeat(2,1fr)}
+.footer-inner{grid-template-columns:1fr 1fr;gap:36px}
+}
+@media(max-width:768px){
+.nav-links,.nav-right .nav-phone{display:none}
+.hamburger{display:flex}
+.nav-right{gap:10px}
+.properties-grid{grid-template-columns:1fr}
+.properties-grid.list-view .property-card{grid-template-columns:1fr}
+.filter-row{flex-direction:column;align-items:stretch}
+.filter-group select,.filter-group input{min-width:100%}
+.filter-actions{margin-left:0;width:100%}
+.filter-actions .btn-search,.filter-actions .btn-reset{flex:1}
+.footer-inner{grid-template-columns:1fr}
+.footer-bottom{flex-direction:column;gap:10px;text-align:center}
+.results-bar{flex-direction:column;gap:12px;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- ════ NAVBAR ════ -->
+<nav class="navbar" id="navbar"><div class="nav-inner">
+  <a href="../index.html" class="nav-logo">
+    <svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+    <div class="nav-logo-text"><span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span><span class="nav-logo-sub">Properties &amp; Contracting</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="properties.html" class="active">Properties</a></li>
+    <li><a href="contracting.html">Contracting</a></li>
+    <li><a href="maintenance.html">Maintenance</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right"><a href="tel:+971504399804" class="nav-phone"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+971 50 43 99 804</a><a href="contact.html" class="nav-cta">Get a Quote</a></div>
+  <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</div></nav>
+<div class="mobile-nav" id="mobileNav"><a href="../index.html" onclick="closeMobile()">Home</a><a href="properties.html" class="active" onclick="closeMobile()">Properties</a><a href="contracting.html" onclick="closeMobile()">Contracting</a><a href="maintenance.html" onclick="closeMobile()">Maintenance</a><a href="about.html" onclick="closeMobile()">About</a><a href="contact.html" onclick="closeMobile()">Contact</a></div>
+
+<!-- ════ PAGE HERO ════ -->
+<section class="page-hero">
+  <h1>Our <em>Properties</em></h1>
+  <div class="breadcrumb">
+    <a href="../index.html">Home</a>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    <span>Properties</span>
+  </div>
+</section>
+
+<!-- ════ FILTER BAR ════ -->
+<section class="filter-section">
+  <div class="filter-inner">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label>Purpose</label>
+        <select id="filterPurpose">
+          <option value="all">All</option>
+          <option value="sale">Sale</option>
+          <option value="rent">Rent</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Type</label>
+        <select id="filterType">
+          <option value="all">All</option>
+          <option value="apartment">Apartment</option>
+          <option value="villa">Villa</option>
+          <option value="office">Office</option>
+          <option value="commercial">Commercial</option>
+          <option value="plot">Plot</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Location</label>
+        <select id="filterLocation">
+          <option value="all">All</option>
+          <option value="abu dhabi">Abu Dhabi</option>
+          <option value="dubai">Dubai</option>
+          <option value="sharjah">Sharjah</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Min Price (AED)</label>
+        <input type="number" id="filterMinPrice" placeholder="0">
+      </div>
+      <div class="filter-group">
+        <label>Max Price (AED)</label>
+        <input type="number" id="filterMaxPrice" placeholder="Any">
+      </div>
+      <div class="filter-actions">
+        <button class="btn-search" onclick="applyFilters()">Search</button>
+        <button class="btn-reset" onclick="resetFilters()">Reset</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ RESULTS BAR ════ -->
+<div class="results-bar">
+  <div class="results-count">Showing <span id="resultCount">12</span> properties</div>
+  <div class="view-toggle">
+    <button class="view-btn active" id="gridBtn" onclick="setView('grid')" aria-label="Grid view">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    </button>
+    <button class="view-btn" id="listBtn" onclick="setView('list')" aria-label="List view">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ════ PROPERTIES GRID ════ -->
+<section class="properties-section">
+  <div class="properties-grid" id="propertiesGrid">
+
+    <!-- Card 1 -->
+    <div class="property-card" data-purpose="sale" data-type="apartment" data-location="abu dhabi" data-price="1200000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80" alt="Luxury 2BR Apartment">
+        <span class="card-badge badge-sale">For Sale</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Al Reem Island, Abu Dhabi</div>
+        <h3 class="card-title">Luxury 2BR Apartment</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg>2 Beds</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12h16M4 12v4a4 4 0 004 4h8a4 4 0 004-4v-4M6 12V5a2 2 0 012-2h0a2 2 0 012 2v7"/></svg>2 Baths</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>1,200 sqft</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 1,200,000</div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="property-card" data-purpose="rent" data-type="apartment" data-location="abu dhabi" data-price="45000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80" alt="Modern Studio">
+        <span class="card-badge badge-rent">For Rent</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Khalifa City, Abu Dhabi</div>
+        <h3 class="card-title">Modern Studio</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg>Studio</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12h16M4 12v4a4 4 0 004 4h8a4 4 0 004-4v-4M6 12V5a2 2 0 012-2h0a2 2 0 012 2v7"/></svg>1 Bath</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>450 sqft</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 45,000<small>/yr</small></div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="property-card" data-purpose="sale" data-type="villa" data-location="abu dhabi" data-price="3500000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80" alt="Spacious 4BR Villa">
+        <span class="card-badge badge-sale">For Sale</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>MBZ City, Abu Dhabi</div>
+        <h3 class="card-title">Spacious 4BR Villa</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg>4 Beds</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12h16M4 12v4a4 4 0 004 4h8a4 4 0 004-4v-4M6 12V5a2 2 0 012-2h0a2 2 0 012 2v7"/></svg>4 Baths</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>3,800 sqft</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 3,500,000</div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="property-card" data-purpose="rent" data-type="office" data-location="abu dhabi" data-price="85000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80" alt="Commercial Office">
+        <span class="card-badge badge-rent">For Rent</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Al Ghaith Tower, Abu Dhabi</div>
+        <h3 class="card-title">Commercial Office</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>1,100 sqft</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>2 Floors</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 85,000<small>/yr</small></div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="property-card" data-purpose="sale" data-type="villa" data-location="abu dhabi" data-price="2200000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="3BR Townhouse">
+        <span class="card-badge badge-sale">For Sale</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Yas Island, Abu Dhabi</div>
+        <h3 class="card-title">3BR Townhouse</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg>3 Beds</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12h16M4 12v4a4 4 0 004 4h8a4 4 0 004-4v-4M6 12V5a2 2 0 012-2h0a2 2 0 012 2v7"/></svg>3 Baths</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>2,600 sqft</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 2,200,000</div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="property-card" data-purpose="rent" data-type="apartment" data-location="abu dhabi" data-price="60000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&q=80" alt="1BR Apartment">
+        <span class="card-badge badge-rent">For Rent</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Al Raha Beach, Abu Dhabi</div>
+        <h3 class="card-title">1BR Apartment</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg>1 Bed</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12h16M4 12v4a4 4 0 004 4h8a4 4 0 004-4v-4M6 12V5a2 2 0 012-2h0a2 2 0 012 2v7"/></svg>1 Bath</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>750 sqft</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 60,000<small>/yr</small></div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 7 -->
+    <div class="property-card" data-purpose="sale" data-type="apartment" data-location="abu dhabi" data-price="5800000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80" alt="Penthouse Suite">
+        <span class="card-badge badge-sale">For Sale</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Corniche, Abu Dhabi</div>
+        <h3 class="card-title">Penthouse Suite</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg>4 Beds</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12h16M4 12v4a4 4 0 004 4h8a4 4 0 004-4v-4M6 12V5a2 2 0 012-2h0a2 2 0 012 2v7"/></svg>5 Baths</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>4,200 sqft</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 5,800,000</div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 8 -->
+    <div class="property-card" data-purpose="rent" data-type="commercial" data-location="abu dhabi" data-price="95000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80" alt="Retail Space">
+        <span class="card-badge badge-rent">For Rent</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Mussafah, Abu Dhabi</div>
+        <h3 class="card-title">Retail Space</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>1,500 sqft</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Ground Floor</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 95,000<small>/yr</small></div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 9 -->
+    <div class="property-card" data-purpose="sale" data-type="villa" data-location="abu dhabi" data-price="7200000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80" alt="5BR Villa with Pool">
+        <span class="card-badge badge-sale">For Sale</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Saadiyat Island, Abu Dhabi</div>
+        <h3 class="card-title">5BR Villa + Pool</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg>5 Beds</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12h16M4 12v4a4 4 0 004 4h8a4 4 0 004-4v-4M6 12V5a2 2 0 012-2h0a2 2 0 012 2v7"/></svg>6 Baths</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>6,500 sqft</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 7,200,000</div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 10 -->
+    <div class="property-card" data-purpose="rent" data-type="apartment" data-location="abu dhabi" data-price="75000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=80" alt="2BR Apartment">
+        <span class="card-badge badge-rent">For Rent</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Al Muroor, Abu Dhabi</div>
+        <h3 class="card-title">2BR Apartment</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 22V8l9-6 9 6v14"/></svg>2 Beds</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 12h16M4 12v4a4 4 0 004 4h8a4 4 0 004-4v-4M6 12V5a2 2 0 012-2h0a2 2 0 012 2v7"/></svg>2 Baths</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>1,050 sqft</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 75,000<small>/yr</small></div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 11 -->
+    <div class="property-card" data-purpose="sale" data-type="plot" data-location="abu dhabi" data-price="1800000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1575652765979-a8d2da9e2b5c?w=600&q=80" alt="Land Plot">
+        <span class="card-badge badge-sale">For Sale</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Al Shamkha, Abu Dhabi</div>
+        <h3 class="card-title">Land Plot 5,000 sqft</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>5,000 sqft</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Residential</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 1,800,000</div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 12 -->
+    <div class="property-card" data-purpose="rent" data-type="office" data-location="abu dhabi" data-price="180000">
+      <div class="card-image">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80" alt="Office Floor">
+        <span class="card-badge badge-rent">For Rent</span>
+        <div class="card-favorite"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      </div>
+      <div class="card-body">
+        <div class="card-location"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Abu Dhabi CBD</div>
+        <h3 class="card-title">Office Floor 2,400 sqft</h3>
+        <div class="card-specs">
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>2,400 sqft</span>
+          <span class="card-spec"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Full Floor</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">AED 180,000<small>/yr</small></div>
+          <a href="property-detail.html" class="card-link">Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <a class="page-btn disabled">Previous</a>
+    <a class="page-btn active">1</a>
+    <a class="page-btn">2</a>
+    <a class="page-btn">3</a>
+    <a class="page-btn">Next</a>
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="nav-logo" style="margin-bottom:8px">
+        <svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+        <div class="nav-logo-text"><span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span><span class="nav-logo-sub">Properties &amp; Contracting</span></div>
+      </a>
+      <p>Your trusted partner in real estate and contracting services across Abu Dhabi and the UAE. Building futures, creating homes.</p>
+      <div class="footer-socials">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg></a>
+        <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="contracting.html">Contracting</a></li>
+        <li><a href="maintenance.html">Maintenance</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Property Sales</a></li>
+        <li><a href="#">Property Rentals</a></li>
+        <li><a href="#">General Contracting</a></li>
+        <li><a href="#">Interior Fit-out</a></li>
+        <li><a href="#">Property Management</a></li>
+        <li><a href="#">Maintenance</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact Us</h4>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Abu Dhabi, United Arab Emirates</span>
+      </div>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        <span>+971 50 43 99 804</span>
+      </div>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span>info@804avenue.com</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2025 804 Avenue Properties and Contracting. All Rights Reserved.</span>
+    <div>
+      <a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/971504399804" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 32 32"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16.004c0 3.5 1.132 6.738 3.052 9.376L1.06 31.2l6.076-1.952a15.93 15.93 0 008.868 2.676C24.828 31.924 32 24.748 32 16.004S24.828 0 16.004 0zm9.31 22.618c-.39 1.1-2.274 2.1-3.14 2.178-.788.072-1.762.102-2.844-.18a26.092 26.092 0 01-2.576-.952c-4.532-1.952-7.492-6.54-7.72-6.844-.228-.302-1.86-2.474-1.86-4.72s1.178-3.352 1.596-3.81c.418-.458.912-.572 1.216-.572.304 0 .608.002.874.016.28.014.656-.106.026 1.614-.342.928-1.178 2.854-1.282 3.06-.104.208-.174.45-.034.722.14.274.208.444.416.684.208.24.436.536.622.72.208.208.424.434.664.674.24.24.48.502.722.674.24.174.514.34.79.214.274-.126.092-.304 1.358-3.02.128-.274.064-.514-.034-.722-.098-.208-.874-2.106-1.198-2.882-.314-.76-.636-.658-.874-.672-.226-.012-.486-.014-.746-.014s-.684.096-1.042.48c-.358.382-1.368 1.336-1.368 3.26s1.4 3.782 1.596 4.04c.194.26 2.752 4.202 6.672 5.892.932.402 1.66.642 2.228.822.936.298 1.788.256 2.462.156.75-.112 2.314-.946 2.64-1.86z"/></svg>
+</a>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<script src="../assets/js/shared.js"></script>
+<script>
+// Navbar scroll
+window.addEventListener('scroll',function(){
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40);
+  document.getElementById('backToTop').classList.toggle('visible',window.scrollY>500);
+});
+
+// Mobile menu
+const hamburger=document.getElementById('hamburger');
+const mobileNav=document.getElementById('mobileNav');
+hamburger.addEventListener('click',function(){mobileNav.classList.toggle('open');this.classList.toggle('active')});
+function closeMobile(){mobileNav.classList.remove('open');hamburger.classList.remove('active')}
+
+// Back to top
+document.getElementById('backToTop').addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
+
+// View toggle
+function setView(mode){
+  const grid=document.getElementById('propertiesGrid');
+  const gridBtn=document.getElementById('gridBtn');
+  const listBtn=document.getElementById('listBtn');
+  if(mode==='list'){grid.classList.add('list-view');listBtn.classList.add('active');gridBtn.classList.remove('active')}
+  else{grid.classList.remove('list-view');gridBtn.classList.add('active');listBtn.classList.remove('active')}
+}
+
+// Filter
+function applyFilters(){
+  const purpose=document.getElementById('filterPurpose').value;
+  const type=document.getElementById('filterType').value;
+  const location=document.getElementById('filterLocation').value;
+  const minP=parseInt(document.getElementById('filterMinPrice').value)||0;
+  const maxP=parseInt(document.getElementById('filterMaxPrice').value)||Infinity;
+  const cards=document.querySelectorAll('.property-card');
+  let count=0;
+  cards.forEach(function(card){
+    const cp=card.dataset.purpose;
+    const ct=card.dataset.type;
+    const cl=card.dataset.location;
+    const pr=parseInt(card.dataset.price);
+    let show=true;
+    if(purpose!=='all'&&cp!==purpose)show=false;
+    if(type!=='all'&&ct!==type)show=false;
+    if(location!=='all'&&!cl.includes(location))show=false;
+    if(pr<minP||pr>maxP)show=false;
+    card.style.display=show?'':'none';
+    if(show)count++;
+  });
+  document.getElementById('resultCount').textContent=count;
+}
+
+function resetFilters(){
+  document.getElementById('filterPurpose').value='all';
+  document.getElementById('filterType').value='all';
+  document.getElementById('filterLocation').value='all';
+  document.getElementById('filterMinPrice').value='';
+  document.getElementById('filterMaxPrice').value='';
+  document.querySelectorAll('.property-card').forEach(function(c){c.style.display=''});
+  document.getElementById('resultCount').textContent='12';
+}
+
+// Favorite toggle
+document.querySelectorAll('.card-favorite').forEach(function(btn){
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    const svg=this.querySelector('svg');
+    if(svg.getAttribute('fill')==='none'){svg.setAttribute('fill','var(--accent)');svg.style.stroke='var(--accent)'}
+    else{svg.setAttribute('fill','none');svg.style.stroke=''}
+  });
+});
+</script>
+</body>
+</html>

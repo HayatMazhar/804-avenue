@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Property — 804 Avenue Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-deep:#04060C;--bg-surface:#0C1222;--bg-card:#111B2E;--bg-elevated:#182039;
+  --success:#10B981;--danger:#EF4444;
+  --text-primary:#F1F5F9;--text-secondary:#94A3B8;--text-tertiary:#64748B;
+  --sidebar-w:260px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg-deep);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
+button,a{font-family:'Syne',sans-serif}
+a{text-decoration:none;color:inherit}
+
+/* ─── SIDEBAR ─── */
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--bg-surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.sidebar-brand{padding:28px 24px 20px;border-bottom:1px solid var(--border)}
+.sidebar-brand .logo{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+.sidebar-brand .logo-804{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;letter-spacing:2px}
+.sidebar-brand .logo-avenue{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--accent);letter-spacing:2px}
+.sidebar-brand .sub{font-family:'Inter',sans-serif;font-size:11px;color:var(--text-tertiary);letter-spacing:3px;text-transform:uppercase;margin-top:2px}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.sidebar-nav a{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;font-size:14px;font-weight:500;color:var(--text-secondary);transition:all .2s;margin-bottom:2px}
+.sidebar-nav a:hover{color:var(--text-primary);background:rgba(59,130,246,.06)}
+.sidebar-nav a.active{color:#fff;background:var(--accent);box-shadow:0 4px 16px rgba(59,130,246,.25)}
+.sidebar-nav a svg{width:18px;height:18px;flex-shrink:0}
+.sidebar-footer{padding:16px 16px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.sidebar-footer .avatar{width:36px;height:36px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:#fff;flex-shrink:0}
+.sidebar-footer .info{flex:1;min-width:0}
+.sidebar-footer .info .name{font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-footer .info .role{font-size:11px;color:var(--text-tertiary)}
+.sidebar-footer .logout{color:var(--text-tertiary);transition:color .2s;flex-shrink:0}
+.sidebar-footer .logout:hover{color:var(--danger)}
+.sidebar-footer .logout svg{width:18px;height:18px}
+
+/* ─── MAIN ─── */
+.main{margin-left:var(--sidebar-w);min-height:100vh;background:var(--bg-deep);padding:32px}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px}
+.top-bar h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
+.top-bar h1 span{color:var(--accent)}
+.breadcrumb{font-size:13px;color:var(--text-tertiary);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--accent);transition:color .2s}
+.breadcrumb a:hover{color:var(--cyan)}
+.btn{font-family:'Syne',sans-serif;font-weight:600;font-size:14px;border:none;cursor:pointer;border-radius:10px;padding:10px 22px;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(59,130,246,.3)}
+.btn-primary:hover{background:var(--accent-hover);box-shadow:0 6px 24px rgba(59,130,246,.4);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--text-secondary);border:1px solid var(--border-active)}
+.btn-outline:hover{color:var(--text-primary);border-color:var(--accent);background:rgba(59,130,246,.06)}
+.btn svg{width:16px;height:16px}
+
+/* ─── FORM ─── */
+.form-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:0;margin-bottom:24px;overflow:hidden}
+.section-header{padding:18px 24px;border-left:3px solid var(--accent);background:var(--bg-elevated);font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;letter-spacing:.3px;display:flex;align-items:center;gap:10px}
+.section-header svg{width:18px;height:18px;color:var(--accent)}
+.section-body{padding:24px}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:12px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.8px;font-family:'Syne',sans-serif}
+.form-group input,.form-group select,.form-group textarea{background:var(--bg-deep);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text-primary);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--text-tertiary)}
+.form-group select option{background:var(--bg-card);color:var(--text-primary)}
+.form-group textarea{resize:vertical;min-height:120px;line-height:1.6}
+.form-group.full{grid-column:1/-1}
+
+/* ─── CHECKBOX GRID ─── */
+.checkbox-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.checkbox-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:var(--bg-deep);border:1px solid var(--border);cursor:pointer;transition:all .2s}
+.checkbox-item:hover{border-color:var(--border-active)}
+.checkbox-item input[type="checkbox"]{appearance:none;width:18px;height:18px;border:2px solid var(--text-tertiary);border-radius:4px;cursor:pointer;position:relative;flex-shrink:0;transition:all .2s}
+.checkbox-item input[type="checkbox"]:checked{background:var(--accent);border-color:var(--accent)}
+.checkbox-item input[type="checkbox"]:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:11px;font-weight:700}
+.checkbox-item span{font-size:13px;color:var(--text-secondary)}
+
+/* ─── IMAGE DROP ZONE ─── */
+.drop-zone{border:2px dashed var(--accent);border-radius:12px;padding:48px 24px;text-align:center;cursor:pointer;transition:all .2s;background:var(--accent-10)}
+.drop-zone:hover,.drop-zone.dragover{background:rgba(59,130,246,.08);border-color:var(--cyan)}
+.drop-zone svg{width:48px;height:48px;color:var(--accent);margin-bottom:12px}
+.drop-zone h4{font-size:15px;margin-bottom:6px;color:var(--text-primary)}
+.drop-zone p{font-size:13px;color:var(--text-tertiary)}
+.drop-zone .browse{color:var(--accent);font-weight:600;cursor:pointer}
+.drop-zone .browse:hover{color:var(--cyan)}
+.preview-grid{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.preview-item{width:80px;height:80px;border-radius:8px;background:var(--bg-elevated);border:1px solid var(--border);position:relative;overflow:hidden}
+.preview-item img{width:100%;height:100%;object-fit:cover}
+.preview-item .remove{position:absolute;top:2px;right:2px;width:20px;height:20px;border-radius:50%;background:var(--danger);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px}
+
+/* ─── FORM ACTIONS ─── */
+.form-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:8px;padding-top:24px;border-top:1px solid var(--border)}
+
+/* ─── HAMBURGER ─── */
+.hamburger{display:none;position:fixed;top:18px;left:16px;z-index:200;width:40px;height:40px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border);cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.hamburger span{display:block;width:20px;height:2px;background:var(--text-primary);border-radius:2px;transition:all .3s}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;backdrop-filter:blur(4px)}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:24px 16px;padding-top:68px}
+  .hamburger{display:flex}
+  .overlay.show{display:block}
+  .form-grid{grid-template-columns:1fr}
+  .checkbox-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+}
+@media(max-width:600px){
+  .top-bar{flex-direction:column;align-items:flex-start}
+  .form-actions{flex-direction:column}
+  .form-actions .btn{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- Hamburger -->
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+  <span></span><span></span><span></span>
+</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo"><span class="logo-804">804</span><span class="logo-avenue">AVENUE</span></div>
+    <div class="sub">Admin Panel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Dashboard
+    </a>
+    <a href="list.html" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Properties
+    </a>
+    <a href="../projects/list.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V8l7-5 7 5v12"/><path d="M9 20v-4h6v4"/></svg>
+      Projects
+    </a>
+    <a href="../inquiries/list.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Inquiries
+    </a>
+    <a href="../settings/general.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      Settings
+    </a>
+    <a href="../settings/team.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Team
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="avatar">AU</div>
+    <div class="info">
+      <div class="name">Admin User</div>
+      <div class="role">Administrator</div>
+    </div>
+    <a href="../login.html" class="logout" title="Logout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </a>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="breadcrumb">
+    <a href="list.html">Properties</a>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    <span>Add New</span>
+  </div>
+  <div class="top-bar">
+    <h1>Add New <span>Property</span></h1>
+  </div>
+
+  <form id="propertyForm" onsubmit="return false;">
+
+    <!-- Basic Info -->
+    <div class="form-card">
+      <div class="section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/></svg>
+        Basic Information
+      </div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Property Title</label>
+            <input type="text" placeholder="e.g. Luxury 2BR Apartment, Al Reem Island">
+          </div>
+          <div class="form-group">
+            <label>Property Type</label>
+            <select>
+              <option value="">Select Type</option>
+              <option>Apartment</option>
+              <option>Villa</option>
+              <option>Townhouse</option>
+              <option>Penthouse</option>
+              <option>Office</option>
+              <option>Land</option>
+              <option>Warehouse</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Purpose</label>
+            <select>
+              <option value="">Select Purpose</option>
+              <option>Sale</option>
+              <option>Rent</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select>
+              <option>Active</option>
+              <option>Inactive</option>
+              <option>Sold</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Reference No.</label>
+            <input type="text" placeholder="e.g. 804-P-001">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="form-card">
+      <div class="section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Location
+      </div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>City</label>
+            <select>
+              <option value="">Select City</option>
+              <option>Abu Dhabi</option>
+              <option>Dubai</option>
+              <option>Sharjah</option>
+              <option>Ajman</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Community / Area</label>
+            <input type="text" placeholder="e.g. Al Reem Island">
+          </div>
+          <div class="form-group">
+            <label>Sub-Community</label>
+            <input type="text" placeholder="e.g. Shams Abu Dhabi">
+          </div>
+          <div class="form-group">
+            <label>Building / Project</label>
+            <input type="text" placeholder="e.g. Sun Tower">
+          </div>
+          <div class="form-group full">
+            <label>Full Address</label>
+            <input type="text" placeholder="Street address, unit number, etc.">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="form-card">
+      <div class="section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Pricing
+      </div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Price (AED)</label>
+            <input type="number" placeholder="e.g. 1200000">
+          </div>
+          <div class="form-group">
+            <label>Price Per Sq.Ft (AED)</label>
+            <input type="number" placeholder="e.g. 1200">
+          </div>
+          <div class="form-group">
+            <label>Service Charge (AED/yr)</label>
+            <input type="number" placeholder="e.g. 15000">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="form-card">
+      <div class="section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        Details
+      </div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Bedrooms</label>
+            <select>
+              <option value="">Select</option>
+              <option>Studio</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6+</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Bathrooms</label>
+            <select>
+              <option value="">Select</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5+</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Area (Sq.Ft)</label>
+            <input type="number" placeholder="e.g. 1200">
+          </div>
+          <div class="form-group">
+            <label>Plot Size (Sq.Ft)</label>
+            <input type="number" placeholder="e.g. 3500">
+          </div>
+          <div class="form-group">
+            <label>Furnishing</label>
+            <select>
+              <option value="">Select</option>
+              <option>Furnished</option>
+              <option>Semi-Furnished</option>
+              <option>Unfurnished</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Completion Status</label>
+            <select>
+              <option value="">Select</option>
+              <option>Ready</option>
+              <option>Off-Plan</option>
+              <option>Under Construction</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-card">
+      <div class="section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Description
+      </div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Property Description</label>
+            <textarea placeholder="Describe the property in detail — highlights, views, nearby amenities, unique features..." rows="6"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="form-card">
+      <div class="section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Features &amp; Amenities
+      </div>
+      <div class="section-body">
+        <div class="checkbox-grid">
+          <label class="checkbox-item"><input type="checkbox"><span>Parking</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Swimming Pool</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Gym / Fitness</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Balcony</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Central A/C</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Security</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Concierge</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Maid's Room</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Built-in Wardrobes</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Children's Play Area</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Pets Allowed</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Sea View</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Smart Home</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Private Garden</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>BBQ Area</span></label>
+          <label class="checkbox-item"><input type="checkbox"><span>Laundry Room</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Images -->
+    <div class="form-card">
+      <div class="section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Images
+      </div>
+      <div class="section-body">
+        <div class="drop-zone" id="dropZone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <h4>Drop images here</h4>
+          <p>or <span class="browse" onclick="document.getElementById('fileInput').click()">browse files</span></p>
+          <p style="margin-top:6px;font-size:11px">PNG, JPG, WEBP up to 5MB each</p>
+          <input type="file" id="fileInput" multiple accept="image/*" style="display:none" onchange="handleFiles(this.files)">
+        </div>
+        <div class="preview-grid" id="previewGrid"></div>
+      </div>
+    </div>
+
+    <!-- Agent -->
+    <div class="form-card">
+      <div class="section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Agent Assignment
+      </div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Assigned Agent</label>
+            <select>
+              <option value="">Select Agent</option>
+              <option>Ahmed Al Mansoori</option>
+              <option>Sara Ibrahim</option>
+              <option>Omar Khalil</option>
+              <option>Fatima Al Hashimi</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Agent Phone</label>
+            <input type="tel" placeholder="+971 XX XXX XXXX">
+          </div>
+          <div class="form-group">
+            <label>Agent Email</label>
+            <input type="email" placeholder="agent@804avenue.ae">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <a href="list.html" class="btn btn-outline">Cancel</a>
+      <button type="submit" class="btn btn-primary" onclick="saveProperty()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save Property
+      </button>
+    </div>
+
+  </form>
+</main>
+
+<script>
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+const dropZone=document.getElementById('dropZone');
+const previewGrid=document.getElementById('previewGrid');
+
+['dragenter','dragover'].forEach(e=>{
+  dropZone.addEventListener(e,ev=>{ev.preventDefault();dropZone.classList.add('dragover')});
+});
+['dragleave','drop'].forEach(e=>{
+  dropZone.addEventListener(e,ev=>{ev.preventDefault();dropZone.classList.remove('dragover')});
+});
+dropZone.addEventListener('drop',e=>{handleFiles(e.dataTransfer.files)});
+
+function handleFiles(files){
+  Array.from(files).forEach(file=>{
+    if(!file.type.startsWith('image/'))return;
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const div=document.createElement('div');
+      div.className='preview-item';
+      div.innerHTML=`<img src="${e.target.result}" alt="preview"><button class="remove" onclick="this.parentElement.remove()">&times;</button>`;
+      previewGrid.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function saveProperty(){
+  alert('Property saved successfully!');
+}
+</script>
+</body>
+</html>
