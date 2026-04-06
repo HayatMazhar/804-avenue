@@ -1,0 +1,54 @@
+@page "{categoryId:int}"
+@model Avenue804.Web.Areas.Admin.Pages.Lookups.ValuesModel
+@{
+    ViewData["Title"] = "Lookup values — " + Model.Category?.Name;
+}
+<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Lookups</a></p>
+<h2 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:16px"><code>@Model.Category?.Code</code></h2>
+<div class="admin-table-wrap" style="margin-bottom:28px">
+  <table class="admin-table">
+    <thead><tr><th>Code</th><th>Display</th><th>Sort</th><th>Active</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var r in Model.Rows)
+    {
+      <tr>
+        <td><code>@r.Code</code></td>
+        <td>@r.DisplayName</td>
+        <td>@r.SortOrder</td>
+        <td>@(r.IsActive ? "Yes" : "No")</td>
+        <td><a asp-page="ValueEdit" asp-route-id="@r.Id">Edit</a></td>
+      </tr>
+    }
+    </tbody>
+  </table>
+</div>
+<h3 style="font-size:0.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-tertiary);margin-bottom:12px">Add value</h3>
+<form method="post" asp-page-handler="Add" class="admin-form">
+  <input type="hidden" asp-for="CategoryId" />
+  <div asp-validation-summary="ModelOnly" class="muted" style="color:var(--danger)"></div>
+  <div class="row">
+    <label asp-for="NewValue.Code"></label>
+    <input asp-for="NewValue.Code" required />
+    <span asp-validation-for="NewValue.Code" class="muted"></span>
+  </div>
+  <div class="row">
+    <label asp-for="NewValue.DisplayName"></label>
+    <input asp-for="NewValue.DisplayName" required />
+  </div>
+  <div class="row">
+    <label asp-for="NewValue.SortOrder"></label>
+    <input asp-for="NewValue.SortOrder" type="number" />
+  </div>
+  <div class="row chk">
+    <input asp-for="NewValue.IsActive" />
+    <label asp-for="NewValue.IsActive" style="margin:0"></label>
+  </div>
+  <div class="row">
+    <label asp-for="NewValue.Metadata"></label>
+    <input asp-for="NewValue.Metadata" placeholder="Optional JSON" />
+  </div>
+  <button type="submit" class="btn-primary"><span>Add</span></button>
+</form>
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

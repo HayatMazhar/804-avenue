@@ -1,0 +1,67 @@
+@page "/Contact"
+@model ContactModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Avenue804.Web.Infrastructure
+@{
+    ViewData["Title"] = "Contact us";
+    ViewData["NavActive"] = "contact";
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Contact</span></div>
+    <h1 class="page-hero-title fade-up"><em>Contact</em> us</h1>
+    @{
+      var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
+    }
+    <p class="page-hero-sub fade-up">@site?.Address · <a href="@site?.TelHref">@site?.PhoneDisplay</a> · <a href="mailto:@site?.Email">@site?.Email</a></p>
+  </div>
+</section>
+<section class="section-pad" style="background:var(--bg-surface)">
+  <div class="container" style="max-width:640px">
+    <p class="section-sub fade-up" style="margin-bottom:28px">Send a message and we will respond as soon as possible. For structured property interest (rent / buy / type / location), use <strong>Property inquiry</strong> in the main menu on any page.</p>
+    <form method="post" class="admin-form" style="max-width:none">
+      <div class="row">
+        <label asp-for="Form.Name"></label>
+        <input asp-for="Form.Name" autocomplete="name" placeholder="Your name" />
+        <span asp-validation-for="Form.Name" class="muted"></span>
+      </div>
+      <div class="row">
+        <label asp-for="Form.Email"></label>
+        <input asp-for="Form.Email" autocomplete="email" placeholder="you@example.com" />
+        <span asp-validation-for="Form.Email" class="muted"></span>
+      </div>
+      <div class="row">
+        <label asp-for="Form.Phone"></label>
+        <input asp-for="Form.Phone" autocomplete="tel" placeholder="+971 …" />
+        <span asp-validation-for="Form.Phone" class="muted"></span>
+      </div>
+      @await Component.InvokeAsync("InquiryTopicSelect", new { inputName = "Form.TopicLookupValueId", selectId = "contactTopic", optional = true, selectedValue = Model.Form.TopicLookupValueId?.ToString(), fieldWrapperClass = "row" })
+      <div class="row">
+        <label asp-for="Form.Subject"></label>
+        <input asp-for="Form.Subject" placeholder="How can we help?" />
+        <span asp-validation-for="Form.Subject" class="muted"></span>
+      </div>
+      <div class="row">
+        <label asp-for="Form.Message"></label>
+        <textarea asp-for="Form.Message" placeholder="Your message…"></textarea>
+        <span asp-validation-for="Form.Message" class="muted"></span>
+      </div>
+      <button type="submit" class="btn-primary"><span>Send message</span></button>
+    </form>
+  </div>
+</section>
+@section Styles {
+  <style>
+    .admin-form .row { margin-bottom: 18px; }
+    .admin-form label { display: block; font-family: var(--font-nav); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px; }
+    .admin-form input, .admin-form textarea, .admin-form select {
+      width: 100%; padding: 12px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-primary); font-family: var(--font-body); font-size: 0.95rem; box-sizing: border-box;
+    }
+    .admin-form textarea { min-height: 140px; resize: vertical; }
+    .admin-form input:focus, .admin-form textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-15); }
+    .admin-form .validation-summary-errors { color: var(--danger); font-size: 0.88rem; margin-bottom: 16px; }
+  </style>
+}
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

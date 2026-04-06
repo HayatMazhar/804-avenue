@@ -1,0 +1,35 @@
+@page
+@using Avenue804.Web.Configuration
+@model Avenue804.Web.Areas.Admin.Pages.ContentBlocks.IndexModel
+@{
+    ViewData["Title"] = "Content blocks";
+}
+<p class="muted" style="margin-bottom:20px;line-height:1.65">Published HTML/text by slug. Wired slugs (edit these to change public copy):</p>
+<ul class="muted" style="margin:-8px 0 20px 1.1rem;line-height:1.7;font-size:0.86rem">
+  @foreach (var s in ContentBlockSlugs.AllWiredSlugs)
+  {
+    <li><code>@s</code></li>
+  }
+</ul>
+<p style="margin-bottom:16px"><a asp-page="Create" style="color:var(--accent);font-weight:600">+ New block</a></p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead><tr><th>Slug</th><th>Title</th><th>Published</th><th>Updated</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var r in Model.Rows)
+    {
+      <tr>
+        <td><code>@r.Slug</code></td>
+        <td>@(r.Title ?? "—")</td>
+        <td>@(r.IsPublished ? "Yes" : "No")</td>
+        <td>@r.UpdatedAt.LocalDateTime.ToString("g")</td>
+        <td><a asp-page="Edit" asp-route-id="@r.Id">Edit</a></td>
+      </tr>
+    }
+    </tbody>
+  </table>
+</div>
+@if (Model.Rows.Count == 0)
+{
+  <p class="muted">No content blocks yet.</p>
+}

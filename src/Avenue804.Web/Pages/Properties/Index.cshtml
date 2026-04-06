@@ -1,0 +1,35 @@
+@page "/Properties"
+@model Avenue804.Web.Pages.Properties.IndexModel
+@{
+    ViewData["Title"] = "Properties";
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Properties</span></div>
+    <h1 class="page-hero-title fade-up">Browse <em>Properties</em></h1>
+    <p class="page-hero-sub fade-up">Published listings from our team. Filter by sale or rent, then open a listing for full details.</p>
+  </div>
+</section>
+<section class="section-pad" style="background:var(--bg-deep)">
+  <div class="container">
+    <div class="catalog-toolbar fade-up">
+      <span class="muted" style="font-family:var(--font-nav);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;margin-right:8px">Show</span>
+      <a asp-page="/Properties/Index" asp-route-offer="" class="@(string.IsNullOrEmpty(Model.Filter) ? "active" : null)">All</a>
+      <a asp-page="/Properties/Index" asp-route-offer="sale" class="@(string.Equals(Model.Filter, "sale", StringComparison.OrdinalIgnoreCase) ? "active" : null)">For sale</a>
+      <a asp-page="/Properties/Index" asp-route-offer="rent" class="@(string.Equals(Model.Filter, "rent", StringComparison.OrdinalIgnoreCase) ? "active" : null)">For rent</a>
+    </div>
+    @if (Model.Listings.Count == 0)
+    {
+      <p class="section-sub fade-up" style="max-width:560px">No published listings match this filter yet. Use the <a asp-area="Admin" asp-page="/Listings/Index">admin</a> area to add properties, or try another filter.</p>
+    }
+    else
+    {
+      <div class="feat-grid">
+        @foreach (var p in Model.Listings)
+        {
+          <partial name="Shared/_PropertyCard" model="p" />
+        }
+      </div>
+    }
+  </div>
+</section>

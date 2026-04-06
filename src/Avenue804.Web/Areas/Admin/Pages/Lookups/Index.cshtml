@@ -1,0 +1,29 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Lookups.IndexModel
+@{
+    ViewData["Title"] = "Lookups";
+}
+<p style="margin-bottom:16px"><a asp-page="CategoryEdit" style="color:var(--accent);font-weight:600">+ New category</a></p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead><tr><th>Code</th><th>Name</th><th>Values</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var c in Model.Categories)
+    {
+      <tr>
+        <td><code>@c.Code</code></td>
+        <td>@c.Name</td>
+        <td>@c.ValueCount</td>
+        <td>
+          <a asp-page="CategoryEdit" asp-route-id="@c.Id">Edit category</a>
+          · <a asp-page="Values" asp-route-categoryId="@c.Id">Values</a>
+        </td>
+      </tr>
+    }
+    </tbody>
+  </table>
+</div>
+@if (Model.Categories.Count == 0)
+{
+  <p class="muted">No lookup categories yet.</p>
+}

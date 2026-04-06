@@ -1,0 +1,30 @@
+@page "{id:int}"
+@model Avenue804.Web.Areas.Admin.Pages.SiteSettings.EditModel
+@{
+    ViewData["Title"] = "Edit setting";
+}
+<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Site settings</a></p>
+<form method="post" class="admin-form">
+  <input type="hidden" asp-for="Form.Key" />
+  <div asp-validation-summary="ModelOnly" class="muted" style="color:var(--danger)"></div>
+  <div class="row">
+    <label>Key</label>
+    <input type="text" value="@Model.KeyName" readonly style="opacity:.75" />
+  </div>
+  <div class="row">
+    <label asp-for="Form.Value"></label>
+    <textarea asp-for="Form.Value" rows="5" required></textarea>
+    <span asp-validation-for="Form.Value" class="muted"></span>
+  </div>
+  <div class="row">
+    <label asp-for="Form.Description"></label>
+    <input asp-for="Form.Description" />
+  </div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <button type="submit" class="btn-primary"><span>Save</span></button>
+    <button type="submit" class="btn-outline" style="border-color:var(--danger);color:var(--danger)" asp-page-handler="Delete" formnovalidate onclick="return confirm('Remove this override? The site will fall back to appsettings.');">Delete</button>
+  </div>
+</form>
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

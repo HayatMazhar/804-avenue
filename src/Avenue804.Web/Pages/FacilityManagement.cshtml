@@ -1,0 +1,11 @@
+@page "/FacilityManagement"
+@model FacilityManagementModel
+@{
+    ViewData["Title"] = "Facility Management";
+    ViewData["NavActive"] = "facility";
+    ViewData["MetaDescription"] = "804 Avenue facility management — building operations, soft services, vendor coordination, and compliance for assets in Abu Dhabi, UAE.";
+}
+@section Styles {
+  <link rel="stylesheet" href="~/css/service-pages.css" asp-append-version="true" />
+}
+<partial name="_FacilityManagementBody" model="Model.Hero" />

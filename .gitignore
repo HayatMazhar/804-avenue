@@ -1,2 +1,10 @@
 *.zip
 .cursor-remote.json
+
+# .NET
+**/bin/
+**/obj/
+**/.vs/
+*.user
+*.suo
+appsettings.*.local.json

@@ -1,0 +1,31 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.ContentBlocks.CreateModel
+@{
+    ViewData["Title"] = "New content block";
+}
+<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Content blocks</a></p>
+<form method="post" class="admin-form" style="max-width:720px">
+  <div asp-validation-summary="ModelOnly" class="muted" style="color:var(--danger)"></div>
+  <div class="row">
+    <label asp-for="Form.Slug"></label>
+    <input asp-for="Form.Slug" required placeholder="e.g. home.hero.subtitle" />
+    <span asp-validation-for="Form.Slug" class="muted"></span>
+  </div>
+  <div class="row">
+    <label asp-for="Form.Title"></label>
+    <input asp-for="Form.Title" />
+  </div>
+  <div class="row">
+    <label asp-for="Form.Body"></label>
+    <textarea asp-for="Form.Body" rows="12" required></textarea>
+    <span asp-validation-for="Form.Body" class="muted"></span>
+  </div>
+  <div class="row chk">
+    <input asp-for="Form.IsPublished" />
+    <label asp-for="Form.IsPublished" style="margin:0">Published</label>
+  </div>
+  <button type="submit" class="btn-primary"><span>Save</span></button>
+</form>
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

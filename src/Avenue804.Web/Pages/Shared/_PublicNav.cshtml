@@ -1,0 +1,59 @@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Avenue804.Web.Infrastructure
+@{
+    var a = ViewData["NavActive"] as string ?? "";
+    string Active(string key) => string.Equals(a, key, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
+}
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a asp-page="/Index" class="nav-logo">
+      <svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+      <div class="nav-logo-text">
+        <span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span>
+        <span class="nav-logo-sub">@site?.NavTagline</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a asp-page="/Index" class="@Active("home")">Home</a></li>
+      <li class="nav-dropdown">
+        <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true" id="navServicesBtn">
+          Services
+          <svg class="nav-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <ul class="nav-dropdown-menu" id="navServicesMenu" role="menu" aria-labelledby="navServicesBtn">
+          <li role="none"><a role="menuitem" asp-page="/Properties" class="@Active("properties")">Properties</a></li>
+          <li role="none"><a role="menuitem" asp-page="/Contracting" class="@Active("contracting")">Contracting</a></li>
+          <li role="none"><a role="menuitem" asp-page="/Maintenance" class="@Active("maintenance")">Maintenance</a></li>
+          <li role="none"><a role="menuitem" asp-page="/FacilityManagement" class="@Active("facility")">Facility Management</a></li>
+        </ul>
+      </li>
+      <li><a asp-page="/About" class="@Active("about")">About Us</a></li>
+      <li><button type="button" class="nav-modal-link" data-modal-open="modal-list-property">List Your Property</button></li>
+      <li><button type="button" class="nav-modal-link" data-modal-open="modal-inquiry">Property inquiry</button></li>
+      <li><a asp-page="/Contact" class="@Active("contact")">Contact us</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="@site?.TelHref" class="nav-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        @site?.PhoneDisplay
+      </a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a asp-page="/Index" class="@Active("home")" onclick="closeMobile()">Home</a>
+  <span class="mobile-nav-label">Services</span>
+  <div class="mobile-nav-sub">
+    <a asp-page="/Properties" class="@Active("properties")" onclick="closeMobile()">Properties</a>
+    <a asp-page="/Contracting" class="@Active("contracting")" onclick="closeMobile()">Contracting</a>
+    <a asp-page="/Maintenance" class="@Active("maintenance")" onclick="closeMobile()">Maintenance</a>
+    <a asp-page="/FacilityManagement" class="@Active("facility")" onclick="closeMobile()">Facility Management</a>
+  </div>
+  <a asp-page="/About" class="@Active("about")" onclick="closeMobile()">About Us</a>
+  <button type="button" class="nav-modal-link" data-modal-open="modal-list-property" onclick="closeMobile()">List Your Property</button>
+  <button type="button" class="nav-modal-link" data-modal-open="modal-inquiry" onclick="closeMobile()">Property inquiry</button>
+  <a asp-page="/Contact" class="@Active("contact")" onclick="closeMobile()">Contact us</a>
+  <a href="@site?.TelHref" class="btn-primary" onclick="closeMobile()" style="margin-top:16px"><span>Call Us</span></a>
+</div>

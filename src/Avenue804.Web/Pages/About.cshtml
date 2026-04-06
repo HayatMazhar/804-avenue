@@ -1,0 +1,11 @@
+@page "/About"
+@model AboutModel
+@{
+    ViewData["Title"] = "About Us";
+    ViewData["NavActive"] = "about";
+    ViewData["MetaDescription"] = "Learn about 804 Avenue Properties and Contracting — vision, mission, team, and expertise across real estate and construction in the UAE.";
+}
+@section Styles {
+  <link rel="stylesheet" href="~/css/service-pages.css" asp-append-version="true" />
+}
+<partial name="_AboutBody" model="Model.Hero" />

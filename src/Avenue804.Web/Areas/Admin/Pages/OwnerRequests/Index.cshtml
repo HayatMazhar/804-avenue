@@ -1,0 +1,44 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.OwnerRequests.IndexModel
+@{
+    ViewData["Title"] = "Listing requests";
+}
+<p class="muted" style="margin-bottom:20px">@Model.TotalCount total</p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Intent</th>
+        <th>Location / title</th>
+      </tr>
+    </thead>
+    <tbody>
+    @foreach (var row in Model.Items)
+    {
+      <tr>
+        <td>@row.CreatedAt.LocalDateTime.ToString("g")</td>
+        <td><a asp-page="Detail" asp-route-id="@row.Id">@row.Name</a></td>
+        <td>@row.Intent</td>
+        <td class="muted">@(row.LocationOrTitle ?? "—")</td>
+      </tr>
+    }
+    </tbody>
+  </table>
+</div>
+@if (Model.Items.Count == 0)
+{
+  <p class="muted" style="margin-top:16px">No listing requests yet.</p>
+}
+<div class="pager">
+  @if (Model.PageNumber > 1)
+  {
+    <a asp-page="Index" asp-route-p="@(Model.PageNumber - 1)">Previous</a>
+  }
+  <span>Page @Model.PageNumber of @Model.TotalPages</span>
+  @if (Model.PageNumber < Model.TotalPages)
+  {
+    <a asp-page="Index" asp-route-p="@(Model.PageNumber + 1)">Next</a>
+  }
+</div>

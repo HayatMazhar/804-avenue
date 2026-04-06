@@ -1,0 +1,20 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Build. Buy. Maintain.";
+    ViewData["NavActive"] = "home";
+}
+@section Styles {
+  <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+}
+
+<partial name="_HomeSections" model="Model" />
+
+@section Scripts {
+  <script>
+  (function(){
+    var tabs=document.querySelectorAll('.search-tab');
+    tabs.forEach(function(t){t.addEventListener('click',function(){tabs.forEach(function(x){x.classList.remove('active')});t.classList.add('active')})});
+  })();
+  </script>
+}

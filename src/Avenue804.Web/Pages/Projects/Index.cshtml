@@ -1,0 +1,29 @@
+@page "/Projects"
+@model Avenue804.Web.Pages.Projects.IndexModel
+@{
+    ViewData["Title"] = "Projects";
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Projects</span></div>
+    <h1 class="page-hero-title fade-up">Our <em>Projects</em></h1>
+    <p class="page-hero-sub fade-up">Selected contracting and fit-out work from our portfolio. Entries are managed in admin under Projects.</p>
+  </div>
+</section>
+<section class="section-pad" style="background:var(--bg-deep)">
+  <div class="container">
+    @if (Model.Projects.Count == 0)
+    {
+      <p class="section-sub fade-up" style="max-width:560px">No published projects yet. Add portfolio items in <a asp-area="Admin" asp-page="/Projects/Index">admin → Projects</a>.</p>
+    }
+    else
+    {
+      <div class="feat-grid">
+        @foreach (var p in Model.Projects)
+        {
+          <partial name="Shared/_ProjectCard" model="p" />
+        }
+      </div>
+    }
+  </div>
+</section>

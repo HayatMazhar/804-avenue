@@ -1,0 +1,69 @@
+@page "/Properties/{slug}"
+@model Avenue804.Web.Pages.Properties.DetailModel
+@{
+    var L = Model.Listing!;
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Properties/Index">Properties</a><span class="sep">/</span><span>@L.Title</span></div>
+    <h1 class="page-hero-title fade-up">@L.Title</h1>
+    <p class="page-hero-sub fade-up">
+      @if (!string.IsNullOrWhiteSpace(L.Location))
+      {
+        @L.Location
+      }
+      else
+      {
+        <text>Abu Dhabi, UAE</text>
+      }
+    </p>
+  </div>
+</section>
+<section class="section-pad" style="background:var(--bg-deep)">
+  <div class="container">
+    <div class="listing-detail-layout fade-up">
+      <div>
+        <div class="listing-detail-media">
+          <img src="@ListingFormat.ListingImageUrl(L.MainImageUrl)" alt="@L.Title" />
+        </div>
+        @if (!string.IsNullOrWhiteSpace(L.Description))
+        {
+          <div class="section-sub" style="margin-top:28px;max-width:none;white-space:pre-wrap;line-height:1.75">@L.Description</div>
+        }
+      </div>
+      <aside class="prop-card" style="padding:24px;position:sticky;top:100px">
+        <div class="prop-price" style="margin-bottom:12px">
+          @ListingFormat.PricePrimary(L.Price, L.Currency, L.OfferType)
+          @if (ListingFormat.ShowRentSuffix(L.OfferType))
+          {
+            <small>/yr</small>
+          }
+        </div>
+        @if (L.OfferType == ListingOfferType.Sale)
+        {
+          <span class="prop-badge badge-sale" style="position:static;display:inline-block;margin-bottom:16px">For sale</span>
+        }
+        else
+        {
+          <span class="prop-badge badge-rent" style="position:static;display:inline-block;margin-bottom:16px">For rent</span>
+        }
+        <div class="prop-meta" style="flex-wrap:wrap;margin-bottom:20px">
+          @if (L.Beds is int beds)
+          {
+            <span class="prop-meta-item">@beds beds</span>
+          }
+          @if (L.Baths is int baths)
+          {
+            <span class="prop-meta-item">@baths baths</span>
+          }
+          @if (L.AreaSqft is int sq)
+          {
+            <span class="prop-meta-item">@sq.ToString("N0") sqft</span>
+          }
+        </div>
+        <button type="button" class="btn-primary nav-modal-link" style="width:100%;justify-content:center;margin-bottom:12px;border:none;cursor:pointer" data-modal-open="modal-inquiry" data-inquiry-subject="Property: @L.Title (@L.Slug)"><span>Inquire about this property</span></button>
+        <a asp-page="/Contact" class="btn-outline" style="display:flex;justify-content:center;text-decoration:none">Contact us</a>
+      </aside>
+    </div>
+  </div>
+</section>

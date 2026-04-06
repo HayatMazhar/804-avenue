@@ -1,0 +1,40 @@
+@page "{id:int}"
+@model Avenue804.Web.Areas.Admin.Pages.Projects.EditModel
+@{
+    ViewData["Title"] = "Edit project";
+}
+<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Projects</a></p>
+<form method="post" class="admin-form">
+  <div class="row">
+    <label asp-for="Form.Title"></label>
+    <input asp-for="Form.Title" />
+    <span asp-validation-for="Form.Title" class="muted"></span>
+  </div>
+  <div class="row">
+    <label asp-for="Form.Slug">Slug (optional)</label>
+    <input asp-for="Form.Slug" placeholder="auto from title" />
+  </div>
+  <div class="row">
+    <label asp-for="Form.Summary"></label>
+    <textarea asp-for="Form.Summary" style="min-height:80px"></textarea>
+  </div>
+  <div class="row">
+    <label asp-for="Form.Description"></label>
+    <textarea asp-for="Form.Description"></textarea>
+  </div>
+  <div class="row">
+    <label asp-for="Form.CoverImageUrl"></label>
+    <input asp-for="Form.CoverImageUrl" />
+  </div>
+  <div class="row chk">
+    <input asp-for="Form.IsPublished" />
+    <label asp-for="Form.IsPublished" style="margin:0;font-size:0.88rem;text-transform:none;letter-spacing:normal">Published</label>
+  </div>
+  <button type="submit" class="btn-primary"><span>Save</span></button>
+</form>
+<form method="post" asp-page-handler="Delete" style="margin-top:28px" onsubmit="return confirm('Delete this project?');">
+  <button type="submit" class="btn-outline" style="border-color:var(--danger);color:var(--danger)">Delete project</button>
+</form>
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

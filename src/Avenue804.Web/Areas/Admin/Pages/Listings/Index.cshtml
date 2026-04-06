@@ -1,0 +1,33 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Listings.IndexModel
+@{
+    ViewData["Title"] = "Properties";
+}
+<p style="margin-bottom:20px"><a class="btn-primary" asp-page="Create" style="text-decoration:none;display:inline-flex"><span>New listing</span></a></p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Offer</th>
+        <th>Location</th>
+        <th>Published</th>
+      </tr>
+    </thead>
+    <tbody>
+    @foreach (var row in Model.Items)
+    {
+      <tr>
+        <td><a asp-page="Edit" asp-route-id="@row.Id">@row.Title</a></td>
+        <td>@row.OfferType</td>
+        <td class="muted">@(row.Location ?? "—")</td>
+        <td>@(row.IsPublished ? "Yes" : "No")</td>
+      </tr>
+    }
+    </tbody>
+  </table>
+</div>
+@if (Model.Items.Count == 0)
+{
+  <p class="muted" style="margin-top:16px">No listings yet. Create and publish one to show it on the public <a asp-area="" asp-page="/Properties/Index" style="color:var(--accent)">Properties</a> page.</p>
+}

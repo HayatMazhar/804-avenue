@@ -1,0 +1,26 @@
+@page "{id:int}"
+@model Avenue804.Web.Areas.Admin.Pages.OwnerRequests.DetailModel
+@{
+    ViewData["Title"] = "Listing request";
+    var row = Model.Row!;
+}
+<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Listing requests</a></p>
+<div class="detail-block">
+  <h3>@row.Name</h3>
+  <dl class="detail-dl">
+    <dt>Email</dt>
+    <dd><a href="mailto:@row.Email">@row.Email</a></dd>
+    <dt>Phone</dt>
+    <dd>@row.Phone</dd>
+    <dt>Intent</dt>
+    <dd>@row.Intent</dd>
+    <dt>Location / title</dt>
+    <dd>@(string.IsNullOrWhiteSpace(row.LocationOrTitle) ? "—" : row.LocationOrTitle)</dd>
+    <dt>Submitted</dt>
+    <dd>@row.CreatedAt.LocalDateTime.ToString("f")</dd>
+  </dl>
+</div>
+<div class="detail-block">
+  <h3>Details</h3>
+  <p>@(string.IsNullOrWhiteSpace(row.Details) ? "—" : row.Details)</p>
+</div>

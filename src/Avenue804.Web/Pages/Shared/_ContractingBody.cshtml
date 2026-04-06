@@ -1,0 +1,261 @@
+@model Avenue804.Web.Models.Public.ServicePageHeroModel
+<!-- ═══ HERO ═══ -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Contracting</span></div>
+    <h1 class="page-hero-title fade-up">
+      @if (string.IsNullOrEmpty(Model.HeroTitleHtml))
+      {
+        <text>Crafting <em>Spaces</em> with Quality and Precision</text>
+      }
+      else
+      {
+        @Html.Raw(Model.HeroTitleHtml)
+      }
+    </h1>
+    <p class="page-hero-sub fade-up">
+      @if (string.IsNullOrEmpty(Model.HeroSubtitleHtml))
+      {
+        <text>Our contracting division delivers reliable construction and fit-out services with a focus on quality craftsmanship, professional project management, and on-time delivery across the UAE.</text>
+      }
+      else
+      {
+        @Html.Raw(Model.HeroSubtitleHtml)
+      }
+    </p>
+  </div>
+</section>
+
+<!-- ═══ SERVICE 1 — Civil & General Contracting ═══ -->
+<section class="svc-block section-pad">
+  <div class="container">
+    <div class="svc-grid">
+      <div class="svc-img fade-up">
+        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80" alt="Civil construction site">
+      </div>
+      <div class="svc-content fade-up">
+        <span class="section-tag">Construction</span>
+        <h2>Civil &amp; General <em>Contracting</em></h2>
+        <p>From foundation to finish, our civil and general contracting services cover all aspects of building construction. We manage the complete life-cycle of construction projects — residential, commercial, and industrial.</p>
+        <ul class="svc-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Structural concrete and steel works</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Masonry and blockwork</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Waterproofing and insulation</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Site supervision and project management</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Quality assurance and safety compliance</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICE 2 — Gypsum & Ceiling ═══ -->
+<section class="svc-block section-pad">
+  <div class="container">
+    <div class="svc-grid reverse">
+      <div class="svc-img fade-up">
+        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80" alt="Ceiling and gypsum work">
+      </div>
+      <div class="svc-content fade-up">
+        <span class="section-tag">Interiors</span>
+        <h2>Gypsum &amp; <em>Ceiling</em> Works</h2>
+        <p>We design and install precision gypsum partitions, false ceilings, and decorative mouldings that define the character of your interior spaces — delivering flawless finishes every time.</p>
+        <ul class="svc-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Gypsum board partitions and cladding</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Suspended and false ceiling systems</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Decorative cornices and mouldings</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Fire-rated and acoustic partitions</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Concealed lighting integration</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICE 3 — Glass & Aluminum ═══ -->
+<section class="svc-block section-pad">
+  <div class="container">
+    <div class="svc-grid">
+      <div class="svc-img fade-up">
+        <img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&q=80" alt="Glass facade building">
+      </div>
+      <div class="svc-content fade-up">
+        <span class="section-tag">Facades</span>
+        <h2>Glass &amp; <em>Aluminum</em> Works</h2>
+        <p>From sleek glass facades to custom aluminum cladding, we create modern exterior and interior solutions that combine aesthetics with structural performance and energy efficiency.</p>
+        <ul class="svc-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Curtain wall systems</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Aluminum doors, windows, and shopfronts</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Glass partitions and balustrades</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Spider and structural glazing</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Aluminum composite panel (ACP) cladding</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICE 4 — Painting & Finishing ═══ -->
+<section class="svc-block section-pad">
+  <div class="container">
+    <div class="svc-grid reverse">
+      <div class="svc-img fade-up">
+        <img src="https://images.unsplash.com/photo-1562259929-b4e1fd3aef09?w=800&q=80" alt="Painting and finishing">
+      </div>
+      <div class="svc-content fade-up">
+        <span class="section-tag">Finishing</span>
+        <h2>Painting &amp; <em>Finishing</em></h2>
+        <p>Our professional painting and finishing teams deliver flawless interior and exterior surfaces using premium materials and meticulous application techniques for long-lasting results.</p>
+        <ul class="svc-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Interior and exterior painting</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Textured and decorative wall finishes</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Epoxy and polyurethane coatings</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Wallpaper installation</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Wood staining and lacquering</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICE 5 — Flooring ═══ -->
+<section class="svc-block section-pad">
+  <div class="container">
+    <div class="svc-grid">
+      <div class="svc-img fade-up">
+        <img src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=800&q=80" alt="Premium flooring installation">
+      </div>
+      <div class="svc-content fade-up">
+        <span class="section-tag">Flooring</span>
+        <h2>Premium <em>Flooring</em> Solutions</h2>
+        <p>We source and install the finest flooring materials — from natural stone and marble to engineered hardwood, ceramic tiles, and industrial-grade epoxy — tailored to your project's needs.</p>
+        <ul class="svc-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Marble, granite, and natural stone</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Porcelain and ceramic tiles</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Hardwood and laminate flooring</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Epoxy and self-leveling floor coatings</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Raised access flooring systems</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICE 6 — Interior Fit-Out & Renovation ═══ -->
+<section class="svc-block section-pad">
+  <div class="container">
+    <div class="svc-grid reverse">
+      <div class="svc-img fade-up">
+        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80" alt="Interior fit-out and renovation">
+      </div>
+      <div class="svc-content fade-up">
+        <span class="section-tag">Fit-Out</span>
+        <h2>Interior Fit-Out &amp; <em>Renovation</em></h2>
+        <p>We deliver complete interior transformations — from design concept to handover — for residential, commercial, and hospitality spaces. Every detail is managed to achieve your vision.</p>
+        <ul class="svc-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Full interior design and space planning</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Joinery and custom millwork</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>MEP coordination and integration</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Kitchen and bathroom renovations</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Office and retail space buildouts</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICE 7 — Signage ═══ -->
+<section class="svc-block section-pad">
+  <div class="container">
+    <div class="svc-grid">
+      <div class="svc-img fade-up">
+        <img src="https://images.unsplash.com/photo-1563906267088-b029e7101114?w=800&q=80" alt="Custom signage">
+      </div>
+      <div class="svc-content fade-up">
+        <span class="section-tag">Signage</span>
+        <h2>Internal &amp; External <em>Signage</em></h2>
+        <p>We design, fabricate, and install custom signage solutions that enhance brand visibility and wayfinding — from illuminated channel letters to directional systems and digital displays.</p>
+        <ul class="svc-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>3D lettering and channel letters</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>LED and illuminated signage</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Wayfinding and directional systems</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Monument and pylon signs</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Vehicle wraps and vinyl graphics</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROCESS TIMELINE ═══ -->
+<section class="process-section section-pad">
+  <div class="container" style="text-align:center">
+    <span class="section-tag fade-up" style="justify-content:center">Our Process</span>
+    <h2 class="section-title fade-up">From Concept to <em>Completion</em></h2>
+    <p class="section-sub fade-up" style="margin:0 auto 16px">A streamlined, transparent approach that keeps your project on track from day one to handover.</p>
+    <div class="timeline">
+      <div class="timeline-step fade-up">
+        <div class="timeline-dot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <h4>Consultation</h4>
+        <p>Understanding your requirements and vision</p>
+      </div>
+      <div class="timeline-step fade-up">
+        <div class="timeline-dot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+        <h4>Design</h4>
+        <p>Technical drawings and material planning</p>
+      </div>
+      <div class="timeline-step fade-up">
+        <div class="timeline-dot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <h4>Approval</h4>
+        <p>Permits, authority clearances, and sign-off</p>
+      </div>
+      <div class="timeline-step fade-up">
+        <div class="timeline-dot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+        <h4>Execution</h4>
+        <p>On-site construction with quality control</p>
+      </div>
+      <div class="timeline-step fade-up">
+        <div class="timeline-dot"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
+        <h4>Handover</h4>
+        <p>Final inspection, snagging, and delivery</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MATERIALS & STANDARDS ═══ -->
+<section class="materials-section section-pad">
+  <div class="container" style="text-align:center">
+    <span class="section-tag fade-up" style="justify-content:center">Quality</span>
+    <h2 class="section-title fade-up">Materials &amp; <em>Standards</em></h2>
+    <p class="section-sub fade-up" style="margin:0 auto 16px">We never compromise on materials. Every product and process meets international quality benchmarks.</p>
+    <div class="mat-grid">
+      <div class="mat-card fade-up">
+        <div class="mat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h4>Certified Materials</h4>
+        <p>All materials are sourced from certified manufacturers and meet ASTM, ISO, and UAE Civil Defense compliance requirements.</p>
+      </div>
+      <div class="mat-card fade-up">
+        <div class="mat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <h4>Quality Assurance</h4>
+        <p>Multi-stage quality checks at every phase — from material receipt to final installation — ensuring zero-defect handover.</p>
+      </div>
+      <div class="mat-card fade-up">
+        <div class="mat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <h4>Safety Standards</h4>
+        <p>Our sites adhere to OSHAD and ADQCC safety protocols with certified HSE officers and regular safety audits.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-banner">
+  <div class="container">
+    <h2 class="cta-title fade-up">Ready to Start Your <em>Project</em>?</h2>
+    <p class="cta-sub fade-up">Let's discuss your contracting needs. From initial consultation to final handover, we're with you every step of the way.</p>
+    <div class="cta-btns fade-up">
+      <a asp-page="/Contact" class="btn-primary"><span>Start Your Project</span></a>
+      <a asp-page="/Projects/Index" class="btn-outline">View our projects</a>
+    </div>
+  </div>

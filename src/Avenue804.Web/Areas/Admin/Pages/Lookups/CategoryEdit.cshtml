@@ -1,0 +1,33 @@
+@page "{id:int?}"
+@model Avenue804.Web.Areas.Admin.Pages.Lookups.CategoryEditModel
+@{
+    ViewData["Title"] = Model.IsNew ? "New lookup category" : "Edit lookup category";
+}
+<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Lookups</a></p>
+<form method="post" class="admin-form">
+  <div asp-validation-summary="ModelOnly" class="muted" style="color:var(--danger)"></div>
+  <div class="row">
+    <label asp-for="Form.Code"></label>
+    @if (Model.IsNew)
+    {
+      <input asp-for="Form.Code" required />
+    }
+    else
+    {
+      <input asp-for="Form.Code" readonly style="opacity:.75" />
+    }
+    <span asp-validation-for="Form.Code" class="muted"></span>
+  </div>
+  <div class="row">
+    <label asp-for="Form.Name"></label>
+    <input asp-for="Form.Name" required />
+  </div>
+  <div class="row">
+    <label asp-for="Form.SortOrder"></label>
+    <input asp-for="Form.SortOrder" type="number" />
+  </div>
+  <button type="submit" class="btn-primary"><span>Save</span></button>
+</form>
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

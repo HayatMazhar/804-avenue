@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facility Management — 804 Avenue</title>
+<meta name="description" content="804 Avenue Facility Management — Integrated operations, soft services, security, and vendor coordination for commercial and residential assets in Abu Dhabi, UAE.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/shared.css">
+<style>
+.svc-block{padding:90px 0;position:relative;overflow:hidden}
+.svc-block:nth-child(even){background:var(--bg-surface)}
+.svc-block:nth-child(odd){background:var(--bg-deep)}
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.svc-grid.reverse .svc-img{order:2}
+.svc-grid.reverse .svc-content{order:1}
+.svc-img{border-radius:var(--radius-md);overflow:hidden;position:relative}
+.svc-img img{width:100%;height:400px;object-fit:cover;transition:transform .6s var(--ease)}
+.svc-img:hover img{transform:scale(1.04)}
+.svc-img::after{content:'';position:absolute;inset:0;border:1px solid var(--border);border-radius:var(--radius-md);pointer-events:none}
+.svc-content .section-tag{margin-bottom:12px}
+.svc-content h2{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--text-primary);margin-bottom:14px;line-height:1.2}
+.svc-content h2 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.svc-content p{color:var(--text-secondary);line-height:1.8;margin-bottom:20px}
+.svc-list{display:flex;flex-direction:column;gap:10px}
+.svc-list li{display:flex;align-items:flex-start;gap:10px;color:var(--text-secondary);font-size:.9rem;line-height:1.6}
+.svc-list li svg{color:var(--accent);flex-shrink:0;margin-top:3px}
+.why-maint{background:var(--bg-surface);position:relative;overflow:hidden}
+.why-maint::before{content:'';position:absolute;inset:0;background-image:radial-gradient(var(--accent-10) 1px,transparent 1px);background-size:28px 28px;opacity:.35;pointer-events:none}
+.why-maint .container{position:relative;z-index:1}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.why-card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:36px 28px;text-align:center;transition:var(--transition)}
+.why-card:hover{border-color:var(--border-accent);transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,.3),0 0 0 1px var(--accent-15)}
+.why-card-icon{width:60px;height:60px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;background:var(--accent-10);border:1px solid var(--accent-20);border-radius:50%;color:var(--accent);transition:var(--transition)}
+.why-card:hover .why-card-icon{background:var(--accent-20);box-shadow:0 0 24px var(--accent-glow)}
+.why-card h4{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--text-primary);margin-bottom:10px}
+.why-card p{font-size:.88rem;color:var(--text-tertiary);line-height:1.7}
+.cta-banner{position:relative;padding:90px 0;text-align:center;overflow:hidden;background:linear-gradient(135deg,var(--bg-surface),var(--bg-deep))}
+.cta-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,var(--accent-15),transparent 60%);pointer-events:none}
+.cta-banner::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),var(--cyan),transparent)}
+.cta-banner .container{position:relative;z-index:1}
+.cta-title{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:var(--text-primary);margin-bottom:12px;letter-spacing:-.02em}
+.cta-title em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cta-sub{font-size:1rem;color:var(--text-secondary);margin-bottom:32px;max-width:520px;margin-left:auto;margin-right:auto}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+@media(max-width:1024px){
+  .svc-grid{grid-template-columns:1fr;gap:32px}
+  .svc-grid.reverse .svc-img,.svc-grid.reverse .svc-content{order:unset}
+  .why-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .svc-block{padding:60px 0}
+  .svc-img img{height:280px}
+  .why-grid{grid-template-columns:1fr}
+  .cta-btns{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+      <div class="nav-logo-text">
+        <span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span>
+        <span class="nav-logo-sub">Properties &amp; Contracting</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li class="nav-dropdown">
+        <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true" id="navServicesBtnFm">
+          Services
+          <svg class="nav-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <ul class="nav-dropdown-menu" role="menu" aria-labelledby="navServicesBtnFm">
+          <li role="none"><a role="menuitem" href="properties.html">Properties</a></li>
+          <li role="none"><a role="menuitem" href="contracting.html">Contracting</a></li>
+          <li role="none"><a role="menuitem" href="maintenance.html">Maintenance</a></li>
+          <li role="none"><a role="menuitem" href="facility-management.html" class="active">Facility Management</a></li>
+        </ul>
+      </li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="../index.html#modal-list-property">List Your Property</a></li>
+      <li><a href="../index.html#modal-inquiry">Inquiry</a></li>
+      <li><a href="contact.html">Contact us</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="tel:+971504399804" class="nav-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        +971 50 43 99 804
+      </a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="../index.html" onclick="closeMobile()">Home</a>
+  <span class="mobile-nav-label">Services</span>
+  <div class="mobile-nav-sub">
+    <a href="properties.html" onclick="closeMobile()">Properties</a>
+    <a href="contracting.html" onclick="closeMobile()">Contracting</a>
+    <a href="maintenance.html" onclick="closeMobile()">Maintenance</a>
+    <a href="facility-management.html" class="active" onclick="closeMobile()">Facility Management</a>
+  </div>
+  <a href="about.html" onclick="closeMobile()">About Us</a>
+  <a href="../index.html#modal-list-property" onclick="closeMobile()">List Your Property</a>
+  <a href="../index.html#modal-inquiry" onclick="closeMobile()">Inquiry</a>
+  <a href="contact.html" onclick="closeMobile()">Contact us</a>
+  <a href="tel:+971504399804" class="btn-primary" onclick="closeMobile()" style="margin-top:16px"><span>Call Us</span></a>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a href="../index.html">Home</a><span class="sep">/</span><span>Facility Management</span></div>
+    <h1 class="page-hero-title fade-up">Integrated <em>Facility</em> Management</h1>
+    <p class="page-hero-sub fade-up">End-to-end facility operations for offices, retail, and residential towers — combining maintenance, soft services, security coordination, and vendor management under one accountable partner across Abu Dhabi and the UAE.</p>
+  </div>
+</section>
+
+<section class="svc-block section-pad">
+  <div class="container">
+    <div class="svc-grid">
+      <div class="svc-img fade-up">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Modern office facility">
+      </div>
+      <div class="svc-content fade-up">
+        <span class="section-tag">Operations</span>
+        <h2>Building <em>Operations</em> &amp; Compliance</h2>
+        <p>We align day-to-day building performance with landlord and tenant expectations — from helpdesk and work orders to statutory inspections, documentation, and lifecycle planning.</p>
+        <ul class="svc-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Central helpdesk and SLA-based ticketing</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Vendor onboarding, contracts, and performance reviews</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Statutory testing coordination (fire, lift, electrical)</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Monthly KPI reporting and asset registers</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="svc-block section-pad">
+  <div class="container">
+    <div class="svc-grid reverse">
+      <div class="svc-img fade-up">
+        <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=800&q=80" alt="Facility services team">
+      </div>
+      <div class="svc-content fade-up">
+        <span class="section-tag">Soft Services</span>
+        <h2>Soft <em>Services</em> &amp; Guest Experience</h2>
+        <p>Reception, housekeeping, landscaping, waste, and parking operations — delivered with consistent standards, trained supervisors, and clear escalation paths.</p>
+        <ul class="svc-list">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Reception, concierge, and visitor management</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Cleaning, pest control, and waste programs</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Landscaping and façade cleaning schedules</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Security liaison and access control coordination</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="why-maint section-pad">
+  <div class="container" style="text-align:center">
+    <div class="section-tag fade-up" style="justify-content:center">Why FM with 804</div>
+    <h2 class="section-title fade-up" style="max-width:640px;margin:0 auto 16px">One accountable <em>partner</em></h2>
+    <div class="why-grid">
+      <div class="why-card fade-up">
+        <div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h4>Single point of contact</h4>
+        <p>One FM lead coordinates maintenance, soft services, and contractors — fewer handoffs, faster resolution.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div>
+        <h4>Cost transparency</h4>
+        <p>Clear scopes, budgets, and variance reporting so owners always know where spend is going.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <h4>24/7 readiness</h4>
+        <p>After-hours escalation paths aligned with your building’s critical systems and tenant mix.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <div class="container">
+    <h2 class="cta-title fade-up">Discuss your <em>facility</em> scope</h2>
+    <p class="cta-sub fade-up">Share your asset type, size, and service hours — we will propose a tailored FM model and transition plan.</p>
+    <div class="cta-btns fade-up">
+      <a href="contact.html" class="btn-primary"><span>Talk to our FM team</span></a>
+      <a href="maintenance.html" class="btn-outline">Maintenance services</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div style="margin-bottom:16px"><a href="../index.html" class="nav-logo"><svg class="nav-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg><div class="nav-logo-text"><span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span><span class="nav-logo-sub">Properties &amp; Contracting</span></div></a></div>
+        <p class="footer-tagline">Delivering Excellence &amp; Trust — Abu Dhabi's integrated partner for real estate, construction, and property maintenance.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-icon" aria-label="Instagram"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" class="social-icon" aria-label="LinkedIn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="#" class="social-icon" aria-label="Facebook"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+          <a href="https://wa.me/971504399804" target="_blank" class="social-icon" aria-label="WhatsApp"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Real Estate</h4><ul><li><a href="properties.html">Buy Property</a></li><li><a href="properties.html">Rent Property</a></li><li><a href="properties.html">Investment</a></li><li><a href="properties.html">Commercial</a></li></ul></div>
+      <div class="footer-col"><h4>Services</h4><ul><li><a href="contracting.html">Contracting</a></li><li><a href="maintenance.html">Maintenance</a></li><li><a href="facility-management.html">Facility Management</a></li><li><a href="projects.html">Our Projects</a></li></ul></div>
+      <div class="footer-col"><h4>Contact Us</h4><ul><li><a href="#">Office #540, 5th Floor, Al Ghaith Tower, Abu Dhabi, UAE</a></li><li><a href="tel:+971504399804">+971 50 43 99 804</a></li><li><a href="mailto:info@804avenue.com">info@804avenue.com</a></li><li><a href="#">www.804avenue.ae</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><div class="footer-copy">&copy; 2025 804 Avenue Properties and Contracting. All Rights Reserved.</div></div>
+  </div>
+</footer>
+
+<a href="https://wa.me/971504399804" target="_blank" class="whatsapp-float" aria-label="WhatsApp"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+<button class="back-to-top" id="backToTop" aria-label="Back to top"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg></button>
+
+<script src="../assets/js/shared.js"></script>
+</body>
+</html>

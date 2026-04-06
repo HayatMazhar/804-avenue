@@ -1,0 +1,31 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Projects.IndexModel
+@{
+    ViewData["Title"] = "Projects";
+}
+<p style="margin-bottom:20px"><a class="btn-primary" asp-page="Create" style="text-decoration:none;display:inline-flex"><span>New project</span></a></p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Slug</th>
+        <th>Published</th>
+      </tr>
+    </thead>
+    <tbody>
+    @foreach (var row in Model.Items)
+    {
+      <tr>
+        <td><a asp-page="Edit" asp-route-id="@row.Id">@row.Title</a></td>
+        <td class="muted">@(row.Slug ?? "—")</td>
+        <td>@(row.IsPublished ? "Yes" : "No")</td>
+      </tr>
+    }
+    </tbody>
+  </table>
+</div>
+@if (Model.Items.Count == 0)
+{
+  <p class="muted" style="margin-top:16px">No portfolio projects yet.</p>
+}

@@ -1,0 +1,34 @@
+@page "{id:int}"
+@model Avenue804.Web.Areas.Admin.Pages.ContentBlocks.EditModel
+@{
+    ViewData["Title"] = "Edit content block";
+}
+<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Content blocks</a></p>
+<form method="post" class="admin-form" style="max-width:720px">
+  <div asp-validation-summary="ModelOnly" class="muted" style="color:var(--danger)"></div>
+  <div class="row">
+    <label asp-for="Form.Slug"></label>
+    <input asp-for="Form.Slug" required />
+    <span asp-validation-for="Form.Slug" class="muted"></span>
+  </div>
+  <div class="row">
+    <label asp-for="Form.Title"></label>
+    <input asp-for="Form.Title" />
+  </div>
+  <div class="row">
+    <label asp-for="Form.Body"></label>
+    <textarea asp-for="Form.Body" rows="14" required></textarea>
+    <span asp-validation-for="Form.Body" class="muted"></span>
+  </div>
+  <div class="row chk">
+    <input asp-for="Form.IsPublished" />
+    <label asp-for="Form.IsPublished" style="margin:0">Published</label>
+  </div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <button type="submit" class="btn-primary"><span>Save</span></button>
+    <button type="submit" class="btn-outline" style="border-color:var(--danger);color:var(--danger)" asp-page-handler="Delete" formnovalidate onclick="return confirm('Delete this block?');">Delete</button>
+  </div>
+</form>
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

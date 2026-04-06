@@ -1,0 +1,56 @@
+@page
+@using Avenue804.Web.Domain
+@model Avenue804.Web.Areas.Admin.Pages.PropertyInquiries.IndexModel
+@{
+    ViewData["Title"] = "Property inquiries";
+    string BadgeClass(InquiryStatus s) => s switch
+    {
+        InquiryStatus.New => "badge badge-new",
+        InquiryStatus.InProgress => "badge badge-progress",
+        _ => "badge badge-closed"
+    };
+}
+<p class="muted" style="margin-bottom:20px">@Model.TotalCount total — submitted from the public <strong>Property inquiry</strong> modal.</p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Contact</th>
+        <th>I want to</th>
+        <th>Budget</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    @foreach (var row in Model.Items)
+    {
+      <tr>
+        <td>@row.CreatedAt.LocalDateTime.ToString("g")</td>
+        <td>
+          <a asp-page="Detail" asp-route-id="@row.Id">@row.Name</a><br />
+          <span class="muted" style="font-size:0.82rem">@row.Email · @row.Phone</span>
+        </td>
+        <td>@(row.WantToLookup?.DisplayName ?? "—")</td>
+        <td>@(row.BudgetLookup?.DisplayName ?? "—")</td>
+        <td><span class="@BadgeClass(row.Status)">@row.Status</span></td>
+      </tr>
+    }
+    </tbody>
+  </table>
+</div>
+@if (Model.Items.Count == 0)
+{
+  <p class="muted" style="margin-top:16px">No property inquiries yet.</p>
+}
+<div class="pager">
+  @if (Model.PageNumber > 1)
+  {
+    <a asp-page="Index" asp-route-p="@(Model.PageNumber - 1)">Previous</a>
+  }
+  <span>Page @Model.PageNumber of @Model.TotalPages</span>
+  @if (Model.PageNumber < Model.TotalPages)
+  {
+    <a asp-page="Index" asp-route-p="@(Model.PageNumber + 1)">Next</a>
+  }
+</div>

@@ -1,0 +1,31 @@
+@page "{id:int}"
+@model Avenue804.Web.Areas.Admin.Pages.Inquiries.DetailModel
+@{
+    ViewData["Title"] = "Inquiry";
+    var row = Model.Row!;
+}
+<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Inquiries</a></p>
+<div class="detail-block">
+  <h3>@row.Subject</h3>
+  <dl class="detail-dl">
+    <dt>From</dt>
+    <dd>@row.Name &lt;@row.Email&gt;</dd>
+    <dt>Phone</dt>
+    <dd>@(string.IsNullOrWhiteSpace(row.Phone) ? "—" : row.Phone)</dd>
+    <dt>Topic</dt>
+    <dd>@(row.TopicLookup?.DisplayName ?? "—")</dd>
+    <dt>Received</dt>
+    <dd>@row.CreatedAt.LocalDateTime.ToString("f")</dd>
+  </dl>
+</div>
+<div class="detail-block">
+  <h3>Message</h3>
+  <p>@row.Message</p>
+</div>
+<form method="post" class="admin-form" style="max-width:360px">
+  <div class="row">
+    <label asp-for="Status">Status</label>
+    <select asp-for="Status" asp-items="Html.GetEnumSelectList<InquiryStatus>()"></select>
+  </div>
+  <button type="submit" class="btn-primary"><span>Save status</span></button>
+</form>

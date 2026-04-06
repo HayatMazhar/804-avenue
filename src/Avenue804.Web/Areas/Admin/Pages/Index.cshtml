@@ -1,0 +1,25 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<div class="stat-grid">
+  <div class="stat-card fade-up"><div class="n">@Model.NewPropertyListingInquiryCount</div><div class="l">New property inquiries</div></div>
+  <div class="stat-card fade-up"><div class="n">@Model.PropertyListingInquiryCount</div><div class="l">Property inquiries total</div></div>
+  <div class="stat-card fade-up"><div class="n">@Model.NewInquiryCount</div><div class="l">New inquiries</div></div>
+  <div class="stat-card fade-up"><div class="n">@Model.InquiryCount</div><div class="l">Inquiries total</div></div>
+  <div class="stat-card fade-up"><div class="n">@Model.OwnerListingCount</div><div class="l">Listing requests</div></div>
+  <div class="stat-card fade-up"><div class="n">@Model.PublishedListings</div><div class="l">Published listings</div></div>
+  <div class="stat-card fade-up"><div class="n">@Model.PublishedProjects</div><div class="l">Published projects</div></div>
+</div>
+<div style="margin-top:36px;display:flex;flex-wrap:wrap;gap:12px">
+  <a class="btn-primary" asp-area="Admin" asp-page="/PropertyInquiries/Index" style="text-decoration:none"><span>Property inquiries</span></a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/Inquiries/Index" style="text-decoration:none">Contact inquiries</a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/SiteSettings/Index" style="text-decoration:none">Site settings</a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/Lookups/Index" style="text-decoration:none">Lookups</a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/ContentBlocks/Index" style="text-decoration:none">Content</a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/OwnerRequests/Index" style="text-decoration:none">Listing requests</a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/Listings/Index" style="text-decoration:none">Properties</a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/Projects/Index" style="text-decoration:none">Projects</a>
+</div>
+<p class="muted" style="margin-top:28px;line-height:1.7">The <strong>Property inquiry</strong> modal saves to <strong>Property inquiries</strong>. The contact page form and legacy flow save to <strong>Contact inquiries</strong>. <strong>List your property</strong> saves to <strong>Listing requests</strong>.</p>

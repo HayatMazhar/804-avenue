@@ -198,4 +198,78 @@
       }
     });
   });
+
+  function closeModal(root) {
+    if (!root) return;
+    root.classList.remove('open');
+    root.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (typeof history !== 'undefined' && history.replaceState) {
+      var h = window.location.hash;
+      if (h === '#modal-list-property' || h === '#modal-inquiry') {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    }
+  }
+
+  function openModal(id) {
+    var root = document.getElementById(id);
+    if (!root) return;
+    document.querySelectorAll('.modal-root.open').forEach(function(m) {
+      if (m !== root) closeModal(m);
+    });
+    root.classList.add('open');
+    root.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var closeBtn = root.querySelector('.modal-close');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  document.querySelectorAll('[data-modal-open]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var id = btn.getAttribute('data-modal-open');
+      if (!id) return;
+      openModal(id);
+      if (id === 'modal-inquiry') {
+        var hint = btn.getAttribute('data-inquiry-subject');
+        var el = document.getElementById('inSubject');
+        if (hint && el) el.value = hint;
+      }
+    });
+  });
+
+  document.querySelectorAll('.modal-root').forEach(function(root) {
+    root.setAttribute('aria-hidden', 'true');
+    root.querySelectorAll('[data-modal-close]').forEach(function(el) {
+      el.addEventListener('click', function() {
+        closeModal(root);
+      });
+    });
+    var bd = root.querySelector('.modal-backdrop');
+    if (bd) {
+      bd.addEventListener('click', function() {
+        closeModal(root);
+      });
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-root.open').forEach(closeModal);
+    }
+  });
+
+  (function openModalFromHash() {
+    var id = (window.location.hash || '').replace(/^#/, '');
+    if (id === 'modal-list-property' || id === 'modal-inquiry') {
+      openModal(id);
+    }
+  })();
+  window.addEventListener('hashchange', function() {
+    var id = (window.location.hash || '').replace(/^#/, '');
+    if (id === 'modal-list-property' || id === 'modal-inquiry') {
+      openModal(id);
+    }
+  });
 })();

@@ -1,0 +1,15 @@
+@{
+    var section = ViewData["AdminSection"] as string ?? "";
+    string NavClass(string key) => string.Equals(section, key, StringComparison.OrdinalIgnoreCase) ? "admin-nav-a active" : "admin-nav-a";
+}
+<nav class="admin-nav" aria-label="Admin">
+  <a class="@NavClass("dashboard")" asp-area="Admin" asp-page="/Index">Dashboard</a>
+  <a class="@NavClass("settings")" asp-area="Admin" asp-page="/SiteSettings/Index">Settings</a>
+  <a class="@NavClass("lookups")" asp-area="Admin" asp-page="/Lookups/Index">Lookups</a>
+  <a class="@NavClass("content")" asp-area="Admin" asp-page="/ContentBlocks/Index">Content</a>
+  <a class="@NavClass("property-inquiries")" asp-area="Admin" asp-page="/PropertyInquiries/Index">Property inquiries</a>
+  <a class="@NavClass("inquiries")" asp-area="Admin" asp-page="/Inquiries/Index">Inquiries</a>
+  <a class="@NavClass("owner")" asp-area="Admin" asp-page="/OwnerRequests/Index">Listing requests</a>
+  <a class="@NavClass("listings")" asp-area="Admin" asp-page="/Listings/Index">Properties</a>
+  <a class="@NavClass("projects")" asp-area="Admin" asp-page="/Projects/Index">Projects</a>
+</nav>

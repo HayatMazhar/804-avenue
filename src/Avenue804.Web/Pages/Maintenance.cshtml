@@ -1,0 +1,11 @@
+@page "/Maintenance"
+@model MaintenanceModel
+@{
+    ViewData["Title"] = "Maintenance";
+    ViewData["NavActive"] = "maintenance";
+    ViewData["MetaDescription"] = "804 Avenue maintenance — general building, civil, MEP, preventive and corrective care with 24/7 support in Abu Dhabi, UAE.";
+}
+@section Styles {
+  <link rel="stylesheet" href="~/css/service-pages.css" asp-append-version="true" />
+}
+<partial name="_MaintenanceBody" model="Model.Hero" />

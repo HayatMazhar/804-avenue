@@ -1,0 +1,65 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Listings.CreateModel
+@{
+    ViewData["Title"] = "New listing";
+}
+<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Properties</a></p>
+<form method="post" class="admin-form">
+  <div class="row">
+    <label asp-for="Form.Title"></label>
+    <input asp-for="Form.Title" />
+    <span asp-validation-for="Form.Title" class="muted"></span>
+  </div>
+  <div class="row">
+    <label asp-for="Form.Slug">Slug (optional)</label>
+    <input asp-for="Form.Slug" placeholder="auto from title" />
+  </div>
+  <div class="row" style="display:grid;grid-template-columns:1fr 120px;gap:16px">
+    <div>
+      <label asp-for="Form.Price"></label>
+      <input asp-for="Form.Price" />
+    </div>
+    <div>
+      <label asp-for="Form.Currency"></label>
+      <input asp-for="Form.Currency" />
+    </div>
+  </div>
+  <div class="row">
+    <label asp-for="Form.OfferType"></label>
+    <select asp-for="Form.OfferType" asp-items="Html.GetEnumSelectList<ListingOfferType>()"></select>
+  </div>
+  <div class="row">
+    <label asp-for="Form.Location"></label>
+    <input asp-for="Form.Location" />
+  </div>
+  <div class="row">
+    <label asp-for="Form.Description"></label>
+    <textarea asp-for="Form.Description"></textarea>
+  </div>
+  <div class="row" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <div>
+      <label asp-for="Form.Beds"></label>
+      <input asp-for="Form.Beds" />
+    </div>
+    <div>
+      <label asp-for="Form.Baths"></label>
+      <input asp-for="Form.Baths" />
+    </div>
+    <div>
+      <label asp-for="Form.AreaSqft"></label>
+      <input asp-for="Form.AreaSqft" />
+    </div>
+  </div>
+  <div class="row">
+    <label asp-for="Form.MainImageUrl"></label>
+    <input asp-for="Form.MainImageUrl" />
+  </div>
+  <div class="row chk">
+    <input asp-for="Form.IsPublished" />
+    <label asp-for="Form.IsPublished" style="margin:0;font-size:0.88rem;text-transform:none;letter-spacing:normal">Published</label>
+  </div>
+  <button type="submit" class="btn-primary"><span>Create</span></button>
+</form>
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,34 @@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Avenue804.Web.Infrastructure
+@{
+    var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
+}
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div style="margin-bottom:16px"><a asp-page="/Index" class="nav-logo"><svg class="nav-logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg><div class="nav-logo-text"><span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span><span class="nav-logo-sub">@site?.NavTagline</span></div></a></div>
+        <p class="footer-tagline">@site?.FooterTagline</p>
+        <div class="footer-socials">
+          @if (!string.IsNullOrWhiteSpace(site?.InstagramUrl))
+          {
+            <a href="@site.InstagramUrl" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+          }
+          @if (!string.IsNullOrWhiteSpace(site?.LinkedInUrl))
+          {
+            <a href="@site.LinkedInUrl" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="LinkedIn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          }
+          @if (!string.IsNullOrWhiteSpace(site?.FacebookUrl))
+          {
+            <a href="@site.FacebookUrl" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+          }
+          <a href="@site?.WhatsAppHref" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="WhatsApp"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Real Estate</h4><ul><li><a asp-page="/Properties">Buy Property</a></li><li><a asp-page="/Properties">Rent Property</a></li><li><a asp-page="/Properties">Investment</a></li><li><a asp-page="/Properties">Commercial</a></li></ul></div>
+      <div class="footer-col"><h4>Contracting</h4><ul><li><a asp-page="/Contracting">General Contracting</a></li><li><a asp-page="/Contracting">Interior Fit-Out</a></li><li><a asp-page="/Contracting">Renovation</a></li><li><a asp-page="/Maintenance">Maintenance</a></li><li><a asp-page="/FacilityManagement">Facility Management</a></li><li><a asp-page="/Projects">Our Projects</a></li></ul></div>
+      <div class="footer-col"><h4>Contact Us</h4><ul><li><span style="color:var(--text-secondary)">@site?.Address</span></li><li><a href="@site?.TelHref">@site?.PhoneDisplay</a></li><li><a href="mailto:@site?.Email">@site?.Email</a></li>@if (!string.IsNullOrWhiteSpace(site?.WebsiteUrl)) { <li><a href="@site.WebsiteUrl" target="_blank" rel="noopener noreferrer">@site.WebsiteUrl.Replace("https://", "").Replace("http://", "")</a></li> }</ul></div>
+    </div>
+    <div class="footer-bottom"><div class="footer-copy">&copy; @DateTime.UtcNow.Year @(site?.CopyrightOwner ?? "804 Avenue Properties and Contracting"). All Rights Reserved.</div></div>
+  </div>
+</footer>

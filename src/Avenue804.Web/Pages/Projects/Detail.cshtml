@@ -1,0 +1,39 @@
+@page "/Projects/{slug}"
+@model Avenue804.Web.Pages.Projects.DetailModel
+@{
+  var P = Model.Project!;
+  var img = string.IsNullOrWhiteSpace(P.CoverImageUrl)
+    ? "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1600&q=80"
+    : P.CoverImageUrl.Trim();
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Projects/Index">Projects</a><span class="sep">/</span><span>@P.Title</span></div>
+    <h1 class="page-hero-title fade-up">@P.Title</h1>
+    @if (!string.IsNullOrWhiteSpace(P.Summary))
+    {
+      <p class="page-hero-sub fade-up">@P.Summary</p>
+    }
+  </div>
+</section>
+<section class="section-pad" style="background:var(--bg-deep)">
+  <div class="container">
+    <div class="listing-detail-layout fade-up">
+      <div>
+        <div class="listing-detail-media">
+          <img src="@img" alt="@P.Title" />
+        </div>
+        @if (!string.IsNullOrWhiteSpace(P.Description))
+        {
+          <div class="section-sub" style="margin-top:28px;max-width:none;white-space:pre-wrap;line-height:1.75">@P.Description</div>
+        }
+      </div>
+      <aside class="prop-card" style="padding:24px;position:sticky;top:100px">
+        <p class="section-sub" style="margin:0 0 20px;font-size:0.9rem">Interested in similar work for your space?</p>
+        <button type="button" class="btn-primary nav-modal-link" style="width:100%;justify-content:center;margin-bottom:12px;border:none;cursor:pointer" data-modal-open="modal-inquiry" data-inquiry-subject="Project: @P.Title (@P.Slug)"><span>Send an inquiry</span></button>
+        <a asp-page="/Contracting" class="btn-outline" style="display:flex;justify-content:center;text-decoration:none;margin-bottom:12px">Contracting services</a>
+        <a asp-page="/Contact" class="btn-outline" style="display:flex;justify-content:center;text-decoration:none">Contact us</a>
+      </aside>
+    </div>
+  </div>
+</section>

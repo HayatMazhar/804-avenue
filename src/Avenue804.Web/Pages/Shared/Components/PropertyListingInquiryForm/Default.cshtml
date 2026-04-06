@@ -1,0 +1,48 @@
+@using Avenue804.Web.Infrastructure
+@using Avenue804.Web.Models.Public
+@model PropertyListingInquiryFormViewModel
+<form method="post" asp-page="/Submit/PropertyListingInquiry" id="propertyListingInquiryForm" asp-antiforgery="true">
+  <div class="modal-field"><label for="pliName">Name</label><input id="pliName" name="Name" type="text" required autocomplete="name" maxlength="200" placeholder="Your name" /></div>
+  <div class="modal-field"><label for="pliPhone">Mobile number</label><input id="pliPhone" name="Phone" type="tel" required autocomplete="tel" maxlength="50" placeholder="+971 …" inputmode="tel" /></div>
+  <div class="modal-field"><label for="pliEmail">Email</label><input id="pliEmail" name="Email" type="email" required autocomplete="email" maxlength="256" placeholder="you@example.com" /></div>
+  <div class="modal-field"><label for="pliWant">I want to</label>
+    <select id="pliWant" name="WantToLookupValueId" required>
+      <option value="">Select…</option>
+      @foreach (var v in Model.WantToOptions)
+      {
+        <option value="@v.Id">@v.DisplayName</option>
+      }
+    </select>
+  </div>
+  <div class="modal-field"><label for="pliPropType">Property type</label>
+    <select id="pliPropType" name="PropertyTypeLookupValueId" required>
+      <option value="">Select…</option>
+      @foreach (var v in Model.PropertyTypeOptions)
+      {
+        <option value="@v.Id" data-type-code="@v.Code.ToLowerInvariant()">@v.DisplayName</option>
+      }
+    </select>
+  </div>
+  <div class="modal-field"><label for="pliDetail">Property details</label>
+    <select id="pliDetail" name="PropertyDetailLookupValueId">
+      <option value="">Select…</option>
+      @foreach (var v in Model.PropertyDetailOptions)
+      {
+        <option value="@v.Id" data-for-types='@PropertyDetailLookupMetadata.ForTypesDataAttribute(v.Metadata)'>@v.DisplayName</option>
+      }
+    </select>
+  </div>
+  <div class="modal-field"><label for="pliReq">Requirement details</label><textarea id="pliReq" name="RequirementDetails" rows="4" maxlength="8000" placeholder="Describe your requirements, timeline, and any specifics…"></textarea></div>
+  <div class="modal-field"><label for="pliArea">Area</label><input id="pliArea" name="Area" type="text" maxlength="300" placeholder="Neighbourhood, district, or size…" /></div>
+  <div class="modal-field"><label for="pliBudget">Budget</label>
+    <select id="pliBudget" name="BudgetLookupValueId" required>
+      <option value="">Select range…</option>
+      @foreach (var v in Model.BudgetOptions)
+      {
+        <option value="@v.Id">@v.DisplayName</option>
+      }
+    </select>
+  </div>
+  <div class="modal-field"><label for="pliMoveIn">Expected move-in date</label><input id="pliMoveIn" name="ExpectedMoveInDate" type="date" /></div>
+  <div class="modal-actions"><button type="submit" class="btn-primary"><span>Submit</span></button></div>
+</form>

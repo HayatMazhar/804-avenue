@@ -1,0 +1,35 @@
+@page
+@model LoginModel
+@{
+    Layout = "_AdminLoginLayout";
+    ViewData["Title"] = "Admin login";
+}
+<style>
+  .login-form { max-width: 400px; margin-top: 24px; }
+  .login-form .modal-field { margin-bottom: 18px; }
+  .login-form label { display:block;font-family:var(--font-nav);font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:8px }
+  .login-form input { width:100%;padding:12px 14px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:.95rem }
+  .login-form input:focus { outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-15) }
+  .err { padding:12px 14px;border-radius:var(--radius-sm);background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--danger);font-size:.88rem;margin-bottom:18px }
+</style>
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+  <div class="err">@Model.ErrorMessage</div>
+}
+<form method="post" class="login-form">
+  <div class="modal-field">
+    <label asp-for="Input.Email"></label>
+    <input asp-for="Input.Email" autocomplete="username" />
+    <span asp-validation-for="Input.Email" style="color:var(--danger);font-size:.8rem"></span>
+  </div>
+  <div class="modal-field">
+    <label asp-for="Input.Password"></label>
+    <input asp-for="Input.Password" autocomplete="current-password" />
+    <span asp-validation-for="Input.Password" style="color:var(--danger);font-size:.8rem"></span>
+  </div>
+  <button type="submit" class="btn-primary" style="width:100%;justify-content:center"><span>Sign in</span></button>
+</form>
+<p style="margin-top:24px;font-size:.85rem;color:var(--text-tertiary)">Default user is created from <code>Seed:AdminEmail</code> / <code>Seed:AdminPassword</code> in appsettings (Development only).</p>
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

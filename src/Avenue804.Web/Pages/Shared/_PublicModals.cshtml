@@ -1,0 +1,50 @@
+<div class="modal-root" id="modal-list-property" role="dialog" aria-modal="true" aria-labelledby="modalListTitle">
+  <div class="modal-backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+  <div class="modal-dialog" role="document">
+    <div class="modal-head">
+      <div>
+        <h2 id="modalListTitle">List Your Property</h2>
+        <p>Tell us about your property and our team will get back to you shortly.</p>
+      </div>
+      <button type="button" class="modal-close" data-modal-close aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form method="post" asp-page="/Submit/Listing">
+        <div class="modal-field"><label for="lpName">Full name</label><input id="lpName" name="Name" type="text" required autocomplete="name" placeholder="Your name" maxlength="200"></div>
+        <div class="modal-field"><label for="lpEmail">Email</label><input id="lpEmail" name="Email" type="email" required autocomplete="email" placeholder="you@example.com" maxlength="256"></div>
+        <div class="modal-field"><label for="lpPhone">Phone</label><input id="lpPhone" name="Phone" type="tel" required autocomplete="tel" placeholder="+971 …" maxlength="50"></div>
+        <div class="modal-field"><label for="lpType">Listing type</label>
+          <select id="lpType" name="Intent" required>
+            <option value="">Select…</option>
+            <option value="0">For sale</option>
+            <option value="1">For rent</option>
+            <option value="2">Sale &amp; rent</option>
+          </select>
+        </div>
+        <div class="modal-field"><label for="lpLoc">Location / title</label><input id="lpLoc" name="LocationOrTitle" type="text" placeholder="Area, building, or title" maxlength="500"></div>
+        <div class="modal-field"><label for="lpMsg">Details</label><textarea id="lpMsg" name="Details" placeholder="Bedrooms, size, price expectations…" maxlength="8000"></textarea></div>
+        <div class="modal-actions"><button type="submit" class="btn-primary"><span>Submit listing request</span></button></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-root" id="modal-inquiry" role="dialog" aria-modal="true" aria-labelledby="modalInquiryTitle">
+  <div class="modal-backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+  <div class="modal-dialog" role="document" style="max-width:min(520px,96vw)">
+    <div class="modal-head">
+      <div>
+        <h2 id="modalInquiryTitle">Property inquiry</h2>
+        <p>Tell us what you are looking for — we will contact you shortly for further details.</p>
+      </div>
+      <button type="button" class="modal-close" data-modal-close aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      @await Component.InvokeAsync("PropertyListingInquiryForm")
+    </div>
+  </div>
+</div>

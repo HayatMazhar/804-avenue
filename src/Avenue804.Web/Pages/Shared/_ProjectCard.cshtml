@@ -1,0 +1,18 @@
+@model Avenue804.Web.Domain.PortfolioProject
+@{
+  var img = string.IsNullOrWhiteSpace(Model.CoverImageUrl)
+    ? "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1200&q=80"
+    : Model.CoverImageUrl.Trim();
+}
+<a asp-page="/Projects/Detail" asp-route-slug="@Model.Slug" class="prop-card fade-up" style="text-decoration:none;color:inherit;display:block">
+  <div class="prop-card-img" style="height:200px">
+    <img src="@img" alt="@Model.Title" loading="lazy" />
+  </div>
+  <div class="prop-card-body">
+    <div class="prop-name">@Model.Title</div>
+    @if (!string.IsNullOrWhiteSpace(Model.Summary))
+    {
+      <p style="margin:0;font-size:0.86rem;color:var(--text-tertiary);line-height:1.55">@Model.Summary</p>
+    }
+  </div>
+</a>

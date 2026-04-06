@@ -1,0 +1,29 @@
+@using Avenue804.Web.Domain
+@model IReadOnlyList<LookupValue>
+@{
+    var inputName = ViewData["InputName"] as string ?? "TopicLookupValueId";
+    var selectId = ViewData["SelectId"] as string ?? "inquiryTopic";
+    var optional = ViewData["Optional"] as bool? ?? true;
+    var selected = ViewData["SelectedValue"] as string;
+    var wrap = ViewData["FieldWrapperClass"] as string ?? "modal-field";
+}
+<div class="@wrap">
+  <label for="@selectId">Topic</label>
+  <select id="@selectId" name="@inputName">
+    @if (optional)
+    {
+      <option value="">Optional — select a topic</option>
+    }
+    @foreach (var v in Model)
+    {
+      if (string.Equals(selected, v.Id.ToString(), StringComparison.Ordinal))
+      {
+        <option value="@v.Id" selected>@v.DisplayName</option>
+      }
+      else
+      {
+        <option value="@v.Id">@v.DisplayName</option>
+      }
+    }
+  </select>
+</div>
