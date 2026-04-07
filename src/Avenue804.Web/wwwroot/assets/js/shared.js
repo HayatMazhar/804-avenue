@@ -2,10 +2,18 @@
    804 AVENUE — Shared JavaScript
    ═══════════════════════════════════════════════════════ */
 
-/* ── Theme Switcher (runs immediately before paint) ── */
+/* ── Theme Switcher (runs immediately before paint) ──
+   Default: Amber Gold. Empty string in localStorage = user chose Electric Blue. */
 (function() {
   var saved = localStorage.getItem('804-theme');
-  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  if (saved === null) {
+    document.documentElement.setAttribute('data-theme', 'gold');
+    localStorage.setItem('804-theme', 'gold');
+  } else if (saved === '') {
+    document.documentElement.removeAttribute('data-theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', saved);
+  }
 })();
 
 (function() {
@@ -13,15 +21,16 @@
 
   /* ── Theme Switcher UI ── */
   var themes = [
-    { id: '', label: 'Electric Blue', swatch: 'blue' },
     { id: 'gold', label: 'Amber Gold', swatch: 'gold' },
+    { id: '', label: 'Electric Blue', swatch: 'blue' },
     { id: 'green', label: 'Emerald', swatch: 'green' },
     { id: 'red', label: 'Ruby Red', swatch: 'red' },
     { id: 'violet', label: 'Royal Violet', swatch: 'violet' },
     { id: 'orange', label: 'Sunset Orange', swatch: 'orange' }
   ];
 
-  var currentTheme = localStorage.getItem('804-theme') || '';
+  var rawTheme = localStorage.getItem('804-theme');
+  var currentTheme = rawTheme === null ? 'gold' : rawTheme;
 
   /* ── Runtime stylesheet patcher ──
      Replaces hardcoded blue accent colors in embedded <style> blocks
@@ -103,7 +112,7 @@
           localStorage.setItem('804-theme', id);
         } else {
           document.documentElement.removeAttribute('data-theme');
-          localStorage.removeItem('804-theme');
+          localStorage.setItem('804-theme', '');
         }
         panel.querySelectorAll('.theme-option').forEach(function(o) { o.classList.remove('active'); });
         this.classList.add('active');
