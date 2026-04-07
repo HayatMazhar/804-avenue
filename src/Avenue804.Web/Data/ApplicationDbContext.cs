@@ -75,30 +75,31 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             e.Property(x => x.RequirementDetails).HasMaxLength(8000);
             e.Property(x => x.Area).HasMaxLength(300);
             e.Property(x => x.ExpectedMoveInDate).HasColumnType("date");
+            /* SQL Server: multiple SET NULL from same child → LookupValues causes "cycles or multiple cascade paths". */
             e.HasOne(x => x.IAmLookup)
                 .WithMany()
                 .HasForeignKey(x => x.IAmLookupValueId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
             e.HasOne(x => x.WantToLookup)
                 .WithMany()
                 .HasForeignKey(x => x.WantToLookupValueId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
             e.HasOne(x => x.PropertyTypeLookup)
                 .WithMany()
                 .HasForeignKey(x => x.PropertyTypeLookupValueId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
             e.HasOne(x => x.PropertyDetailLookup)
                 .WithMany()
                 .HasForeignKey(x => x.PropertyDetailLookupValueId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
             e.HasOne(x => x.LocationLookup)
                 .WithMany()
                 .HasForeignKey(x => x.LocationLookupValueId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
             e.HasOne(x => x.BudgetLookup)
                 .WithMany()
                 .HasForeignKey(x => x.BudgetLookupValueId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
         });
 
         builder.Entity<SiteSetting>(e =>
@@ -122,6 +123,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             e.Property(x => x.DisplayName).HasMaxLength(200);
             e.Property(x => x.Metadata).HasMaxLength(2000);
             e.HasIndex(x => new { x.CategoryId, x.Code }).IsUnique();
+            e.HasOne(x => x.Category)
+                .WithMany(x => x.Values)
+                .HasForeignKey(x => x.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         builder.Entity<ContentBlock>(e =>

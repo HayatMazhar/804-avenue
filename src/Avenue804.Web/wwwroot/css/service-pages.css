@@ -34,7 +34,7 @@
 .materials-section{background:var(--bg-deep)}
 .mat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
 .mat-card{background:var(--bg-glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-md);padding:36px 28px;text-align:center;transition:var(--transition)}
-.mat-card:hover{border-color:var(--border-accent);transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,.3),0 0 0 1px var(--accent-15)}
+.mat-card:hover{border-color:var(--border-accent);transform:translateY(-6px);box-shadow:0 16px 48px rgba(15,23,42,.1),0 0 0 1px var(--accent-15)}
 .mat-icon{width:60px;height:60px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;background:var(--accent-10);border:1px solid var(--accent-20);border-radius:var(--radius-sm);color:var(--accent);transition:var(--transition)}
 .mat-card:hover .mat-icon{background:var(--accent-20);box-shadow:0 0 24px var(--accent-glow)}
 .mat-card h4{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--text-primary);margin-bottom:10px}
@@ -81,7 +81,7 @@
 .vm-section{background:var(--bg-surface)}
 .vm-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:48px}
 .vm-card{background:var(--bg-glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius-md);padding:40px 32px;transition:var(--transition)}
-.vm-card:hover{border-color:var(--border-accent);transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,.3),0 0 0 1px var(--accent-15)}
+.vm-card:hover{border-color:var(--border-accent);transform:translateY(-6px);box-shadow:0 16px 48px rgba(15,23,42,.1),0 0 0 1px var(--accent-15)}
 .vm-icon{width:56px;height:56px;display:flex;align-items:center;justify-content:center;background:var(--accent-10);border:1px solid var(--accent-20);border-radius:var(--radius-sm);color:var(--accent);margin-bottom:20px;transition:var(--transition)}
 .vm-card:hover .vm-icon{background:var(--accent-20);box-shadow:0 0 24px var(--accent-glow)}
 .vm-card h3{font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--text-primary);margin-bottom:12px}
@@ -117,7 +117,7 @@
 .team-section .container{position:relative;z-index:1}
 .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:48px}
 .team-card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:36px 24px;text-align:center;transition:var(--transition)}
-.team-card:hover{border-color:var(--border-accent);transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,.3),0 0 0 1px var(--accent-15)}
+.team-card:hover{border-color:var(--border-accent);transform:translateY(-6px);box-shadow:0 16px 48px rgba(15,23,42,.1),0 0 0 1px var(--accent-15)}
 .team-avatar{width:80px;height:80px;border-radius:50%;background:var(--accent-10);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;transition:var(--transition)}
 .team-card:hover .team-avatar{box-shadow:0 0 30px var(--accent-glow);border-color:var(--cyan)}
 .team-initials{font-family:var(--font-display);font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -174,7 +174,7 @@
 .why-maint .container{position:relative;z-index:1}
 .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
 .why-card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:36px 28px;text-align:center;transition:var(--transition)}
-.why-card:hover{border-color:var(--border-accent);transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,.3),0 0 0 1px var(--accent-15)}
+.why-card:hover{border-color:var(--border-accent);transform:translateY(-6px);box-shadow:0 16px 48px rgba(15,23,42,.1),0 0 0 1px var(--accent-15)}
 .why-card-icon{width:60px;height:60px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;background:var(--accent-10);border:1px solid var(--accent-20);border-radius:50%;color:var(--accent);transition:var(--transition)}
 .why-card:hover .why-card-icon{background:var(--accent-20);box-shadow:0 0 24px var(--accent-glow)}
 .why-card h4{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--text-primary);margin-bottom:10px}

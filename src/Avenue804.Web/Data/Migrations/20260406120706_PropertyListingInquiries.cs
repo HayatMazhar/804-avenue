@@ -38,31 +38,31 @@ namespace Avenue804.Web.Data.Migrations
                         column: x => x.IAmLookupValueId,
                         principalTable: "LookupValues",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_PropertyListingInquiries_LookupValues_LocationLookupValueId",
                         column: x => x.LocationLookupValueId,
                         principalTable: "LookupValues",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_PropertyListingInquiries_LookupValues_PropertyDetailLookupValueId",
                         column: x => x.PropertyDetailLookupValueId,
                         principalTable: "LookupValues",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_PropertyListingInquiries_LookupValues_PropertyTypeLookupValueId",
                         column: x => x.PropertyTypeLookupValueId,
                         principalTable: "LookupValues",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_PropertyListingInquiries_LookupValues_WantToLookupValueId",
                         column: x => x.WantToLookupValueId,
                         principalTable: "LookupValues",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(

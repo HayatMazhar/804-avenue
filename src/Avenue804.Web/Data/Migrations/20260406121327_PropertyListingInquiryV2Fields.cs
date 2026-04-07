@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -41,7 +41,7 @@ namespace Avenue804.Web.Data.Migrations
                 column: "BudgetLookupValueId",
                 principalTable: "LookupValues",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.SetNull);
+                onDelete: ReferentialAction.NoAction);
         }
 
         /// <inheritdoc />
