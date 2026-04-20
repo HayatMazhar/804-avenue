@@ -1,0 +1,905 @@
+@page "/ListYourProperty"
+@model ListYourPropertyModel
+@{
+    ViewData["Title"] = "List Your Property";
+    ViewData["NavActive"] = "list-property";
+    ViewData["MetaDescription"] = "List your property with 804 Avenue — sell or rent residential and commercial assets across Abu Dhabi, Dubai, and Al Ain. Our team will contact you shortly.";
+}
+@section Styles {
+  <link rel="stylesheet" href="~/css/service-pages.css" asp-append-version="true" />
+  <style>
+    /* ════════════════════════════════════════════════════════════════
+       LIST YOUR PROPERTY — modern split-screen design
+       Local namespace: .lyp2-*  (avoids any clash with old .lyp-* rules)
+    ════════════════════════════════════════════════════════════════ */
+    .lyp2 {
+      --lyp-ink:        #0F172A;
+      --lyp-ink-soft:   #475569;
+      --lyp-ink-faint:  #94A3B8;
+      --lyp-line:       #E5E7EB;
+      --lyp-line-soft:  #F1F5F9;
+      --lyp-card:       #FFFFFF;
+      --lyp-page:       #F7F8FB;
+      --lyp-accent:     var(--accent, #C9A04F);
+      --lyp-accent-08:  rgba(201,160,79,.08);
+      --lyp-accent-15:  rgba(201,160,79,.15);
+      --lyp-accent-30:  rgba(201,160,79,.30);
+      --lyp-accent-glow:0 14px 40px rgba(201,160,79,.28);
+      --lyp-radius:     14px;
+      --lyp-radius-sm:  10px;
+    }
+
+    /* ─── Hero split section ────────────────────────────────────── */
+    .lyp2-hero {
+      position: relative;
+      padding: 110px 0 80px;
+      background:
+        radial-gradient(1200px 600px at 110% -10%, rgba(201,160,79,.18), transparent 60%),
+        radial-gradient(900px 500px  at -10% 100%, rgba(201,160,79,.08), transparent 55%),
+        linear-gradient(180deg, #0B1224 0%, #111B33 100%);
+      color: #fff;
+      overflow: hidden;
+    }
+    .lyp2-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(900px 500px at 30% 40%, #000 30%, transparent 70%);
+      -webkit-mask-image: radial-gradient(900px 500px at 30% 40%, #000 30%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .lyp2-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    @@media (min-width: 1024px) {
+      .lyp2-grid { grid-template-columns: 1fr 1.18fr; gap: 56px; }
+    }
+
+    /* ─── Left column: marketing content ─────────────────────────── */
+    .lyp2-content { position: relative; padding: 0 4px; }
+    .lyp2-content__crumbs {
+      font-size: .78rem;
+      color: rgba(255,255,255,.65);
+      margin-bottom: 26px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .lyp2-content__crumbs a { color: rgba(255,255,255,.65); text-decoration: none; }
+    .lyp2-content__crumbs a:hover { color: #fff; }
+    .lyp2-content__crumbs .sep { opacity: .5; }
+
+    .lyp2-content__eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--lyp-accent-15);
+      color: var(--lyp-accent);
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .lyp2-content__eyebrow::before {
+      content: ''; width: 6px; height: 6px; border-radius: 999px;
+      background: var(--lyp-accent);
+      box-shadow: 0 0 0 4px var(--lyp-accent-15);
+    }
+
+    .lyp2-content__title {
+      font-family: var(--font-display, inherit);
+      font-size: clamp(2rem, 4.4vw, 3.4rem);
+      line-height: 1.08;
+      font-weight: 700;
+      margin: 0 0 18px;
+      color: #fff;
+      letter-spacing: -.01em;
+    }
+    .lyp2-content__title em {
+      font-style: normal;
+      background: linear-gradient(135deg, #E5C681 0%, var(--lyp-accent) 60%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lyp2-content__lead {
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: rgba(255,255,255,.78);
+      margin: 0 0 32px;
+      max-width: 540px;
+    }
+
+    .lyp2-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 36px;
+      display: flex; flex-direction: column; gap: 12px;
+      max-width: 520px;
+    }
+    .lyp2-bullets li {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: .92rem;
+      color: rgba(255,255,255,.85);
+      line-height: 1.5;
+    }
+    .lyp2-bullets li svg {
+      flex: 0 0 22px;
+      width: 22px; height: 22px;
+      padding: 4px;
+      border-radius: 999px;
+      background: var(--lyp-accent-15);
+      color: var(--lyp-accent);
+      stroke-width: 2.8;
+    }
+    .lyp2-bullets li strong { color: #fff; font-weight: 600; }
+
+    .lyp2-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      max-width: 540px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,.10);
+    }
+    .lyp2-stats-item .num {
+      display: block;
+      font-family: var(--font-display, inherit);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.1;
+    }
+    .lyp2-stats-item .num em {
+      font-style: normal;
+      color: var(--lyp-accent);
+    }
+    .lyp2-stats-item .lbl {
+      display: block;
+      font-size: .72rem;
+      color: rgba(255,255,255,.55);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    /* ─── Right column: floating form card ───────────────────────── */
+    .lyp2-card {
+      position: relative;
+      background: var(--lyp-card);
+      border-radius: 18px;
+      box-shadow:
+        0 32px 80px -20px rgba(8,15,35,.45),
+        0 0 0 1px rgba(255,255,255,.05);
+      overflow: hidden;
+      transform: translateZ(0);
+    }
+    .lyp2-card__head {
+      position: relative;
+      padding: 22px 28px 18px;
+      background:
+        linear-gradient(135deg, var(--lyp-accent) 0%, #B98A3D 100%);
+      color: #fff;
+      overflow: hidden;
+    }
+    .lyp2-card__head::after {
+      content: '';
+      position: absolute;
+      top: -40%; right: -15%;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(closest-side, rgba(255,255,255,.20), transparent 70%);
+      pointer-events: none;
+    }
+    .lyp2-card__head h2 {
+      font-family: var(--font-display, inherit);
+      font-size: 1.25rem; font-weight: 700;
+      margin: 0; letter-spacing: -.005em;
+    }
+    .lyp2-card__head p {
+      margin: 4px 0 0;
+      font-size: .82rem;
+      color: rgba(255,255,255,.85);
+    }
+
+    .lyp2-card__body { padding: 24px 28px 8px; }
+    .lyp2-card__foot {
+      padding: 18px 28px 26px;
+      border-top: 1px solid var(--lyp-line-soft);
+      background: linear-gradient(180deg, #fff, #FBFAF6);
+    }
+    @@media (max-width: 540px) {
+      .lyp2-card__head, .lyp2-card__body, .lyp2-card__foot { padding-left: 18px; padding-right: 18px; }
+    }
+
+    /* Section heading inside the form */
+    .lyp2-sec {
+      display: flex; align-items: center; gap: 10px;
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--lyp-ink-soft);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin: 22px 0 14px;
+    }
+    .lyp2-sec:first-child { margin-top: 4px; }
+    .lyp2-sec__num {
+      width: 22px; height: 22px;
+      border-radius: 7px;
+      background: var(--lyp-accent-08);
+      color: var(--lyp-accent);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: .72rem; font-weight: 800;
+      letter-spacing: 0;
+    }
+    .lyp2-sec::after {
+      content: ''; flex: 1;
+      height: 1px;
+      background: var(--lyp-line);
+      margin-left: 6px;
+    }
+
+    /* Field grid */
+    .lyp2-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @@media (max-width: 640px) { .lyp2-row { grid-template-columns: 1fr; gap: 10px; } }
+    .lyp2-stack { display: flex; flex-direction: column; gap: 14px; }
+
+    /* Floating-label input */
+    .float {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .float input,
+    .float textarea {
+      width: 100%; box-sizing: border-box;
+      padding: 22px 14px 8px;
+      font: inherit;
+      font-size: .95rem;
+      color: var(--lyp-ink);
+      background: #fff;
+      border: 1.5px solid var(--lyp-line);
+      border-radius: var(--lyp-radius-sm);
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+      -webkit-appearance: none;
+    }
+    .float textarea { resize: vertical; min-height: 92px; padding-top: 26px; }
+    .float input::placeholder,
+    .float textarea::placeholder { color: transparent; }
+    .float label {
+      position: absolute;
+      top: 16px; left: 14px;
+      font-size: .92rem;
+      color: var(--lyp-ink-faint);
+      pointer-events: none;
+      transition: top .14s ease, font-size .14s ease, color .14s ease, font-weight .14s ease;
+      background: transparent;
+      padding: 0 2px;
+    }
+    .float input:focus,
+    .float textarea:focus {
+      outline: none;
+      border-color: var(--lyp-accent);
+      box-shadow: 0 0 0 4px var(--lyp-accent-15);
+      background: #fff;
+    }
+    .float input:focus + label,
+    .float input:not(:placeholder-shown) + label,
+    .float textarea:focus + label,
+    .float textarea:not(:placeholder-shown) + label {
+      top: 6px;
+      font-size: .66rem;
+      font-weight: 700;
+      color: var(--lyp-accent);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .float .req { color: var(--lyp-accent); margin-left: 2px; }
+
+    /* Native select dressed up */
+    .lyp2-select-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .lyp2-select-wrap > .lbl {
+      display: block;
+      font-size: .68rem; font-weight: 700;
+      color: var(--lyp-ink-soft);
+      letter-spacing: .06em; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .lyp2-select-wrap > .lbl .req { color: var(--lyp-accent); margin-left: 2px; }
+    .lyp2-select-wrap select {
+      width: 100%; box-sizing: border-box;
+      padding: 14px 38px 14px 14px;
+      font: inherit;
+      font-size: .95rem;
+      color: var(--lyp-ink);
+      background: #fff;
+      border: 1.5px solid var(--lyp-line);
+      border-radius: var(--lyp-radius-sm);
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .lyp2-select-wrap select:focus {
+      outline: none;
+      border-color: var(--lyp-accent);
+      box-shadow: 0 0 0 4px var(--lyp-accent-15);
+    }
+    .lyp2-select-wrap select:disabled {
+      background-color: #FAFBFC;
+      color: var(--lyp-ink-faint);
+      cursor: not-allowed;
+    }
+
+    /* Pill-segmented control (radios as pills) */
+    .lyp2-seg-label {
+      display: block;
+      font-size: .68rem; font-weight: 700;
+      color: var(--lyp-ink-soft);
+      letter-spacing: .06em; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .lyp2-seg-label .req { color: var(--lyp-accent); margin-left: 2px; }
+    .lyp2-seg {
+      display: flex; flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .lyp2-seg__opt {
+      flex: 1 1 auto;
+      min-width: 0;
+      cursor: pointer;
+      position: relative;
+    }
+    .lyp2-seg__opt input {
+      position: absolute;
+      width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;
+    }
+    .lyp2-seg__opt-inner {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px;
+      padding: 10px 14px;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--lyp-ink-soft);
+      background: #fff;
+      border: 1.5px solid var(--lyp-line);
+      border-radius: var(--lyp-radius-sm);
+      transition: all .15s ease;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .lyp2-seg__opt-inner svg {
+      flex: 0 0 14px;
+      width: 14px; height: 14px;
+      stroke-width: 2;
+    }
+    .lyp2-seg__opt:hover .lyp2-seg__opt-inner {
+      border-color: var(--lyp-accent-30);
+      color: var(--lyp-ink);
+    }
+    .lyp2-seg__opt input:checked ~ .lyp2-seg__opt-inner {
+      border-color: var(--lyp-accent);
+      background: var(--lyp-accent-08);
+      color: var(--lyp-accent);
+      box-shadow: 0 0 0 4px var(--lyp-accent-15);
+      font-weight: 700;
+    }
+    .lyp2-seg__opt input:focus-visible ~ .lyp2-seg__opt-inner {
+      outline: 2px solid var(--lyp-accent);
+      outline-offset: 2px;
+    }
+
+    /* Big "choice card" segmented control (used for binary high-impact choices) */
+    .lyp2-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .lyp2-card-opt { cursor: pointer; position: relative; }
+    .lyp2-card-opt input {
+      position: absolute;
+      width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;
+    }
+    .lyp2-card-opt__inner {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 6px;
+      padding: 16px 12px;
+      background: #fff;
+      border: 1.5px solid var(--lyp-line);
+      border-radius: var(--lyp-radius);
+      transition: all .18s ease;
+      text-align: center;
+    }
+    .lyp2-card-opt__inner svg {
+      width: 22px; height: 22px;
+      color: var(--lyp-ink-soft);
+      stroke-width: 1.8;
+      transition: color .18s ease;
+    }
+    .lyp2-card-opt__inner strong {
+      font-size: .92rem; font-weight: 700;
+      color: var(--lyp-ink);
+    }
+    .lyp2-card-opt__inner span {
+      font-size: .72rem;
+      color: var(--lyp-ink-faint);
+      line-height: 1.35;
+    }
+    .lyp2-card-opt:hover .lyp2-card-opt__inner {
+      border-color: var(--lyp-accent-30);
+    }
+    .lyp2-card-opt input:checked ~ .lyp2-card-opt__inner {
+      border-color: var(--lyp-accent);
+      background: linear-gradient(135deg, var(--lyp-accent-08), rgba(201,160,79,.02));
+      box-shadow: 0 0 0 4px var(--lyp-accent-15);
+    }
+    .lyp2-card-opt input:checked ~ .lyp2-card-opt__inner svg { color: var(--lyp-accent); }
+    .lyp2-card-opt input:focus-visible ~ .lyp2-card-opt__inner {
+      outline: 2px solid var(--lyp-accent);
+      outline-offset: 2px;
+    }
+
+    /* Reveal animation for "If Others" field */
+    .lyp2-reveal {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      margin: 0 !important;
+      transition: max-height .25s ease, opacity .2s ease, margin .2s ease;
+    }
+    .lyp2-reveal.is-open {
+      max-height: 110px;
+      opacity: 1;
+      margin: 0 0 14px !important;
+    }
+
+    /* Submit */
+    .lyp2-submit {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 22px;
+      background: linear-gradient(135deg, var(--lyp-accent) 0%, #B98A3D 100%);
+      color: #fff;
+      border: none;
+      border-radius: var(--lyp-radius-sm);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: .01em;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(201,160,79,.32);
+      transition: transform .12s ease, box-shadow .15s ease, filter .15s ease;
+    }
+    .lyp2-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 36px rgba(201,160,79,.42);
+      filter: brightness(1.04);
+    }
+    .lyp2-submit:active { transform: translateY(0); }
+    .lyp2-submit svg { transition: transform .15s ease; }
+    .lyp2-submit:hover svg { transform: translateX(3px); }
+
+    .lyp2-foot-note {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px;
+      font-size: .72rem;
+      color: var(--lyp-ink-faint);
+      margin: 12px 0 0;
+      text-align: center;
+    }
+    .lyp2-foot-note svg { flex: 0 0 12px; color: var(--lyp-accent); }
+    .lyp2-foot-note a { color: var(--lyp-accent); font-weight: 600; }
+
+    /* ─── How it works strip ─────────────────────────────────────── */
+    .lyp2-how {
+      padding: 72px 0 88px;
+      background: var(--lyp-page);
+    }
+    .lyp2-how__title {
+      text-align: center;
+      font-family: var(--font-display, inherit);
+      font-size: clamp(1.5rem, 2.6vw, 2rem);
+      font-weight: 700;
+      color: var(--lyp-ink);
+      margin: 0 0 12px;
+      letter-spacing: -.01em;
+    }
+    .lyp2-how__title em {
+      font-style: normal;
+      color: var(--lyp-accent);
+    }
+    .lyp2-how__sub {
+      text-align: center;
+      font-size: .98rem;
+      color: var(--lyp-ink-soft);
+      max-width: 580px;
+      margin: 0 auto 48px;
+    }
+    .lyp2-how__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      counter-reset: step;
+    }
+    @@media (max-width: 820px) {
+      .lyp2-how__grid { grid-template-columns: 1fr; }
+    }
+    .lyp2-step {
+      position: relative;
+      background: #fff;
+      padding: 32px 26px 26px;
+      border: 1px solid var(--lyp-line);
+      border-radius: var(--lyp-radius);
+      box-shadow: 0 4px 16px rgba(8,15,35,.04);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .lyp2-step:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 36px rgba(8,15,35,.08);
+      border-color: var(--lyp-accent-30);
+    }
+    .lyp2-step__num {
+      counter-increment: step;
+      position: absolute; top: -16px; left: 26px;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--lyp-accent), #B98A3D);
+      color: #fff;
+      border-radius: 12px;
+      font-family: var(--font-display, inherit);
+      font-size: 1rem; font-weight: 800;
+      box-shadow: 0 8px 18px rgba(201,160,79,.35);
+    }
+    .lyp2-step__num::before { content: counter(step, decimal-leading-zero); }
+    .lyp2-step__title {
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--lyp-ink);
+      margin: 14px 0 8px;
+      letter-spacing: -.005em;
+    }
+    .lyp2-step__body {
+      font-size: .9rem;
+      line-height: 1.6;
+      color: var(--lyp-ink-soft);
+      margin: 0;
+    }
+    .lyp2-step__icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: var(--lyp-accent-08);
+      color: var(--lyp-accent);
+      margin-bottom: 4px;
+    }
+
+    /* fade-up entry (uses project's existing animation if present) */
+    .lyp2-fade { opacity: 0; transform: translateY(14px); animation: lypFade .6s ease forwards; }
+    .lyp2-fade.d2 { animation-delay: .08s; }
+    .lyp2-fade.d3 { animation-delay: .16s; }
+    .lyp2-fade.d4 { animation-delay: .24s; }
+    @@keyframes lypFade { to { opacity: 1; transform: translateY(0); } }
+  </style>
+}
+
+<section class="lyp2 lyp2-hero">
+  <div class="container">
+    <div class="lyp2-grid">
+
+      <!-- ─── LEFT: marketing column ─────────────────────────── -->
+      <div class="lyp2-content">
+        <div class="lyp2-content__crumbs lyp2-fade">
+          <a asp-page="/Index">Home</a>
+          <span class="sep">/</span>
+          <span>List Your Property</span>
+        </div>
+
+        <span class="lyp2-content__eyebrow lyp2-fade">For property owners</span>
+
+        <h1 class="lyp2-content__title lyp2-fade d2">
+          List your property<br />
+          <em>with confidence</em>
+        </h1>
+
+        <p class="lyp2-content__lead lyp2-fade d2">
+          From villa compounds to commercial showrooms — reach qualified buyers and tenants
+          across Abu Dhabi, Dubai &amp; Al Ain. Tell us a few details and our property team
+          will be in touch within 24 hours with a free valuation and listing plan.
+        </p>
+
+        <ul class="lyp2-bullets lyp2-fade d3">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><strong>Free valuation &amp; listing</strong> — no upfront fees, no obligation.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><strong>Pre-screened enquiries</strong> — we filter time-wasters before forwarding leads.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><strong>Multi-channel marketing</strong> — featured on our portal, partner sites &amp; agent network.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><strong>Dedicated relationship manager</strong> — single point of contact end-to-end.</span>
+          </li>
+        </ul>
+
+        <div class="lyp2-stats lyp2-fade d4">
+          <div class="lyp2-stats-item">
+            <span class="num">15<em>+</em></span>
+            <span class="lbl">Years in UAE</span>
+          </div>
+          <div class="lyp2-stats-item">
+            <span class="num">2,400<em>+</em></span>
+            <span class="lbl">Properties listed</span>
+          </div>
+          <div class="lyp2-stats-item">
+            <span class="num">&lt;24<em>h</em></span>
+            <span class="lbl">Avg. response</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── RIGHT: form card ───────────────────────────────── -->
+      <div class="lyp2-card lyp2-fade d2">
+        <div class="lyp2-card__head">
+          <h2>Tell us about your property</h2>
+          <p>It only takes a minute. We will contact you shortly for further details.</p>
+        </div>
+
+        <div class="lyp2-card__body">
+          <form method="post" asp-page="/Submit/Listing" id="lypForm" novalidate>
+            <input type="hidden" name="returnUrl" value="/ListYourProperty" />
+
+            <!-- Section 1: Contact -->
+            <div class="lyp2-sec"><span class="lyp2-sec__num">1</span>Your details</div>
+
+            <div class="lyp2-row">
+              <div class="float">
+                <input id="lypName" name="Name" type="text" required autocomplete="name" maxlength="200" placeholder=" " />
+                <label for="lypName">Full name <span class="req">*</span></label>
+              </div>
+              <div class="float">
+                <input id="lypPhone" name="Phone" type="tel" required autocomplete="tel" inputmode="tel" maxlength="50" placeholder=" " />
+                <label for="lypPhone">Mobile number <span class="req">*</span></label>
+              </div>
+            </div>
+            <div class="float">
+              <input id="lypEmail" name="Email" type="email" required autocomplete="email" maxlength="256" placeholder=" " />
+              <label for="lypEmail">Email address <span class="req">*</span></label>
+            </div>
+
+            <span class="lyp2-seg-label">I am <span class="req">*</span></span>
+            <div class="lyp2-seg" role="radiogroup" aria-label="I am">
+              <label class="lyp2-seg__opt">
+                <input type="radio" name="lpIAm" value="Free Lancer" required />
+                <span class="lyp2-seg__opt-inner">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  Free Lancer
+                </span>
+              </label>
+              <label class="lyp2-seg__opt">
+                <input type="radio" name="lpIAm" value="Company" />
+                <span class="lyp2-seg__opt-inner">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg>
+                  Company
+                </span>
+              </label>
+              <label class="lyp2-seg__opt">
+                <input type="radio" name="lpIAm" value="Individual Owner" />
+                <span class="lyp2-seg__opt-inner">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+                  Individual Owner
+                </span>
+              </label>
+              <label class="lyp2-seg__opt">
+                <input type="radio" name="lpIAm" value="Developer" />
+                <span class="lyp2-seg__opt-inner">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22V8l10-6 10 6v14"/><path d="M6 22V12h12v10"/><path d="M10 22v-4h4v4"/></svg>
+                  Developer
+                </span>
+              </label>
+            </div>
+
+            <!-- Section 2: Property -->
+            <div class="lyp2-sec"><span class="lyp2-sec__num">2</span>Property details</div>
+
+            <span class="lyp2-seg-label">I want to <span class="req">*</span></span>
+            <div class="lyp2-cards" role="radiogroup" aria-label="I want to">
+              <label class="lyp2-card-opt">
+                <input type="radio" name="Intent" value="0" required />
+                <span class="lyp2-card-opt__inner">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 100 4h4a2 2 0 110 4H8"/><path d="M12 18V6"/></svg>
+                  <strong>Sell</strong>
+                  <span>Find a buyer at the best price</span>
+                </span>
+              </label>
+              <label class="lyp2-card-opt">
+                <input type="radio" name="Intent" value="1" />
+                <span class="lyp2-card-opt__inner">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2h-4v-7H10v7H5a2 2 0 01-2-2z"/></svg>
+                  <strong>Rent</strong>
+                  <span>Match with qualified tenants</span>
+                </span>
+              </label>
+            </div>
+
+            <span class="lyp2-seg-label">Property type <span class="req">*</span></span>
+            <div class="lyp2-cards" role="radiogroup" aria-label="Property type">
+              <label class="lyp2-card-opt">
+                <input type="radio" name="lpPropertyCategory" id="lpPropertyCategoryRes" value="Residential" required />
+                <span class="lyp2-card-opt__inner">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/><path d="M9 20V14h6v6"/></svg>
+                  <strong>Residential</strong>
+                  <span>Apartments, villas, land</span>
+                </span>
+              </label>
+              <label class="lyp2-card-opt">
+                <input type="radio" name="lpPropertyCategory" id="lpPropertyCategoryCom" value="Commercial" />
+                <span class="lyp2-card-opt__inner">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg>
+                  <strong>Commercial</strong>
+                  <span>Offices, retail, warehouses</span>
+                </span>
+              </label>
+            </div>
+
+            <div class="lyp2-row">
+              <div class="lyp2-select-wrap">
+                <span class="lbl">Property details <span class="req">*</span></span>
+                <select name="lpPropertyDetails" id="lpPropertyDetails" required disabled>
+                  <option value="">Choose property type first…</option>
+                </select>
+              </div>
+              <div class="lyp2-select-wrap">
+                <span class="lbl">Location <span class="req">*</span></span>
+                <select name="lpEmirate" id="lpEmirate" required>
+                  <option value="">Select…</option>
+                  <option value="Abu Dhabi">Abu Dhabi</option>
+                  <option value="Dubai">Dubai</option>
+                  <option value="Al Ain">Al Ain</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Reveals when "Others" picked in Property details -->
+            <div class="lyp2-reveal" id="lpIfOthersField">
+              <div class="float" style="margin: 0;">
+                <input id="lpIfOthers" name="lpIfOthers" type="text" maxlength="200" placeholder=" " />
+                <label for="lpIfOthers">If others, please specify</label>
+              </div>
+            </div>
+
+            <div class="float">
+              <input id="lypArea" name="lpArea" type="text" maxlength="200" placeholder=" " />
+              <label for="lypArea">Area / community <span style="color:var(--lyp-ink-faint);font-weight:400;">(optional)</span></label>
+            </div>
+
+            <!-- Section 3: Notes -->
+            <div class="lyp2-sec"><span class="lyp2-sec__num">3</span>Anything else?</div>
+
+            <div class="float">
+              <textarea id="lypDetails" name="Details" rows="3" maxlength="4000" placeholder=" "></textarea>
+              <label for="lypDetails">Additional notes — size, price expectations, condition, available date…</label>
+            </div>
+          </form>
+        </div>
+
+        <div class="lyp2-card__foot">
+          <button type="submit" form="lypForm" class="lyp2-submit">
+            <span>Submit listing request</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <p class="lyp2-foot-note">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            Secure submission — by submitting you agree to our <a href="/Privacy">Privacy Policy</a>.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── How it works strip ─────────────────────────────────────── -->
+<section class="lyp2 lyp2-how">
+  <div class="container">
+    <h2 class="lyp2-how__title">From submission to <em>signed deal</em></h2>
+    <p class="lyp2-how__sub">A clear, three-step process — no chasing, no surprises.</p>
+
+    <div class="lyp2-how__grid">
+      <div class="lyp2-step">
+        <div class="lyp2-step__num"></div>
+        <span class="lyp2-step__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </span>
+        <h3 class="lyp2-step__title">Submit your details</h3>
+        <p class="lyp2-step__body">Fill the form opposite. We will reach out within 24 hours to confirm the scope and arrange a site visit if needed.</p>
+      </div>
+      <div class="lyp2-step">
+        <div class="lyp2-step__num"></div>
+        <span class="lyp2-step__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        </span>
+        <h3 class="lyp2-step__title">Free valuation &amp; plan</h3>
+        <p class="lyp2-step__body">Our team prepares an honest market valuation, suggested asking price, photography brief, and listing plan — at no cost.</p>
+      </div>
+      <div class="lyp2-step">
+        <div class="lyp2-step__num"></div>
+        <span class="lyp2-step__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </span>
+        <h3 class="lyp2-step__title">List, market &amp; close</h3>
+        <p class="lyp2-step__body">We list across our portal, partner sites and agent network — and bring you only pre-qualified, serious buyers and tenants.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  // ─── Property details cascade ────────────────────────────────
+  var residentialOptions = [
+    'Apartment', 'Villa Apartment', 'Villa Compound', 'Villa', 'Building', 'Land', 'Others'
+  ];
+  var commercialOptions = [
+    'Shell & Core Offices', 'Furnished Offices', 'Warehouse / Stores', 'Showroom', 'Shop',
+    'Villa', 'Labor Camp', 'Building', 'Land', 'Others'
+  ];
+
+  var resRadio = document.getElementById('lpPropertyCategoryRes');
+  var comRadio = document.getElementById('lpPropertyCategoryCom');
+  var details  = document.getElementById('lpPropertyDetails');
+  var others   = document.getElementById('lpIfOthersField');
+  var othersIn = document.getElementById('lpIfOthers');
+
+  function fillDetails(opts) {
+    details.innerHTML = '';
+    var ph = document.createElement('option');
+    ph.value = ''; ph.textContent = 'Select property details…';
+    details.appendChild(ph);
+    for (var i = 0; i < opts.length; i++) {
+      var o = document.createElement('option');
+      o.value = opts[i]; o.textContent = opts[i];
+      details.appendChild(o);
+    }
+    details.disabled = false;
+  }
+
+  function refreshOthers() {
+    var isOthers = details.value === 'Others';
+    others.classList.toggle('is-open', isOthers);
+    if (!isOthers && othersIn) othersIn.value = '';
+  }
+
+  function applyCategory() {
+    if (resRadio.checked)       fillDetails(residentialOptions);
+    else if (comRadio.checked)  fillDetails(commercialOptions);
+    else {
+      details.innerHTML = '<option value="">Choose property type first…</option>';
+      details.disabled = true;
+    }
+    refreshOthers();
+  }
+
+  resRadio.addEventListener('change', applyCategory);
+  comRadio.addEventListener('change', applyCategory);
+  details.addEventListener('change', refreshOthers);
+})();
+</script>

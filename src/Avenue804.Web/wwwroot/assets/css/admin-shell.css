@@ -98,6 +98,34 @@
   margin-top: 2px;
 }
 
+/* ── Image-based admin sidebar brand (.as-side__brand--img) ── */
+.as-side__brand.as-side__brand--img {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 18px 20px 16px;
+}
+.as-side__brand-link {
+  display: inline-block;
+  line-height: 0;
+  text-decoration: none;
+  transition: opacity .2s ease;
+}
+.as-side__brand-link:hover { opacity: .85; }
+.as-side__brand-img {
+  display: block;
+  height: 44px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  /* Sidebar bg is dark navy — invert the colour logo to white */
+  filter: brightness(0) invert(1);
+}
+.as-side__brand--img .as-side__brand-sub {
+  margin-top: 0;
+  padding-left: 2px;
+}
+
 .as-side__scroll {
   flex: 1;
   overflow-y: auto;

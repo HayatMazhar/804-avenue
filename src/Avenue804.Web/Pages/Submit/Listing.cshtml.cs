@@ -31,16 +31,30 @@ public class ListingModel : PageModel
         string? lpWhatsapp, string? lpPropertyType, string? lpEmirate, string? lpArea,
         string? lpBeds, string? lpBaths, string? lpSize, string? lpPrice,
         string? lpCondition, string? lpAvailable, string? lpBestTime,
+        string? lpIAm, string? lpPropertyCategory, string? lpPropertyDetails, string? lpIfOthers,
+        string? returnUrl,
         CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
+        // Resolve a safe local return URL — only allow same-site relative paths.
+        IActionResult RedirectBack(string? toast = null, bool error = false)
         {
-            TempData["ToastError"] = "Please check the listing form and try again.";
+            if (toast != null) TempData[error ? "ToastError" : "ToastOk"] = toast;
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return LocalRedirect(returnUrl);
             return RedirectToPage("/Index");
         }
 
+        if (!ModelState.IsValid)
+        {
+            return RedirectBack("Please check the listing form and try again.", error: true);
+        }
+
         var extras = new List<string>();
+        if (!string.IsNullOrWhiteSpace(lpIAm)) extras.Add($"I am: {lpIAm}");
         if (!string.IsNullOrWhiteSpace(lpWhatsapp)) extras.Add($"WhatsApp: {lpWhatsapp}");
+        if (!string.IsNullOrWhiteSpace(lpPropertyCategory)) extras.Add($"Property type: {lpPropertyCategory}");
+        if (!string.IsNullOrWhiteSpace(lpPropertyDetails)) extras.Add($"Property details: {lpPropertyDetails}");
+        if (!string.IsNullOrWhiteSpace(lpIfOthers)) extras.Add($"Other / specify: {lpIfOthers}");
         if (!string.IsNullOrWhiteSpace(lpPropertyType)) extras.Add($"Type: {lpPropertyType}");
         if (!string.IsNullOrWhiteSpace(lpEmirate)) extras.Add($"Emirate: {lpEmirate}");
         if (!string.IsNullOrWhiteSpace(lpArea)) extras.Add($"Area: {lpArea}");
@@ -91,7 +105,6 @@ public class ListingModel : PageModel
             cancellationToken);
         } // end email notification check
 
-        TempData["ToastOk"] = "Thank you — we received your listing request and will contact you shortly.";
-        return RedirectToPage("/Index");
+        return RedirectBack("Thank you — we received your listing request. We will contact you shortly for further details.");
     }
 }

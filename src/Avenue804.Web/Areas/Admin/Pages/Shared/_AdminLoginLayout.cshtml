@@ -83,6 +83,23 @@
       margin-top: 3px;
     }
 
+    /* Image-based brand (al-logo--img) — replaces the "804" tile + text */
+    .al-logo.al-logo--img {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .al-logo__img {
+      display: block;
+      height: 56px;
+      width: auto;
+      max-width: 240px;
+      object-fit: contain;
+      /* Dark navy panel — invert the colour logo to white */
+      filter: brightness(0) invert(1);
+    }
+    .al-logo--img .al-logo__sub { margin-top: 0; padding-left: 2px; }
+
     .al-brand__h1 {
       font-family: 'DM Serif Display', serif;
       font-size: clamp(2rem, 4vw, 2.8rem);
@@ -258,12 +275,13 @@
   <!-- ── Left brand panel ───────────────────────────── -->
   <aside class="al-brand">
     <div class="al-brand__top">
-      <div class="al-logo">
-        <div class="al-logo__mark">804</div>
-        <div class="al-logo__text">
-          <span class="al-logo__name">804 Avenue</span>
-          <span class="al-logo__sub">Admin Console</span>
-        </div>
+      <div class="al-logo al-logo--img">
+        <img src="~/assets/img/brand/logo-804avenue-transparent.png"
+             alt="804 Avenue — Properties &amp; Contracting"
+             class="al-logo__img"
+             width="200" height="64"
+             decoding="async" />
+        <span class="al-logo__sub">Admin Console</span>
       </div>
     </div>
 

@@ -11,15 +11,15 @@
   "categories": ["business", "lifestyle"],
   "icons": [
     {
-      "src": "https://images.unsplash.com/photo-1512632578888-169bbbc64f33?w=192&q=80&fit=crop",
-      "sizes": "192x192",
-      "type": "image/jpeg",
+      "src": "/assets/img/brand/logo-804avenue-transparent.png",
+      "sizes": "any",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://images.unsplash.com/photo-1512632578888-169bbbc64f33?w=512&q=80&fit=crop",
-      "sizes": "512x512",
-      "type": "image/jpeg",
+      "src": "/assets/img/brand/logo-804avenue-transparent.png",
+      "sizes": "any",
+      "type": "image/png",
       "purpose": "maskable"
     }
   ],

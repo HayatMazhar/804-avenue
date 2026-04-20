@@ -39,7 +39,7 @@
 
     <!-- Brand -->
     <a asp-page="/Index" class="pf-nav__brand pf-nav__brand--img" aria-label="804 Avenue — Properties &amp; Contracting">
-      <img src="~/assets/img/brand/logo-804avenue.png"
+      <img src="~/assets/img/brand/logo-804avenue-transparent.png"
            alt="804 Avenue — Properties &amp; Contracting"
            class="pf-nav__brand-img"
            width="180" height="58"
@@ -115,8 +115,17 @@
         </a>
       }
 
-      <a asp-page="/Contact" class="pf-nav__list-btn d-none d-lg-inline-flex">
-        Get a Quote
+      <!-- List Your Property — owner-listing CTA, sits with the right-side actions -->
+      <a asp-page="/ListYourProperty" class="pf-nav__list-btn pf-nav__list-btn--ghost d-none d-lg-inline-flex @(Active("list-property") == "active" ? "is-active" : "")">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+        List Your Property
+      </a>
+
+      <!-- Inquiry — primary CTA. Routes to the property-requirement form on /Inquiry.
+           (A "quote" is a price proposal; this form captures a buy/sell/rent inquiry.) -->
+      <a asp-page="/Inquiry" class="pf-nav__list-btn d-none d-lg-inline-flex @(Active("inquiry") == "active" ? "is-active" : "")">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Inquiry
       </a>
 
       @if (isAuth && currentUser != null)
@@ -192,12 +201,18 @@
         <a class="pf-nav__mobile-link" asp-page="/AreaGuides/Index">Area Guides</a>
       </div>
       <div class="pf-nav__mobile-group">
+        <div class="pf-nav__mobile-label">For Owners</div>
+        <a class="pf-nav__mobile-link pf-nav__mobile-link--accent" asp-page="/ListYourProperty">List Your Property</a>
+      </div>
+      <div class="pf-nav__mobile-group">
         <a class="pf-nav__mobile-link" asp-page="/About">About</a>
+        <a class="pf-nav__mobile-link" asp-page="/Inquiry">Property Inquiry</a>
         <a class="pf-nav__mobile-link" asp-page="/Contact">Contact</a>
       </div>
       <div class="pf-nav__mobile-actions">
-        <a asp-page="/Contact" class="pf-nav__list-btn w-100 justify-content-center">
-          Get a Quote
+        <a asp-page="/Inquiry" class="pf-nav__list-btn w-100 justify-content-center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Inquiry
         </a>
         @if (!isAuth)
         {

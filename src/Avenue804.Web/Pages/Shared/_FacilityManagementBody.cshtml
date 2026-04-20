@@ -55,13 +55,184 @@
   </div>
 </section>
 
-<section class="cta-banner" id="enquire">
+<!-- ═══ FM ENQUIRY FORM ═══ -->
+<section class="quote-section" id="enquire">
   <div class="container">
-    <h2 class="cta-title fade-up">@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilityCtaTitle, "Discuss your <em>facility</em> scope"))</h2>
-    <p class="cta-sub fade-up">@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilityCtaBody, "Share your asset type, size, and service hours — we will propose a tailored FM model and transition plan."))</p>
-    <div class="cta-btns fade-up">
-      <a asp-page="/Contact" class="btn-primary"><span>Talk to our FM team</span></a>
-      <a asp-page="/Maintenance" class="btn-outline">Maintenance services</a>
+    <div class="section-tag fade-up" style="justify-content:center">Facility Management Enquiry</div>
+    <h2 class="section-title fade-up" style="text-align:center;max-width:700px;margin:0 auto 12px">@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilityCtaTitle, "Discuss your <em>facility</em> scope"))</h2>
+    <p class="section-sub fade-up" style="text-align:center;margin:0 auto 36px;max-width:640px">@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilityCtaBody, "Share asset details, required services and contact info — we will propose a tailored FM model and indicative pricing within 48 hours."))</p>
+
+    <div class="amc-calc fade-up">
+      <form method="post" asp-page="/Submit/Inquiry" id="fmEnquireForm">
+        <input type="hidden" name="Subject" id="fmSubject" value="Facility Management Enquiry" />
+        <input type="hidden" name="Message" id="fmMessage" value="" />
+
+        <div class="section-tag" style="margin-bottom:16px">Asset &amp; scope</div>
+
+        <div class="quote-grid-2">
+          <div class="quote-field">
+            <label>Asset type <span style="color:var(--accent)">*</span></label>
+            <select id="fmAsset" required>
+              <option value="">Choose your asset…</option>
+              <option value="Residential tower">Residential tower</option>
+              <option value="Commercial / office tower">Commercial / office tower</option>
+              <option value="Mixed-use development">Mixed-use development</option>
+              <option value="Retail / mall">Retail / mall</option>
+              <option value="Industrial / warehouse">Industrial / warehouse</option>
+              <option value="Villa / compound">Villa / compound</option>
+              <option value="Hotel / hospitality">Hotel / hospitality</option>
+            </select>
+          </div>
+          <div class="quote-field">
+            <label>Service hours</label>
+            <select id="fmHours">
+              <option value="Business hours (8–6)">Business hours (8–6)</option>
+              <option value="Extended (12 hrs)">Extended (12 hrs)</option>
+              <option value="24×7 manned">24×7 manned</option>
+              <option value="On-call only">On-call only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="quote-grid-2">
+          <div class="quote-field">
+            <label>Approx. units / floors</label>
+            <input type="number" id="fmSize" min="1" max="5000" placeholder="e.g. 120" />
+          </div>
+          <div class="quote-field">
+            <label>Total area (sqm)</label>
+            <input type="number" id="fmArea" min="100" max="500000" placeholder="e.g. 18000" />
+          </div>
+        </div>
+
+        <div class="quote-field">
+          <label>Asset location</label>
+          <input type="text" id="fmLocation" placeholder="e.g. Al Reem Island, Abu Dhabi" maxlength="400" />
+        </div>
+
+        <div class="quote-field"><label>Required services</label></div>
+        <div class="amc-services-grid">
+          <label class="amc-service-check"><input type="checkbox" value="Building operations" checked /> Building operations</label>
+          <label class="amc-service-check"><input type="checkbox" value="MEP / HVAC" /> MEP / HVAC</label>
+          <label class="amc-service-check"><input type="checkbox" value="Cleaning / housekeeping" /> Cleaning / housekeeping</label>
+          <label class="amc-service-check"><input type="checkbox" value="Security coordination" /> Security coordination</label>
+          <label class="amc-service-check"><input type="checkbox" value="Pest control" /> Pest control</label>
+          <label class="amc-service-check"><input type="checkbox" value="Landscaping" /> Landscaping</label>
+          <label class="amc-service-check"><input type="checkbox" value="Vendor management" /> Vendor management</label>
+          <label class="amc-service-check"><input type="checkbox" value="Compliance &amp; statutory" /> Compliance &amp; statutory</label>
+        </div>
+
+        <div class="quote-field" style="margin-top:16px">
+          <label>Additional notes</label>
+          <textarea id="fmNotes" rows="3" maxlength="4000" placeholder="Anything else we should know — current FM partner, transition date, special requirements…"></textarea>
+        </div>
+
+        <div style="margin:24px 0 16px;border-top:1px solid var(--border-subtle)"></div>
+        <div class="section-tag" style="margin-bottom:16px">Your contact details</div>
+
+        <div class="quote-grid-2">
+          <div class="quote-field">
+            <label>Your name <span style="color:var(--accent)">*</span></label>
+            <input type="text" name="Name" required maxlength="200" placeholder="Ahmed Al Mansoori" autocomplete="name" />
+          </div>
+          <div class="quote-field">
+            <label>Company / role (optional)</label>
+            <input type="text" id="fmCompany" maxlength="200" placeholder="Owners' association, asset manager…" />
+          </div>
+        </div>
+        <div class="quote-grid-2">
+          <div class="quote-field">
+            <label>Mobile <span style="color:var(--accent)">*</span></label>
+            <input type="tel" name="Phone" required inputmode="tel" placeholder="+971 50 000 0000" maxlength="50" />
+          </div>
+          <div class="quote-field">
+            <label>Email <span style="color:var(--accent)">*</span></label>
+            <input type="email" name="Email" required placeholder="you@example.com" maxlength="256" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;margin-top:8px" onclick="return syncFmEnquire()">
+          <span>Request FM Proposal</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+
+        <p style="font-size:.72rem;color:var(--text-secondary);margin-top:14px;text-align:center">
+          Prefer to talk first? <a asp-page="/Contact" style="color:var(--accent);font-weight:600">Reach our FM team directly</a>
+          &nbsp;·&nbsp;
+          Looking for AMC only? <a asp-page="/Maintenance" style="color:var(--accent);font-weight:600">See maintenance packages</a>
+        </p>
+      </form>
     </div>
   </div>
 </section>
+
+<script>
+(function () {
+  function syncFmEnquire() {
+    var asset    = (document.getElementById('fmAsset')    || {}).value || '';
+    var hours    = (document.getElementById('fmHours')    || {}).value || '';
+    var size     = (document.getElementById('fmSize')     || {}).value || '';
+    var area     = (document.getElementById('fmArea')     || {}).value || '';
+    var loc      = (document.getElementById('fmLocation') || {}).value || '';
+    var company  = (document.getElementById('fmCompany')  || {}).value || '';
+    var notes    = (document.getElementById('fmNotes')    || {}).value || '';
+
+    if (!asset) {
+      alert('Please choose an asset type before requesting an FM proposal.');
+      return false;
+    }
+
+    var checks = document.querySelectorAll('#fmEnquireForm .amc-service-check input[type="checkbox"]:checked');
+    var services = [];
+    for (var i = 0; i < checks.length; i++) services.push(checks[i].value);
+
+    var lines = [
+      '— Asset type: '    + asset,
+      '— Service hours: ' + hours,
+      size    ? ('— Units / floors: ' + size)        : '',
+      area    ? ('— Total area: '     + area + ' sqm') : '',
+      loc     ? ('— Location: '       + loc)         : '',
+      company ? ('— Company / role: ' + company)     : '',
+      services.length ? ('— Services: ' + services.join(', ')) : '',
+      '',
+      notes ? notes : '(no additional notes)'
+    ];
+    var clean = [];
+    for (var j = 0; j < lines.length; j++) if (lines[j] !== '') clean.push(lines[j]);
+
+    document.getElementById('fmSubject').value = 'Facility Management Enquiry — ' + asset;
+    document.getElementById('fmMessage').value = clean.join('\n');
+    return true;
+  }
+  window.syncFmEnquire = syncFmEnquire;
+
+  // Pre-fill from URL query params set by the home-hero search widget
+  // e.g. /FacilityManagement?subject=facility-management&assetType=residential-tower&serviceHours=24x7#enquire
+  var assetMap = {
+    'residential-tower': 'Residential tower',
+    'commercial-tower':  'Commercial / office tower',
+    'mixed-use':         'Mixed-use development',
+    'retail':            'Retail / mall',
+    'industrial':        'Industrial / warehouse',
+    'villa-compound':    'Villa / compound',
+    'hospitality':       'Hotel / hospitality'
+  };
+  var hoursMap = {
+    'business':  'Business hours (8–6)',
+    'extended':  'Extended (12 hrs)',
+    '24x7':      '24×7 manned',
+    'on-call':   'On-call only'
+  };
+  try {
+    var qs = new URLSearchParams(window.location.search);
+    var a = qs.get('assetType');
+    var h = qs.get('serviceHours');
+    if (a && assetMap[a]) {
+      var ae = document.getElementById('fmAsset'); if (ae) ae.value = assetMap[a];
+    }
+    if (h && hoursMap[h]) {
+      var he = document.getElementById('fmHours'); if (he) he.value = hoursMap[h];
+    }
+  } catch (e) { /* no-op */ }
+})();
+</script>

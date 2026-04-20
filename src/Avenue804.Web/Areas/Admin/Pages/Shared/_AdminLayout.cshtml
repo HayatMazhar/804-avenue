@@ -31,12 +31,15 @@
 
     <!-- ─── Sidebar ─────────────────────────────────────── -->
     <aside class="as-side" aria-label="Admin navigation">
-      <div class="as-side__brand">
-        <div class="as-side__brand-mark">804</div>
-        <div class="as-side__brand-text">
-          <span class="as-side__brand-name">804 Avenue</span>
-          <span class="as-side__brand-sub">Admin Console</span>
-        </div>
+      <div class="as-side__brand as-side__brand--img">
+        <a asp-area="" asp-page="/Index" target="_blank" rel="noopener" class="as-side__brand-link" aria-label="804 Avenue — open public site">
+          <img src="~/assets/img/brand/logo-804avenue-transparent.png"
+               alt="804 Avenue — Properties &amp; Contracting"
+               class="as-side__brand-img"
+               width="180" height="58"
+               decoding="async" />
+        </a>
+        <span class="as-side__brand-sub">Admin Console</span>
       </div>
       <div class="as-side__scroll">
         <partial name="_AdminNav" />

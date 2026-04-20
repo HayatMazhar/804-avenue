@@ -41,7 +41,8 @@
     <meta name="twitter:title" content="@pageTitle" />
     <meta name="twitter:description" content="@meta" />
     <meta name="twitter:image" content="@ogImage" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F59E0B' stroke-width='1.8'%3E%3Cpath d='M3 21h18M5 21V7l7-4 7 4v14'/%3E%3Cpath d='M9 21v-6h6v6'/%3E%3C/svg%3E" />
+    <link rel="icon" type="image/png" href="~/assets/img/brand/logo-804avenue-transparent.png" />
+    <link rel="apple-touch-icon" href="~/assets/img/brand/logo-804avenue-transparent.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet" />
@@ -150,7 +151,7 @@
       <script src="~/assets/js/tawkto.js" data-tawk-property="@tawkProp" data-tawk-widget="@tawkWidget" nonce="@nonce" asp-append-version="true" defer></script>
     }
     <!-- Cookie consent -->
-    <div id="cookieBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:3000;background:var(--bg-card);border-top:1px solid var(--border-accent);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -8px 32px rgba(15,23,42,.1)">
+    <div id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie consent" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:3000;background:var(--bg-card);border-top:1px solid var(--border-accent);padding:14px 24px;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -8px 32px rgba(15,23,42,.1)">
       <p style="font-size:.8rem;color:var(--text-secondary);margin:0;max-width:680px">We use cookies to improve your experience and analyse site traffic. By continuing, you agree to our <a asp-page="/Privacy" style="color:var(--accent)">Privacy Policy</a>.</p>
       <div style="display:flex;gap:10px;flex-shrink:0">
         <button id="cookieBannerAccept" type="button" class="btn-primary" style="padding:9px 20px;font-size:.72rem"><span>Accept</span></button>

@@ -65,6 +65,31 @@ body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__brand { color: #fff; }
 }
 body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__brand-sub { color: rgba(255,255,255,.65); }
 
+/* ── Image-based brand (.pf-nav__brand--img) ─────────────── */
+.pf-nav__brand--img { gap: 0; padding: 4px 0; }
+.pf-nav__brand-img {
+  display: block;
+  height: 44px;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  transition: filter .25s ease, opacity .2s ease;
+}
+.pf-nav__brand--img:hover .pf-nav__brand-img { opacity: .88; }
+
+/* On the dark home-hero (nav not scrolled), invert the colour logo to solid white */
+body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__brand-img {
+  filter: brightness(0) invert(1);
+}
+
+/* Slightly smaller after the nav shrinks on scroll */
+.pf-nav--scrolled .pf-nav__brand-img { height: 38px; }
+
+@media (max-width: 640px) {
+  .pf-nav__brand-img { height: 36px; max-width: 160px; }
+  .pf-nav--scrolled .pf-nav__brand-img { height: 32px; }
+}
+
 /* Nav links list */
 .pf-nav__links {
   display: flex;
@@ -96,6 +121,13 @@ body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__brand-sub { color: rgba(255,25
 .pf-nav__link.active { color: var(--accent); font-weight: 700; }
 body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__link { color: rgba(255,255,255,.88); }
 body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__link:hover { color: #fff; background: rgba(255,255,255,.1); }
+
+/* Mobile drawer accent variant — used by "List Your Property" link in the
+   mobile hamburger drawer (the desktop CTA lives in pf-nav__actions). */
+.pf-nav__mobile-link--accent {
+  color: var(--accent) !important;
+  font-weight: 700;
+}
 .pf-nav__chevron { transition: transform .2s ease; }
 .pf-nav__item--dd.is-open .pf-nav__chevron { transform: rotate(180deg); }
 
@@ -206,6 +238,36 @@ body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__phone { color: rgba(255,255,25
   white-space: nowrap;
 }
 .pf-nav__list-btn:hover { background: var(--accent-hover); box-shadow: 0 4px 16px var(--accent-glow); color: #fff; }
+
+/* Ghost variant — pairs next to the solid "Inquiry" pill so we don't
+   end up with two heavy gold buttons shouting at each other. Reads as a
+   secondary CTA on the light scrolled nav AND on the dark home-hero nav. */
+.pf-nav__list-btn.pf-nav__list-btn--ghost {
+  background: transparent;
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+.pf-nav__list-btn.pf-nav__list-btn--ghost:hover {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: inset 0 0 0 1.5px var(--accent), 0 4px 16px var(--accent-glow);
+}
+.pf-nav__list-btn.pf-nav__list-btn--ghost.is-active {
+  background: var(--accent);
+  color: #fff;
+}
+/* On the transparent dark nav (home hero) the gold outline disappears
+   into the photo background — switch to a white outline that flips to the
+   solid gold on hover. */
+body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__list-btn--ghost {
+  color: #fff;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.6);
+}
+body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__list-btn--ghost:hover {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: inset 0 0 0 1.5px var(--accent), 0 4px 16px var(--accent-glow);
+}
 .pf-nav__signin-btn {
   display: inline-flex;
   align-items: center;
