@@ -38,6 +38,9 @@ public static class FeatureFlags
     public const string PropertyCompare   = "property_compare";
     public const string CurrencyConverter = "currency_converter";
 
+    // ── Security / anti-abuse ──────────────────────────────────────
+    public const string RecaptchaV3 = "recaptcha_v3";
+
     public static string DbKey(string flag) => $"feature.{flag}";
 
     public static IReadOnlyList<(string Flag, string Label, string Description, bool DefaultOn)> All =>
@@ -54,5 +57,6 @@ public static class FeatureFlags
         (PropertyRatings,    "Property Ratings",         "Allow signed-in users to rate and review property listings.",              true),
         (PropertyCompare,    "Property Comparison",      "Allow users to compare up to 3 properties side by side.",                 true),
         (CurrencyConverter,  "Currency Converter",       "Show a currency toggle (AED / USD / EUR / GBP) on property pages.",       true),
+        (RecaptchaV3,        "reCAPTCHA v3",             "Require a Google reCAPTCHA v3 token on public submission forms (requires Recaptcha:SiteKey/SecretKey).", false),
     ];
 }

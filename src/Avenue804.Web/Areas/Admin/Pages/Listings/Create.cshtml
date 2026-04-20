@@ -2,68 +2,172 @@
 @model Avenue804.Web.Areas.Admin.Pages.Listings.CreateModel
 @{
     ViewData["Title"] = "New listing";
+    ViewData["AdminSection"] = "listings";
 }
-<p class="admin-back"><a asp-page="Index">← Properties</a></p>
-<form method="post" class="admin-form">
-  <div class="row">
-    <label asp-for="Form.Title"></label>
-    <input asp-for="Form.Title" />
-    <span asp-validation-for="Form.Title" class="muted"></span>
-  </div>
-  <div class="row">
-    <label asp-for="Form.Slug">Slug (optional)</label>
-    <input asp-for="Form.Slug" placeholder="auto from title" />
-  </div>
-  <div class="row admin-form-row-price">
-    <div>
-      <label asp-for="Form.Price"></label>
-      <input asp-for="Form.Price" />
+
+<div class="admin-back"><a asp-page="Index">← Properties</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">New listing</h1>
+      <p class="as-form-page__sub">Add the basics now and you can polish photos, amenities &amp; SEO right after saving.</p>
     </div>
-    <div>
-      <label asp-for="Form.Currency"></label>
-      <input asp-for="Form.Currency" />
+    <div class="as-form-page__pill" style="background:var(--as-accent-08);border-color:var(--as-accent-50,rgba(245,158,11,.4));color:var(--as-accent);">
+      Draft
     </div>
-  </div>
-  <div class="row">
-    <label asp-for="Form.OfferType"></label>
-    <select asp-for="Form.OfferType" asp-items="Html.GetEnumSelectList<ListingOfferType>()"></select>
-  </div>
-  <div class="row">
-    <label asp-for="Form.Location"></label>
-    <input asp-for="Form.Location" />
-  </div>
-  <div class="row">
-    <label asp-for="Form.Description"></label>
-    <textarea asp-for="Form.Description"></textarea>
-  </div>
-  <div class="row admin-form-row-3">
-    <div>
-      <label asp-for="Form.Beds"></label>
-      <input asp-for="Form.Beds" />
-    </div>
-    <div>
-      <label asp-for="Form.Baths"></label>
-      <input asp-for="Form.Baths" />
-    </div>
-    <div>
-      <label asp-for="Form.AreaSqft"></label>
-      <input asp-for="Form.AreaSqft" />
-    </div>
-  </div>
-  <div class="row">
-    <label asp-for="Form.MainImageUrl"></label>
-    <input asp-for="Form.MainImageUrl" placeholder="https://…" />
-  </div>
-  <div class="row">
-    <label asp-for="Form.GalleryImagesJson">Additional images (one URL per line)</label>
-    <textarea asp-for="Form.GalleryImagesJson" rows="3" placeholder="https://image1.jpg&#10;https://image2.jpg"></textarea>
-  </div>
-  <div class="row chk">
-    <input asp-for="Form.IsPublished" />
-    <label asp-for="Form.IsPublished" class="admin-label-inline">Published</label>
-  </div>
-  <button type="submit" class="btn-primary"><span>Create</span></button>
-</form>
-@section Scripts {
-  <partial name="_ValidationScriptsPartial" />
-}
+  </header>
+
+  <form method="post">
+    <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Basics</h2>
+          <p class="as-section__sub">Title and short description shown on the listing page.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.Title">Listing title <span class="req">*</span></label>
+          <input asp-for="Form.Title" placeholder="e.g. 3-bedroom luxury apartment with sea view" />
+          <span asp-validation-for="Form.Title" class="field-validation-error"></span>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.Slug">URL slug</label>
+          <input asp-for="Form.Slug" placeholder="auto-generated from the title if left blank" />
+          <p class="as-field-hint">Lowercase letters, numbers and dashes — used in the public URL.</p>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.Description">Description</label>
+          <textarea asp-for="Form.Description" rows="4" placeholder="Describe the property — highlights, finishes, location perks…"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Pricing &amp; offer</h2>
+          <p class="as-section__sub">Asking price, currency and whether it's for sale or rent.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--price">
+          <div class="as-field">
+            <label asp-for="Form.Price">Price</label>
+            <input asp-for="Form.Price" type="number" min="0" step="1000" placeholder="e.g. 1500000" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.Currency">Currency</label>
+            <input asp-for="Form.Currency" placeholder="AED" />
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.OfferType">Offer type</label>
+          <select asp-for="Form.OfferType" asp-items="Html.GetEnumSelectList<ListingOfferType>()"></select>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Location &amp; specs</h2>
+          <p class="as-section__sub">Where the property is and the headline numbers.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.Location">Location (area, community)</label>
+          <input asp-for="Form.Location" placeholder="e.g. Al Reem Island, Abu Dhabi" />
+        </div>
+        <div class="as-row as-row--3">
+          <div class="as-field">
+            <label asp-for="Form.Beds">Bedrooms</label>
+            <input asp-for="Form.Beds" type="number" min="0" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.Baths">Bathrooms</label>
+            <input asp-for="Form.Baths" type="number" min="0" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.AreaSqft">Area (sqft)</label>
+            <input asp-for="Form.AreaSqft" type="number" min="0" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Photos</h2>
+          <p class="as-section__sub">A hero photo and optional gallery URLs. Polish the upload UX after creating.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.MainImageUrl">Main photo URL</label>
+          <input asp-for="Form.MainImageUrl" placeholder="https://…/hero.jpg" />
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.GalleryImagesJson">Gallery URLs</label>
+          <textarea asp-for="Form.GalleryImagesJson" rows="3" placeholder="https://image1.jpg&#10;https://image2.jpg"></textarea>
+          <p class="as-field-hint">One URL per line. You'll get a proper drag-and-drop uploader on the edit page.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Visibility</h2>
+          <p class="as-section__sub">Save as a draft first, then turn on publishing once everything looks right.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <label class="as-toggle">
+          <input asp-for="Form.IsPublished" />
+          <span class="as-toggle__switch"></span>
+          <span class="as-toggle__text">
+            <span class="as-toggle__title">Publish immediately</span>
+            <span class="as-toggle__sub">Off by default — listing will be live as soon as you save.</span>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info">
+        <span class="dot" style="background:var(--as-mute);"></span>
+        Saving as draft — you'll land on the full editor right after.
+      </div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create listing
+        </button>
+      </div>
+    </footer>
+  </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

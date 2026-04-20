@@ -1,31 +1,141 @@
 @page
 @model Avenue804.Web.Areas.Admin.Pages.AreaGuides.CreateModel
-@{ ViewData["Title"] = "Add Area Guide"; }
-<p class="admin-back"><a asp-page="Index">← Area Guides</a></p>
-<form method="post" class="admin-form">
-  <div class="row admin-form-row-2">
-    <div><label asp-for="F.Name">Area name *</label><input asp-for="F.Name" placeholder="e.g. Al Reem Island" /></div>
-    <div><label asp-for="F.Emirate">Emirate *</label>
-      <select asp-for="F.Emirate">
-        <option value="Abu Dhabi">Abu Dhabi</option>
-        <option value="Dubai">Dubai</option>
-        <option value="Sharjah">Sharjah</option>
-        <option value="Ajman">Ajman</option>
-        <option value="Ras Al Khaimah">Ras Al Khaimah</option>
-        <option value="Fujairah">Fujairah</option>
-      </select>
+@{
+    ViewData["Title"] = "Add area guide";
+    ViewData["AdminSection"] = "area-guides";
+}
+
+<div class="admin-back"><a asp-page="Index">← Area guides</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">Add area guide</h1>
+      <p class="as-form-page__sub">Build a guide for a UAE area — overview, prices, lifestyle &amp; transport.</p>
     </div>
-  </div>
-  <div class="row"><label asp-for="F.HeroImageUrl">Hero image URL</label><input asp-for="F.HeroImageUrl" type="url" placeholder="https://…" /></div>
-  <div class="row"><label asp-for="F.Overview">Overview (HTML allowed)</label><textarea asp-for="F.Overview" rows="6" placeholder="Describe the area, lifestyle, what makes it popular…"></textarea></div>
-  <div class="row admin-form-row-2">
-    <div><label asp-for="F.AvgPriceSaleSqft">Avg sale price / sqft (AED)</label><input asp-for="F.AvgPriceSaleSqft" type="number" placeholder="e.g. 1200" /></div>
-    <div><label asp-for="F.AvgRentYearly">Avg 1BR rent / year (AED)</label><input asp-for="F.AvgRentYearly" type="number" placeholder="e.g. 75000" /></div>
-  </div>
-  <div class="row"><label asp-for="F.PopularWith">Popular with</label><input asp-for="F.PopularWith" placeholder="e.g. Families, Expats, Investors" /></div>
-  <div class="row"><label asp-for="F.NearbyLandmarks">Nearby landmarks</label><input asp-for="F.NearbyLandmarks" placeholder="Al Reem Mall, ADGM, Sorbonne University" /></div>
-  <div class="row"><label asp-for="F.SchoolsNearby">Schools nearby</label><input asp-for="F.SchoolsNearby" placeholder="GEMS, Raha International School" /></div>
-  <div class="row"><label asp-for="F.TransportLinks">Transport links</label><input asp-for="F.TransportLinks" placeholder="5 min to Corniche, 15 min to Abu Dhabi Mall" /></div>
-  <div class="row chk"><input asp-for="F.IsPublished" /><label asp-for="F.IsPublished" class="admin-label-inline">Published</label></div>
-  <button type="submit" class="btn-primary"><span>Save Area Guide</span></button>
-</form>
+  </header>
+
+  <form method="post">
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Identity</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.Name">Area name <span class="req">*</span></label>
+            <input asp-for="F.Name" placeholder="e.g. Al Reem Island" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.Emirate">Emirate <span class="req">*</span></label>
+            <select asp-for="F.Emirate">
+              <option value="Abu Dhabi">Abu Dhabi</option>
+              <option value="Dubai">Dubai</option>
+              <option value="Sharjah">Sharjah</option>
+              <option value="Ajman">Ajman</option>
+              <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+              <option value="Fujairah">Fujairah</option>
+            </select>
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.HeroImageUrl">Hero image URL</label>
+          <input asp-for="F.HeroImageUrl" type="url" placeholder="https://…" />
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Overview</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="F.Overview">Overview (HTML allowed)</label>
+          <textarea asp-for="F.Overview" rows="6" placeholder="Describe the area, lifestyle, what makes it popular…"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Average prices</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.AvgPriceSaleSqft">Avg sale / sqft (AED)</label>
+            <input asp-for="F.AvgPriceSaleSqft" type="number" placeholder="e.g. 1200" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.AvgRentYearly">Avg 1BR rent / year (AED)</label>
+            <input asp-for="F.AvgRentYearly" type="number" placeholder="e.g. 75000" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 4-9 4-9-4 9-4z"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Lifestyle &amp; transport</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="F.PopularWith">Popular with</label>
+          <input asp-for="F.PopularWith" placeholder="e.g. Families, Expats, Investors" />
+        </div>
+        <div class="as-field">
+          <label asp-for="F.NearbyLandmarks">Nearby landmarks</label>
+          <input asp-for="F.NearbyLandmarks" placeholder="Al Reem Mall, ADGM, Sorbonne University" />
+        </div>
+        <div class="as-field">
+          <label asp-for="F.SchoolsNearby">Schools nearby</label>
+          <input asp-for="F.SchoolsNearby" placeholder="GEMS, Raha International School" />
+        </div>
+        <div class="as-field">
+          <label asp-for="F.TransportLinks">Transport links</label>
+          <input asp-for="F.TransportLinks" placeholder="5 min to Corniche, 15 min to Abu Dhabi Mall" />
+        </div>
+        <label class="as-toggle">
+          <input asp-for="F.IsPublished" />
+          <span class="as-toggle__switch"></span>
+          <span class="as-toggle__text">
+            <span class="as-toggle__title">Publish immediately</span>
+            <span class="as-toggle__sub">Off by default — save as draft.</span>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info"><span class="dot" style="background:var(--as-mute);"></span>Saving creates the area guide.</div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Save area guide
+        </button>
+      </div>
+    </footer>
+  </form>
+</div>

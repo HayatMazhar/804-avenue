@@ -1,155 +1,227 @@
 @page
 @model Avenue804.Web.Areas.Admin.Pages.WebsiteContent.IndexModel
 @{
-    ViewData["Title"] = "Website Content";
+    ViewData["Title"] = "Page Content";
+    ViewData["AdminSub"] = "Edit every public-facing page in one place.";
 }
 
-@if (!string.IsNullOrEmpty(Model.SuccessMessage))
-{
-    <div class="toast-admin ok" role="status">@Model.SuccessMessage</div>
-}
+<div class="as-wc">
 
-<!-- ═══ TAB NAV ═══ -->
-<div class="wc-tabs" id="wcTabs">
-    <button class="wc-tab active" type="button" data-tab="branding">Site Branding</button>
-    @foreach (var grp in IndexModel.ContentSections)
+  <!-- ─── Sidebar tabs (one entry per public page) ─── -->
+  <nav class="as-wc__nav" aria-label="Page picker">
+    <p class="as-wc__navtitle">Brand</p>
+    <button type="button" class="as-wc__tab is-active" data-tab="branding">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20"/></svg>
+      Brand &amp; contact
+      <span class="as-wc__tab-count">@Avenue804.Web.Areas.Admin.Pages.WebsiteContent.IndexModel.BrandingFields.Count</span>
+    </button>
+
+    <p class="as-wc__navtitle" style="margin-top:8px;">Public pages</p>
+    @foreach (var pg in Avenue804.Web.Areas.Admin.Pages.WebsiteContent.IndexModel.ContentPages)
     {
-        <button class="wc-tab" type="button" data-tab="@grp.Group.Replace(" ", "-").ToLower()">@grp.Group</button>
+      <button type="button" class="as-wc__tab" data-tab="@pg.Id">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        @pg.Title
+        <span class="as-wc__tab-count">@pg.Fields.Count</span>
+      </button>
     }
-</div>
 
-<!-- ═══ BRANDING TAB ═══ -->
-<div class="wc-panel active" data-panel="branding">
-    <form method="post" asp-page-handler="Branding" class="wc-form">
-        <p class="muted mb-3">Company details, contact info, and social links shown across the site.</p>
-        <div class="wc-grid">
-            @foreach (var (key, label) in IndexModel.BrandingFields)
-            {
-                var val = Model.Settings.TryGetValue(key, out var s) ? s.Value : "";
-                <div class="wc-field">
-                    <label class="wc-label">@label</label>
-                    <input type="text" name="ss_@key" value="@val" class="wc-input" placeholder="@label" />
-                    <span class="wc-slug">@key</span>
+    @if (Model.OrphanFields.Count > 0)
+    {
+      <p class="as-wc__navtitle" style="margin-top:8px;">Other</p>
+      <button type="button" class="as-wc__tab" data-tab="page-other">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Unwired blocks
+        <span class="as-wc__tab-count">@Model.OrphanFields.Count</span>
+      </button>
+    }
+  </nav>
+
+  <!-- ─── Panels ─────────────────────────────────────── -->
+  <div>
+
+    <!-- ── Brand & contact panel ── -->
+    <section class="as-wc__panel is-active" data-panel="branding" id="branding">
+      <div class="as-wc__panel-head">
+        <div class="as-wc__panel-info">
+          <h2 class="as-wc__panel-title">Brand &amp; contact</h2>
+          <p class="as-wc__panel-sub">Company name, phone, email, social URLs and other details that appear in the navigation, footer and metadata across the entire site.</p>
+        </div>
+      </div>
+      <form method="post" asp-page-handler="Branding" class="as-wc__form">
+        <div class="as-wc__fields">
+          @{ var fpairs = Avenue804.Web.Areas.Admin.Pages.WebsiteContent.IndexModel.BrandingFields.Select((f, i) => new { F = f, I = i }).ToList(); }
+          @for (int i = 0; i < fpairs.Count; i += 2)
+          {
+            <div class="as-wc__row">
+              @{
+                var a = fpairs[i].F;
+                var aVal = Model.Settings.TryGetValue(a.Key, out var aS) ? aS.Value : "";
+              }
+              <div class="as-wc__field">
+                <label class="as-wc__label">@a.Label</label>
+                <input type="text" name="ss_@a.Key" value="@aVal" class="as-wc__input" placeholder="@a.Label" />
+                @if (!string.IsNullOrWhiteSpace(a.Hint)) { <span class="as-wc__hint">@a.Hint</span> }
+              </div>
+              @if (i + 1 < fpairs.Count)
+              {
+                var b = fpairs[i + 1].F;
+                var bVal = Model.Settings.TryGetValue(b.Key, out var bS) ? bS.Value : "";
+                <div class="as-wc__field">
+                  <label class="as-wc__label">@b.Label</label>
+                  <input type="text" name="ss_@b.Key" value="@bVal" class="as-wc__input" placeholder="@b.Label" />
+                  @if (!string.IsNullOrWhiteSpace(b.Hint)) { <span class="as-wc__hint">@b.Hint</span> }
                 </div>
-            }
+              }
+              else
+              {
+                <div></div>
+              }
+            </div>
+          }
         </div>
-        <div class="wc-actions">
-            <button type="submit" class="btn-primary"><span>Save Branding</span></button>
+        <div class="as-wc__sticky-bar">
+          <span class="as-wc__sticky-info">@Avenue804.Web.Areas.Admin.Pages.WebsiteContent.IndexModel.BrandingFields.Count fields · changes are global.</span>
+          <button type="submit" class="as-btn as-btn--primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Save brand settings
+          </button>
         </div>
-    </form>
-</div>
+      </form>
+    </section>
 
-<!-- ═══ CONTENT TABS ═══ -->
-@foreach (var grp in IndexModel.ContentSections)
-{
-    var panelId = grp.Group.Replace(" ", "-").ToLower();
-    <div class="wc-panel" data-panel="@panelId">
-        <form method="post" asp-page-handler="Content" class="wc-form">
-            <p class="muted mb-3">Edit the text and copy shown on the <strong>@grp.Group</strong>.</p>
-            <div class="wc-fields-list">
-                @foreach (var field in grp.Fields)
-                {
-                    var formKey = "cb_" + field.Slug.Replace('.', '_');
-                    var body = Model.BlockBodies.TryGetValue(field.Slug, out var b) ? b : "";
-                    <div class="wc-field wc-field--full">
-                        <label class="wc-label">@field.Label</label>
-                        @if (field.IsTextarea)
-                        {
-                            <textarea name="@formKey" class="wc-textarea" rows="5" placeholder="@field.Label">@body</textarea>
-                        }
-                        else
-                        {
-                            <input type="text" name="@formKey" value="@body" class="wc-input" placeholder="@field.Label" />
-                        }
-                        <span class="wc-slug">@field.Slug</span>
-                    </div>
-                }
-            </div>
-            <div class="wc-actions">
-                <button type="submit" class="btn-primary"><span>Save @grp.Group</span></button>
-            </div>
+    <!-- ── Orphan / unwired blocks panel ── -->
+    @if (Model.OrphanFields.Count > 0)
+    {
+      <section class="as-wc__panel" data-panel="page-other" id="page-other">
+        <div class="as-wc__panel-head">
+          <div class="as-wc__panel-info">
+            <h2 class="as-wc__panel-title">Unwired content blocks</h2>
+            <p class="as-wc__panel-sub">
+              These slugs exist in the database but aren't yet mapped to a public page tab.
+              Edit them here as a fallback, then ask a developer to add them to the page editor with a friendly label.
+            </p>
+          </div>
+          <span class="as-wc__preview" style="background:var(--as-soft);color:var(--as-mute);border-color:var(--as-border);">
+            @Model.OrphanFields.Count fallback field@(Model.OrphanFields.Count == 1 ? "" : "s")
+          </span>
+        </div>
+        <form method="post" asp-page-handler="Content" class="as-wc__form">
+          <input type="hidden" name="__page" value="page-other" />
+          <div class="as-wc__fields">
+            @foreach (var field in Model.OrphanFields)
+            {
+              var formKey = "cb_" + field.Slug.Replace('.', '_');
+              var body = Model.BlockBodies.TryGetValue(field.Slug, out var b) ? b : "";
+              <div class="as-wc__field">
+                <label class="as-wc__label">@field.Label</label>
+                <textarea name="@formKey" class="as-wc__textarea" rows="3" placeholder="@field.Slug">@body</textarea>
+                <span class="as-wc__hint">@field.Hint · slug: @field.Slug</span>
+              </div>
+            }
+          </div>
+          <div class="as-wc__sticky-bar">
+            <span class="as-wc__sticky-info">@Model.OrphanFields.Count unmapped block(s).</span>
+            <button type="submit" class="as-btn as-btn--primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Save unwired blocks
+            </button>
+          </div>
         </form>
-    </div>
-}
+      </section>
+    }
+
+    <!-- ── Per-page panels ── -->
+    @foreach (var pg in Avenue804.Web.Areas.Admin.Pages.WebsiteContent.IndexModel.ContentPages)
+    {
+      <section class="as-wc__panel" data-panel="@pg.Id" id="@pg.Id">
+        <div class="as-wc__panel-head">
+          <div class="as-wc__panel-info">
+            <h2 class="as-wc__panel-title">@pg.Title</h2>
+            <p class="as-wc__panel-sub">@pg.Description</p>
+          </div>
+          @if (!string.IsNullOrWhiteSpace(pg.PreviewUrl))
+          {
+            <a class="as-wc__preview" href="@pg.PreviewUrl" target="_blank" rel="noopener">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Preview @pg.PreviewUrl
+            </a>
+          }
+        </div>
+        <form method="post" asp-page-handler="Content" class="as-wc__form">
+          <input type="hidden" name="__page" value="@pg.Id" />
+          <div class="as-wc__fields">
+            @foreach (var field in pg.Fields)
+            {
+              var formKey = "cb_" + field.Slug.Replace('.', '_');
+              var body = Model.BlockBodies.TryGetValue(field.Slug, out var b) ? b : "";
+              <div class="as-wc__field">
+                <label class="as-wc__label">@field.Label</label>
+                @if (field.IsTextarea)
+                {
+                  <textarea name="@formKey" class="as-wc__textarea" rows="4" placeholder="@field.Label">@body</textarea>
+                }
+                else
+                {
+                  <input type="text" name="@formKey" value="@body" class="as-wc__input" placeholder="@field.Label" />
+                }
+                @if (!string.IsNullOrWhiteSpace(field.Hint))
+                {
+                  <span class="as-wc__hint">@field.Hint · slug: @field.Slug</span>
+                }
+                else
+                {
+                  <span class="as-wc__hint">slug: @field.Slug</span>
+                }
+              </div>
+            }
+          </div>
+          <div class="as-wc__sticky-bar">
+            <span class="as-wc__sticky-info">@pg.Fields.Count fields on this page.</span>
+            <button type="submit" class="as-btn as-btn--primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Save @pg.Title
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+  </div>
+</div>
 
 @section Scripts {
-<style>
-.wc-tabs { display: flex; gap: 0; border-bottom: 2px solid #e2e5e9; margin-bottom: 24px; flex-wrap: wrap; }
-.wc-tab {
-    padding: 10px 18px;
-    font-family: var(--font-nav);
-    font-size: .72rem;
-    font-weight: 600;
-    letter-spacing: .04em;
-    color: var(--text-tertiary);
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-    cursor: pointer;
-    transition: color .15s, border-color .15s;
-    white-space: nowrap;
-}
-.wc-tab:hover { color: var(--text-primary); }
-.wc-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-.wc-panel { display: none; }
-.wc-panel.active { display: block; }
-.wc-form { max-width: 900px; }
-.wc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-.wc-fields-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
-.wc-field { display: flex; flex-direction: column; gap: 4px; }
-.wc-field--full { grid-column: 1 / -1; }
-.wc-label { font-family: var(--font-nav); font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text-secondary); }
-.wc-slug { font-size: .6rem; color: var(--text-tertiary); font-family: monospace; }
-.wc-input {
-    width: 100%;
-    padding: 9px 12px;
-    border: 1.5px solid #e2e5e9;
-    border-radius: 7px;
-    font-family: var(--font-body);
-    font-size: .84rem;
-    color: var(--text-primary);
-    background: #fff;
-    transition: border-color .15s;
-    box-sizing: border-box;
-}
-.wc-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-15); }
-.wc-textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1.5px solid #e2e5e9;
-    border-radius: 7px;
-    font-family: var(--font-body);
-    font-size: .84rem;
-    color: var(--text-primary);
-    background: #fff;
-    resize: vertical;
-    min-height: 100px;
-    line-height: 1.6;
-    box-sizing: border-box;
-}
-.wc-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-15); }
-.wc-actions { padding-top: 8px; }
-@@media (max-width: 640px) {
-    .wc-grid { grid-template-columns: 1fr; }
-    .wc-tabs { gap: 0; }
-    .wc-tab { padding: 8px 12px; font-size: .65rem; }
-}
-</style>
 <script>
-(function() {
-    var tabs = document.querySelectorAll('.wc-tab');
-    var panels = document.querySelectorAll('.wc-panel');
-    tabs.forEach(function(tab) {
-        tab.addEventListener('click', function() {
-            tabs.forEach(function(t) { t.classList.remove('active'); });
-            panels.forEach(function(p) { p.classList.remove('active'); });
-            tab.classList.add('active');
-            var target = tab.getAttribute('data-tab');
-            var panel = document.querySelector('[data-panel="' + target + '"]');
-            if (panel) panel.classList.add('active');
-        });
+(function () {
+  var tabs = document.querySelectorAll('.as-wc__tab');
+  var panels = document.querySelectorAll('.as-wc__panel');
+
+  function activate(id, push) {
+    tabs.forEach(function (t) { t.classList.toggle('is-active', t.getAttribute('data-tab') === id); });
+    panels.forEach(function (p) { p.classList.toggle('is-active', p.getAttribute('data-panel') === id); });
+    if (push) {
+      try { history.replaceState(null, '', '#' + id); } catch (_) { /* ignored */ }
+    }
+  }
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var id = tab.getAttribute('data-tab');
+      activate(id, true);
+      var panel = document.querySelector('[data-panel="' + id + '"]');
+      if (panel && panel.scrollIntoView) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+  });
+
+  // Honour URL hash so dashboard quick-links land on the right tab.
+  var hash = (location.hash || '').replace('#', '');
+  if (hash && document.querySelector('[data-panel="' + hash + '"]')) {
+    activate(hash, false);
+  }
+
+  window.addEventListener('hashchange', function () {
+    var h = (location.hash || '').replace('#', '');
+    if (h && document.querySelector('[data-panel="' + h + '"]')) activate(h, false);
+  });
 })();
 </script>
 }

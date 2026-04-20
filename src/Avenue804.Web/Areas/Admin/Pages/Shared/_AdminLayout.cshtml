@@ -1,9 +1,16 @@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var pageTitle = ViewData["Title"] as string ?? "Admin";
+    var pageSub = ViewData["AdminSub"] as string;
+    var unread = ViewData["UnreadNotifs"] as int? ?? 0;
+}
 <!DOCTYPE html>
 <html lang="en" data-theme="gold">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>@ViewData["Title"] — 804 Admin</title>
+  <title>@pageTitle — 804 Admin</title>
+  <meta name="robots" content="noindex,nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" crossorigin="anonymous" />
@@ -17,104 +24,107 @@
   <link rel="stylesheet" href="~/assets/css/bootstrap-avenue.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/assets/css/admin.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/assets/css/ui-dropdown.css" asp-append-version="true" />
-  <style>
-    body { margin: 0; min-height: 100vh; background: var(--bg-deep); }
-    .admin-shell { max-width: 1200px; margin: 0 auto; padding: 24px 24px 60px; }
-    .admin-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle); }
-    .admin-top h1 { font-family: var(--font-display); font-size: 1.3rem; color: var(--text-primary); margin: 0 0 8px; }
-    .admin-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-    .admin-actions a { font-family: var(--font-nav); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); }
-    .admin-actions a:hover { color: var(--accent); }
-    .admin-nav { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 4px; }
-    .admin-nav-a { font-family: var(--font-nav); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); padding-bottom: 4px; border-bottom: 2px solid transparent; }
-    .admin-nav-a:hover { color: var(--text-primary); }
-    .admin-nav-a.active { color: var(--accent); border-bottom-color: var(--accent); }
-    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-    .stat-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; }
-    .stat-card .n { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); }
-    .stat-card .l { font-size: 0.72rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 6px; }
-    .admin-table-wrap { overflow-x: auto; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-card); }
-    table.admin-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
-    .admin-table th { text-align: left; font-family: var(--font-nav); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary); padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); background: var(--bg-surface); }
-    .admin-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); vertical-align: top; }
-    .admin-table tr:last-child td { border-bottom: none; }
-    .admin-table a { color: var(--accent); font-weight: 500; }
-    .admin-table a:hover { text-decoration: underline; }
-    .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-family: var(--font-nav); font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-    .badge-new { background: var(--accent-15); color: var(--accent-light); border: 1px solid var(--border-accent); }
-    .badge-progress { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.35); }
-    .badge-closed { background: rgba(148, 163, 184, 0.12); color: var(--text-tertiary); border: 1px solid var(--border-subtle); }
-    .badge-yes { background: rgba(16, 185, 129, 0.15); color: var(--success); }
-    .badge-no { background: rgba(148, 163, 184, 0.1); color: var(--text-tertiary); }
-    .pager { display: flex; gap: 12px; align-items: center; margin-top: 20px; flex-wrap: wrap; }
-    .pager a, .pager span { font-family: var(--font-nav); font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
-    .pager a { color: var(--accent); }
-    .pager span { color: var(--text-tertiary); }
-    .admin-form { max-width: 640px; }
-    .admin-form .row { margin-bottom: 18px; }
-    .admin-form label { display: block; font-family: var(--font-nav); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px; }
-    /* Admin form layout — core input styling comes from bulma-theme.css */
-    .admin-form .row { margin-bottom: 1.1rem; }
-    .admin-form .row > label:first-child { display:block;font-family:var(--font-nav);font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:.45rem; }
-    .admin-form .row:focus-within > label:first-child { color: var(--accent); }
-    .admin-form input, .admin-form textarea, .admin-form select { width:100%;box-sizing:border-box; }
-    .admin-form textarea { min-height: 120px; resize: vertical; }
-    .admin-form .chk { display: flex; align-items: center; gap: 10px; }
-    .admin-form .chk input { width: auto; }
-    .muted { color: var(--text-tertiary); font-size: 0.82rem; }
-    .detail-block { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px 22px; margin-bottom: 20px; }
-    .detail-block h3 { font-family: var(--font-display); font-size: 1rem; color: var(--text-primary); margin: 0 0 12px; }
-    .detail-block p, .detail-block dd { margin: 0; color: var(--text-secondary); line-height: 1.65; white-space: pre-wrap; }
-    .detail-dl { display: grid; grid-template-columns: 140px 1fr; gap: 10px 16px; font-size: 0.88rem; }
-    .detail-dl dt { color: var(--text-tertiary); font-family: var(--font-nav); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; }
-    .detail-dl dd { color: var(--text-secondary); margin: 0; }
-    .toast-admin { padding: 12px 16px; border-radius: var(--radius-sm); margin-bottom: 20px; font-size: 0.88rem; }
-    .toast-admin.ok { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); color: var(--success); }
-    .notif-bell { position:relative;display:inline-flex;align-items:center;color:var(--text-secondary);transition:color .2s ease }
-    .notif-bell:hover { color:var(--accent) }
-    .notif-count { position:absolute;top:-6px;right:-8px;background:var(--danger);color:#fff;border-radius:999px;font-size:.55rem;font-weight:700;padding:1px 5px;font-family:var(--font-nav);min-width:16px;text-align:center }
-  </style>
+  <link rel="stylesheet" href="~/assets/css/admin-shell.css" asp-append-version="true" />
 </head>
-<body>
-  <div class="admin-shell enhance-dd">
-    <div class="admin-top">
-      <div>
-        <h1>@ViewData["Title"]</h1>
+<body class="admin-body">
+  <div class="as-shell enhance-dd" id="asShell">
+
+    <!-- ─── Sidebar ─────────────────────────────────────── -->
+    <aside class="as-side" aria-label="Admin navigation">
+      <div class="as-side__brand">
+        <div class="as-side__brand-mark">804</div>
+        <div class="as-side__brand-text">
+          <span class="as-side__brand-name">804 Avenue</span>
+          <span class="as-side__brand-sub">Admin Console</span>
+        </div>
+      </div>
+      <div class="as-side__scroll">
         <partial name="_AdminNav" />
       </div>
-      <div class="admin-actions">
-        <a asp-area="" asp-page="/Index">View site</a>
-        <a asp-area="Admin" asp-page="/Notifications/Index" class="notif-bell" title="Notifications">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-          @if (ViewData["UnreadNotifs"] is int u && u > 0) { <span class="notif-count">@u</span> }
-        </a>
-        <form asp-area="Admin" asp-page="/Logout" method="post" class="admin-logout-form">
-          <button type="submit" class="btn-outline admin-btn-logout">Log out</button>
-        </form>
+      <div class="as-side__foot">
+        <span>v1.0</span>
+        <a asp-area="" asp-page="/Index" target="_blank" rel="noopener">View site →</a>
       </div>
+    </aside>
+
+    <!-- ─── Main column ─────────────────────────────────── -->
+    <div class="as-main">
+      <header class="as-top">
+        <button type="button" class="as-top__menu-btn" id="asMenuBtn" aria-label="Toggle navigation">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+
+        <div class="as-top__title">
+          <div class="as-top__crumbs">
+            <a asp-area="Admin" asp-page="/Index">Admin</a>
+            <span>/</span>
+            <span>@pageTitle</span>
+          </div>
+          <h1 class="as-top__h1">@pageTitle</h1>
+        </div>
+
+        <div class="as-top__spacer"></div>
+
+        <a asp-area="" asp-page="/Index" class="as-top__action as-top__action--hide-sm" target="_blank" rel="noopener" title="Open public site in a new tab">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          View site
+        </a>
+
+        <a asp-area="Admin" asp-page="/Notifications/Index" class="as-top__bell" title="Notifications">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          @if (unread > 0) { <span class="as-top__bell-count">@unread</span> }
+        </a>
+
+        <form asp-area="Admin" asp-page="/Logout" method="post" class="admin-logout-form" style="margin:0;">
+          <button type="submit" class="as-top__logout">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Log out
+          </button>
+        </form>
+      </header>
+
+      <main class="as-body">
+        @if (TempData["ToastOk"] is string admOk && !string.IsNullOrWhiteSpace(admOk))
+        {
+          <div class="as-toast as-toast--ok" role="status">@admOk</div>
+        }
+        @RenderBody()
+      </main>
     </div>
-    @if (TempData["ToastOk"] is string admOk && !string.IsNullOrWhiteSpace(admOk))
-    {
-      <div class="toast-admin ok" role="status">@admOk</div>
-    }
-    @RenderBody()
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js" crossorigin="anonymous"></script>
   <script src="~/assets/js/tom-select-init.js" asp-append-version="true"></script>
   <script src="~/assets/js/autocomplete.js" asp-append-version="true"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr" defer></script>
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    if (typeof flatpickr === 'undefined') return;
-    document.querySelectorAll('input[type="date"]:not(.flatpickr-input)').forEach(function(el) {
-      flatpickr(el, { dateFormat: 'Y-m-d', allowInput: true, animate: true });
+  (function () {
+    var shell = document.getElementById('asShell');
+    var btn = document.getElementById('asMenuBtn');
+    if (btn && shell) {
+      btn.addEventListener('click', function () {
+        shell.classList.toggle('is-side-open');
+      });
+      shell.addEventListener('click', function (e) {
+        if (shell.classList.contains('is-side-open') &&
+            !e.target.closest('.as-side') &&
+            !e.target.closest('#asMenuBtn')) {
+          shell.classList.remove('is-side-open');
+        }
+      });
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof flatpickr === 'undefined') return;
+      document.querySelectorAll('input[type="date"]:not(.flatpickr-input)').forEach(function (el) {
+        flatpickr(el, { dateFormat: 'Y-m-d', allowInput: true, animate: true });
+      });
+      document.querySelectorAll('input[type="range"]').forEach(function (r) {
+        function sync() { var mn = parseFloat(r.min) || 0, mx = parseFloat(r.max) || 100, v = parseFloat(r.value) || 0; r.style.setProperty('--range-pct', ((v - mn) / (mx - mn) * 100).toFixed(1) + '%'); }
+        sync(); r.addEventListener('input', sync);
+      });
     });
-    document.querySelectorAll('input[type="range"]').forEach(function(r) {
-      function sync() { var mn=parseFloat(r.min)||0,mx=parseFloat(r.max)||100,v=parseFloat(r.value)||0; r.style.setProperty('--range-pct',((v-mn)/(mx-mn)*100).toFixed(1)+'%'); }
-      sync(); r.addEventListener('input', sync);
-    });
-  });
+  })();
   </script>
   @await RenderSectionAsync("Scripts", required: false)
 </body>

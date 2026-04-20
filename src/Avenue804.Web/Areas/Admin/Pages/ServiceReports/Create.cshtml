@@ -1,17 +1,84 @@
 @page
 @model Avenue804.Web.Areas.Admin.Pages.ServiceReports.CreateModel
-@{ ViewData["Title"] = "Add Service Report"; }
-<p class="admin-back"><a asp-page="Index">← Service Reports</a></p>
-<form method="post" class="admin-form">
-  <div class="row admin-form-row-2">
-    <div><label asp-for="F.ClientName">Client name *</label><input asp-for="F.ClientName" /></div>
-    <div><label asp-for="F.ClientEmail">Client email *</label><input asp-for="F.ClientEmail" type="email" /></div>
-  </div>
-  <div class="row"><label asp-for="F.Title">Report title *</label><input asp-for="F.Title" placeholder="e.g. Q1 2026 MEP Maintenance Report — Al Reem Tower" /></div>
-  <div class="row admin-form-row-2">
-    <div><label asp-for="F.VisitDate">Visit date *</label><input asp-for="F.VisitDate" type="date" /></div>
-    <div><label asp-for="F.ReportFileUrl">Report PDF URL</label><input asp-for="F.ReportFileUrl" type="url" placeholder="https://… (paste Google Drive, Dropbox, or CDN link)" /></div>
-  </div>
-  <div class="row"><label asp-for="F.Description">Summary</label><textarea asp-for="F.Description" rows="3" placeholder="Brief description of works carried out…"></textarea></div>
-  <button type="submit" class="btn-primary"><span>Save Report</span></button>
-</form>
+@{
+    ViewData["Title"] = "Add service report";
+    ViewData["AdminSection"] = "service-reports";
+}
+
+<div class="admin-back"><a asp-page="Index">← Service reports</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">Add service report</h1>
+      <p class="as-form-page__sub">Create a service-completion report that the client can view via a unique link.</p>
+    </div>
+  </header>
+
+  <form method="post">
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Client</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.ClientName">Client name <span class="req">*</span></label>
+            <input asp-for="F.ClientName" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.ClientEmail">Client email <span class="req">*</span></label>
+            <input asp-for="F.ClientEmail" type="email" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Report details</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="F.Title">Report title <span class="req">*</span></label>
+          <input asp-for="F.Title" placeholder="e.g. Q1 2026 MEP Maintenance Report — Al Reem Tower" />
+        </div>
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.VisitDate">Visit date <span class="req">*</span></label>
+            <input asp-for="F.VisitDate" type="date" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.ReportFileUrl">Report PDF URL</label>
+            <input asp-for="F.ReportFileUrl" type="url" placeholder="https://… (paste Drive / Dropbox / CDN link)" />
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.Description">Summary</label>
+          <textarea asp-for="F.Description" rows="3" placeholder="Brief description of works carried out…"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info"><span class="dot" style="background:var(--as-mute);"></span>Saving generates a unique client link.</div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Save report
+        </button>
+      </div>
+    </footer>
+  </form>
+</div>

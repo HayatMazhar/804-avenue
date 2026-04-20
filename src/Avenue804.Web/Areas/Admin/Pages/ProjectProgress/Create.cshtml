@@ -1,22 +1,95 @@
 @page
 @model Avenue804.Web.Areas.Admin.Pages.ProjectProgress.CreateModel
 @using Avenue804.Web.Domain
-@{ ViewData["Title"] = "Add Project"; }
-<p class="admin-back"><a asp-page="Index">← Project Progress</a></p>
-<form method="post" class="admin-form">
-  <div class="row admin-form-row-2">
-    <div><label asp-for="F.ClientName">Client name *</label><input asp-for="F.ClientName" /></div>
-    <div><label asp-for="F.ClientEmail">Client email *</label><input asp-for="F.ClientEmail" type="email" /></div>
-  </div>
-  <div class="row admin-form-row-2">
-    <div><label asp-for="F.ProjectTitle">Project title</label><input asp-for="F.ProjectTitle" placeholder="e.g. Office Fit-Out — ADGM Tower" /></div>
-    <div><label asp-for="F.Location">Location</label><input asp-for="F.Location" placeholder="Building, unit, area" /></div>
-  </div>
-  <div class="row admin-form-row-3">
-    <div><label asp-for="F.CurrentStage">Current stage</label><select asp-for="F.CurrentStage" asp-items="Html.GetEnumSelectList<ProjectStage>()"></select></div>
-    <div><label asp-for="F.ProgressPercent">Progress %</label><input asp-for="F.ProgressPercent" type="number" min="0" max="100" /></div>
-    <div><label asp-for="F.EstimatedCompletion">Est. completion</label><input asp-for="F.EstimatedCompletion" type="date" /></div>
-  </div>
-  <div class="row"><label asp-for="F.StageNotes">Stage notes (visible to client)</label><textarea asp-for="F.StageNotes" rows="3"></textarea></div>
-  <button type="submit" class="btn-primary"><span>Create Project</span></button>
-</form>
+@{
+    ViewData["Title"] = "Add project";
+    ViewData["AdminSection"] = "project-progress";
+}
+
+<div class="admin-back"><a asp-page="Index">← Project progress</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">Add project</h1>
+      <p class="as-form-page__sub">Track an ongoing project the client can follow via a unique progress link.</p>
+    </div>
+  </header>
+
+  <form method="post">
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Client</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.ClientName">Client name <span class="req">*</span></label>
+            <input asp-for="F.ClientName" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.ClientEmail">Client email <span class="req">*</span></label>
+            <input asp-for="F.ClientEmail" type="email" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Project</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.ProjectTitle">Project title</label>
+            <input asp-for="F.ProjectTitle" placeholder="e.g. Office Fit-Out — ADGM Tower" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.Location">Location</label>
+            <input asp-for="F.Location" placeholder="Building, unit, area" />
+          </div>
+        </div>
+        <div class="as-row as-row--3">
+          <div class="as-field">
+            <label asp-for="F.CurrentStage">Current stage</label>
+            <select asp-for="F.CurrentStage" asp-items="Html.GetEnumSelectList<ProjectStage>()"></select>
+          </div>
+          <div class="as-field">
+            <label asp-for="F.ProgressPercent">Progress %</label>
+            <input asp-for="F.ProgressPercent" type="number" min="0" max="100" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.EstimatedCompletion">Est. completion</label>
+            <input asp-for="F.EstimatedCompletion" type="date" />
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.StageNotes">Stage notes (visible to client)</label>
+          <textarea asp-for="F.StageNotes" rows="3"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info"><span class="dot" style="background:var(--as-mute);"></span>Saving creates the project tracker.</div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create project
+        </button>
+      </div>
+    </footer>
+  </form>
+</div>

@@ -1,0 +1,2458 @@
+Using launch settings from src\Avenue804.Web\Properties\launchSettings.json...
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'TotalAreaSqm' on entity type 'AmcRequest'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'AvgPriceSaleSqft' on entity type 'AreaGuide'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'AvgRentYearly' on entity type 'AreaGuide'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'PreviousPrice' on entity type 'PropertyListing'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'AreaSqm' on entity type 'ServiceQuoteRequest'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'Budget' on entity type 'ServiceQuoteRequest'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (13ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (11ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [MigrationId], [ProductVersion]
+      FROM [__EFMigrationsHistory]
+      ORDER BY [MigrationId];
+info: Microsoft.EntityFrameworkCore.Migrations[20405]
+      No migrations were applied. The database is already up to date.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Key]
+      FROM [SiteSettings] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [l].[Id], [l].[Code], [l].[Name], [l].[SortOrder]
+      FROM [LookupCategories] AS [l]
+      WHERE [l].[Code] = N'InquiryTopic'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [LookupCategories] AS [l]
+              WHERE [l].[Code] = N'PropertyInquiryWantTo') THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [LookupCategories] AS [l]
+              WHERE [l].[Code] = N'PropertyInquiryBudget') THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Id], [t].[Code], [t].[Name], [t].[SortOrder], [l0].[Id], [l0].[CategoryId], [l0].[Code], [l0].[DisplayName], [l0].[IsActive], [l0].[Metadata], [l0].[SortOrder]
+      FROM (
+          SELECT TOP(1) [l].[Id], [l].[Code], [l].[Name], [l].[SortOrder]
+          FROM [LookupCategories] AS [l]
+          WHERE [l].[Code] = N'PropertyInquiryPropertyDetail'
+      ) AS [t]
+      LEFT JOIN [LookupValues] AS [l0] ON [t].[Id] = [l0].[CategoryId]
+      ORDER BY [t].[Id]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (71ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__slug_0='?' (Size = 160)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [ContentBlocks] AS [c]
+              WHERE [c].[Slug] = @__slug_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [UaeAreas] AS [u]) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [PropertyListings] AS [p]) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+      FROM [AspNetRoles] AS [a]
+      WHERE [a].[NormalizedName] = @__normalizedName_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[AvatarUrl], [a].[Bio], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[DisplayName], [a].[Email], [a].[EmailConfirmed], [a].[IsPublicUser], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[PhoneVerified], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+info: Avenue804.Web.Services.WeeklyDigestJob[0]
+      Weekly digest job started.
+info: Avenue804.Web.Services.WeeklyDigestJob[0]
+      Next weekly digest in 135.9 hours.
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5223
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\SCAD\Codebase\github\804\src\Avenue804.Web
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Description], [s].[Key], [s].[UpdatedAt], [s].[Value]
+      FROM [SiteSettings] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[AvatarUrl], [a].[Bio], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[DisplayName], [a].[Email], [a].[EmailConfirmed], [a].[IsPublicUser], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[PhoneVerified], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(2) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+      FROM [AspNetRoles] AS [a]
+      WHERE [a].[NormalizedName] = @__normalizedRoleName_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__p_0='?' (Size = 450), @__p_1='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[UserId], [a].[RoleId]
+      FROM [AspNetUserRoles] AS [a]
+      WHERE [a].[UserId] = @__p_0 AND [a].[RoleId] = @__p_1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__user_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[ClaimType], [a].[ClaimValue], [a].[UserId]
+      FROM [AspNetUserClaims] AS [a]
+      WHERE [a].[UserId] = @__user_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a0].[Name]
+      FROM [AspNetUserRoles] AS [a]
+      INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+      WHERE [a].[UserId] = @__userId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+      FROM [AspNetRoles] AS [a]
+      WHERE [a].[NormalizedName] = @__normalizedName_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__role_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[ClaimType], [a].[ClaimValue]
+      FROM [AspNetRoleClaims] AS [a]
+      WHERE [a].[RoleId] = @__role_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+      WHERE [i].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+      WHERE [p].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__AddDays_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+      WHERE [o].[CreatedAt] >= @__AddDays_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PortfolioProjects] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[IsPublicUser] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [SavedProperties] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyRatings] AS [p]
+      WHERE [p].[IsApproved] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM(COALESCE([p].[ViewCount], 0)), 0)
+      FROM [PropertyListings] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [ServiceQuoteRequests] AS [s]
+      WHERE [s].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AmcRequests] AS [a]
+      WHERE [a].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [MaintenanceTickets] AS [m]
+      WHERE [m].[Priority] = 2 AND [m].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AdminNotifications] AS [a]
+      WHERE [a].[IsRead] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Testimonials] AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [NewsletterSubscribers] AS [n]
+      WHERE [n].[IsActive] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Key] AS [Date], COUNT(*) AS [Count]
+      FROM (
+          SELECT CONVERT(date, [p].[CreatedAt]) AS [Key]
+          FROM [PropertyListingInquiries] AS [p]
+          WHERE [p].[CreatedAt] >= @__p_0
+      ) AS [t]
+      GROUP BY [t].[Key]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+      ORDER BY [p].[ViewCount] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[Name], [p].[CreatedAt]
+      FROM [PropertyListingInquiries] AS [p]
+      ORDER BY [p].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [i].[Id], [i].[Name], [i].[Subject], [i].[CreatedAt]
+      FROM [Inquiries] AS [i]
+      ORDER BY [i].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [o].[Id], [o].[Name], [o].[CreatedAt]
+      FROM [OwnerListingRequests] AS [o]
+      ORDER BY [o].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [s].[Id], [s].[Name], [s].[CreatedAt]
+      FROM [ServiceQuoteRequests] AS [s]
+      ORDER BY [s].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [a].[Id], [a].[Name], [a].[CreatedAt]
+      FROM [AmcRequests] AS [a]
+      ORDER BY [a].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+      WHERE [i].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+      WHERE [p].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__AddDays_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+      WHERE [o].[CreatedAt] >= @__AddDays_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PortfolioProjects] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[IsPublicUser] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [SavedProperties] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyRatings] AS [p]
+      WHERE [p].[IsApproved] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM(COALESCE([p].[ViewCount], 0)), 0)
+      FROM [PropertyListings] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [ServiceQuoteRequests] AS [s]
+      WHERE [s].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AmcRequests] AS [a]
+      WHERE [a].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [MaintenanceTickets] AS [m]
+      WHERE [m].[Priority] = 2 AND [m].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AdminNotifications] AS [a]
+      WHERE [a].[IsRead] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Testimonials] AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [NewsletterSubscribers] AS [n]
+      WHERE [n].[IsActive] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Key] AS [Date], COUNT(*) AS [Count]
+      FROM (
+          SELECT CONVERT(date, [p].[CreatedAt]) AS [Key]
+          FROM [PropertyListingInquiries] AS [p]
+          WHERE [p].[CreatedAt] >= @__p_0
+      ) AS [t]
+      GROUP BY [t].[Key]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+      ORDER BY [p].[ViewCount] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[Name], [p].[CreatedAt]
+      FROM [PropertyListingInquiries] AS [p]
+      ORDER BY [p].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [i].[Id], [i].[Name], [i].[Subject], [i].[CreatedAt]
+      FROM [Inquiries] AS [i]
+      ORDER BY [i].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [o].[Id], [o].[Name], [o].[CreatedAt]
+      FROM [OwnerListingRequests] AS [o]
+      ORDER BY [o].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [s].[Id], [s].[Name], [s].[CreatedAt]
+      FROM [ServiceQuoteRequests] AS [s]
+      ORDER BY [s].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [a].[Id], [a].[Name], [a].[CreatedAt]
+      FROM [AmcRequests] AS [a]
+      ORDER BY [a].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Description], [s].[Key], [s].[UpdatedAt], [s].[Value]
+      FROM [SiteSettings] AS [s]
+      WHERE [s].[Key] LIKE N'feature.%'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[AvatarUrl], [a].[Bio], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[DisplayName], [a].[Email], [a].[EmailConfirmed], [a].[IsPublicUser], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[PhoneVerified], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(2) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+      FROM [AspNetRoles] AS [a]
+      WHERE [a].[NormalizedName] = @__normalizedRoleName_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (Size = 450), @__p_1='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[UserId], [a].[RoleId]
+      FROM [AspNetUserRoles] AS [a]
+      WHERE [a].[UserId] = @__p_0 AND [a].[RoleId] = @__p_1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__user_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[ClaimType], [a].[ClaimValue], [a].[UserId]
+      FROM [AspNetUserClaims] AS [a]
+      WHERE [a].[UserId] = @__user_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a0].[Name]
+      FROM [AspNetUserRoles] AS [a]
+      INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+      WHERE [a].[UserId] = @__userId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+      FROM [AspNetRoles] AS [a]
+      WHERE [a].[NormalizedName] = @__normalizedName_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[ClaimType], [a].[ClaimValue]
+      FROM [AspNetRoleClaims] AS [a]
+      WHERE [a].[RoleId] = @__role_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+      WHERE [i].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+      WHERE [p].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__AddDays_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+      WHERE [o].[CreatedAt] >= @__AddDays_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PortfolioProjects] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[IsPublicUser] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [SavedProperties] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyRatings] AS [p]
+      WHERE [p].[IsApproved] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM(COALESCE([p].[ViewCount], 0)), 0)
+      FROM [PropertyListings] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [ServiceQuoteRequests] AS [s]
+      WHERE [s].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AmcRequests] AS [a]
+      WHERE [a].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [MaintenanceTickets] AS [m]
+      WHERE [m].[Priority] = 2 AND [m].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AdminNotifications] AS [a]
+      WHERE [a].[IsRead] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Testimonials] AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [NewsletterSubscribers] AS [n]
+      WHERE [n].[IsActive] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Key] AS [Date], COUNT(*) AS [Count]
+      FROM (
+          SELECT CONVERT(date, [p].[CreatedAt]) AS [Key]
+          FROM [PropertyListingInquiries] AS [p]
+          WHERE [p].[CreatedAt] >= @__p_0
+      ) AS [t]
+      GROUP BY [t].[Key]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+      ORDER BY [p].[ViewCount] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[Name], [p].[CreatedAt]
+      FROM [PropertyListingInquiries] AS [p]
+      ORDER BY [p].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [i].[Id], [i].[Name], [i].[Subject], [i].[CreatedAt]
+      FROM [Inquiries] AS [i]
+      ORDER BY [i].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [o].[Id], [o].[Name], [o].[CreatedAt]
+      FROM [OwnerListingRequests] AS [o]
+      ORDER BY [o].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [s].[Id], [s].[Name], [s].[CreatedAt]
+      FROM [ServiceQuoteRequests] AS [s]
+      ORDER BY [s].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [a].[Id], [a].[Name], [a].[CreatedAt]
+      FROM [AmcRequests] AS [a]
+      ORDER BY [a].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+      WHERE [i].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+      WHERE [p].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__AddDays_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+      WHERE [o].[CreatedAt] >= @__AddDays_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PortfolioProjects] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[IsPublicUser] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [SavedProperties] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyRatings] AS [p]
+      WHERE [p].[IsApproved] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM(COALESCE([p].[ViewCount], 0)), 0)
+      FROM [PropertyListings] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [ServiceQuoteRequests] AS [s]
+      WHERE [s].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AmcRequests] AS [a]
+      WHERE [a].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [MaintenanceTickets] AS [m]
+      WHERE [m].[Priority] = 2 AND [m].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AdminNotifications] AS [a]
+      WHERE [a].[IsRead] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Testimonials] AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [NewsletterSubscribers] AS [n]
+      WHERE [n].[IsActive] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Key] AS [Date], COUNT(*) AS [Count]
+      FROM (
+          SELECT CONVERT(date, [p].[CreatedAt]) AS [Key]
+          FROM [PropertyListingInquiries] AS [p]
+          WHERE [p].[CreatedAt] >= @__p_0
+      ) AS [t]
+      GROUP BY [t].[Key]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+      ORDER BY [p].[ViewCount] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[Name], [p].[CreatedAt]
+      FROM [PropertyListingInquiries] AS [p]
+      ORDER BY [p].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [i].[Id], [i].[Name], [i].[Subject], [i].[CreatedAt]
+      FROM [Inquiries] AS [i]
+      ORDER BY [i].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [o].[Id], [o].[Name], [o].[CreatedAt]
+      FROM [OwnerListingRequests] AS [o]
+      ORDER BY [o].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [s].[Id], [s].[Name], [s].[CreatedAt]
+      FROM [ServiceQuoteRequests] AS [s]
+      ORDER BY [s].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [a].[Id], [a].[Name], [a].[CreatedAt]
+      FROM [AmcRequests] AS [a]
+      ORDER BY [a].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Description], [s].[Key], [s].[UpdatedAt], [s].[Value]
+      FROM [SiteSettings] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Slug]
+      FROM [ContentBlocks] AS [c]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Description], [s].[Key], [s].[UpdatedAt], [s].[Value]
+      FROM [SiteSettings] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[AvatarUrl], [a].[Bio], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[DisplayName], [a].[Email], [a].[EmailConfirmed], [a].[IsPublicUser], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[PhoneVerified], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(2) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+      FROM [AspNetRoles] AS [a]
+      WHERE [a].[NormalizedName] = @__normalizedRoleName_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (Size = 450), @__p_1='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[UserId], [a].[RoleId]
+      FROM [AspNetUserRoles] AS [a]
+      WHERE [a].[UserId] = @__p_0 AND [a].[RoleId] = @__p_1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__user_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[ClaimType], [a].[ClaimValue], [a].[UserId]
+      FROM [AspNetUserClaims] AS [a]
+      WHERE [a].[UserId] = @__user_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a0].[Name]
+      FROM [AspNetUserRoles] AS [a]
+      INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+      WHERE [a].[UserId] = @__userId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+      FROM [AspNetRoles] AS [a]
+      WHERE [a].[NormalizedName] = @__normalizedName_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[ClaimType], [a].[ClaimValue]
+      FROM [AspNetRoleClaims] AS [a]
+      WHERE [a].[RoleId] = @__role_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+      WHERE [i].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+      WHERE [p].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__AddDays_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+      WHERE [o].[CreatedAt] >= @__AddDays_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PortfolioProjects] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[IsPublicUser] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [SavedProperties] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyRatings] AS [p]
+      WHERE [p].[IsApproved] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM(COALESCE([p].[ViewCount], 0)), 0)
+      FROM [PropertyListings] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [ServiceQuoteRequests] AS [s]
+      WHERE [s].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AmcRequests] AS [a]
+      WHERE [a].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [MaintenanceTickets] AS [m]
+      WHERE [m].[Priority] = 2 AND [m].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AdminNotifications] AS [a]
+      WHERE [a].[IsRead] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Testimonials] AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [NewsletterSubscribers] AS [n]
+      WHERE [n].[IsActive] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Key] AS [Date], COUNT(*) AS [Count]
+      FROM (
+          SELECT CONVERT(date, [p].[CreatedAt]) AS [Key]
+          FROM [PropertyListingInquiries] AS [p]
+          WHERE [p].[CreatedAt] >= @__p_0
+      ) AS [t]
+      GROUP BY [t].[Key]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+      ORDER BY [p].[ViewCount] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[Name], [p].[CreatedAt]
+      FROM [PropertyListingInquiries] AS [p]
+      ORDER BY [p].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [i].[Id], [i].[Name], [i].[Subject], [i].[CreatedAt]
+      FROM [Inquiries] AS [i]
+      ORDER BY [i].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [o].[Id], [o].[Name], [o].[CreatedAt]
+      FROM [OwnerListingRequests] AS [o]
+      ORDER BY [o].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [s].[Id], [s].[Name], [s].[CreatedAt]
+      FROM [ServiceQuoteRequests] AS [s]
+      ORDER BY [s].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [a].[Id], [a].[Name], [a].[CreatedAt]
+      FROM [AmcRequests] AS [a]
+      ORDER BY [a].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Description], [s].[Key], [s].[UpdatedAt], [s].[Value]
+      FROM [SiteSettings] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Slug]
+      FROM [ContentBlocks] AS [c]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Id], [t].[AgentNote], [t].[Area], [t].[BudgetLookupValueId], [t].[CreatedAt], [t].[Email], [t].[ExpectedMoveInDate], [t].[IAmLookupValueId], [t].[LocationLookupValueId], [t].[Name], [t].[OtherDetails], [t].[Phone], [t].[PropertyDetailLookupValueId], [t].[PropertyTypeLookupValueId], [t].[RequirementDetails], [t].[Status], [t].[WantToLookupValueId], [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[CategoryId], [l0].[Code], [l0].[DisplayName], [l0].[IsActive], [l0].[Metadata], [l0].[SortOrder]
+      FROM (
+          SELECT [p].[Id], [p].[AgentNote], [p].[Area], [p].[BudgetLookupValueId], [p].[CreatedAt], [p].[Email], [p].[ExpectedMoveInDate], [p].[IAmLookupValueId], [p].[LocationLookupValueId], [p].[Name], [p].[OtherDetails], [p].[Phone], [p].[PropertyDetailLookupValueId], [p].[PropertyTypeLookupValueId], [p].[RequirementDetails], [p].[Status], [p].[WantToLookupValueId]
+          FROM [PropertyListingInquiries] AS [p]
+          ORDER BY [p].[CreatedAt] DESC
+          OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+      ) AS [t]
+      LEFT JOIN [LookupValues] AS [l] ON [t].[WantToLookupValueId] = [l].[Id]
+      LEFT JOIN [LookupValues] AS [l0] ON [t].[BudgetLookupValueId] = [l0].[Id]
+      ORDER BY [t].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[AvatarUrl], [a].[Bio], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[DisplayName], [a].[Email], [a].[EmailConfirmed], [a].[IsPublicUser], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[PhoneVerified], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(2) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+      FROM [AspNetRoles] AS [a]
+      WHERE [a].[NormalizedName] = @__normalizedRoleName_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (Size = 450), @__p_1='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[UserId], [a].[RoleId]
+      FROM [AspNetUserRoles] AS [a]
+      WHERE [a].[UserId] = @__p_0 AND [a].[RoleId] = @__p_1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__user_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[ClaimType], [a].[ClaimValue], [a].[UserId]
+      FROM [AspNetUserClaims] AS [a]
+      WHERE [a].[UserId] = @__user_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a0].[Name]
+      FROM [AspNetUserRoles] AS [a]
+      INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+      WHERE [a].[UserId] = @__userId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+      FROM [AspNetRoles] AS [a]
+      WHERE [a].[NormalizedName] = @__normalizedName_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[ClaimType], [a].[ClaimValue]
+      FROM [AspNetRoleClaims] AS [a]
+      WHERE [a].[RoleId] = @__role_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+      WHERE [i].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+      WHERE [p].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__AddDays_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+      WHERE [o].[CreatedAt] >= @__AddDays_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PortfolioProjects] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[IsPublicUser] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [SavedProperties] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyRatings] AS [p]
+      WHERE [p].[IsApproved] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM(COALESCE([p].[ViewCount], 0)), 0)
+      FROM [PropertyListings] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [ServiceQuoteRequests] AS [s]
+      WHERE [s].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AmcRequests] AS [a]
+      WHERE [a].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [MaintenanceTickets] AS [m]
+      WHERE [m].[Priority] = 2 AND [m].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AdminNotifications] AS [a]
+      WHERE [a].[IsRead] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Testimonials] AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [NewsletterSubscribers] AS [n]
+      WHERE [n].[IsActive] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Key] AS [Date], COUNT(*) AS [Count]
+      FROM (
+          SELECT CONVERT(date, [p].[CreatedAt]) AS [Key]
+          FROM [PropertyListingInquiries] AS [p]
+          WHERE [p].[CreatedAt] >= @__p_0
+      ) AS [t]
+      GROUP BY [t].[Key]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+      ORDER BY [p].[ViewCount] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[Name], [p].[CreatedAt]
+      FROM [PropertyListingInquiries] AS [p]
+      ORDER BY [p].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [i].[Id], [i].[Name], [i].[Subject], [i].[CreatedAt]
+      FROM [Inquiries] AS [i]
+      ORDER BY [i].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [o].[Id], [o].[Name], [o].[CreatedAt]
+      FROM [OwnerListingRequests] AS [o]
+      ORDER BY [o].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [s].[Id], [s].[Name], [s].[CreatedAt]
+      FROM [ServiceQuoteRequests] AS [s]
+      ORDER BY [s].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [a].[Id], [a].[Name], [a].[CreatedAt]
+      FROM [AmcRequests] AS [a]
+      ORDER BY [a].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Description], [s].[Key], [s].[UpdatedAt], [s].[Value]
+      FROM [SiteSettings] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Slug]
+      FROM [ContentBlocks] AS [c]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__needDb_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+      WHERE [c].[IsPublished] = CAST(1 AS bit) AND [c].[Slug] IN (
+          SELECT [n].[value]
+          FROM OPENJSON(@__needDb_0) WITH ([value] nvarchar(160) '$') AS [n]
+      )
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[AvatarUrl], [a].[Bio], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[DisplayName], [a].[Email], [a].[EmailConfirmed], [a].[IsPublicUser], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[PhoneVerified], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[Id] = @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__currentUser_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id]
+      FROM [Agents] AS [a]
+      WHERE [a].[UserId] = @__currentUser_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[AvatarUrl], [a].[Bio], [a].[CreatedAt], [a].[Email], [a].[IsActive], [a].[LastActiveAt], [a].[Name], [a].[Phone], [a].[ResponseRatePct], [a].[ResponseTime], [a].[Title], [a].[UserId], [a].[WhatsAppNumber]
+      FROM [Agents] AS [a]
+      WHERE [a].[Id] = @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit) AND [p].[ApprovalStatus] = 2 AND [p].[Slug] IS NOT NULL AND [p].[Slug] <> N''
+      ORDER BY COALESCE([p].[UpdatedAt], [p].[CreatedAt]) DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Id], [t].[AuthorName], [t].[AuthorRole], [t].[CreatedAt], [t].[IsActive], [t].[Quote], [t].[SortOrder], [t].[Stars]
+      FROM [Testimonials] AS [t]
+      WHERE [t].[IsActive] = CAST(1 AS bit)
+      ORDER BY [t].[SortOrder], [t].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PortfolioProjects] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [MaintenanceTickets] AS [m]
+      WHERE [m].[Status] IN (3, 4)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit) AND [p].[ApprovalStatus] = 2
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Value]
+      FROM [SiteSettings] AS [s]
+      WHERE [s].[Key] = N'founded_year'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__needDb_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+      WHERE [c].[IsPublished] = CAST(1 AS bit) AND [c].[Slug] IN (
+          SELECT [n].[value]
+          FROM OPENJSON(@__needDb_0) WITH ([value] nvarchar(160) '$') AS [n]
+      )
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[AvatarUrl], [a].[Bio], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[DisplayName], [a].[Email], [a].[EmailConfirmed], [a].[IsPublicUser], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[PhoneVerified], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[Id] = @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__currentUser_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id]
+      FROM [Agents] AS [a]
+      WHERE [a].[UserId] = @__currentUser_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[AvatarUrl], [a].[Bio], [a].[CreatedAt], [a].[Email], [a].[IsActive], [a].[LastActiveAt], [a].[Name], [a].[Phone], [a].[ResponseRatePct], [a].[ResponseTime], [a].[Title], [a].[UserId], [a].[WhatsAppNumber]
+      FROM [Agents] AS [a]
+      WHERE [a].[Id] = @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit) AND [p].[ApprovalStatus] = 2 AND [p].[Slug] IS NOT NULL AND [p].[Slug] <> N''
+      ORDER BY COALESCE([p].[UpdatedAt], [p].[CreatedAt]) DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Id], [t].[AuthorName], [t].[AuthorRole], [t].[CreatedAt], [t].[IsActive], [t].[Quote], [t].[SortOrder], [t].[Stars]
+      FROM [Testimonials] AS [t]
+      WHERE [t].[IsActive] = CAST(1 AS bit)
+      ORDER BY [t].[SortOrder], [t].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__needDb_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+      WHERE [c].[IsPublished] = CAST(1 AS bit) AND [c].[Slug] IN (
+          SELECT [n].[value]
+          FROM OPENJSON(@__needDb_0) WITH ([value] nvarchar(160) '$') AS [n]
+      )
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[AvatarUrl], [a].[Bio], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[DisplayName], [a].[Email], [a].[EmailConfirmed], [a].[IsPublicUser], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[PhoneVerified], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[Id] = @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__currentUser_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id]
+      FROM [Agents] AS [a]
+      WHERE [a].[UserId] = @__currentUser_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[AvatarUrl], [a].[Bio], [a].[CreatedAt], [a].[Email], [a].[IsActive], [a].[LastActiveAt], [a].[Name], [a].[Phone], [a].[ResponseRatePct], [a].[ResponseTime], [a].[Title], [a].[UserId], [a].[WhatsAppNumber]
+      FROM [Agents] AS [a]
+      WHERE [a].[Id] = @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+      WHERE [i].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+      WHERE [p].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__AddDays_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+      WHERE [o].[CreatedAt] >= @__AddDays_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PortfolioProjects] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[IsPublicUser] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [SavedProperties] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyRatings] AS [p]
+      WHERE [p].[IsApproved] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM(COALESCE([p].[ViewCount], 0)), 0)
+      FROM [PropertyListings] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [ServiceQuoteRequests] AS [s]
+      WHERE [s].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AmcRequests] AS [a]
+      WHERE [a].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [MaintenanceTickets] AS [m]
+      WHERE [m].[Priority] = 2 AND [m].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AdminNotifications] AS [a]
+      WHERE [a].[IsRead] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Testimonials] AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [NewsletterSubscribers] AS [n]
+      WHERE [n].[IsActive] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Key] AS [Date], COUNT(*) AS [Count]
+      FROM (
+          SELECT CONVERT(date, [p].[CreatedAt]) AS [Key]
+          FROM [PropertyListingInquiries] AS [p]
+          WHERE [p].[CreatedAt] >= @__p_0
+      ) AS [t]
+      GROUP BY [t].[Key]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+      ORDER BY [p].[ViewCount] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[Name], [p].[CreatedAt]
+      FROM [PropertyListingInquiries] AS [p]
+      ORDER BY [p].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [i].[Id], [i].[Name], [i].[Subject], [i].[CreatedAt]
+      FROM [Inquiries] AS [i]
+      ORDER BY [i].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [o].[Id], [o].[Name], [o].[CreatedAt]
+      FROM [OwnerListingRequests] AS [o]
+      ORDER BY [o].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [s].[Id], [s].[Name], [s].[CreatedAt]
+      FROM [ServiceQuoteRequests] AS [s]
+      ORDER BY [s].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [a].[Id], [a].[Name], [a].[CreatedAt]
+      FROM [AmcRequests] AS [a]
+      ORDER BY [a].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+      WHERE [i].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+      WHERE [p].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__AddDays_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+      WHERE [o].[CreatedAt] >= @__AddDays_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PortfolioProjects] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[IsPublicUser] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [SavedProperties] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyRatings] AS [p]
+      WHERE [p].[IsApproved] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM(COALESCE([p].[ViewCount], 0)), 0)
+      FROM [PropertyListings] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [ServiceQuoteRequests] AS [s]
+      WHERE [s].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AmcRequests] AS [a]
+      WHERE [a].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [MaintenanceTickets] AS [m]
+      WHERE [m].[Priority] = 2 AND [m].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AdminNotifications] AS [a]
+      WHERE [a].[IsRead] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Testimonials] AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [NewsletterSubscribers] AS [n]
+      WHERE [n].[IsActive] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Key] AS [Date], COUNT(*) AS [Count]
+      FROM (
+          SELECT CONVERT(date, [p].[CreatedAt]) AS [Key]
+          FROM [PropertyListingInquiries] AS [p]
+          WHERE [p].[CreatedAt] >= @__p_0
+      ) AS [t]
+      GROUP BY [t].[Key]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+      ORDER BY [p].[ViewCount] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[Name], [p].[CreatedAt]
+      FROM [PropertyListingInquiries] AS [p]
+      ORDER BY [p].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [i].[Id], [i].[Name], [i].[Subject], [i].[CreatedAt]
+      FROM [Inquiries] AS [i]
+      ORDER BY [i].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [o].[Id], [o].[Name], [o].[CreatedAt]
+      FROM [OwnerListingRequests] AS [o]
+      ORDER BY [o].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [s].[Id], [s].[Name], [s].[CreatedAt]
+      FROM [ServiceQuoteRequests] AS [s]
+      ORDER BY [s].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [a].[Id], [a].[Name], [a].[CreatedAt]
+      FROM [AmcRequests] AS [a]
+      ORDER BY [a].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+      ORDER BY [c].[Slug]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Description], [s].[Key], [s].[UpdatedAt], [s].[Value]
+      FROM [SiteSettings] AS [s]
+      ORDER BY [s].[Key]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Id], [t].[AgentNote], [t].[Area], [t].[BudgetLookupValueId], [t].[CreatedAt], [t].[Email], [t].[ExpectedMoveInDate], [t].[IAmLookupValueId], [t].[LocationLookupValueId], [t].[Name], [t].[OtherDetails], [t].[Phone], [t].[PropertyDetailLookupValueId], [t].[PropertyTypeLookupValueId], [t].[RequirementDetails], [t].[Status], [t].[WantToLookupValueId], [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[CategoryId], [l0].[Code], [l0].[DisplayName], [l0].[IsActive], [l0].[Metadata], [l0].[SortOrder]
+      FROM (
+          SELECT [p].[Id], [p].[AgentNote], [p].[Area], [p].[BudgetLookupValueId], [p].[CreatedAt], [p].[Email], [p].[ExpectedMoveInDate], [p].[IAmLookupValueId], [p].[LocationLookupValueId], [p].[Name], [p].[OtherDetails], [p].[Phone], [p].[PropertyDetailLookupValueId], [p].[PropertyTypeLookupValueId], [p].[RequirementDetails], [p].[Status], [p].[WantToLookupValueId]
+          FROM [PropertyListingInquiries] AS [p]
+          ORDER BY [p].[CreatedAt] DESC
+          OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+      ) AS [t]
+      LEFT JOIN [LookupValues] AS [l] ON [t].[WantToLookupValueId] = [l].[Id]
+      LEFT JOIN [LookupValues] AS [l0] ON [t].[BudgetLookupValueId] = [l0].[Id]
+      ORDER BY [t].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Id], [t].[CreatedAt], [t].[Email], [t].[Message], [t].[Name], [t].[Phone], [t].[Status], [t].[Subject], [t].[TopicLookupValueId], [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder]
+      FROM (
+          SELECT [i].[Id], [i].[CreatedAt], [i].[Email], [i].[Message], [i].[Name], [i].[Phone], [i].[Status], [i].[Subject], [i].[TopicLookupValueId]
+          FROM [Inquiries] AS [i]
+          ORDER BY [i].[CreatedAt] DESC
+          OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+      ) AS [t]
+      LEFT JOIN [LookupValues] AS [l] ON [t].[TopicLookupValueId] = [l].[Id]
+      ORDER BY [t].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [o].[Id], [o].[CreatedAt], [o].[Details], [o].[Email], [o].[Intent], [o].[LocationOrTitle], [o].[Name], [o].[Phone]
+      FROM [OwnerListingRequests] AS [o]
+      ORDER BY [o].[CreatedAt] DESC
+      OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+      ORDER BY [c].[Slug]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+      WHERE [c].[Id] = @__Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+      ORDER BY [c].[Slug]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (8ms) [Parameters=[@__p_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[AvatarUrl], [a].[Bio], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[DisplayName], [a].[Email], [a].[EmailConfirmed], [a].[IsPublicUser], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[PhoneVerified], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[Id] = @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__user_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[ClaimType], [a].[ClaimValue], [a].[UserId]
+      FROM [AspNetUserClaims] AS [a]
+      WHERE [a].[UserId] = @__user_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a0].[Name]
+      FROM [AspNetUserRoles] AS [a]
+      INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+      WHERE [a].[UserId] = @__userId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+      FROM [AspNetRoles] AS [a]
+      WHERE [a].[NormalizedName] = @__normalizedName_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[ClaimType], [a].[ClaimValue]
+      FROM [AspNetRoleClaims] AS [a]
+      WHERE [a].[RoleId] = @__role_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Description], [s].[Key], [s].[UpdatedAt], [s].[Value]
+      FROM [SiteSettings] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+      ORDER BY [c].[Slug]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+      ORDER BY [c].[Slug]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+      WHERE [c].[Id] = @__Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Inquiries] AS [i]
+      WHERE [i].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListingInquiries] AS [p]
+      WHERE [p].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__AddDays_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [OwnerListingRequests] AS [o]
+      WHERE [o].[CreatedAt] >= @__AddDays_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PortfolioProjects] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[IsPublicUser] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [SavedProperties] AS [s]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [PropertyRatings] AS [p]
+      WHERE [p].[IsApproved] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COALESCE(SUM(COALESCE([p].[ViewCount], 0)), 0)
+      FROM [PropertyListings] AS [p]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [ServiceQuoteRequests] AS [s]
+      WHERE [s].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AmcRequests] AS [a]
+      WHERE [a].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [MaintenanceTickets] AS [m]
+      WHERE [m].[Priority] = 2 AND [m].[Status] = 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AdminNotifications] AS [a]
+      WHERE [a].[IsRead] = CAST(0 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [Testimonials] AS [t]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [NewsletterSubscribers] AS [n]
+      WHERE [n].[IsActive] = CAST(1 AS bit)
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Key] AS [Date], COUNT(*) AS [Count]
+      FROM (
+          SELECT CONVERT(date, [p].[CreatedAt]) AS [Key]
+          FROM [PropertyListingInquiries] AS [p]
+          WHERE [p].[CreatedAt] >= @__p_0
+      ) AS [t]
+      GROUP BY [t].[Key]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit)
+      ORDER BY [p].[ViewCount] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[Name], [p].[CreatedAt]
+      FROM [PropertyListingInquiries] AS [p]
+      ORDER BY [p].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [i].[Id], [i].[Name], [i].[Subject], [i].[CreatedAt]
+      FROM [Inquiries] AS [i]
+      ORDER BY [i].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [o].[Id], [o].[Name], [o].[CreatedAt]
+      FROM [OwnerListingRequests] AS [o]
+      ORDER BY [o].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [s].[Id], [s].[Name], [s].[CreatedAt]
+      FROM [ServiceQuoteRequests] AS [s]
+      ORDER BY [s].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [a].[Id], [a].[Name], [a].[CreatedAt]
+      FROM [AmcRequests] AS [a]
+      ORDER BY [a].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(@__p_0) [p].[Id], [p].[AgentId], [p].[AmenitiesJson], [p].[ApprovalStatus], [p].[AreaSqft], [p].[Baths], [p].[Beds], [p].[CompletionPercent], [p].[CreatedAt], [p].[Currency], [p].[Description], [p].[DeveloperId], [p].[FloorPlanUrl], [p].[GalleryImagesJson], [p].[HandoverDate], [p].[IsOffPlan], [p].[IsPublished], [p].[IsVerified], [p].[Label], [p].[Location], [p].[MainImageUrl], [p].[OfferType], [p].[PaymentPlan], [p].[PreviousPrice], [p].[Price], [p].[PriceHistoryJson], [p].[RejectionReason], [p].[SeoDescription], [p].[SeoTitle], [p].[Slug], [p].[Title], [p].[UpdatedAt], [p].[ViewCount], [p].[VirtualTourUrl]
+      FROM [PropertyListings] AS [p]
+      WHERE [p].[IsPublished] = CAST(1 AS bit) AND [p].[ApprovalStatus] = 2 AND [p].[Slug] IS NOT NULL AND [p].[Slug] <> N''
+      ORDER BY COALESCE([p].[UpdatedAt], [p].[CreatedAt]) DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[Id], [t].[AuthorName], [t].[AuthorRole], [t].[CreatedAt], [t].[IsActive], [t].[Quote], [t].[SortOrder], [t].[Stars]
+      FROM [Testimonials] AS [t]
+      WHERE [t].[IsActive] = CAST(1 AS bit)
+      ORDER BY [t].[SortOrder], [t].[CreatedAt] DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__needDb_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[Body], [c].[IsPublished], [c].[Slug], [c].[Title], [c].[UpdatedAt]
+      FROM [ContentBlocks] AS [c]
+      WHERE [c].[IsPublished] = CAST(1 AS bit) AND [c].[Slug] IN (
+          SELECT [n].[value]
+          FROM OPENJSON(@__needDb_0) WITH ([value] nvarchar(160) '$') AS [n]
+      )
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Description], [s].[Key], [s].[UpdatedAt], [s].[Value]
+      FROM [SiteSettings] AS [s]
+      WHERE [s].[Key] LIKE N'feature.%'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[AvatarUrl], [a].[Bio], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[DisplayName], [a].[Email], [a].[EmailConfirmed], [a].[IsPublicUser], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[PhoneVerified], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+      FROM [AspNetUsers] AS [a]
+      WHERE [a].[Id] = @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__currentUser_Id_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id]
+      FROM [Agents] AS [a]
+      WHERE [a].[UserId] = @__currentUser_Id_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [a].[Id], [a].[AvatarUrl], [a].[Bio], [a].[CreatedAt], [a].[Email], [a].[IsActive], [a].[LastActiveAt], [a].[Name], [a].[Phone], [a].[ResponseRatePct], [a].[ResponseTime], [a].[Title], [a].[UserId], [a].[WhatsAppNumber]
+      FROM [Agents] AS [a]
+      WHERE [a].[Id] = @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@__code_0='?' (Size = 80)], CommandType='Text', CommandTimeout='30']
+      SELECT [l].[Id], [l].[CategoryId], [l].[Code], [l].[DisplayName], [l].[IsActive], [l].[Metadata], [l].[SortOrder], [l0].[Id], [l0].[Code], [l0].[Name], [l0].[SortOrder]
+      FROM [LookupValues] AS [l]
+      INNER JOIN [LookupCategories] AS [l0] ON [l].[CategoryId] = [l0].[Id]
+      WHERE [l].[IsActive] = CAST(1 AS bit) AND [l0].[Code] = @__code_0
+      ORDER BY [l].[SortOrder], [l].[DisplayName]

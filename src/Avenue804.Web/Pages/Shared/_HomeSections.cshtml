@@ -1,52 +1,294 @@
 @model Avenue804.Web.Pages.IndexModel
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnv
 @using Avenue804.Web.Infrastructure
 @using Avenue804.Web.Configuration
 @{
     var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
     var B = Model.Blocks;
     string Txt(string slug, string fallback) => B.TryGetValue(slug, out var v) ? v : fallback;
+
+    // Hero image strategy:
+    //  1. If marketing has dropped a local home-hero.webp (and optional @2x) into
+    //     wwwroot/assets/img/hero/, prefer it (zero external dependency, fastest).
+    //  2. Otherwise fall back to the curated Unsplash construction photo that has
+    //     historically been the production hero.
+    // We must only emit the WebP <source> when the files actually exist on disk —
+    // per HTML spec, if a type-matched <source> picks but fails to load, the browser
+    // does NOT fall through to the <img> tag.
+    var heroDir = System.IO.Path.Combine(WebHostEnv.WebRootPath, "assets", "img", "hero");
+    var hasWebp1x = System.IO.File.Exists(System.IO.Path.Combine(heroDir, "home-hero.webp"));
+    var hasWebp2x = System.IO.File.Exists(System.IO.Path.Combine(heroDir, "home-hero@@2x.webp"));
+    const string FallbackHeroUrl = "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1800&q=80&auto=format&fit=crop";
 }
 
 <!-- ══════════════════════════════════════════════
-     HERO
+     HERO — service-first (Phase 1)
 ══════════════════════════════════════════════ -->
 <section class="ph-hero" id="hero">
   <div class="ph-hero__bg">
-    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1800&q=80" alt="Construction and contracting in Abu Dhabi" />
+    <picture>
+      @if (hasWebp1x)
+      {
+        var url1x = Url.Content("~/assets/img/hero/home-hero.webp");
+        var url2x = Url.Content("~/assets/img/hero/home-hero@@2x.webp");
+        var srcset = hasWebp2x ? $"{url1x} 1x, {url2x} 2x" : $"{url1x} 1x";
+        <source type="image/webp" srcset="@srcset" />
+      }
+      <img src="@FallbackHeroUrl"
+           alt="Abu Dhabi skyline — 804 Avenue contracting, maintenance & facility management"
+           width="1800" height="1000" loading="eager" decoding="async" fetchpriority="high" />
+    </picture>
   </div>
   <div class="ph-hero__overlay"></div>
   <div class="ph-hero__content">
-    <p class="ph-hero__eyebrow">Abu Dhabi's Trusted Contracting &amp; Property Firm</p>
-    <h1 class="ph-hero__title">Build. <span class="ph-hero__hl">Maintain.</span><br>Manage.</h1>
-    <p class="ph-hero__sub">Contracting, maintenance &amp; facility management — plus real estate brokerage — all under one roof across the UAE.</p>
-    <div class="ph-hero__ctas">
-      <a asp-page="/Contact" class="ph-btn ph-btn--primary">Get a Free Quote</a>
-      <a asp-page="/Properties" class="ph-btn ph-btn--outline-white">Browse Properties</a>
-    </div>
+    <p class="ph-hero__eyebrow">@Html.Raw(Txt(ContentBlockSlugs.HomeHeroEyebrow, "Abu Dhabi's Trusted Maintenance, AMC &amp; Contracting Team"))</p>
+    <h1 class="ph-hero__title">@Html.Raw(Txt(ContentBlockSlugs.HomeHeroTitle, "Maintain. <span class=\"ph-hero__hl\">Build.</span><br>Manage."))</h1>
+    <p class="ph-hero__sub">@Html.Raw(Txt(ContentBlockSlugs.HomeHeroSubtitle, "Maintenance, AMC, contracting &amp; facility management — one accountable team across the UAE."))</p>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════
+     HERO SERVICE-QUOTE WIDGET (4 tabs — modernized)
+══════════════════════════════════════════════ -->
+<div class="ph-search-wrap">
+  <div class="ph-search ph-search--v2" id="heroQuoteWidget">
+
+    <!-- Tabs: pill-chip service selector with icons -->
+    <div class="ph-search__tabs" role="tablist" aria-label="Choose a service">
+      <button type="button" class="ph-search__tab active" role="tab" aria-selected="true" data-quote-tab="maintenance">
+        <span class="ph-search__tab-ico" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </span>
+        <span class="ph-search__tab-txt">Maintenance</span>
+      </button>
+      <button type="button" class="ph-search__tab" role="tab" aria-selected="false" data-quote-tab="amc">
+        <span class="ph-search__tab-ico" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </span>
+        <span class="ph-search__tab-txt">AMC</span>
+      </button>
+      <button type="button" class="ph-search__tab" role="tab" aria-selected="false" data-quote-tab="contracting">
+        <span class="ph-search__tab-ico" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22l4-1 11-11-3-3L3 18l-1 4z"/><path d="M14 6l4 4"/></svg>
+        </span>
+        <span class="ph-search__tab-txt">Contracting</span>
+      </button>
+      <button type="button" class="ph-search__tab" role="tab" aria-selected="false" data-quote-tab="facility">
+        <span class="ph-search__tab-ico" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg>
+        </span>
+        <span class="ph-search__tab-txt">Facility Management</span>
+      </button>
+    </div>
+
+    <!-- Maintenance panel -->
+    <div class="ph-search__form" data-quote-panel="maintenance">
+      <div class="ph-search__fields">
+        <div class="ph-search__field ph-search__field--wide">
+          <span class="ph-search__field-ico" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          </span>
+          <div class="ph-search__field-body">
+            <div class="ph-search__label">Issue type</div>
+            <select class="ph-search__input" id="heroMaintIssue" aria-label="Issue type">
+              <option value="">Choose what needs fixing…</option>
+              <option value="ac">AC / cooling not working</option>
+              <option value="plumbing">Plumbing / leak / drainage</option>
+              <option value="electrical">Electrical fault / no power</option>
+              <option value="general">General repair / handyman</option>
+              <option value="emergency">Emergency call-out</option>
+            </select>
+          </div>
+        </div>
+        <div class="ph-search__field">
+          <span class="ph-search__field-ico" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          <div class="ph-search__field-body">
+            <div class="ph-search__label">Emirate</div>
+            <select class="ph-search__input" id="heroMaintEmirate" aria-label="Emirate">
+              <option value="abu-dhabi">Abu Dhabi</option>
+              <option value="dubai">Dubai</option>
+              <option value="sharjah">Sharjah</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" class="ph-search__btn" data-quote-go="maintenance">
+          <span>Request Service</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- AMC panel -->
+    <div class="ph-search__form" data-quote-panel="amc" hidden>
+      <div class="ph-search__fields">
+        <div class="ph-search__field ph-search__field--wide">
+          <span class="ph-search__field-ico" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M10 9h.01M10 13h.01M10 17h.01M14 9h.01M14 13h.01M14 17h.01"/></svg>
+          </span>
+          <div class="ph-search__field-body">
+            <div class="ph-search__label">Building type</div>
+            <select class="ph-search__input" id="heroAmcType" aria-label="Building type">
+              <option value="Residential">Residential building</option>
+              <option value="Commercial">Commercial building</option>
+              <option value="Villa">Villa / compound</option>
+              <option value="Mixed">Mixed-use</option>
+            </select>
+          </div>
+        </div>
+        <div class="ph-search__field">
+          <span class="ph-search__field-ico" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </span>
+          <div class="ph-search__field-body">
+            <div class="ph-search__label">Approx. units / floors</div>
+            <input type="number" min="1" max="2000" class="ph-search__input" id="heroAmcSize" placeholder="e.g. 20" />
+          </div>
+        </div>
+        <button type="button" class="ph-search__btn" data-quote-go="amc">
+          <span>Request Quote</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contracting panel -->
+    <div class="ph-search__form" data-quote-panel="contracting" hidden>
+      <div class="ph-search__fields">
+        <div class="ph-search__field ph-search__field--wide">
+          <span class="ph-search__field-ico" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22l4-1 11-11-3-3L3 18l-1 4z"/><path d="M14 6l4 4"/></svg>
+          </span>
+          <div class="ph-search__field-body">
+            <div class="ph-search__label">Service type</div>
+            <select class="ph-search__input" id="heroContrService" aria-label="Service type">
+              <option value="">Choose a service…</option>
+              <option value="fitout">Interior fit-out</option>
+              <option value="renovation">Renovation</option>
+              <option value="gypsum">Gypsum &amp; ceiling</option>
+              <option value="flooring">Flooring</option>
+              <option value="painting">Painting &amp; finishing</option>
+              <option value="civil">Civil / general contracting</option>
+            </select>
+          </div>
+        </div>
+        <div class="ph-search__field">
+          <span class="ph-search__field-ico" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+          </span>
+          <div class="ph-search__field-body">
+            <div class="ph-search__label">Area (sqm)</div>
+            <input type="number" min="1" max="50000" class="ph-search__input" id="heroContrArea" placeholder="e.g. 200" />
+          </div>
+        </div>
+        <button type="button" class="ph-search__btn" data-quote-go="contracting">
+          <span>Request Quote</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Facility Management panel -->
+    <div class="ph-search__form" data-quote-panel="facility" hidden>
+      <div class="ph-search__fields">
+        <div class="ph-search__field ph-search__field--wide">
+          <span class="ph-search__field-ico" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg>
+          </span>
+          <div class="ph-search__field-body">
+            <div class="ph-search__label">Asset type</div>
+            <select class="ph-search__input" id="heroFmAsset" aria-label="Asset type">
+              <option value="">Choose your asset…</option>
+              <option value="residential-tower">Residential tower</option>
+              <option value="commercial-tower">Commercial / office tower</option>
+              <option value="mixed-use">Mixed-use development</option>
+              <option value="retail">Retail / mall</option>
+              <option value="industrial">Industrial / warehouse</option>
+              <option value="villa-compound">Villa / compound</option>
+              <option value="hospitality">Hotel / hospitality</option>
+            </select>
+          </div>
+        </div>
+        <div class="ph-search__field">
+          <span class="ph-search__field-ico" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </span>
+          <div class="ph-search__field-body">
+            <div class="ph-search__label">Service hours</div>
+            <select class="ph-search__input" id="heroFmHours" aria-label="Service hours">
+              <option value="business">Business hours (8–6)</option>
+              <option value="extended">Extended (12 hrs)</option>
+              <option value="24x7">24×7 manned</option>
+              <option value="on-call">On-call only</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" class="ph-search__btn" data-quote-go="facility">
+          <span>Request FM Proposal</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Trust strip — small reassurance row under every panel -->
+    <div class="ph-search__trust" aria-hidden="true">
+      <span class="ph-search__trust-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Free quote
+      </span>
+      <span class="ph-search__trust-dot" aria-hidden="true"></span>
+      <span class="ph-search__trust-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Reply within 2 hours
+      </span>
+      <span class="ph-search__trust-dot" aria-hidden="true"></span>
+      <span class="ph-search__trust-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+        Licensed &amp; insured
+      </span>
+    </div>
+  </div>
+
+  <!-- Properties demoted to a ghost link below the widget -->
+  <div class="ph-hero__ghost">
+    @Html.Raw(Txt(ContentBlockSlugs.HomeHeroPropertiesLink,
+      "Looking for a property to buy or rent? <a href=\"/Properties\">Browse listings →</a>"))
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
      STATS BAR
 ══════════════════════════════════════════════ -->
+@{
+    // Real DB-backed counts from IHomeStatsService (1h cache); see HomeStatsService.cs
+    var hs = Model.Stats;
+    var projectsCount   = Math.Max(hs.ProjectsDelivered, 0);
+    var ticketsCount    = Math.Max(hs.MaintenanceTicketsResolved, 0);
+    var listingsCount   = Math.Max(hs.PropertiesListed, 0);
+    var yearsCount      = Math.Max(hs.YearsExperience, 1);
+    // Render "+" suffix only when there's enough volume to look credible.
+    string Suffix(int n) => n >= 5 ? "+" : "";
+}
 <section class="ph-stats">
   <div class="container">
     <div class="ph-stats__grid">
       <div class="ph-stats__item fade-up">
-        <div class="ph-stats__num" data-count="120" data-suffix="+">0</div>
+        <div class="ph-stats__num" data-count="@projectsCount" data-suffix="@Suffix(projectsCount)">0</div>
         <div class="ph-stats__label">Projects Delivered</div>
       </div>
       <div class="ph-stats__item fade-up">
-        <div class="ph-stats__num" data-count="15" data-suffix="+">0</div>
+        <div class="ph-stats__num" data-count="@yearsCount" data-suffix="+">0</div>
         <div class="ph-stats__label">Years Experience</div>
       </div>
       <div class="ph-stats__item fade-up">
-        <div class="ph-stats__num" data-count="98" data-suffix="%">0</div>
-        <div class="ph-stats__label">Client Satisfaction</div>
+        <div class="ph-stats__num" data-count="@ticketsCount" data-suffix="@Suffix(ticketsCount)">0</div>
+        <div class="ph-stats__label">Maintenance Jobs Resolved</div>
       </div>
       <div class="ph-stats__item fade-up">
-        <div class="ph-stats__num" data-count="500" data-suffix="+">0</div>
+        <div class="ph-stats__num" data-count="@listingsCount" data-suffix="@Suffix(listingsCount)">0</div>
         <div class="ph-stats__label">Properties Listed</div>
       </div>
     </div>
@@ -71,7 +313,7 @@
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
           </div>
           <h3 class="ph-service-card__title">Contracting</h3>
-          <p class="ph-service-card__sub">Civil works, interior fit-out, gypsum, flooring, glass &amp; aluminum, signage — end-to-end project delivery.</p>
+          <p class="ph-service-card__sub">@Html.Raw(Txt(ContentBlockSlugs.HomeServiceCardContrLead, "Civil works, interior fit-out, gypsum, flooring, glass &amp; aluminum, signage — end-to-end project delivery."))</p>
           <ul class="ph-service-card__list">
             <li>Civil &amp; general contracting</li>
             <li>Interior fit-out &amp; renovation</li>
@@ -92,7 +334,7 @@
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
           </div>
           <h3 class="ph-service-card__title">Maintenance</h3>
-          <p class="ph-service-card__sub">Preventive, corrective and MEP maintenance — keeping your property in peak condition year-round.</p>
+          <p class="ph-service-card__sub">@Html.Raw(Txt(ContentBlockSlugs.HomeServiceCardMaintLead, "Preventive, corrective and MEP maintenance — keeping your property in peak condition year-round."))</p>
           <ul class="ph-service-card__list">
             <li>MEP (mechanical, electrical, plumbing)</li>
             <li>Preventive maintenance contracts</li>
@@ -113,7 +355,7 @@
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M14 7h1M14 11h1M9 7h1M9 11h1"/></svg>
           </div>
           <h3 class="ph-service-card__title">Facility Management</h3>
-          <p class="ph-service-card__sub">Complete facility management for buildings, compounds and commercial complexes across the UAE.</p>
+          <p class="ph-service-card__sub">@Html.Raw(Txt(ContentBlockSlugs.HomeServiceCardFmLead, "Complete facility management for buildings, compounds and commercial complexes across the UAE."))</p>
           <ul class="ph-service-card__list">
             <li>Building operations management</li>
             <li>Shared services coordination</li>
@@ -177,68 +419,29 @@
 </section>
 
 <!-- ══════════════════════════════════════════════
-     FEATURED PROPERTIES (secondary — shown after services & about)
+     FEATURED PROPERTIES — secondary; hidden when no published listings exist
+     (Phase 1: hardcoded Unsplash mock fallback removed; show real data only.)
 ══════════════════════════════════════════════ -->
-<section class="section-pad" style="background:#f9fafb">
-  <div class="container">
-    <div class="ph-projects__head">
-      <div>
-        <p class="ph-tag fade-up">Real Estate</p>
-        <h2 class="ph-title fade-up">Featured <em>Properties</em></h2>
+@if (Model.FeaturedListings.Count > 0)
+{
+  <section class="section-pad" style="background:#f9fafb">
+    <div class="container">
+      <div class="ph-projects__head">
+        <div>
+          <p class="ph-tag fade-up">Real Estate</p>
+          <h2 class="ph-title fade-up">Featured <em>Properties</em></h2>
+        </div>
+        <a class="ph-link-all" asp-page="/Properties/Index">Browse all →</a>
       </div>
-      <a class="ph-link-all" asp-page="/Properties">Browse all →</a>
-    </div>
-    <div class="ph-feat-grid">
-      @if (Model.FeaturedListings.Count > 0)
-      {
-        foreach (var p in Model.FeaturedListings)
+      <div class="ph-feat-grid">
+        @foreach (var p in Model.FeaturedListings)
         {
           <partial name="Shared/_PropertyCard" model="p" />
         }
-      }
-      else
-      {
-        <div class="pcard fade-up">
-          <div class="pcard__img">
-            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80" alt="Luxury Apartment" />
-            <span class="pcard__badge pcard__badge--sale">For Sale</span>
-          </div>
-          <div class="pcard__body">
-            <div class="pcard__price">AED 1,200,000</div>
-            <div class="pcard__title">Luxury 2BR Apartment</div>
-            <div class="pcard__loc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Al Reem Island, Abu Dhabi</div>
-            <div class="pcard__meta"><span class="pcard__meta-item">2 Beds</span><span class="pcard__meta-item">2 Baths</span><span class="pcard__meta-item">1,250 sqft</span></div>
-          </div>
-        </div>
-        <div class="pcard fade-up">
-          <div class="pcard__img">
-            <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&q=80" alt="Modern Villa" />
-            <span class="pcard__badge pcard__badge--rent">For Rent</span>
-          </div>
-          <div class="pcard__body">
-            <div class="pcard__price">AED 180,000 <small>/yr</small></div>
-            <div class="pcard__title">Modern 4BR Villa</div>
-            <div class="pcard__loc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Khalifa City, Abu Dhabi</div>
-            <div class="pcard__meta"><span class="pcard__meta-item">4 Beds</span><span class="pcard__meta-item">5 Baths</span><span class="pcard__meta-item">3,800 sqft</span></div>
-          </div>
-        </div>
-        <div class="pcard fade-up">
-          <div class="pcard__img">
-            <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80" alt="Penthouse" />
-            <span class="pcard__badge pcard__badge--sale">For Sale</span>
-            <span class="pcard__label pcard__label--featured">Featured</span>
-          </div>
-          <div class="pcard__body">
-            <div class="pcard__price">AED 4,500,000</div>
-            <div class="pcard__title">Sea View Penthouse</div>
-            <div class="pcard__loc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Corniche Road, Abu Dhabi</div>
-            <div class="pcard__meta"><span class="pcard__meta-item">3 Beds</span><span class="pcard__meta-item">4 Baths</span><span class="pcard__meta-item">2,900 sqft</span></div>
-          </div>
-        </div>
-      }
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+}
 
 <!-- ══════════════════════════════════════════════
      TESTIMONIALS
@@ -322,8 +525,8 @@
         </a>
       </div>
       <div class="ph-cta__btns">
-        <a asp-page="/Contact" class="ph-btn ph-btn--white">Get a Free Quote</a>
-        <a asp-page="/Properties" class="ph-btn ph-btn--outline-white">Browse Properties</a>
+        <a asp-page="/Submit/ServiceQuote" class="ph-btn ph-btn--white">Get a Free Quote</a>
+        <a asp-page="/Services/Index" class="ph-btn ph-btn--outline-white">All Services</a>
       </div>
     </div>
   </div>

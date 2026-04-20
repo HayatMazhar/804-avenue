@@ -4,22 +4,26 @@ using Avenue804.Web.Domain;
 using Avenue804.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Avenue804.Web.Pages.Submit;
 
+[EnableRateLimiting("submit")]
 public class ServiceQuoteModel : PageModel
 {
     private readonly ApplicationDbContext _db;
     private readonly IEmailSender _email;
     private readonly IConfiguration _cfg;
     private readonly IFeatureFlagService _flags;
+    private readonly IRecaptchaVerifier _recaptcha;
 
-    public ServiceQuoteModel(ApplicationDbContext db, IEmailSender email, IConfiguration cfg, IFeatureFlagService flags)
+    public ServiceQuoteModel(ApplicationDbContext db, IEmailSender email, IConfiguration cfg, IFeatureFlagService flags, IRecaptchaVerifier recaptcha)
     {
         _db = db;
         _email = email;
         _cfg = cfg;
         _flags = flags;
+        _recaptcha = recaptcha;
     }
 
     public IActionResult OnGet() => RedirectToPage("/Contracting");
@@ -42,6 +46,13 @@ public class ServiceQuoteModel : PageModel
         if (!ModelState.IsValid)
         {
             TempData["ToastError"] = "Please complete all required fields.";
+            return !string.IsNullOrEmpty(returnPage) && Url.IsLocalUrl(returnPage) ? LocalRedirect(returnPage) : RedirectToPage("/Contracting");
+        }
+
+        var rcToken = Request.Form["g-recaptcha-response"].ToString();
+        if (!await _recaptcha.VerifyAsync(rcToken, "service_quote", ct))
+        {
+            TempData["ToastError"] = "We couldn't verify your request. Please refresh the page and try again.";
             return !string.IsNullOrEmpty(returnPage) && Url.IsLocalUrl(returnPage) ? LocalRedirect(returnPage) : RedirectToPage("/Contracting");
         }
 

@@ -102,24 +102,30 @@ body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__link:hover { color: #fff; back
 /* Dropdown panels */
 .pf-nav__dd-panel {
   position: absolute;
-  top: calc(100% + 6px);
+  /* Flush with the button (no transparent gap) so the cursor can move directly
+     from the button into the panel without falling off in between. The visual
+     6px breathing room is now produced by the panel's own padding-top. */
+  top: 100%;
   left: -12px;
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 12px 40px rgba(8,15,35,.13), 0 0 0 1px #e5e7eb;
-  padding: 12px;
+  padding: 18px 12px 12px;
   min-width: 320px;
   z-index: 200;
   animation: navDdIn .18s ease;
 }
 /* Invisible bridge so mouseleave doesn't fire in the gap between button and panel */
+/* Invisible "hover bridge" above the panel so the cursor never lands in
+   no-man's-land while moving from the trigger button into the panel.
+   Wider than the panel itself so it covers the button area too. */
 .pf-nav__dd-panel::before {
   content: '';
   position: absolute;
-  top: -10px;
-  left: 0;
-  right: 0;
-  height: 10px;
+  top: -14px;
+  left: -20px;
+  right: -20px;
+  height: 14px;
 }
 .pf-nav__dd-panel--sm { min-width: 280px; }
 @keyframes navDdIn { from { opacity:0; transform:translateY(-6px) } to { opacity:1; transform:translateY(0) } }

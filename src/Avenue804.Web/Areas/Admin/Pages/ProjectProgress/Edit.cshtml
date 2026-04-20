@@ -1,27 +1,122 @@
 @page "{id:int}"
 @model Avenue804.Web.Areas.Admin.Pages.ProjectProgress.EditModel
 @using Avenue804.Web.Domain
-@{ ViewData["Title"] = "Edit Project"; }
-<p class="admin-back"><a asp-page="Index">← Project Progress</a></p>
-<div class="admin-client-link">
-  <span class="admin-client-link__label">Client link</span>
-  <a asp-area="" asp-page="/Project" asp-route-token="@Model.AccessToken" target="_blank">/Project/@Model.AccessToken</a>
-  <button type="button" class="btn-copy" onclick="navigator.clipboard.writeText(window.location.origin+'/Project/@Model.AccessToken')">Copy</button>
+@{
+    ViewData["Title"] = "Edit project";
+    ViewData["AdminSection"] = "project-progress";
+}
+
+<div class="admin-back"><a asp-page="Index">← Project progress</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">@(string.IsNullOrWhiteSpace(Model.F.ProjectTitle) ? "Edit project" : Model.F.ProjectTitle)</h1>
+      <p class="as-form-page__sub">Update progress, stage notes and estimated completion. The client view updates instantly.</p>
+    </div>
+    <div class="as-form-page__pill" style="background:var(--as-accent-08);border-color:var(--as-accent-50,rgba(245,158,11,.4));color:var(--as-accent);">
+      @Model.F.ProgressPercent% complete
+    </div>
+  </header>
+
+  <section class="as-section" style="background:linear-gradient(135deg,var(--as-soft) 0%,var(--as-accent-08) 100%);">
+    <header class="as-section__head" style="background:transparent;border-bottom:none;">
+      <div class="as-section__icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+      </div>
+      <div class="as-section__title-wrap">
+        <h2 class="as-section__title">Client link</h2>
+        <p class="as-section__sub">Share this URL with the client — they'll see read-only progress updates.</p>
+      </div>
+    </header>
+    <div class="as-section__body">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <a class="as-btn as-btn--ghost" asp-area="" asp-page="/Project" asp-route-token="@Model.AccessToken" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open /Project/@Model.AccessToken
+        </a>
+        <button type="button" class="as-btn as-btn--ghost" onclick="navigator.clipboard.writeText(window.location.origin+'/Project/@Model.AccessToken'); this.textContent='Copied ✓';">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy link
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <form method="post">
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Client</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.ClientName">Client name <span class="req">*</span></label>
+            <input asp-for="F.ClientName" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.ClientEmail">Client email <span class="req">*</span></label>
+            <input asp-for="F.ClientEmail" type="email" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Project</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.ProjectTitle">Project title</label>
+            <input asp-for="F.ProjectTitle" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.Location">Location</label>
+            <input asp-for="F.Location" />
+          </div>
+        </div>
+        <div class="as-row as-row--3">
+          <div class="as-field">
+            <label asp-for="F.CurrentStage">Current stage</label>
+            <select asp-for="F.CurrentStage" asp-items="Html.GetEnumSelectList<ProjectStage>()"></select>
+          </div>
+          <div class="as-field">
+            <label asp-for="F.ProgressPercent">Progress %</label>
+            <input asp-for="F.ProgressPercent" type="number" min="0" max="100" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.EstimatedCompletion">Est. completion</label>
+            <input asp-for="F.EstimatedCompletion" type="date" />
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.StageNotes">Stage notes (visible to client)</label>
+          <textarea asp-for="F.StageNotes" rows="3"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info"><span class="dot" style="background:var(--as-success);"></span>Client view updates instantly</div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Save changes
+        </button>
+      </div>
+    </footer>
+  </form>
 </div>
-<form method="post" class="admin-form">
-  <div class="row admin-form-row-2">
-    <div><label asp-for="F.ClientName">Client name *</label><input asp-for="F.ClientName" /></div>
-    <div><label asp-for="F.ClientEmail">Client email *</label><input asp-for="F.ClientEmail" type="email" /></div>
-  </div>
-  <div class="row admin-form-row-2">
-    <div><label asp-for="F.ProjectTitle">Project title</label><input asp-for="F.ProjectTitle" /></div>
-    <div><label asp-for="F.Location">Location</label><input asp-for="F.Location" /></div>
-  </div>
-  <div class="row admin-form-row-3">
-    <div><label asp-for="F.CurrentStage">Current stage</label><select asp-for="F.CurrentStage" asp-items="Html.GetEnumSelectList<ProjectStage>()"></select></div>
-    <div><label asp-for="F.ProgressPercent">Progress %</label><input asp-for="F.ProgressPercent" type="number" min="0" max="100" /></div>
-    <div><label asp-for="F.EstimatedCompletion">Est. completion</label><input asp-for="F.EstimatedCompletion" type="date" /></div>
-  </div>
-  <div class="row"><label asp-for="F.StageNotes">Stage notes (visible to client)</label><textarea asp-for="F.StageNotes" rows="3"></textarea></div>
-  <button type="submit" class="btn-primary"><span>Save</span></button>
-</form>

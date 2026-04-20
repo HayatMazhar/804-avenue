@@ -1,0 +1,374 @@
+@page "/Services"
+@model Avenue804.Web.Pages.Services.IndexModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Avenue804.Web.Configuration
+@using Avenue804.Web.Infrastructure
+@{
+    ViewData["Title"] = "Our Services — Maintenance, AMC, Contracting & Facility Management";
+    ViewData["MetaDescription"] = "Book maintenance, an annual maintenance contract (AMC), contracting works or full facility management with 804 Avenue across the UAE.";
+    ViewData["NavActive"] = "services";
+    var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
+    var phoneHref = site?.TelHref ?? "tel:+971504399804";
+    var phoneText = site?.PhoneDisplay ?? "+971 50 43 99 804";
+
+    string Block(string slug, string fallback) => Model.Block(slug, fallback);
+}
+@section Styles {
+  <link rel="stylesheet" href="~/css/services-hub.css" asp-append-version="true" />
+}
+
+<div class="svc-hub">
+
+  <!-- ══════════════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════════════ -->
+  <section class="svc-hub__hero">
+    <div class="container">
+      <nav class="svc-hub__breadcrumb svc-fade-up" aria-label="Breadcrumb">
+        <a asp-page="/Index">Home</a><span class="sep">/</span><span>Services</span>
+      </nav>
+      <span class="svc-hub__eyebrow svc-fade-up">@Block(ContentBlockSlugs.PageServicesHubEyebrow, "What we do")</span>
+      <h1 class="svc-hub__hero-title svc-fade-up">
+        @Html.Raw(Block(ContentBlockSlugs.PageServicesHubTitle,
+          "One call. <em>Every</em> service."))
+      </h1>
+      <p class="svc-hub__hero-sub svc-fade-up">
+        @Html.Raw(Block(ContentBlockSlugs.PageServicesHubSubtitle,
+          "Maintenance, AMC, contracting and facility management — delivered by one accountable team across Abu Dhabi, Dubai and the wider UAE."))
+      </p>
+      <div class="svc-hub__hero-actions svc-fade-up">
+        <a asp-page="/Submit/ServiceQuote" class="svc-hub__btn svc-hub__btn--primary">
+          Request a Quote
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="@phoneHref" class="svc-hub__btn svc-hub__btn--ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
+          @phoneText
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       STATS RIBBON (overlaps hero/cards background)
+  ════════════════════════════════════════════════════ -->
+  <div class="svc-hub__stats-wrap">
+    <div class="container">
+      <div class="svc-hub__stats svc-fade-up">
+        <div class="svc-hub__stat">
+          <div class="svc-hub__stat-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div>
+            <div class="svc-hub__stat-num">15+ yrs</div>
+            <div class="svc-hub__stat-label">Operating in the UAE</div>
+          </div>
+        </div>
+        <div class="svc-hub__stat">
+          <div class="svc-hub__stat-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="svc-hub__stat-num">24/7</div>
+            <div class="svc-hub__stat-label">Emergency response</div>
+          </div>
+        </div>
+        <div class="svc-hub__stat">
+          <div class="svc-hub__stat-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </div>
+          <div>
+            <div class="svc-hub__stat-num">In-house</div>
+            <div class="svc-hub__stat-label">Engineers &amp; technicians</div>
+          </div>
+        </div>
+        <div class="svc-hub__stat">
+          <div class="svc-hub__stat-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+          </div>
+          <div>
+            <div class="svc-hub__stat-num">All UAE</div>
+            <div class="svc-hub__stat-label">Abu Dhabi · Dubai · Sharjah</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       FOUR SERVICE FEATURE CARDS
+  ════════════════════════════════════════════════════ -->
+  <section class="svc-hub__section" style="padding-top:24px">
+    <div class="container">
+      <div class="svc-hub__section-head">
+        <span class="svc-hub__tag svc-fade-up">Our services</span>
+        <h2 class="svc-hub__h2 svc-fade-up">Pick what you <em>need today.</em></h2>
+        <p class="svc-hub__lead svc-fade-up">
+          @Html.Raw(Block(ContentBlockSlugs.PageServicesHubLead,
+            "Every request lands directly with our operations team — no call-centre handoffs, no third-party dispatch."))
+        </p>
+      </div>
+
+      <div class="svc-hub__grid">
+
+        <!-- Maintenance -->
+        <article class="svc-hub__card svc-fade-up">
+          <div class="svc-hub__card-media" style="background-image:url('https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=900&q=80&auto=format&fit=crop')">
+            <span class="svc-hub__card-num">01</span>
+            <span class="svc-hub__card-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            </span>
+          </div>
+          <div class="svc-hub__card-body">
+            <h3 class="svc-hub__card-title">Maintenance</h3>
+            <p class="svc-hub__card-sub">MEP, preventive, corrective and emergency repairs — single visits or ongoing care for homes, offices and buildings.</p>
+            <ul class="svc-hub__card-list">
+              <li>Mechanical, electrical &amp; plumbing</li>
+              <li>HVAC, lifts &amp; building systems</li>
+              <li>24/7 emergency response (Abu Dhabi)</li>
+            </ul>
+            <div class="svc-hub__card-actions">
+              <a asp-page="/Submit/MaintenanceRequest" class="svc-hub__btn svc-hub__btn--primary">Request Service</a>
+              <a asp-page="/Maintenance" class="svc-hub__card-link">Learn more</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- AMC -->
+        <article class="svc-hub__card svc-fade-up">
+          <div class="svc-hub__card-media" style="background-image:url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=900&q=80&auto=format&fit=crop')">
+            <span class="svc-hub__card-num">02</span>
+            <span class="svc-hub__card-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </span>
+          </div>
+          <div class="svc-hub__card-body">
+            <h3 class="svc-hub__card-title">Annual Maintenance Contract</h3>
+            <p class="svc-hub__card-sub">Fixed-fee, scheduled upkeep that prevents downtime and protects asset value for residential and commercial buildings.</p>
+            <ul class="svc-hub__card-list">
+              <li>Quarterly preventive visits</li>
+              <li>Discounted call-out &amp; spare parts</li>
+              <li>Quarterly compliance &amp; safety reports</li>
+            </ul>
+            <div class="svc-hub__card-actions">
+              <a asp-page="/Submit/AmcRequest" class="svc-hub__btn svc-hub__btn--primary">Request AMC Quote</a>
+              <a asp-page="/FacilityManagement" class="svc-hub__card-link">FM details</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Contracting -->
+        <article class="svc-hub__card svc-fade-up">
+          <div class="svc-hub__card-media" style="background-image:url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&q=80&auto=format&fit=crop')">
+            <span class="svc-hub__card-num">03</span>
+            <span class="svc-hub__card-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            </span>
+          </div>
+          <div class="svc-hub__card-body">
+            <h3 class="svc-hub__card-title">Contracting &amp; Fit-Out</h3>
+            <p class="svc-hub__card-sub">Civil works, interior fit-out, gypsum, flooring, glass and aluminum, signage — end-to-end project delivery.</p>
+            <ul class="svc-hub__card-list">
+              <li>Office &amp; retail interior fit-out</li>
+              <li>Gypsum, ceilings &amp; partitions</li>
+              <li>Painting, finishing &amp; signage</li>
+            </ul>
+            <div class="svc-hub__card-actions">
+              <a asp-page="/Submit/ServiceQuote" class="svc-hub__btn svc-hub__btn--primary">Get a Quote</a>
+              <a asp-page="/Contracting" class="svc-hub__card-link">Learn more</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Facility Management -->
+        <article class="svc-hub__card svc-fade-up">
+          <div class="svc-hub__card-media" style="background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&q=80&auto=format&fit=crop')">
+            <span class="svc-hub__card-num">04</span>
+            <span class="svc-hub__card-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+            </span>
+          </div>
+          <div class="svc-hub__card-body">
+            <h3 class="svc-hub__card-title">Facility Management</h3>
+            <p class="svc-hub__card-sub">Building operations, vendor coordination, HSE and compliance for compounds, towers and commercial buildings.</p>
+            <ul class="svc-hub__card-list">
+              <li>Building operations &amp; soft services</li>
+              <li>Vendor &amp; contractor management</li>
+              <li>HSE, compliance &amp; reporting</li>
+            </ul>
+            <div class="svc-hub__card-actions">
+              <a asp-page="/Submit/ServiceQuote" class="svc-hub__btn svc-hub__btn--primary">Talk to FM Team</a>
+              <a asp-page="/FacilityManagement" class="svc-hub__card-link">Learn more</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       HOW IT WORKS — 4-step process
+  ════════════════════════════════════════════════════ -->
+  <section class="svc-hub__section svc-hub__section--white">
+    <div class="container">
+      <div class="svc-hub__section-head">
+        <span class="svc-hub__tag svc-fade-up">How it works</span>
+        <h2 class="svc-hub__h2 svc-fade-up">From request to <em>resolution</em>, on one timeline.</h2>
+        <p class="svc-hub__lead svc-fade-up">No call-centre runaround. Every request goes straight to a coordinator who owns it end-to-end.</p>
+      </div>
+
+      <div class="svc-hub__process svc-fade-up">
+        <div class="svc-hub__step">
+          <div class="svc-hub__step-num">01</div>
+          <h3 class="svc-hub__step-title">Tell us what you need</h3>
+          <p class="svc-hub__step-text">Pick a service, drop the basics in a 60-second form (or call us).</p>
+        </div>
+        <div class="svc-hub__step">
+          <div class="svc-hub__step-num">02</div>
+          <h3 class="svc-hub__step-title">Get a clear quote</h3>
+          <p class="svc-hub__step-text">A coordinator reviews scope, sends a transparent fixed quote — usually within 4 working hours.</p>
+        </div>
+        <div class="svc-hub__step">
+          <div class="svc-hub__step-num">03</div>
+          <h3 class="svc-hub__step-title">We schedule the team</h3>
+          <p class="svc-hub__step-text">Licensed in-house engineers and technicians are dispatched at the time you confirmed.</p>
+        </div>
+        <div class="svc-hub__step">
+          <div class="svc-hub__step-num">04</div>
+          <h3 class="svc-hub__step-title">Done &amp; documented</h3>
+          <p class="svc-hub__step-text">Job sheet, photos and warranty captured against your account — no paper, no chasing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       WHY US — trust signals
+  ════════════════════════════════════════════════════ -->
+  <section class="svc-hub__section">
+    <div class="container">
+      <div class="svc-hub__section-head">
+        <span class="svc-hub__tag svc-fade-up">Why 804 Avenue</span>
+        <h2 class="svc-hub__h2 svc-fade-up">One accountable team. <em>Zero handoffs.</em></h2>
+        <p class="svc-hub__lead svc-fade-up">We employ our crews and engineers directly — so when something is wrong, there's one number to call and one team that fixes it.</p>
+      </div>
+
+      <div class="svc-hub__trust">
+        <div class="svc-hub__trust-item svc-fade-up">
+          <div class="svc-hub__trust-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3 class="svc-hub__trust-title">Licensed &amp; insured</h3>
+          <p class="svc-hub__trust-text">UAE-licensed contractor, insured public liability, certified MEP engineers.</p>
+        </div>
+        <div class="svc-hub__trust-item svc-fade-up">
+          <div class="svc-hub__trust-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3 class="svc-hub__trust-title">On-time, every time</h3>
+          <p class="svc-hub__trust-text">Confirmed time slots with SMS updates. Late arrival? You're not charged for the visit.</p>
+        </div>
+        <div class="svc-hub__trust-item svc-fade-up">
+          <div class="svc-hub__trust-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <h3 class="svc-hub__trust-title">Transparent pricing</h3>
+          <p class="svc-hub__trust-text">Fixed quotes for scoped work. No surprise call-out fees, no markup on parts.</p>
+        </div>
+        <div class="svc-hub__trust-item svc-fade-up">
+          <div class="svc-hub__trust-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3 class="svc-hub__trust-title">Workmanship warranty</h3>
+          <p class="svc-hub__trust-text">90-day warranty on labour for repairs; 12 months on contracting works.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       FAQ
+  ════════════════════════════════════════════════════ -->
+  <section class="svc-hub__section svc-hub__section--white">
+    <div class="container">
+      <div class="svc-hub__section-head">
+        <span class="svc-hub__tag svc-fade-up">FAQ</span>
+        <h2 class="svc-hub__h2 svc-fade-up">Common <em>questions</em>.</h2>
+      </div>
+
+      <div class="svc-hub__faq">
+        <details class="svc-hub__faq-item svc-fade-up">
+          <summary class="svc-hub__faq-summary">Which emirates do you cover?</summary>
+          <div class="svc-hub__faq-body">
+            We operate across the UAE, with same-day coverage in Abu Dhabi (including the islands and the Western Region) and next-day coverage in Dubai and Sharjah. Other emirates are scheduled within 48 hours.
+          </div>
+        </details>
+        <details class="svc-hub__faq-item svc-fade-up">
+          <summary class="svc-hub__faq-summary">Is there a charge to get a quote?</summary>
+          <div class="svc-hub__faq-body">
+            No. Quotes for maintenance, AMC and contracting work are always free. For very large fit-out or FM tenders, we may schedule a paid site survey — but that's agreed up front.
+          </div>
+        </details>
+        <details class="svc-hub__faq-item svc-fade-up">
+          <summary class="svc-hub__faq-summary">How fast is your emergency response?</summary>
+          <div class="svc-hub__faq-body">
+            For Abu Dhabi mainland customers, we target a 60-minute on-site response for true emergencies (water leak, full power loss, AC failure during summer) — 24/7, including public holidays.
+          </div>
+        </details>
+        <details class="svc-hub__faq-item svc-fade-up">
+          <summary class="svc-hub__faq-summary">Can one AMC cover everything in our building?</summary>
+          <div class="svc-hub__faq-body">
+            Yes. A single 804 Avenue AMC can bundle MEP, HVAC, civil maintenance, soft services and even contracted upgrades — billed as one fixed monthly fee against one SLA.
+          </div>
+        </details>
+        <details class="svc-hub__faq-item svc-fade-up">
+          <summary class="svc-hub__faq-summary">Do you do small jobs as well as large projects?</summary>
+          <div class="svc-hub__faq-body">
+            Both. A blocked drain in a single villa and an entire commercial-tower fit-out land with the same operations team — we just route them to the right crew.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       FINAL CTA
+  ════════════════════════════════════════════════════ -->
+  <section class="svc-hub__cta">
+    <div class="container">
+      <div class="svc-hub__cta-inner svc-fade-up">
+        <div>
+          <h2 class="svc-hub__cta-title">Need an answer in the next hour?</h2>
+          <p class="svc-hub__cta-sub">Skip the form — call our operations team directly. Our line is staffed 24/7 for emergencies.</p>
+          <a href="@phoneHref" class="svc-hub__cta-phone">@phoneText</a>
+        </div>
+        <div class="svc-hub__cta-actions">
+          <a asp-page="/Submit/ServiceQuote" class="svc-hub__btn svc-hub__btn--white">Request a Quote</a>
+          <a asp-page="/Contact" class="svc-hub__btn svc-hub__btn--outline-white">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+@section Scripts {
+<script>
+(function () {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.svc-fade-up').forEach(function (el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.svc-fade-up').forEach(function (el) { io.observe(el); });
+})();
+</script>
+}

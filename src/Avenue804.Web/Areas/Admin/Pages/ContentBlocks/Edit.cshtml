@@ -2,33 +2,90 @@
 @model Avenue804.Web.Areas.Admin.Pages.ContentBlocks.EditModel
 @{
     ViewData["Title"] = "Edit content block";
+    ViewData["AdminSection"] = "content-blocks";
 }
-<p class="admin-back"><a asp-page="Index">← Content blocks</a></p>
-<form method="post" class="admin-form admin-form--wide">
-  <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
-  <div class="row">
-    <label asp-for="Form.Slug"></label>
-    <input asp-for="Form.Slug" required />
-    <span asp-validation-for="Form.Slug" class="muted"></span>
-  </div>
-  <div class="row">
-    <label asp-for="Form.Title"></label>
-    <input asp-for="Form.Title" />
-  </div>
-  <div class="row">
-    <label asp-for="Form.Body"></label>
-    <textarea asp-for="Form.Body" rows="14" required></textarea>
-    <span asp-validation-for="Form.Body" class="muted"></span>
-  </div>
-  <div class="row chk">
-    <input asp-for="Form.IsPublished" />
-    <label asp-for="Form.IsPublished" class="admin-label-inline">Published</label>
-  </div>
-  <div class="admin-flex-row">
-    <button type="submit" class="btn-primary"><span>Save</span></button>
-    <button type="submit" class="btn-outline btn-danger-outline" asp-page-handler="Delete" formnovalidate onclick="return confirm('Delete this block?');">Delete</button>
-  </div>
-</form>
-@section Scripts {
-  <partial name="_ValidationScriptsPartial" />
-}
+
+<div class="admin-back"><a asp-page="Index">← Content blocks</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">@(string.IsNullOrWhiteSpace(Model.Form.Title) ? Model.Form.Slug : Model.Form.Title)</h1>
+      <p class="as-form-page__sub">Raw content-block editor — used for slugs not yet wired to the page-by-page editor.</p>
+    </div>
+    <div class="as-form-page__pill" style="background:@(Model.Form.IsPublished ? "var(--as-accent-08)" : "var(--as-soft)");border-color:@(Model.Form.IsPublished ? "var(--as-accent-50,rgba(245,158,11,.4))" : "var(--as-border)");color:@(Model.Form.IsPublished ? "var(--as-accent)" : "var(--as-mute)");">
+      @(Model.Form.IsPublished ? "Live" : "Draft")
+    </div>
+  </header>
+
+  <form method="post">
+    <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Identifier</h2>
+          <p class="as-section__sub">Slug used in code to fetch this content block.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.Slug">Slug <span class="req">*</span></label>
+          <input asp-for="Form.Slug" required style="font-family:'SFMono-Regular',Consolas,monospace;" />
+          <span asp-validation-for="Form.Slug" class="field-validation-error"></span>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.Title">Friendly title</label>
+          <input asp-for="Form.Title" placeholder="Optional internal label" />
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Body</h2>
+          <p class="as-section__sub">Markdown / HTML supported, depending on where the slug is rendered.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.Body">Body <span class="req">*</span></label>
+          <textarea asp-for="Form.Body" rows="14" required style="font-family:'SFMono-Regular',Consolas,monospace;font-size:.86rem;"></textarea>
+          <span asp-validation-for="Form.Body" class="field-validation-error"></span>
+        </div>
+        <label class="as-toggle">
+          <input asp-for="Form.IsPublished" />
+          <span class="as-toggle__switch"></span>
+          <span class="as-toggle__text">
+            <span class="as-toggle__title">Published</span>
+            <span class="as-toggle__sub">Unpublished blocks fall back to default values in code.</span>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info"><span class="dot" style="background:@(Model.Form.IsPublished ? "var(--as-success)" : "var(--as-mute)");"></span>Slug: <code>@Model.Form.Slug</code></div>
+      <div class="as-form-foot__actions">
+        <button type="submit" class="as-btn as-btn--danger" asp-page-handler="Delete" formnovalidate onclick="return confirm('Delete this block?');">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg>
+          Delete
+        </button>
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Save changes
+        </button>
+      </div>
+    </footer>
+  </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

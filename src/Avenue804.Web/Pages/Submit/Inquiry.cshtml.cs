@@ -2,9 +2,11 @@ using Avenue804.Web.Models.Forms;
 using Avenue804.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Avenue804.Web.Pages.Submit;
 
+[EnableRateLimiting("submit")]
 public class InquiryModel : PageModel
 {
     private readonly IInquirySubmitter _inquiries;

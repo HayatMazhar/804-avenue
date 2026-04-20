@@ -1,9 +1,13 @@
+@{
+    var pageTitle = ViewData["Title"] as string ?? "Admin login";
+}
 <!DOCTYPE html>
 <html lang="en" data-theme="gold">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>@ViewData["Title"] — 804 Admin</title>
+  <title>@pageTitle — 804 Admin</title>
+  <meta name="robots" content="noindex,nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" crossorigin="anonymous" />
@@ -14,30 +18,299 @@
   <link rel="stylesheet" href="~/assets/css/bulma-theme.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/assets/css/bootstrap-avenue.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/assets/css/admin.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/assets/css/admin-shell.css" asp-append-version="true" />
   <style>
-    body { margin: 0; min-height: 100vh; background: var(--bg-deep); display: flex; align-items: center; justify-content: center; }
-    .login-shell { width: 100%; max-width: 400px; padding: 24px; }
-    .login-card { background: #fff; border: 1px solid #e2e5e9; border-radius: 14px; padding: 36px 32px; box-shadow: 0 4px 24px rgba(15,23,42,.06); }
-    .login-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
-    .login-brand svg { color: var(--accent); }
-    .login-brand-text { font-family: var(--font-nav); font-weight: 800; font-size: 1rem; color: var(--text-primary); letter-spacing: .03em; }
-    .login-brand-text span { color: var(--accent); }
-    .login-shell h1 { font-family: var(--font-display); font-size: 1.2rem; color: var(--text-primary); margin: 0 0 4px; }
-    .login-shell .sub { color: var(--text-tertiary); font-size: 0.8rem; margin-bottom: 24px; }
+    body.admin-login-body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      color: #0f172a;
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      background: #f4f6fa;
+    }
+    @@media (max-width: 900px) { body.admin-login-body { grid-template-columns: 1fr; } }
+
+    /* ── Left brand panel ───────────────────────────── */
+    .al-brand {
+      position: relative;
+      overflow: hidden;
+      padding: 48px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #fff;
+      background:
+        radial-gradient(900px 500px at 90% -10%, rgba(245,158,11,.28), transparent 60%),
+        radial-gradient(700px 400px at 0% 110%, rgba(6,182,212,.18), transparent 55%),
+        linear-gradient(135deg, #0b1220 0%, #11203b 50%, #0f172a 100%);
+    }
+    .al-brand::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.05) 1px, transparent 0);
+      background-size: 28px 28px;
+      pointer-events: none;
+      mask-image: linear-gradient(180deg, #000 30%, transparent 100%);
+    }
+    .al-brand__top, .al-brand__mid, .al-brand__bot { position: relative; z-index: 2; }
+
+    .al-logo { display: inline-flex; align-items: center; gap: 12px; }
+    .al-logo__mark {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f59e0b, #fb923c);
+      color: #0b1220;
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -.04em;
+      display: grid; place-items: center;
+      box-shadow: 0 10px 20px rgba(245,158,11,.4);
+    }
+    .al-logo__text {
+      display: flex; flex-direction: column; line-height: 1.1;
+    }
+    .al-logo__name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem; color: #fff; letter-spacing: -.01em;
+    }
+    .al-logo__sub {
+      font-size: .65rem;
+      color: rgba(255,255,255,.55);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      margin-top: 3px;
+    }
+
+    .al-brand__h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      font-weight: 700;
+      max-width: 480px;
+      margin: 0 0 18px;
+    }
+    .al-brand__h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #f59e0b 0%, #fb923c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .al-brand__lead {
+      font-size: 1rem; color: rgba(255,255,255,.78);
+      max-width: 460px; line-height: 1.6; margin: 0;
+    }
+    .al-feats {
+      list-style: none; margin: 28px 0 0; padding: 0;
+      display: grid; gap: 12px;
+    }
+    .al-feats li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: .88rem; color: rgba(255,255,255,.85);
+    }
+    .al-feats svg {
+      flex-shrink: 0;
+      background: rgba(245,158,11,.15);
+      border: 1px solid rgba(245,158,11,.4);
+      border-radius: 6px;
+      padding: 4px;
+      color: #f59e0b;
+    }
+
+    .al-brand__bot {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 14px;
+      font-size: .72rem;
+      color: rgba(255,255,255,.45);
+    }
+    .al-brand__bot a { color: rgba(255,255,255,.7); text-decoration: none; }
+    .al-brand__bot a:hover { color: #f59e0b; }
+
+    /* ── Right form panel ───────────────────────────── */
+    .al-form-pane {
+      display: flex; align-items: center; justify-content: center;
+      padding: 48px 32px;
+    }
+    .al-card {
+      width: 100%; max-width: 420px;
+    }
+    .al-card__head { margin-bottom: 28px; }
+    .al-card__eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 12px;
+      border: 1px solid rgba(245,158,11,.35);
+      background: rgba(245,158,11,.08);
+      color: #b45309;
+      border-radius: 99px;
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .al-card__h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.7rem; font-weight: 700;
+      letter-spacing: -.015em;
+      margin: 0 0 6px;
+      color: #0f172a;
+    }
+    .al-card__sub {
+      font-size: .9rem; color: #64748b; margin: 0;
+    }
+    .err {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.35);
+      color: #991b1b;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: .85rem;
+      margin-bottom: 16px;
+    }
+    .err::before {
+      content: '!';
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: #fff;
+      display: grid; place-items: center;
+      font-weight: 700;
+      font-size: .8rem;
+    }
+    .al-card .modal-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .al-card .modal-field > label {
+      font-size: .75rem; font-weight: 700; color: #0f172a; letter-spacing: .02em;
+    }
+    .al-card .modal-field input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: .92rem;
+      background: #fff;
+      color: #0f172a;
+      transition: border-color .15s ease, box-shadow .15s ease;
+      box-sizing: border-box;
+    }
+    .al-card .modal-field input:focus {
+      outline: none;
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245,158,11,.15);
+    }
+    .field-validation-error {
+      color: #b91c1c;
+      font-size: .76rem;
+      margin-top: 4px;
+    }
+    .al-card .btn-login-full {
+      display: inline-flex !important;
+      align-items: center; justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: #0b1220 !important;
+      color: #fff !important;
+      border: 1.5px solid #0b1220 !important;
+      border-radius: 10px !important;
+      padding: 13px 16px !important;
+      font-family: inherit !important;
+      font-size: .92rem !important;
+      font-weight: 600 !important;
+      letter-spacing: 0 !important;
+      text-transform: none !important;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background .15s ease, color .15s ease, transform .15s ease, box-shadow .15s ease;
+    }
+    .al-card .btn-login-full:hover {
+      background: #f59e0b !important;
+      border-color: #f59e0b !important;
+      color: #0b1220 !important;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(245,158,11,.4);
+    }
+    .al-card .btn-login-full > span { font: inherit; }
+    .login-footnote {
+      margin-top: 22px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 10px;
+      font-size: .76rem;
+      color: #64748b;
+      line-height: 1.5;
+    }
+    .login-footnote code {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: .72rem;
+      color: #b45309;
+    }
   </style>
 </head>
-<body>
-  <div class="login-shell">
-    <div class="login-card">
-      <div class="login-brand">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
-        <div class="login-brand-text">804 <span>AVENUE</span></div>
+<body class="admin-login-body">
+
+  <!-- ── Left brand panel ───────────────────────────── -->
+  <aside class="al-brand">
+    <div class="al-brand__top">
+      <div class="al-logo">
+        <div class="al-logo__mark">804</div>
+        <div class="al-logo__text">
+          <span class="al-logo__name">804 Avenue</span>
+          <span class="al-logo__sub">Admin Console</span>
+        </div>
       </div>
-      <h1>@ViewData["Title"]</h1>
-      <p class="sub">Sign in to the admin panel</p>
+    </div>
+
+    <div class="al-brand__mid">
+      <h1 class="al-brand__h1">One console for the <em>entire business.</em></h1>
+      <p class="al-brand__lead">
+        Run the public site, manage inquiries, dispatch service jobs and
+        ship new content — all from a single, unified console.
+      </p>
+      <ul class="al-feats">
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Page-by-page CMS for every public surface
+        </li>
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Property inquiries, service requests &amp; AMC in one inbox
+        </li>
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Real-time dashboards &amp; emergency-ticket alerting
+        </li>
+      </ul>
+    </div>
+
+    <div class="al-brand__bot">
+      <span>© @DateTime.UtcNow.Year 804 Avenue</span>
+      <a href="/" target="_blank" rel="noopener">View public site →</a>
+    </div>
+  </aside>
+
+  <!-- ── Right form panel ───────────────────────────── -->
+  <section class="al-form-pane">
+    <div class="al-card">
+      <div class="al-card__head">
+        <span class="al-card__eyebrow">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 1l3 6 6 1-4.5 4 1 6L12 15l-5.5 3 1-6L3 8l6-1z"/></svg>
+          Secure access
+        </span>
+        <h2 class="al-card__h2">Welcome back</h2>
+        <p class="al-card__sub">Sign in to the 804 Avenue admin console.</p>
+      </div>
+
       @RenderBody()
     </div>
-  </div>
+  </section>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -28,9 +28,6 @@ public class UploadImageModel : PageModel
         if (file == null || file.Length == 0)
             return new JsonResult(new { error = "No file provided." }) { StatusCode = 400 };
 
-        if (file.Length > 10 * 1024 * 1024) // 10 MB limit
-            return new JsonResult(new { error = "File too large. Maximum size is 10 MB." }) { StatusCode = 400 };
-
         try
         {
             var url = await _storage.UploadAsync(file, folder ?? "listings", ct);

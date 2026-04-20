@@ -29,20 +29,32 @@ public class AzureBlobStorageService : IStorageService
 
     public async Task<string> UploadAsync(IFormFile file, string folder = "listings", CancellationToken ct = default)
     {
+        var validation = await FileUploadValidator.ValidateImageAsync(file, ct: ct);
+        if (!validation.Ok)
+            throw new InvalidOperationException(validation.Error);
+
         var containerClient = _client.GetBlobContainerClient(_container);
         await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob, cancellationToken: ct);
 
-        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-        if (!IsAllowedExtension(ext))
-            throw new InvalidOperationException($"File type '{ext}' is not allowed. Use JPG, PNG, or WebP.");
-
-        var blobName = $"{folder}/{Guid.NewGuid():N}{ext}";
+        var safeFolder = SanitiseFolder(folder);
+        var blobName = $"{safeFolder}/{FileUploadValidator.GenerateBlobName(file.FileName)}";
         var blobClient = containerClient.GetBlobClient(blobName);
+
+        // Trust our magic-byte sniff over the client-supplied Content-Type
+        var ext = Path.GetExtension(blobName).ToLowerInvariant();
+        var safeContentType = ext switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png"            => "image/png",
+            ".webp"           => "image/webp",
+            ".gif"            => "image/gif",
+            _                  => "application/octet-stream"
+        };
 
         var headers = new BlobHttpHeaders
         {
-            ContentType = file.ContentType,
-            CacheControl = "public, max-age=31536000"  // 1-year cache
+            ContentType = safeContentType,
+            CacheControl = "public, max-age=31536000"
         };
 
         await using var stream = file.OpenReadStream();
@@ -54,6 +66,13 @@ public class AzureBlobStorageService : IStorageService
 
         _log.LogInformation("Uploaded to Azure Blob: {Url}", url);
         return url;
+    }
+
+    private static string SanitiseFolder(string folder)
+    {
+        if (string.IsNullOrWhiteSpace(folder)) return "listings";
+        var clean = new string(folder.Where(c => char.IsLetterOrDigit(c) || c == '-' || c == '_').ToArray());
+        return string.IsNullOrEmpty(clean) ? "listings" : clean.ToLowerInvariant();
     }
 
     public async Task DeleteAsync(string? url, CancellationToken ct = default)
@@ -75,6 +94,4 @@ public class AzureBlobStorageService : IStorageService
         }
     }
 
-    private static bool IsAllowedExtension(string ext)
-        => ext is ".jpg" or ".jpeg" or ".png" or ".webp" or ".gif";
 }

@@ -1,27 +1,130 @@
 @{
     var section = ViewData["AdminSection"] as string ?? "";
-    string NavClass(string key) => string.Equals(section, key, StringComparison.OrdinalIgnoreCase) ? "admin-nav-a active" : "admin-nav-a";
+    string CssFor(string key) => string.Equals(section, key, StringComparison.OrdinalIgnoreCase)
+        ? "as-side__link is-active"
+        : "as-side__link";
 }
-<nav class="admin-nav" aria-label="Admin">
-  <a class="@NavClass("dashboard")" asp-area="Admin" asp-page="/Index">Dashboard</a>
-  <a class="@NavClass("website") admin-nav-a--accent" asp-area="Admin" asp-page="/WebsiteContent/Index"><i class="bi bi-globe me-1" aria-hidden="true"></i>Website</a>
-  <a class="@NavClass("settings")" asp-area="Admin" asp-page="/SiteSettings/Index">Settings</a>
-  <a class="@NavClass("lookups")" asp-area="Admin" asp-page="/Lookups/Index">Lookups</a>
-  <a class="@NavClass("content")" asp-area="Admin" asp-page="/ContentBlocks/Index">Content</a>
-  <a class="@NavClass("property-inquiries")" asp-area="Admin" asp-page="/PropertyInquiries/Index">Property inquiries</a>
-  <a class="@NavClass("inquiries")" asp-area="Admin" asp-page="/Inquiries/Index">Inquiries</a>
-  <a class="@NavClass("owner")" asp-area="Admin" asp-page="/OwnerRequests/Index">Listing requests</a>
-  <a class="@NavClass("listings")" asp-area="Admin" asp-page="/Listings/Index">Properties</a>
-  <a class="@NavClass("projects")" asp-area="Admin" asp-page="/Projects/Index">Projects</a>
-  <a class="@NavClass("ratings")" asp-area="Admin" asp-page="/Ratings/Index">Reviews</a>
-  <a class="@NavClass("users")" asp-area="Admin" asp-page="/Users/Index">Users</a>
-  <a class="@NavClass("agents")" asp-area="Admin" asp-page="/Agents/Index">Agents</a>
-  <a class="@NavClass("testimonials")" asp-area="Admin" asp-page="/Testimonials/Index">Testimonials</a>
-  <a class="@NavClass("service-requests") admin-nav-a--warning" asp-area="Admin" asp-page="/ServiceRequests/Index"><i class="bi bi-gear me-1" aria-hidden="true"></i>Service Requests</a>
-  <a class="@NavClass("project-progress")" asp-area="Admin" asp-page="/ProjectProgress/Index">Project Tracker</a>
-  <a class="@NavClass("service-reports")" asp-area="Admin" asp-page="/ServiceReports/Index">Service Reports</a>
-  <a class="@NavClass("newsletter")" asp-area="Admin" asp-page="/Newsletter/Index">Newsletter</a>
-  <a class="@NavClass("developers")" asp-area="Admin" asp-page="/Developers/Index">Developers</a>
-  <a class="@NavClass("areaguides")" asp-area="Admin" asp-page="/AreaGuides/Index">Area Guides</a>
-  <a class="@NavClass("features") admin-nav-a--accent" asp-area="Admin" asp-page="/Features/Index"><i class="bi bi-sliders me-1" aria-hidden="true"></i>Features</a>
-</nav>
+
+@* ─── Overview ──────────────────────────────────────────── *@
+<div class="as-side__group">
+  <p class="as-side__group-title">Overview</p>
+  <a class="@CssFor("dashboard")" asp-area="Admin" asp-page="/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <span>Dashboard</span>
+  </a>
+  <a class="@CssFor("notifications")" asp-area="Admin" asp-page="/Notifications/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+    <span>Notifications</span>
+  </a>
+</div>
+
+@* ─── Website (CMS) ─────────────────────────────────────── *@
+<div class="as-side__group">
+  <p class="as-side__group-title">Website</p>
+  <a class="@CssFor("website")" asp-area="Admin" asp-page="/WebsiteContent/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+    <span>Page Content</span>
+    <span class="as-side__badge">CMS</span>
+  </a>
+  <a class="@CssFor("content")" asp-area="Admin" asp-page="/ContentBlocks/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <span>Content Blocks</span>
+  </a>
+  <a class="@CssFor("settings")" asp-area="Admin" asp-page="/SiteSettings/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    <span>Site Settings</span>
+  </a>
+</div>
+
+@* ─── Inquiries / Requests ─────────────────────────────── *@
+<div class="as-side__group">
+  <p class="as-side__group-title">Inquiries</p>
+  <a class="@CssFor("property-inquiries")" asp-area="Admin" asp-page="/PropertyInquiries/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+    <span>Property inquiries</span>
+  </a>
+  <a class="@CssFor("inquiries")" asp-area="Admin" asp-page="/Inquiries/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <span>Contact inquiries</span>
+  </a>
+  <a class="@CssFor("owner")" asp-area="Admin" asp-page="/OwnerRequests/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    <span>Listing requests</span>
+  </a>
+  <a class="@CssFor("service-requests")" asp-area="Admin" asp-page="/ServiceRequests/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    <span>Service requests</span>
+  </a>
+</div>
+
+@* ─── Operations ───────────────────────────────────────── *@
+<div class="as-side__group">
+  <p class="as-side__group-title">Operations</p>
+  <a class="@CssFor("project-progress")" asp-area="Admin" asp-page="/ProjectProgress/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <span>Project tracker</span>
+  </a>
+  <a class="@CssFor("service-reports")" asp-area="Admin" asp-page="/ServiceReports/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+    <span>Service reports</span>
+  </a>
+  <a class="@CssFor("newsletter")" asp-area="Admin" asp-page="/Newsletter/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    <span>Newsletter</span>
+  </a>
+</div>
+
+@* ─── Catalogue ────────────────────────────────────────── *@
+<div class="as-side__group">
+  <p class="as-side__group-title">Catalogue</p>
+  <a class="@CssFor("listings")" asp-area="Admin" asp-page="/Listings/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+    <span>Properties</span>
+  </a>
+  <a class="@CssFor("projects")" asp-area="Admin" asp-page="/Projects/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+    <span>Projects</span>
+  </a>
+  <a class="@CssFor("developers")" asp-area="Admin" asp-page="/Developers/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22h20M3 22V8l9-5 9 5v14"/><path d="M9 22v-9h6v9"/></svg>
+    <span>Developers</span>
+  </a>
+  <a class="@CssFor("areaguides")" asp-area="Admin" asp-page="/AreaGuides/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    <span>Area guides</span>
+  </a>
+  <a class="@CssFor("testimonials")" asp-area="Admin" asp-page="/Testimonials/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    <span>Testimonials</span>
+  </a>
+</div>
+
+@* ─── People ───────────────────────────────────────────── *@
+<div class="as-side__group">
+  <p class="as-side__group-title">People</p>
+  <a class="@CssFor("users")" asp-area="Admin" asp-page="/Users/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    <span>Users</span>
+  </a>
+  <a class="@CssFor("agents")" asp-area="Admin" asp-page="/Agents/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Agents</span>
+  </a>
+  <a class="@CssFor("ratings")" asp-area="Admin" asp-page="/Ratings/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <span>Reviews</span>
+  </a>
+</div>
+
+@* ─── System ───────────────────────────────────────────── *@
+<div class="as-side__group">
+  <p class="as-side__group-title">System</p>
+  <a class="@CssFor("lookups")" asp-area="Admin" asp-page="/Lookups/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+    <span>Lookups</span>
+  </a>
+  <a class="@CssFor("features")" asp-area="Admin" asp-page="/Features/Index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+    <span>Feature flags</span>
+  </a>
+</div>

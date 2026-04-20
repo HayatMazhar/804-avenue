@@ -1,0 +1,45 @@
+@*
+    Renders an invisible reCAPTCHA v3 token input + a small JS snippet that
+    refreshes the token on form submit. The host form must include a
+    <input type="hidden" name="g-recaptcha-response" /> which this partial
+    provides — pages just drop <partial name="_RecaptchaToken" model="..." />
+    inside their <form>.
+
+    Model: a string action name (e.g. "service_quote", "amc_request").
+    Renders nothing when the recaptcha_v3 feature flag is off or no SiteKey.
+*@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject Avenue804.Web.Services.IFeatureFlagService FeatureFlagService
+@inject IConfiguration AppConfig
+@using Avenue804.Web.Middleware
+@using Avenue804.Web.Services
+@model string
+@{
+    var siteKey = AppConfig["Recaptcha:SiteKey"];
+    var enabled = !string.IsNullOrWhiteSpace(siteKey)
+        && await FeatureFlagService.IsEnabledAsync(FeatureFlags.RecaptchaV3);
+    if (!enabled) { return; }
+    var action = string.IsNullOrWhiteSpace(Model) ? "submit" : Model;
+    var nonce = HttpContextAccessor.HttpContext.GetCspNonce();
+    var inputId = $"rcToken_{action}";
+}
+<input type="hidden" name="g-recaptcha-response" id="@inputId" value="" />
+<script nonce="@nonce">
+(function () {
+  var input = document.getElementById('@inputId');
+  if (!input) return;
+  var form = input.closest('form');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    if (input.value) return; // already populated
+    if (typeof grecaptcha === 'undefined' || !window.__recaptchaSiteKey) return;
+    e.preventDefault();
+    grecaptcha.ready(function () {
+      grecaptcha.execute(window.__recaptchaSiteKey, { action: '@action' }).then(function (token) {
+        input.value = token;
+        form.submit();
+      });
+    });
+  });
+})();
+</script>

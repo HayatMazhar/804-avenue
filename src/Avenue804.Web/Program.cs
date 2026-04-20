@@ -1,10 +1,14 @@
+using System.Net;
 using System.Text;
+using System.Threading.RateLimiting;
 using Avenue804.Web.Configuration;
 using Avenue804.Web.Data;
 using Avenue804.Web.Infrastructure;
 using Avenue804.Web.Middleware;
 using Avenue804.Web.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +26,10 @@ builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
 builder.Services.AddScoped<ITwilioOtpService, TwilioOtpService>();
 builder.Services.AddScoped<IFeatureFlagService, FeatureFlagService>();
 builder.Services.AddScoped<IAdminNotificationService, AdminNotificationService>();
+builder.Services.AddScoped<IHomeStatsService, HomeStatsService>();
 builder.Services.AddScoped<SavedSearchAlertService>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<IRecaptchaVerifier, RecaptchaVerifier>();
 builder.Services.AddHostedService<WeeklyDigestJob>();
 
 // Storage service — local disk by default, Azure Blob when Provider = "azure"
@@ -40,6 +47,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 // ── Identity ──────────────────────────────────────────────────
+// RequireConfirmedEmail is config-flagged so the dev seeded admin can still log in
+// without an SMTP round-trip. Production enables it via Identity__RequireConfirmedEmail=true.
+var requireConfirmedEmail = string.Equals(builder.Configuration["Identity:RequireConfirmedEmail"], "true", StringComparison.OrdinalIgnoreCase);
+
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
@@ -49,9 +60,10 @@ builder.Services
         options.Password.RequireUppercase = false;
         options.Password.RequireNonAlphanumeric = false;
         options.User.RequireUniqueEmail = true;
-        options.SignIn.RequireConfirmedEmail = false;
+        options.SignIn.RequireConfirmedEmail = requireConfirmedEmail;
         options.Lockout.MaxFailedAccessAttempts = 5;
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+        options.Lockout.AllowedForNewUsers = true;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
@@ -131,6 +143,9 @@ builder.Services.AddAuthorization(options =>
 });
 
 // ── Razor Pages ───────────────────────────────────────────────
+// AutoValidateAntiforgeryToken: every non-GET handler (POST/PUT/PATCH/DELETE)
+// must include a valid antiforgery token. Razor Pages already does this for
+// page handlers; the global filter enforces it for any plain controllers too.
 builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AuthorizeAreaFolder("Admin", "/", "AdminOnly");
@@ -139,6 +154,62 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AuthorizePage("/Account/Profile",   "PublicUser");
     options.Conventions.AuthorizePage("/Account/Logout",    "PublicUser");
     options.Conventions.AuthorizePage("/AgentPortal/Dashboard", "PublicUser");
+})
+.AddMvcOptions(o =>
+{
+    o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+});
+
+// ── Rate limiting (built-in .NET 8) ──────────────────────────
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = (int)HttpStatusCode.TooManyRequests;
+    options.OnRejected = async (context, ct) =>
+    {
+        context.HttpContext.Response.Headers["Retry-After"] = "60";
+        await context.HttpContext.Response.WriteAsync("Too many requests. Please slow down and try again.", ct);
+    };
+
+    static string ClientKey(HttpContext ctx)
+        => ctx.Connection.RemoteIpAddress?.ToString() ?? "anon";
+
+    // Public submission forms: 10 requests / minute per client IP
+    options.AddPolicy("submit", ctx => RateLimitPartition.GetFixedWindowLimiter(
+        partitionKey: ClientKey(ctx),
+        factory: _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 10,
+            Window = TimeSpan.FromMinutes(1),
+            QueueLimit = 0,
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            AutoReplenishment = true
+        }));
+
+    // OTP send: 3 per 5 minutes per IP+phone
+    options.AddPolicy("otp-send", ctx =>
+    {
+        var phone = ctx.Request.HasFormContentType
+            ? ctx.Request.Form["phoneNumber"].ToString()
+            : string.Empty;
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: $"{ClientKey(ctx)}|{phone}",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 3,
+                Window = TimeSpan.FromMinutes(5),
+                QueueLimit = 0
+            });
+    });
+
+    // Email login: 8 per 5 minutes per IP
+    options.AddPolicy("login", ctx => RateLimitPartition.GetFixedWindowLimiter(
+        partitionKey: ClientKey(ctx),
+        factory: _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 8,
+            Window = TimeSpan.FromMinutes(5),
+            QueueLimit = 0
+        }));
 });
 
 // ── Build & pipeline ─────────────────────────────────────────
@@ -155,7 +226,11 @@ app.UseStaticFiles();
 
 app.UseStatusCodePagesWithReExecute("/Error", "?code={0}");
 
+app.UseSecurityHeaders(builder.Configuration);
+
 app.UseRouting();
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -4,9 +4,11 @@ using Avenue804.Web.Domain;
 using Avenue804.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Avenue804.Web.Pages.Submit;
 
+[EnableRateLimiting("submit")]
 public class MaintenanceRequestModel : PageModel
 {
     private readonly ApplicationDbContext _db;
@@ -14,10 +16,11 @@ public class MaintenanceRequestModel : PageModel
     private readonly IConfiguration _cfg;
     private readonly IFeatureFlagService _flags;
     private readonly IAdminNotificationService _notif;
+    private readonly IRecaptchaVerifier _recaptcha;
 
-    public MaintenanceRequestModel(ApplicationDbContext db, IEmailSender email, IConfiguration cfg, IFeatureFlagService flags, IAdminNotificationService notif)
+    public MaintenanceRequestModel(ApplicationDbContext db, IEmailSender email, IConfiguration cfg, IFeatureFlagService flags, IAdminNotificationService notif, IRecaptchaVerifier recaptcha)
     {
-        _db = db; _email = email; _cfg = cfg; _flags = flags; _notif = notif;
+        _db = db; _email = email; _cfg = cfg; _flags = flags; _notif = notif; _recaptcha = recaptcha;
     }
 
     public IActionResult OnGet() => RedirectToPage("/Maintenance");
@@ -34,6 +37,13 @@ public class MaintenanceRequestModel : PageModel
         if (!ModelState.IsValid)
         {
             TempData["ToastError"] = "Please fill in all required fields.";
+            return RedirectToPage("/Maintenance");
+        }
+
+        var rcToken = Request.Form["g-recaptcha-response"].ToString();
+        if (!await _recaptcha.VerifyAsync(rcToken, "maintenance_request", ct))
+        {
+            TempData["ToastError"] = "We couldn't verify your request. Please refresh the page and try again.";
             return RedirectToPage("/Maintenance");
         }
 

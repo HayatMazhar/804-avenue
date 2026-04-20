@@ -32,21 +32,31 @@ public class LocalStorageService : IStorageService
 
     public async Task<string> UploadAsync(IFormFile file, string folder = "listings", CancellationToken ct = default)
     {
-        var dir = Path.Combine(_uploadRoot, folder);
+        var validation = await FileUploadValidator.ValidateImageAsync(file, ct: ct);
+        if (!validation.Ok)
+            throw new InvalidOperationException(validation.Error);
+
+        var safeFolder = SanitiseFolder(folder);
+        var dir = Path.Combine(_uploadRoot, safeFolder);
         Directory.CreateDirectory(dir);
 
-        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-        if (!IsAllowedExtension(ext))
-            throw new InvalidOperationException($"File type '{ext}' is not allowed. Use JPG, PNG, or WebP.");
-
-        var fileName = $"{Guid.NewGuid():N}{ext}";
+        var fileName = FileUploadValidator.GenerateBlobName(file.FileName);
         var filePath = Path.Combine(dir, fileName);
 
-        await using var stream = new FileStream(filePath, FileMode.Create);
-        await file.CopyToAsync(stream, ct);
+        await using (var stream = new FileStream(filePath, FileMode.CreateNew))
+        {
+            await file.CopyToAsync(stream, ct);
+        }
 
         _log.LogInformation("Uploaded file to local disk: {Path}", filePath);
-        return $"{BaseUrl}/uploads/{folder}/{fileName}";
+        return $"{BaseUrl}/uploads/{safeFolder}/{fileName}";
+    }
+
+    private static string SanitiseFolder(string folder)
+    {
+        if (string.IsNullOrWhiteSpace(folder)) return "listings";
+        var clean = new string(folder.Where(c => char.IsLetterOrDigit(c) || c == '-' || c == '_').ToArray());
+        return string.IsNullOrEmpty(clean) ? "listings" : clean.ToLowerInvariant();
     }
 
     public Task DeleteAsync(string? url, CancellationToken ct = default)
@@ -67,6 +77,4 @@ public class LocalStorageService : IStorageService
         return Task.CompletedTask;
     }
 
-    private static bool IsAllowedExtension(string ext)
-        => ext is ".jpg" or ".jpeg" or ".png" or ".webp" or ".gif";
 }

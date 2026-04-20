@@ -1,30 +1,65 @@
 @page "{id:int}"
 @model Avenue804.Web.Areas.Admin.Pages.SiteSettings.EditModel
 @{
-    ViewData["Title"] = "Edit setting";
+    ViewData["Title"] = "Edit site setting";
+    ViewData["AdminSection"] = "site-settings";
 }
-<p class="admin-back"><a asp-page="Index">← Site settings</a></p>
-<form method="post" class="admin-form">
-  <input type="hidden" asp-for="Form.Key" />
-  <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
-  <div class="row">
-    <label>Key</label>
-    <input type="text" value="@Model.KeyName" readonly class="admin-input-readonly-dim" />
-  </div>
-  <div class="row">
-    <label asp-for="Form.Value"></label>
-    <textarea asp-for="Form.Value" rows="5" required></textarea>
-    <span asp-validation-for="Form.Value" class="muted"></span>
-  </div>
-  <div class="row">
-    <label asp-for="Form.Description"></label>
-    <input asp-for="Form.Description" />
-  </div>
-  <div class="admin-flex-row">
-    <button type="submit" class="btn-primary"><span>Save</span></button>
-    <button type="submit" class="btn-outline btn-danger-outline" asp-page-handler="Delete" formnovalidate onclick="return confirm('Remove this override? The site will fall back to appsettings.');">Delete</button>
-  </div>
-</form>
-@section Scripts {
-  <partial name="_ValidationScriptsPartial" />
-}
+
+<div class="admin-back"><a asp-page="Index">← Site settings</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">@Model.KeyName</h1>
+      <p class="as-form-page__sub">This setting overrides the default value from <code>appsettings.json</code>.</p>
+    </div>
+  </header>
+
+  <form method="post">
+    <input type="hidden" asp-for="Form.Key" />
+    <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Setting value</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label>Key</label>
+          <input type="text" value="@Model.KeyName" readonly style="background:var(--as-soft);color:var(--as-mute);font-family:'SFMono-Regular',Consolas,monospace;" />
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.Value">Value <span class="req">*</span></label>
+          <textarea asp-for="Form.Value" rows="5" required></textarea>
+          <span asp-validation-for="Form.Value" class="field-validation-error"></span>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.Description">Description</label>
+          <input asp-for="Form.Description" placeholder="Optional note about what this setting is for." />
+        </div>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info"><span class="dot" style="background:var(--as-success);"></span>Override active</div>
+      <div class="as-form-foot__actions">
+        <button type="submit" class="as-btn as-btn--danger" asp-page-handler="Delete" formnovalidate onclick="return confirm('Remove this override? The site will fall back to appsettings.');">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg>
+          Remove override
+        </button>
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Save value
+        </button>
+      </div>
+    </footer>
+  </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

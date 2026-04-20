@@ -1,18 +1,75 @@
 @page
 @model Avenue804.Web.Areas.Admin.Pages.Testimonials.CreateModel
-@{ ViewData["Title"] = "Add testimonial"; }
-<p class="admin-back"><a asp-page="Index">← Testimonials</a></p>
-<form method="post" class="admin-form">
-  <div class="row"><label asp-for="Form.AuthorName">Author name</label><input asp-for="Form.AuthorName" /></div>
-  <div class="row"><label asp-for="Form.AuthorRole">Author role / title</label><input asp-for="Form.AuthorRole" placeholder="e.g. Homeowner — Al Reem Island" /></div>
-  <div class="row"><label asp-for="Form.Quote">Quote</label><textarea asp-for="Form.Quote" rows="4" placeholder="What they said about us…"></textarea></div>
-  <div class="row admin-form-row-avatar">
-    <div><label asp-for="Form.Stars">Stars (1-5)</label><input asp-for="Form.Stars" type="number" min="1" max="5" /></div>
-    <div><label asp-for="Form.SortOrder">Sort order</label><input asp-for="Form.SortOrder" type="number" /></div>
-  </div>
-  <div class="row chk">
-    <input asp-for="Form.IsActive" />
-    <label asp-for="Form.IsActive" class="admin-label-inline">Active</label>
-  </div>
-  <button type="submit" class="btn-primary"><span>Save</span></button>
-</form>
+@{
+    ViewData["Title"] = "Add testimonial";
+    ViewData["AdminSection"] = "testimonials";
+}
+
+<div class="admin-back"><a asp-page="Index">← Testimonials</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">Add testimonial</h1>
+      <p class="as-form-page__sub">Add a customer quote that will appear on the public site.</p>
+    </div>
+  </header>
+
+  <form method="post">
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3-1 5-4 5-8h-5V8c0-2 1-3 3-3M14 21c3-1 5-4 5-8h-5V8c0-2 1-3 3-3"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Quote</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="Form.AuthorName">Author name</label>
+            <input asp-for="Form.AuthorName" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.AuthorRole">Author role / title</label>
+            <input asp-for="Form.AuthorRole" placeholder="Homeowner — Al Reem Island" />
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.Quote">Quote</label>
+          <textarea asp-for="Form.Quote" rows="4" placeholder="What they said about us…"></textarea>
+        </div>
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="Form.Stars">Stars (1–5)</label>
+            <input asp-for="Form.Stars" type="number" min="1" max="5" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.SortOrder">Sort order</label>
+            <input asp-for="Form.SortOrder" type="number" />
+          </div>
+        </div>
+        <label class="as-toggle">
+          <input asp-for="Form.IsActive" />
+          <span class="as-toggle__switch"></span>
+          <span class="as-toggle__text">
+            <span class="as-toggle__title">Active</span>
+            <span class="as-toggle__sub">Show on the public site as soon as you save.</span>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info"><span class="dot" style="background:var(--as-mute);"></span>Saving creates the testimonial.</div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Save testimonial
+        </button>
+      </div>
+    </footer>
+  </form>
+</div>

@@ -2,281 +2,426 @@
 @model Avenue804.Web.Areas.Admin.Pages.Listings.EditModel
 @{
     ViewData["Title"] = "Edit listing";
+    ViewData["AdminSection"] = "listings";
 }
-<p class="admin-back"><a asp-page="Index">← Properties</a></p>
-<form method="post" class="admin-form">
-  <div class="row">
-    <label asp-for="Form.Title"></label>
-    <input asp-for="Form.Title" />
-    <span asp-validation-for="Form.Title" class="muted"></span>
-  </div>
-  <div class="row">
-    <label asp-for="Form.Slug">Slug (optional)</label>
-    <input asp-for="Form.Slug" placeholder="auto from title" />
-  </div>
-  <div class="row admin-form-row-price">
-    <div>
-      <label asp-for="Form.Price"></label>
-      <input asp-for="Form.Price" />
+
+<div class="admin-back"><a asp-page="Index">← Properties</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">@(string.IsNullOrWhiteSpace(Model.Form.Title) ? "Edit listing" : Model.Form.Title)</h1>
+      <p class="as-form-page__sub">Update photography, pricing, location, amenities, SEO and approval state. Changes go live as soon as you save (if Published is on).</p>
     </div>
-    <div>
-      <label asp-for="Form.Currency"></label>
-      <input asp-for="Form.Currency" />
+    <div class="as-form-page__pill">
+      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@(Model.Form.IsPublished ? "var(--as-success)" : "var(--as-mute)");"></span>
+      @(Model.Form.IsPublished ? "Live" : "Draft")
     </div>
-  </div>
-  <div class="row admin-form-row-2">
-    <div>
-      <label asp-for="Form.OfferType"></label>
-      <select asp-for="Form.OfferType" asp-items="Html.GetEnumSelectList<ListingOfferType>()"></select>
-    </div>
-    <div>
-      <label asp-for="Form.DeveloperId">Developer (optional)</label>
-      <select asp-for="Form.DeveloperId">
-        <option value="">— None —</option>
-        @Html.Raw(string.Join("", Model.Developers.Select(d => $"<option value=\"{d.Id}\"{(Model.Form.DeveloperId == d.Id ? " selected" : "")}>{d.Name}</option>")))
-      </select>
-    </div>
-  </div>
-  <div class="row">
-    <label asp-for="Form.Location">Location (area, community)</label>
-    <input asp-for="Form.Location" data-autocomplete="uae" autocomplete="off" placeholder="e.g. Al Reem Island, Abu Dhabi" />
-  </div>
-  <div class="row">
-    <label asp-for="Form.Description"></label>
-    <textarea asp-for="Form.Description"></textarea>
-  </div>
-  <div class="row admin-form-row-3">
-    <div>
-      <label asp-for="Form.Beds"></label>
-      <input asp-for="Form.Beds" />
-    </div>
-    <div>
-      <label asp-for="Form.Baths"></label>
-      <input asp-for="Form.Baths" />
-    </div>
-    <div>
-      <label asp-for="Form.AreaSqft"></label>
-      <input asp-for="Form.AreaSqft" />
-    </div>
-  </div>
-  <!-- Main image upload -->
-  <div class="row">
-    <label>Main photo</label>
-    <div class="img-uploader" id="mainImgUploader">
-      <div class="img-uploader-drop" id="mainDropZone">
-        @if (!string.IsNullOrWhiteSpace(Model.Form.MainImageUrl))
-        {
-          <div class="img-preview-wrap">
-            <img src="@Model.Form.MainImageUrl" alt="Main photo" class="img-preview-thumb" />
-            <button type="button" class="img-remove-btn" onclick="clearMainImage()">✕</button>
-          </div>
-        }
-        <div class="img-drop-hint @(string.IsNullOrWhiteSpace(Model.Form.MainImageUrl) ? "" : "d-none")" id="mainDropHint">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <p>Drag &amp; drop or <label for="mainFileInput" class="admin-browse-link">browse</label></p>
-          <small>JPG, PNG, WebP · Max 10 MB</small>
+  </header>
+
+  <form method="post">
+    <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
+
+    <!-- ── Basics ─────────────────────────────────── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
-        <input type="file" id="mainFileInput" accept="image/*" class="visually-hidden" onchange="uploadMain(this)" />
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Basics</h2>
+          <p class="as-section__sub">Title, slug and the short description shown on the listing page.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.Title">Listing title <span class="req">*</span></label>
+          <input asp-for="Form.Title" placeholder="e.g. 3-bedroom luxury apartment with sea view" />
+          <span asp-validation-for="Form.Title" class="field-validation-error"></span>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.Slug">URL slug</label>
+          <input asp-for="Form.Slug" placeholder="auto-generated from the title if left blank" />
+          <p class="as-field-hint">Lowercase letters, numbers and dashes — used in the public URL.</p>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.Description">Description</label>
+          <textarea asp-for="Form.Description" rows="5" placeholder="Describe the property — highlights, finishes, location perks…"></textarea>
+          <p class="as-field-hint">Markdown supported. Aim for 120–250 words.</p>
+        </div>
       </div>
-      <div class="img-upload-progress d-none" id="mainProgress">
-        <div class="img-progress-bar"><div id="mainProgressBar"></div></div>
-        <span id="mainProgressText">Uploading…</span>
+    </section>
+
+    <!-- ── Pricing & offer ────────────────────────── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Pricing &amp; offer</h2>
+          <p class="as-section__sub">Asking price, currency and whether the listing is for sale or rent.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--price">
+          <div class="as-field">
+            <label asp-for="Form.Price">Price</label>
+            <input asp-for="Form.Price" type="number" min="0" step="1000" placeholder="e.g. 1500000" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.Currency">Currency</label>
+            <input asp-for="Form.Currency" placeholder="AED" />
+          </div>
+        </div>
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="Form.OfferType">Offer type</label>
+            <select asp-for="Form.OfferType" asp-items="Html.GetEnumSelectList<ListingOfferType>()"></select>
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.DeveloperId">Developer</label>
+            <select asp-for="Form.DeveloperId">
+              <option value="">— None —</option>
+              @Html.Raw(string.Join("", Model.Developers.Select(d => $"<option value=\"{d.Id}\"{(Model.Form.DeveloperId == d.Id ? " selected" : "")}>{d.Name}</option>")))
+            </select>
+            <p class="as-field-hint">Optional. Link this listing to one of the registered developers.</p>
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.Label">Label / badge</label>
+          <select asp-for="Form.Label">
+            <option value="">— None —</option>
+            <option value="New">New</option>
+            <option value="Hot Deal">Hot Deal</option>
+            <option value="Price Reduced">Price Reduced</option>
+            <option value="Featured">Featured</option>
+            <option value="Off-Plan">Off-Plan</option>
+          </select>
+          <p class="as-field-hint">Shown as a coloured badge on the listing card.</p>
+        </div>
       </div>
-    </div>
-    <input asp-for="Form.MainImageUrl" id="mainImageUrl" placeholder="Or paste URL directly: https://…" class="admin-input-mt" />
-  </div>
+    </section>
 
-  <!-- Gallery images upload -->
-  <div class="row">
-    <label>Gallery photos (up to 20)</label>
-    <div class="img-gallery-uploader" id="galleryUploader">
-      <div class="img-gallery-grid" id="galleryGrid"></div>
-      <label class="img-add-btn" for="galleryFileInput">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Add photos
-      </label>
-      <input type="file" id="galleryFileInput" accept="image/*" multiple class="visually-hidden" onchange="uploadGallery(this)" />
-    </div>
-    <input asp-for="Form.GalleryImagesJson" id="galleryUrlsField" type="hidden" />
-    <textarea id="galleryUrlsFallback" name="_galleryFallback" rows="3" placeholder="Or paste URLs one per line:&#10;https://image1.jpg&#10;https://image2.jpg" class="admin-textarea-gallery-fallback" onchange="syncGalleryFromText(this)">@Model.Form.GalleryImagesJson</textarea>
-    <small class="muted">Upload photos directly or paste URLs. Drag to reorder (coming soon).</small>
-  </div>
-  <div class="row admin-form-row-2">
-    <div>
-      <label asp-for="Form.FloorPlanUrl">Floor plan image URL</label>
-      <input asp-for="Form.FloorPlanUrl" type="url" placeholder="https://…/floorplan.jpg" />
-    </div>
-    <div>
-      <label asp-for="Form.VirtualTourUrl">Virtual tour URL (Matterport / YouTube 360°)</label>
-      <input asp-for="Form.VirtualTourUrl" type="url" placeholder="https://my.matterport.com/…" />
-    </div>
-  </div>
+    <!-- ── Location & specs ───────────────────────── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Location &amp; specs</h2>
+          <p class="as-section__sub">Where the property is and the headline numbers.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.Location">Location (area, community)</label>
+          <input asp-for="Form.Location" data-autocomplete="uae" autocomplete="off" placeholder="e.g. Al Reem Island, Abu Dhabi" />
+          <p class="as-field-hint">Start typing — UAE areas autocomplete.</p>
+        </div>
+        <div class="as-row as-row--3">
+          <div class="as-field">
+            <label asp-for="Form.Beds">Bedrooms</label>
+            <input asp-for="Form.Beds" type="number" min="0" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.Baths">Bathrooms</label>
+            <input asp-for="Form.Baths" type="number" min="0" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.AreaSqft">Area (sqft)</label>
+            <input asp-for="Form.AreaSqft" type="number" min="0" />
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <div class="row">
-    <label>Amenities</label>
-    <div class="admin-amenity-grid">
-      @{
-        var amenities = new[] {
-          ("pool","Swimming Pool"),("gym","Gym / Fitness Centre"),("parking","Covered Parking"),
-          ("security","24/7 Security"),("cctv","CCTV"),("concierge","Concierge"),
-          ("maid","Maid's Room"),("balcony","Balcony"),("pets","Pets Allowed"),
-          ("view","Sea / City View"),("furnished","Fully Furnished"),("kitchen","Open Kitchen"),
-          ("study","Study / Home Office"),("laundry","Laundry Room"),("central_ac","Central A/C"),
-          ("lift","Elevator / Lift"),("bbq","BBQ Area"),("kids","Kids Play Area")
-        };
-        var currentAmenities = (Model.Form.AmenitiesJson ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries).ToHashSet();
-      }
-      @foreach (var (code, label) in amenities)
-      {
-        <label class="admin-amenity-tile">
-          <input type="checkbox" name="amenityChecks" value="@code" @(currentAmenities.Contains(code) ? "checked" : "") />
-          @label
+    <!-- ── Media ──────────────────────────────────── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Media</h2>
+          <p class="as-section__sub">Hero photo, gallery, floor plan and 360° tour link.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label>Main photo</label>
+          <div class="img-uploader" id="mainImgUploader">
+            <div class="img-uploader-drop" id="mainDropZone">
+              @if (!string.IsNullOrWhiteSpace(Model.Form.MainImageUrl))
+              {
+                <div class="img-preview-wrap">
+                  <img src="@Model.Form.MainImageUrl" alt="Main photo" class="img-preview-thumb" />
+                  <button type="button" class="img-remove-btn" onclick="clearMainImage()">✕</button>
+                </div>
+              }
+              <div class="img-drop-hint @(string.IsNullOrWhiteSpace(Model.Form.MainImageUrl) ? "" : "d-none")" id="mainDropHint">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <p>Drag &amp; drop or <label for="mainFileInput" class="admin-browse-link">browse</label></p>
+                <small>JPG, PNG, WebP · Max 10 MB</small>
+              </div>
+              <input type="file" id="mainFileInput" accept="image/*" class="visually-hidden" onchange="uploadMain(this)" />
+            </div>
+            <div class="img-upload-progress d-none" id="mainProgress">
+              <div class="img-progress-bar"><div id="mainProgressBar"></div></div>
+              <span id="mainProgressText">Uploading…</span>
+            </div>
+          </div>
+          <input asp-for="Form.MainImageUrl" id="mainImageUrl" placeholder="…or paste an image URL directly" class="admin-input-mt" />
+        </div>
+
+        <div class="as-field">
+          <label>Gallery photos <span class="as-field-hint" style="display:inline;font-weight:400;">(up to 20)</span></label>
+          <div class="img-gallery-uploader" id="galleryUploader">
+            <div class="img-gallery-grid" id="galleryGrid"></div>
+            <label class="img-add-btn" for="galleryFileInput">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add photos
+            </label>
+            <input type="file" id="galleryFileInput" accept="image/*" multiple class="visually-hidden" onchange="uploadGallery(this)" />
+          </div>
+          <input asp-for="Form.GalleryImagesJson" id="galleryUrlsField" type="hidden" />
+          <textarea id="galleryUrlsFallback" name="_galleryFallback" rows="2" placeholder="Or paste URLs one per line…" class="admin-textarea-gallery-fallback" onchange="syncGalleryFromText(this)">@Model.Form.GalleryImagesJson</textarea>
+        </div>
+
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="Form.FloorPlanUrl">Floor plan image URL</label>
+            <input asp-for="Form.FloorPlanUrl" type="url" placeholder="https://…/floorplan.jpg" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.VirtualTourUrl">Virtual tour URL</label>
+            <input asp-for="Form.VirtualTourUrl" type="url" placeholder="Matterport / YouTube 360°" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Amenities ──────────────────────────────── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Amenities</h2>
+          <p class="as-section__sub">Tick everything available — they show as feature pills on the listing.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        @{
+          var amenities = new[] {
+            ("pool","Swimming Pool"),("gym","Gym / Fitness Centre"),("parking","Covered Parking"),
+            ("security","24/7 Security"),("cctv","CCTV"),("concierge","Concierge"),
+            ("maid","Maid's Room"),("balcony","Balcony"),("pets","Pets Allowed"),
+            ("view","Sea / City View"),("furnished","Fully Furnished"),("kitchen","Open Kitchen"),
+            ("study","Study / Home Office"),("laundry","Laundry Room"),("central_ac","Central A/C"),
+            ("lift","Elevator / Lift"),("bbq","BBQ Area"),("kids","Kids Play Area")
+          };
+          var currentAmenities = (Model.Form.AmenitiesJson ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries).ToHashSet();
+        }
+        <div class="admin-amenity-grid">
+          @foreach (var (code, label) in amenities)
+          {
+            <label class="admin-amenity-tile">
+              <input type="checkbox" name="amenityChecks" value="@code" @(currentAmenities.Contains(code) ? "checked" : "") />
+              @label
+            </label>
+          }
+        </div>
+        <input type="hidden" asp-for="Form.AmenitiesJson" id="amenitiesHidden" />
+      </div>
+    </section>
+
+    <!-- ── SEO ────────────────────────────────────── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Search engine optimisation</h2>
+          <p class="as-section__sub">Optional overrides for the browser tab title and Google search snippet.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.SeoTitle">SEO title</label>
+          <input asp-for="Form.SeoTitle" placeholder="Leave blank to auto-generate from listing title" />
+          <p class="as-field-hint">Shown in browser tab + Google — 50–60 characters ideal.</p>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.SeoDescription">SEO description</label>
+          <textarea asp-for="Form.SeoDescription" rows="2" placeholder="Leave blank to use the listing description"></textarea>
+          <p class="as-field-hint">150–160 characters ideal — shown under the listing in Google results.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Off-plan / handover ────────────────────── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Off-plan / new project</h2>
+          <p class="as-section__sub">Toggle on for projects under construction — extra fields appear.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <label class="as-toggle">
+          <input asp-for="Form.IsOffPlan" id="isOffPlanCheck" onchange="toggleOffPlan()" />
+          <span class="as-toggle__switch"></span>
+          <span class="as-toggle__text">
+            <span class="as-toggle__title">This is an off-plan / new project</span>
+            <span class="as-toggle__sub">Adds handover date, completion % and payment plan fields.</span>
+          </span>
         </label>
-      }
-    </div>
-    <input type="hidden" asp-for="Form.AmenitiesJson" id="amenitiesHidden" />
-  </div>
-
-  <!-- SEO Overrides -->
-  <div class="row">
-    <label asp-for="Form.SeoTitle">SEO title (optional override)</label>
-    <input asp-for="Form.SeoTitle" placeholder="Leave blank to auto-generate from listing title" />
-    <small class="muted">Shown in browser tab + Google — 50–60 chars ideal.</small>
-  </div>
-  <div class="row">
-    <label asp-for="Form.SeoDescription">SEO description (optional override)</label>
-    <textarea asp-for="Form.SeoDescription" rows="2" placeholder="Leave blank to use listing description — 150–160 chars ideal."></textarea>
-  </div>
-
-  <div class="row">
-    <label asp-for="Form.Label">Label / badge (optional)</label>
-    <select asp-for="Form.Label">
-      <option value="">— None —</option>
-      <option value="New">New</option>
-      <option value="Hot Deal">Hot Deal</option>
-      <option value="Price Reduced">Price Reduced</option>
-      <option value="Featured">Featured</option>
-      <option value="Off-Plan">Off-Plan</option>
-    </select>
-  </div>
-
-  <!-- Off-plan section -->
-  <div class="row chk">
-    <input asp-for="Form.IsOffPlan" id="isOffPlanCheck" onchange="toggleOffPlan()" />
-    <label asp-for="Form.IsOffPlan" class="admin-label-inline">Off-plan / New project</label>
-  </div>
-  <div id="offPlanFields" class="@(Model.Form.IsOffPlan ? "" : "d-none")">
-    <div class="row admin-form-row-3">
-      <div>
-        <label asp-for="Form.HandoverDate">Handover date</label>
-        <input asp-for="Form.HandoverDate" placeholder="e.g. Q4 2026" />
+        <div id="offPlanFields" class="@(Model.Form.IsOffPlan ? "" : "d-none")">
+          <div class="as-row as-row--3">
+            <div class="as-field">
+              <label asp-for="Form.HandoverDate">Handover date</label>
+              <input asp-for="Form.HandoverDate" placeholder="e.g. Q4 2026" />
+            </div>
+            <div class="as-field">
+              <label asp-for="Form.CompletionPercent">Completion %</label>
+              <input asp-for="Form.CompletionPercent" type="number" min="0" max="100" placeholder="0–100" />
+            </div>
+            <div class="as-field">
+              <label asp-for="Form.PaymentPlan">Payment plan</label>
+              <input asp-for="Form.PaymentPlan" placeholder="e.g. 40/60 — 40% on booking" />
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <label asp-for="Form.CompletionPercent">Completion %</label>
-        <input asp-for="Form.CompletionPercent" type="number" min="0" max="100" placeholder="0–100" />
-      </div>
-      <div>
-        <label asp-for="Form.PaymentPlan">Payment plan</label>
-        <input asp-for="Form.PaymentPlan" placeholder="e.g. 40/60 — 40% on booking" />
-      </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- Approval status -->
-  <div class="row">
-    <label>Approval status</label>
-    <div class="admin-flex-row">
-      <span class="badge @(Model.Form.ApprovalStatus == Avenue804.Web.Domain.ListingApprovalStatus.Approved ? "badge-closed" : Model.Form.ApprovalStatus == Avenue804.Web.Domain.ListingApprovalStatus.PendingReview ? "badge-progress" : Model.Form.ApprovalStatus == Avenue804.Web.Domain.ListingApprovalStatus.Rejected ? "badge-new" : "badge-closed")">
-        @Model.Form.ApprovalStatus
-      </span>
-      <select asp-for="Form.ApprovalStatus" asp-items="Html.GetEnumSelectList<Avenue804.Web.Domain.ListingApprovalStatus>()"></select>
-    </div>
-    @if (!string.IsNullOrWhiteSpace(Model.Form.RejectionReason))
-    {
-      <small class="muted admin-text-danger">Rejection reason: @Model.Form.RejectionReason</small>
-    }
-  </div>
+    <!-- ── Visibility & approval ──────────────────── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Visibility &amp; approval</h2>
+          <p class="as-section__sub">Control who sees this listing on the public site.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label>Approval status</label>
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <span class="badge @(Model.Form.ApprovalStatus == Avenue804.Web.Domain.ListingApprovalStatus.Approved ? "badge-yes" : Model.Form.ApprovalStatus == Avenue804.Web.Domain.ListingApprovalStatus.PendingReview ? "badge-progress" : Model.Form.ApprovalStatus == Avenue804.Web.Domain.ListingApprovalStatus.Rejected ? "badge-new" : "badge-closed")">
+              @Model.Form.ApprovalStatus
+            </span>
+            <select asp-for="Form.ApprovalStatus" asp-items="Html.GetEnumSelectList<Avenue804.Web.Domain.ListingApprovalStatus>()" style="max-width:240px;"></select>
+          </div>
+          @if (!string.IsNullOrWhiteSpace(Model.Form.RejectionReason))
+          {
+            <p class="as-field-hint" style="color:#991b1b;">Rejection reason: @Model.Form.RejectionReason</p>
+          }
+        </div>
 
-  <div class="row chk">
-    <input asp-for="Form.IsVerified" />
-    <label asp-for="Form.IsVerified" class="admin-label-inline">
-      ✓ Verified listing — shows a "Verified" trust badge
-    </label>
-  </div>
-  <div class="row chk">
-    <input asp-for="Form.IsPublished" />
-    <label asp-for="Form.IsPublished" class="admin-label-inline">Published</label>
-  </div>
-  <div class="admin-flex-row admin-flex-row--lg">
-    <button type="submit" class="btn-primary"><span>Save</span></button>
-  </div>
-</form>
-<form method="post" asp-page-handler="Delete" class="admin-form-delete" onsubmit="return confirm('Delete this listing?');">
-  <button type="submit" class="btn-outline btn-danger-outline">Delete listing</button>
-</form>
+        <label class="as-toggle">
+          <input asp-for="Form.IsVerified" />
+          <span class="as-toggle__switch"></span>
+          <span class="as-toggle__text">
+            <span class="as-toggle__title">Verified listing</span>
+            <span class="as-toggle__sub">Shows a "Verified" trust badge to buyers.</span>
+          </span>
+        </label>
+
+        <label class="as-toggle">
+          <input asp-for="Form.IsPublished" />
+          <span class="as-toggle__switch"></span>
+          <span class="as-toggle__text">
+            <span class="as-toggle__title">Published</span>
+            <span class="as-toggle__sub">Visible on the public site as soon as you save.</span>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <!-- ── Sticky footer ──────────────────────────── -->
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info">
+        <span class="dot" style="background:@(Model.Form.IsPublished ? "var(--as-success)" : "var(--as-mute)");"></span>
+        @(Model.Form.IsPublished ? "Live on the public site" : "Currently in draft")
+      </div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Save changes
+        </button>
+      </div>
+    </footer>
+  </form>
+
+  <!-- ── Danger zone ────────────────────────────── -->
+  <form method="post" asp-page-handler="Delete" class="as-danger-zone" onsubmit="return confirm('Delete this listing? This cannot be undone.');">
+    <div class="as-danger-zone__text">
+      <p class="as-danger-zone__title">Delete this listing</p>
+      <p class="as-danger-zone__sub">This permanently removes the listing, gallery and all associated inquiries. You can't undo this.</p>
+    </div>
+    <button type="submit" class="as-btn as-btn--danger">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg>
+      Delete listing
+    </button>
+  </form>
+</div>
+
 @section Scripts {
   <partial name="_ValidationScriptsPartial" />
   <script>
-  // Image uploader JS
   var _galleryUrls = [];
-
-  // Init gallery from existing JSON
   (function() {
     var field = document.getElementById('galleryUrlsField');
     try {
       var existing = JSON.parse(field?.value || '[]');
-      if (Array.isArray(existing)) {
-        existing.forEach(function(url) { if (url) addGalleryItem(url); });
-      }
+      if (Array.isArray(existing)) existing.forEach(function(url) { if (url) addGalleryItem(url); });
     } catch(e) {}
   })();
 
   function uploadMain(input) {
-    var file = input.files[0];
-    if (!file) return;
+    var file = input.files[0]; if (!file) return;
     setMainProgress(true);
-    var fd = new FormData();
-    fd.append('file', file);
-    fd.append('folder', 'listings');
+    var fd = new FormData(); fd.append('file', file); fd.append('folder', 'listings');
     fetch('/Api/UploadImage', { method: 'POST', body: fd,
       headers: { 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || '' } })
       .then(function(r) { return r.json(); })
-      .then(function(d) {
-        setMainProgress(false);
-        if (d.error) { alert('Upload failed: ' + d.error); return; }
-        setMainImage(d.url);
-      }).catch(function() { setMainProgress(false); alert('Upload failed. Check your connection.'); });
+      .then(function(d) { setMainProgress(false); if (d.error) { alert('Upload failed: ' + d.error); return; } setMainImage(d.url); })
+      .catch(function() { setMainProgress(false); alert('Upload failed. Check your connection.'); });
   }
-
   function setMainImage(url) {
     document.getElementById('mainImageUrl').value = url;
-    var hint = document.getElementById('mainDropHint');
-    hint.classList.add('d-none');
+    document.getElementById('mainDropHint').classList.add('d-none');
     var zone = document.getElementById('mainDropZone');
     var wrap = zone.querySelector('.img-preview-wrap') || document.createElement('div');
     wrap.className = 'img-preview-wrap';
     wrap.innerHTML = '<img src="' + url + '" class="img-preview-thumb" alt="Main photo" /><button type="button" class="img-remove-btn" onclick="clearMainImage()">✕</button>';
     if (!zone.querySelector('.img-preview-wrap')) zone.insertBefore(wrap, zone.firstChild);
   }
-
   function clearMainImage() {
     document.getElementById('mainImageUrl').value = '';
     var zone = document.getElementById('mainDropZone');
-    var wrap = zone.querySelector('.img-preview-wrap');
-    if (wrap) wrap.remove();
+    var wrap = zone.querySelector('.img-preview-wrap'); if (wrap) wrap.remove();
     document.getElementById('mainDropHint').classList.remove('d-none');
   }
-
   function setMainProgress(show) {
     var pr = document.getElementById('mainProgress');
     if (show) pr.classList.remove('d-none'); else pr.classList.add('d-none');
     if (show) { var b=document.getElementById('mainProgressBar'); b.style.width='0%'; setTimeout(function(){b.style.width='70%'},100); }
   }
 
-  // Drag & drop on main zone
   (function() {
-    var zone = document.getElementById('mainDropZone');
-    if (!zone) return;
+    var zone = document.getElementById('mainDropZone'); if (!zone) return;
     zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('drag-over'); });
     zone.addEventListener('dragleave', function() { zone.classList.remove('drag-over'); });
     zone.addEventListener('drop', function(e) {
@@ -290,24 +435,16 @@
     });
   })();
 
-  // Gallery upload
   function uploadGallery(input) {
     Array.from(input.files).forEach(function(file) {
-      var fd = new FormData();
-      fd.append('file', file);
-      fd.append('folder', 'gallery');
+      var fd = new FormData(); fd.append('file', file); fd.append('folder', 'gallery');
       fetch('/Api/UploadImage', { method: 'POST', body: fd,
         headers: { 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || '' } })
         .then(function(r) { return r.json(); })
-        .then(function(d) {
-          if (d.error) { alert('Upload failed: ' + d.error); return; }
-          addGalleryItem(d.url);
-          syncGalleryField();
-        });
+        .then(function(d) { if (d.error) { alert('Upload failed: ' + d.error); return; } addGalleryItem(d.url); syncGalleryField(); });
     });
     input.value = '';
   }
-
   function addGalleryItem(url) {
     if (_galleryUrls.includes(url)) return;
     _galleryUrls.push(url);
@@ -318,40 +455,33 @@
     item.innerHTML = '<img src="' + url + '" alt="" /><button type="button" class="img-remove-btn" onclick="removeGalleryItem(this, \'' + url.replace(/'/g,"\\'") + '\')">✕</button>';
     grid.appendChild(item);
   }
-
   function removeGalleryItem(btn, url) {
     _galleryUrls = _galleryUrls.filter(function(u) { return u !== url; });
     btn.closest('.img-gallery-item').remove();
     syncGalleryField();
   }
-
-  function syncGalleryField() {
-    document.getElementById('galleryUrlsField').value = JSON.stringify(_galleryUrls);
-  }
-
+  function syncGalleryField() { document.getElementById('galleryUrlsField').value = JSON.stringify(_galleryUrls); }
   function syncGalleryFromText(ta) {
     var lines = ta.value.split('\n').map(function(l){return l.trim();}).filter(function(l){return l.startsWith('http');});
-    _galleryUrls = [];
-    document.getElementById('galleryGrid').innerHTML = '';
-    lines.forEach(addGalleryItem);
-    syncGalleryField();
+    _galleryUrls = []; document.getElementById('galleryGrid').innerHTML = '';
+    lines.forEach(addGalleryItem); syncGalleryField();
   }
 
-  // Sync gallery field before form submit
-  document.querySelector('form').addEventListener('submit', function() {
-    syncGalleryField();
-    // Map gallery hidden field into the GalleryImagesJson
-    document.querySelector('[name="Form.GalleryImagesJson"]').value = document.getElementById('galleryUrlsField').value;
-  });
+  (function() {
+    var firstForm = document.querySelector('form[method="post"]');
+    if (!firstForm) return;
+    firstForm.addEventListener('submit', function() {
+      syncGalleryField();
+      var gh = document.querySelector('[name="Form.GalleryImagesJson"]');
+      if (gh) gh.value = document.getElementById('galleryUrlsField').value;
+      var checked = Array.from(document.querySelectorAll('input[name=amenityChecks]:checked')).map(function(c){return c.value;});
+      document.getElementById('amenitiesHidden').value = checked.join(',');
+    });
+  })();
 
   function toggleOffPlan() {
     var el = document.getElementById('offPlanFields');
     el.classList.toggle('d-none', !document.getElementById('isOffPlanCheck').checked);
   }
-  // Sync amenities checkboxes → hidden input before submit
-  document.querySelector('form').addEventListener('submit', function() {
-    var checked = Array.from(document.querySelectorAll('input[name=amenityChecks]:checked')).map(c => c.value);
-    document.getElementById('amenitiesHidden').value = checked.join(',');
-  });
   </script>
 }

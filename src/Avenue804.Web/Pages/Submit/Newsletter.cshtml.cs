@@ -3,10 +3,12 @@ using Avenue804.Web.Data;
 using Avenue804.Web.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avenue804.Web.Pages.Submit;
 
+[EnableRateLimiting("submit")]
 public class NewsletterModel : PageModel
 {
     private readonly ApplicationDbContext _db;

@@ -4,10 +4,12 @@ using Avenue804.Web.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Avenue804.Web.Pages.Submit;
 
+[EnableRateLimiting("submit")]
 public class RatingModel : PageModel
 {
     private readonly ApplicationDbContext _db;

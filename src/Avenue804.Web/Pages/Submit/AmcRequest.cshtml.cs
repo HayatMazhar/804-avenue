@@ -4,22 +4,26 @@ using Avenue804.Web.Domain;
 using Avenue804.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Avenue804.Web.Pages.Submit;
 
+[EnableRateLimiting("submit")]
 public class AmcRequestModel : PageModel
 {
     private readonly ApplicationDbContext _db;
     private readonly IEmailSender _email;
     private readonly IConfiguration _cfg;
     private readonly IFeatureFlagService _flags;
+    private readonly IRecaptchaVerifier _recaptcha;
 
-    public AmcRequestModel(ApplicationDbContext db, IEmailSender email, IConfiguration cfg, IFeatureFlagService flags)
+    public AmcRequestModel(ApplicationDbContext db, IEmailSender email, IConfiguration cfg, IFeatureFlagService flags, IRecaptchaVerifier recaptcha)
     {
         _db = db;
         _email = email;
         _cfg = cfg;
         _flags = flags;
+        _recaptcha = recaptcha;
     }
 
     public IActionResult OnGet() => RedirectToPage("/Maintenance");
@@ -41,6 +45,13 @@ public class AmcRequestModel : PageModel
         if (!ModelState.IsValid)
         {
             TempData["ToastError"] = "Please complete all required fields.";
+            return RedirectToPage("/Maintenance");
+        }
+
+        var rcToken = Request.Form["g-recaptcha-response"].ToString();
+        if (!await _recaptcha.VerifyAsync(rcToken, "amc_request", ct))
+        {
+            TempData["ToastError"] = "We couldn't verify your request. Please refresh the page and try again.";
             return RedirectToPage("/Maintenance");
         }
 

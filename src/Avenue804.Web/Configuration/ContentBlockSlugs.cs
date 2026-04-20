@@ -8,6 +8,20 @@ public static class ContentBlockSlugs
     public const string HomeHeroSubtitle = "home.hero.subtitle";
     public const string AboutStripLead = "about.strip.lead";
 
+    // ── Phase 1 — service-first hero (CMS overrides) ─────────
+    public const string HomeHeroTitle             = "home.hero.title";
+    public const string HomeHeroPropertiesLink    = "home.hero.properties_link";
+    public const string HomeServiceCardMaintLead  = "home.service.maintenance.lead";
+    public const string HomeServiceCardAmcLead    = "home.service.amc.lead";
+    public const string HomeServiceCardContrLead  = "home.service.contracting.lead";
+    public const string HomeServiceCardFmLead     = "home.service.fm.lead";
+
+    // ── Services hub page (Phase 1) ──────────────────────────
+    public const string PageServicesHubEyebrow    = "page.services.hub.eyebrow";
+    public const string PageServicesHubTitle      = "page.services.hub.title";
+    public const string PageServicesHubSubtitle   = "page.services.hub.subtitle";
+    public const string PageServicesHubLead       = "page.services.hub.lead";
+
     public const string PageAboutHeroTitle = "page.about.hero.title";
     public const string PageAboutHeroSubtitle = "page.about.hero.subtitle";
 
@@ -116,6 +130,10 @@ public static class ContentBlockSlugs
     public static IReadOnlyList<string> AllWiredSlugs { get; } =
     [
         HomeHeroEyebrow, HomeHeroSubtitle, AboutStripLead,
+        HomeHeroTitle, HomeHeroPropertiesLink,
+        HomeServiceCardMaintLead, HomeServiceCardAmcLead,
+        HomeServiceCardContrLead, HomeServiceCardFmLead,
+        PageServicesHubEyebrow, PageServicesHubTitle, PageServicesHubSubtitle, PageServicesHubLead,
         PageAboutHeroTitle, PageAboutHeroSubtitle,
         PageContractingHeroTitle, PageContractingHeroSubtitle,
         PageMaintenanceHeroTitle, PageMaintenanceHeroSubtitle,

@@ -1,6 +1,9 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @inject Avenue804.Web.Services.IFeatureFlagService FeatureFlagService
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostEnv
+@inject IConfiguration AppConfig
 @using Avenue804.Web.Infrastructure
+@using Avenue804.Web.Middleware
 @using Avenue804.Web.Services
 @{
     var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
@@ -8,6 +11,10 @@
     var brand = site?.CompanyDisplayName ?? "804 Avenue";
     var featureFlags = await FeatureFlagService.GetAllAsync();
     bool FF(string flag) => featureFlags.TryGetValue(flag, out var v) && v;
+    var nonce = HttpContextAccessor.HttpContext.GetCspNonce();
+    var unregisterSw = !string.Equals(AppConfig["Site:UnregisterServiceWorker"], "false", StringComparison.OrdinalIgnoreCase);
+    var recaptchaSiteKey = AppConfig["Recaptcha:SiteKey"];
+    var recaptchaEnabled = FF(FeatureFlags.RecaptchaV3) && !string.IsNullOrWhiteSpace(recaptchaSiteKey);
 }
 <!DOCTYPE html>
 <html lang="en" data-theme="gold">
@@ -39,12 +46,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet" />
     @{
-        var gaId = (ViewData["GA4Id"] as string) ?? (HttpContextAccessor.HttpContext?.RequestServices.GetService<IConfiguration>()?["Analytics:GA4MeasurementId"]);
+        var gaId = (ViewData["GA4Id"] as string) ?? AppConfig["Analytics:GA4MeasurementId"];
     }
     @if (!string.IsNullOrWhiteSpace(gaId))
     {
-      <script async src="https://www.googletagmanager.com/gtag/js?id=@gaId"></script>
-      <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','@gaId');</script>
+      <script src="~/assets/js/ga4.js" data-ga4-id="@gaId" nonce="@nonce" asp-append-version="true" defer></script>
     }
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#F59E0B" />
@@ -70,12 +76,15 @@
     <link rel="stylesheet" href="~/assets/css/ui-dropdown.css" asp-append-version="true" />
     <!-- Property card styles — used on home, listings, detail, dashboard, etc. -->
     <link rel="stylesheet" href="~/css/properties.css" asp-append-version="true" />
+    <!-- Marketing/landing styles (.ph-* namespace) — used on home, /Services,
+         Properties index, Project, Contact, About, and several other pages. -->
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
     @await RenderSectionAsync("Head", required: false)
     @await RenderSectionAsync("Styles", required: false)
     <!-- Organization JSON-LD -->
-    <script type="application/ld+json">
+    <script type="application/ld+json" nonce="@nonce">
     {
       "@@context": "https://schema.org",
       "@@type": "Organization",
@@ -119,82 +128,35 @@
     <script src="~/assets/js/autocomplete.js" asp-append-version="true"></script>
     <!-- Flatpickr — auto-initialised on all date inputs -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr" defer></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof flatpickr === 'undefined') return;
-      var dateOpts = {
-        dateFormat: 'Y-m-d',
-        disableMobile: false,
-        allowInput: true,
-        static: false,
-        animate: true
-      };
-      // Standard date inputs
-      document.querySelectorAll('input[type="date"]:not(.flatpickr-input)').forEach(function(el) {
-        flatpickr(el, Object.assign({}, dateOpts));
-      });
-      // Range sliders — update gradient fill dynamically
-      document.querySelectorAll('input[type="range"]').forEach(function(r) {
-        function syncRange() {
-          var min = parseFloat(r.min) || 0;
-          var max = parseFloat(r.max) || 100;
-          var val = parseFloat(r.value) || 0;
-          var pct = ((val - min) / (max - min) * 100).toFixed(1) + '%';
-          r.style.setProperty('--range-pct', pct);
-        }
-        syncRange();
-        r.addEventListener('input', syncRange);
-      });
-    });
-    </script>
-    <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(function(regs) {
-    regs.forEach(function(r) { r.unregister(); });
-  });
-  caches.keys().then(function(keys) {
-    keys.forEach(function(k) { caches.delete(k); });
-  });
-}
-</script>
+    <script src="~/assets/js/flatpickr-init.js" nonce="@nonce" asp-append-version="true" defer></script>
+    @if (unregisterSw)
+    {
+      <script src="~/assets/js/sw-cleanup.js" nonce="@nonce" asp-append-version="true" defer></script>
+    }
+    @if (recaptchaEnabled)
+    {
+      <script src="https://www.google.com/recaptcha/api.js?render=@recaptchaSiteKey" async defer></script>
+      <script nonce="@nonce">
+        window.__recaptchaSiteKey = '@recaptchaSiteKey';
+      </script>
+    }
     @await RenderSectionAsync("Scripts", required: false)
     @{
-        var tawkProp = HttpContextAccessor.HttpContext?.RequestServices.GetService<IConfiguration>()?["LiveChat:TawktoPropertyId"];
-        var tawkWidget = HttpContextAccessor.HttpContext?.RequestServices.GetService<IConfiguration>()?["LiveChat:TawktoWidgetId"];
+        var tawkProp = AppConfig["LiveChat:TawktoPropertyId"];
+        var tawkWidget = AppConfig["LiveChat:TawktoWidgetId"];
     }
     @if (!string.IsNullOrWhiteSpace(tawkProp) && !string.IsNullOrWhiteSpace(tawkWidget))
     {
-      <script>
-      var Tawk_API = Tawk_API||{}, Tawk_LoadStart = new Date();
-      (function(){
-        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-        s1.async=true;
-        s1.src='https://embed.tawk.to/@tawkProp/@tawkWidget';
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
-        s0.parentNode.insertBefore(s1,s0);
-      })();
-      </script>
+      <script src="~/assets/js/tawkto.js" data-tawk-property="@tawkProp" data-tawk-widget="@tawkWidget" nonce="@nonce" asp-append-version="true" defer></script>
     }
     <!-- Cookie consent -->
     <div id="cookieBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:3000;background:var(--bg-card);border-top:1px solid var(--border-accent);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -8px 32px rgba(15,23,42,.1)">
       <p style="font-size:.8rem;color:var(--text-secondary);margin:0;max-width:680px">We use cookies to improve your experience and analyse site traffic. By continuing, you agree to our <a asp-page="/Privacy" style="color:var(--accent)">Privacy Policy</a>.</p>
       <div style="display:flex;gap:10px;flex-shrink:0">
-        <button onclick="acceptCookies()" class="btn-primary" style="padding:9px 20px;font-size:.72rem"><span>Accept</span></button>
-        <button onclick="document.getElementById('cookieBanner').style.display='none'" class="btn-outline" style="padding:9px 20px;font-size:.72rem">Decline</button>
+        <button id="cookieBannerAccept" type="button" class="btn-primary" style="padding:9px 20px;font-size:.72rem"><span>Accept</span></button>
+        <button id="cookieBannerDecline" type="button" class="btn-outline" style="padding:9px 20px;font-size:.72rem">Decline</button>
       </div>
     </div>
-    <script>
-    (function() {
-      if (!localStorage.getItem('804-cookie-consent')) {
-        var b = document.getElementById('cookieBanner');
-        if (b) b.style.display = 'flex';
-      }
-    })();
-    function acceptCookies() {
-      localStorage.setItem('804-cookie-consent', 'true');
-      document.getElementById('cookieBanner').style.display = 'none';
-    }
-    </script>
+    <script src="~/assets/js/cookie-banner.js" nonce="@nonce" asp-append-version="true" defer></script>
 </body>
 </html>

@@ -148,9 +148,23 @@
   position: relative;
   z-index: 20;
   /* pull the card up so it overlaps the bottom of the hero */
-  margin-top: -60px;
+  margin-top: -72px;
   padding: 0 20px;
 }
+
+/* Ghost-demoted Properties link below the hero quote widget (Phase 1) */
+.ph-hero__ghost {
+  text-align: center;
+  margin: 18px auto 0;
+  font-size: .9rem;
+  color: rgba(15, 23, 42, .65);
+}
+.ph-hero__ghost a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.ph-hero__ghost a:hover { text-decoration: underline; }
 
 /* Search card — now in normal document flow */
 .ph-search {
@@ -257,7 +271,9 @@
   font-weight: 700;
   letter-spacing: .04em;
   border: none;
-  border-radius: 0 8px 8px 0;
+  /* Match the .ph-search__fields container's 10px radius (was 8px → caused
+     a visible 2px notch at the top-right / bottom-right corners). */
+  border-radius: 0 10px 10px 0;
   cursor: pointer;
   white-space: nowrap;
   transition: background .18s ease, box-shadow .18s ease;
@@ -1150,4 +1166,443 @@ body > .ts-dropdown .option.selected { font-weight: 600; color: var(--accent); b
   .ph-about__img img { height: 280px; }
   .ph-cta__inner     { padding: 24px; }
   .section-pad       { padding: 44px 0; }
+}
+
+/* ═════════════════════════════════════════════════════════════
+   HERO SEARCH WIDGET v2 — modern redesign
+   (overrides legacy .ph-search rules above; scoped to .ph-search--v2)
+═════════════════════════════════════════════════════════════ */
+.ph-search.ph-search--v2 {
+  max-width: 1080px;
+  background: #fff;
+  border-radius: 22px;
+  border: 1px solid rgba(15, 23, 42, .06);
+  box-shadow:
+    0 30px 70px -20px rgba(8, 15, 35, .25),
+    0 8px 24px -8px rgba(8, 15, 35, .12),
+    0 1px 0 rgba(255, 255, 255, .8) inset;
+  padding: 14px 14px 0;
+  overflow: visible;
+}
+
+/* ── Tabs: pill-chip selector ────────────────────────────── */
+.ph-search--v2 .ph-search__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 14px;
+  margin: 0 0 14px;
+}
+.ph-search--v2 .ph-search__tab {
+  flex: 1 1 0;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 14px;
+  font-size: .82rem;
+  font-weight: 600;
+  letter-spacing: .005em;
+  text-transform: none;
+  color: #4b5563;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
+  margin: 0;
+  white-space: nowrap;
+  position: relative;
+}
+.ph-search--v2 .ph-search__tab-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: rgba(15, 23, 42, .06);
+  color: #6b7280;
+  flex-shrink: 0;
+  transition: background .18s ease, color .18s ease;
+}
+.ph-search--v2 .ph-search__tab-ico svg { display: block; }
+.ph-search--v2 .ph-search__tab-txt { line-height: 1; }
+
+.ph-search--v2 .ph-search__tab:hover:not(.active) {
+  color: #111827;
+  background: rgba(255, 255, 255, .55);
+}
+.ph-search--v2 .ph-search__tab:hover:not(.active) .ph-search__tab-ico {
+  background: rgba(15, 23, 42, .1);
+  color: #374151;
+}
+.ph-search--v2 .ph-search__tab.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--accent) 0%, #ff7a18 100%);
+  box-shadow:
+    0 6px 16px -4px var(--accent-glow, rgba(245, 158, 11, .55)),
+    0 1px 0 rgba(255, 255, 255, .25) inset;
+  font-weight: 700;
+}
+.ph-search--v2 .ph-search__tab.active .ph-search__tab-ico {
+  background: rgba(255, 255, 255, .22);
+  color: #ffffff;
+}
+
+/* Focus ring — keyboard a11y */
+.ph-search--v2 .ph-search__tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Form area ───────────────────────────────────────────── */
+.ph-search--v2 .ph-search__form { padding: 4px 4px 14px; }
+
+.ph-search--v2 .ph-search__fields {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.ph-search--v2 .ph-search__field {
+  flex: 1 1 0;
+  min-width: 0;
+  /* EXACT height — not min-height. Tom Select wrappers and native number
+     inputs have slightly different intrinsic heights, so we lock the
+     field box and let the body vertically center its content. This
+     guarantees every panel and the CTA render at identical 64px. */
+  height: 64px;
+  min-height: 64px;
+  max-height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  background: #f9fafb;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  transition: border-color .18s ease, background .18s ease, box-shadow .18s ease;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.ph-search--v2 .ph-search__field--wide { flex: 1.6 1 0; }
+
+.ph-search--v2 .ph-search__field:hover {
+  border-color: #d1d5db;
+  background: #ffffff;
+}
+.ph-search--v2 .ph-search__field:focus-within {
+  border-color: var(--accent);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px var(--accent-08, rgba(245, 158, 11, .12));
+}
+
+.ph-search--v2 .ph-search__field-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  max-height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent-10, rgba(245, 158, 11, .12)) 0%, rgba(255, 255, 255, .6) 100%);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.ph-search--v2 .ph-search__field-ico svg { display: block; }
+
+.ph-search--v2 .ph-search__field-body {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* vertically centre regardless of child height variance */
+  gap: 2px;
+  overflow: hidden;
+}
+
+.ph-search--v2 .ph-search__label {
+  display: block;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.ph-search--v2 .ph-search__input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: .92rem;
+  font-weight: 600;
+  color: #0f172a;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  line-height: 22px;
+  height: 22px; /* lock visual height — prevents native input vs Tom Select wrapper drift */
+  -webkit-appearance: none;
+  -moz-appearance: textfield; /* kill number-input spinner padding in Firefox */
+  appearance: none;
+  box-sizing: border-box;
+}
+.ph-search--v2 .ph-search__input::placeholder { color: #9ca3af; font-weight: 500; }
+.ph-search--v2 input[type="number"].ph-search__input::-webkit-outer-spin-button,
+.ph-search--v2 input[type="number"].ph-search__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Native select chevron */
+.ph-search--v2 select.ph-search__input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  padding-right: 22px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  background-size: 14px 14px;
+}
+
+/* Hide the legacy vertical separator inside v2 */
+.ph-search--v2 .ph-search__sep { display: none; }
+
+/* ── CTA button ──────────────────────────────────────────── */
+.ph-search--v2 .ph-search__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 26px;
+  height: 64px;
+  min-height: 64px;
+  max-height: 64px;
+  box-sizing: border-box;
+  align-self: center; /* don't stretch — keep the locked 64px */
+  background: linear-gradient(135deg, var(--accent) 0%, #ff7a18 100%);
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 700;
+  letter-spacing: .015em;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow:
+    0 8px 18px -4px var(--accent-glow, rgba(245, 158, 11, .55)),
+    0 1px 0 rgba(255, 255, 255, .25) inset;
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.ph-search--v2 .ph-search__btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, .18) 50%, transparent 100%);
+  transform: translateX(-110%);
+  transition: transform .55s ease;
+  pointer-events: none;
+}
+.ph-search--v2 .ph-search__btn:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 28px -6px var(--accent-glow, rgba(245, 158, 11, .65)),
+    0 1px 0 rgba(255, 255, 255, .25) inset;
+  filter: brightness(1.04);
+}
+.ph-search--v2 .ph-search__btn:hover::before { transform: translateX(110%); }
+.ph-search--v2 .ph-search__btn:active { transform: translateY(0); }
+.ph-search--v2 .ph-search__btn svg { transition: transform .2s ease; }
+.ph-search--v2 .ph-search__btn:hover svg { transform: translateX(3px); }
+.ph-search--v2 .ph-search__btn:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+/* ── Trust strip ─────────────────────────────────────────── */
+.ph-search--v2 .ph-search__trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding: 12px 8px 14px;
+  border-top: 1px dashed rgba(15, 23, 42, .08);
+  margin-top: 4px;
+  font-size: .76rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+.ph-search--v2 .ph-search__trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ph-search--v2 .ph-search__trust-item svg { color: var(--accent); flex-shrink: 0; }
+.ph-search--v2 .ph-search__trust-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #d1d5db;
+}
+
+/* ── Tom Select integration overrides for v2 ─────────────── */
+.ph-search--v2 .ph-search__field .ts-wrapper {
+  position: relative;
+  width: 100%;
+  height: 22px !important;       /* lock to same height as native inputs */
+  min-height: 22px !important;
+  max-height: 22px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-direction: row !important; /* override legacy flex-direction:column */
+  box-shadow: none !important;
+}
+.ph-search--v2 .ph-search__field .ts-control {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 18px 0 0 !important;  /* room for the chevron drawn by ::after */
+  margin: 0 !important;
+  height: 22px !important;
+  min-height: 22px !important;
+  max-height: 22px !important;
+  font-size: .92rem !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  font-family: inherit !important;
+  line-height: 22px !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+  cursor: pointer;
+}
+.ph-search--v2 .ph-search__field .ts-control .item {
+  font-size: .92rem !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  background: none !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 22px !important;
+}
+.ph-search--v2 .ph-search__field .ts-control input {
+  font-size: .92rem !important;
+  height: 22px !important;
+  line-height: 22px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+.ph-search--v2 .ph-search__field .ts-wrapper::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+}
+
+/* ── Responsive — tablet ─────────────────────────────────── */
+@media (max-width: 900px) {
+  .ph-search.ph-search--v2 { padding: 12px 12px 0; border-radius: 18px; }
+  .ph-search--v2 .ph-search__tabs { gap: 4px; padding: 3px; }
+  .ph-search--v2 .ph-search__tab { padding: 10px 10px; font-size: .78rem; gap: 6px; }
+  .ph-search--v2 .ph-search__tab-ico { width: 20px; height: 20px; border-radius: 6px; }
+  .ph-search--v2 .ph-search__tab-ico svg { width: 13px; height: 13px; }
+  .ph-search--v2 .ph-search__fields {
+    flex-wrap: wrap;
+  }
+  .ph-search--v2 .ph-search__field,
+  .ph-search--v2 .ph-search__field--wide { flex: 1 1 calc(50% - 5px); }
+  .ph-search--v2 .ph-search__btn { flex: 1 1 100%; min-height: 54px; }
+}
+
+/* ── Responsive — mobile ─────────────────────────────────── */
+@media (max-width: 640px) {
+  .ph-search-wrap { margin-top: -40px; padding: 0 14px; }
+  .ph-search.ph-search--v2 { padding: 10px 10px 0; border-radius: 16px; }
+
+  /* Tabs: icons-only on the smallest screens with hide-text below 480 */
+  .ph-search--v2 .ph-search__tabs {
+    gap: 2px;
+    padding: 3px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .ph-search--v2 .ph-search__tabs::-webkit-scrollbar { display: none; }
+  .ph-search--v2 .ph-search__tab {
+    padding: 9px 10px;
+    font-size: .76rem;
+    flex: 1 0 auto;
+  }
+
+  /* Override legacy 640px rules with !important since legacy uses bare selectors */
+  .ph-search--v2 .ph-search__fields {
+    flex-direction: column !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    gap: 8px;
+  }
+  .ph-search--v2 .ph-search__field,
+  .ph-search--v2 .ph-search__field--wide {
+    flex: 1 1 100% !important;
+    border: 1.5px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    background: #f9fafb !important;
+    margin-bottom: 0 !important;
+    padding: 11px 14px !important;
+    gap: 10px;
+  }
+  .ph-search--v2 .ph-search__field-ico { width: 34px; height: 34px; }
+  .ph-search--v2 .ph-search__btn {
+    width: 100% !important;
+    border-radius: 12px !important;
+    min-height: 52px !important;
+    height: auto !important;
+    margin-top: 4px !important;
+    justify-content: center !important;
+  }
+
+  .ph-search--v2 .ph-search__trust { font-size: .72rem; gap: 6px 10px; padding: 10px 6px 12px; }
+}
+
+@media (max-width: 420px) {
+  .ph-search--v2 .ph-search__tab-txt { display: none; }
+  .ph-search--v2 .ph-search__tab { padding: 9px 8px; }
+  .ph-search--v2 .ph-search__tab-ico { width: 26px; height: 26px; }
+  .ph-search--v2 .ph-search__tab-ico svg { width: 15px; height: 15px; }
 }

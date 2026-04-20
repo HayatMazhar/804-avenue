@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Avenue804.Web.Pages.Account;
 
 [AllowAnonymous]
+[EnableRateLimiting("login")]
 public class LoginModel : PageModel
 {
     private readonly SignInManager<ApplicationUser> _signIn;
@@ -50,6 +52,7 @@ public class LoginModel : PageModel
         return LocalRedirect(returnUrl);
     }
 
+    [EnableRateLimiting("otp-send")]
     public async Task<IActionResult> OnPostSendOtpAsync(string phoneNumber, string? returnUrl = null)
     {
         if (string.IsNullOrWhiteSpace(phoneNumber))

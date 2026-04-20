@@ -11,16 +11,19 @@ public class IndexModel : PageModel
 {
     private readonly ApplicationDbContext _db;
     private readonly IContentBlockService _content;
+    private readonly IHomeStatsService _stats;
 
-    public IndexModel(ApplicationDbContext db, IContentBlockService content)
+    public IndexModel(ApplicationDbContext db, IContentBlockService content, IHomeStatsService stats)
     {
         _db = db;
         _content = content;
+        _stats = stats;
     }
 
     public IReadOnlyList<PropertyListing> FeaturedListings { get; private set; } = [];
     public IReadOnlyDictionary<string, string> Blocks { get; private set; } = new Dictionary<string, string>();
     public IReadOnlyList<Testimonial> Testimonials { get; private set; } = [];
+    public HomeStats Stats { get; private set; } = new(0, 0, 0, 1);
 
     // Backward-compat properties still used by the partial
     public string? HeroEyebrowHtml => Blocks.TryGetValue(ContentBlockSlugs.HomeHeroEyebrow, out var v) ? v : null;
@@ -30,7 +33,7 @@ public class IndexModel : PageModel
     public async Task OnGetAsync(CancellationToken cancellationToken = default)
     {
         FeaturedListings = await _db.PropertyListings.AsNoTracking()
-            .Where(p => p.IsPublished && p.Slug != null && p.Slug != "")
+            .Where(p => p.IsPublished && p.ApprovalStatus == ListingApprovalStatus.Approved && p.Slug != null && p.Slug != "")
             .OrderByDescending(p => p.UpdatedAt ?? p.CreatedAt)
             .Take(3)
             .ToListAsync(cancellationToken);
@@ -40,10 +43,17 @@ public class IndexModel : PageModel
             .OrderBy(t => t.SortOrder).ThenByDescending(t => t.CreatedAt)
             .ToListAsync(cancellationToken);
 
+        Stats = await _stats.GetAsync(cancellationToken);
+
         Blocks = await _content.GetPublishedBodiesAsync(
         [
             ContentBlockSlugs.HomeHeroEyebrow, ContentBlockSlugs.HomeHeroSubtitle,
-            ContentBlockSlugs.HomeHeroHeadline,
+            ContentBlockSlugs.HomeHeroHeadline, ContentBlockSlugs.HomeHeroTitle,
+            ContentBlockSlugs.HomeHeroPropertiesLink,
+            ContentBlockSlugs.HomeServiceCardMaintLead,
+            ContentBlockSlugs.HomeServiceCardAmcLead,
+            ContentBlockSlugs.HomeServiceCardContrLead,
+            ContentBlockSlugs.HomeServiceCardFmLead,
             ContentBlockSlugs.AboutStripLead,
             ContentBlockSlugs.HomeAboutTag, ContentBlockSlugs.HomeAboutTitle,
             ContentBlockSlugs.HomeAboutCards,

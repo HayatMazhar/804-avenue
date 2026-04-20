@@ -1,16 +1,106 @@
 @page "{id:int}"
 @model Avenue804.Web.Areas.Admin.Pages.Developers.EditModel
-@{ ViewData["Title"] = "Edit Developer"; }
-<p class="admin-back"><a asp-page="Index">← Developers</a></p>
-<form method="post" class="admin-form">
-  <div class="row"><label asp-for="F.Name">Developer name *</label><input asp-for="F.Name" /></div>
-  <div class="row admin-form-row-2">
-    <div><label asp-for="F.Headquarters">Headquarters</label><input asp-for="F.Headquarters" /></div>
-    <div><label asp-for="F.EstablishedYear">Established year</label><input asp-for="F.EstablishedYear" type="number" /></div>
-  </div>
-  <div class="row"><label asp-for="F.LogoUrl">Logo URL</label><input asp-for="F.LogoUrl" type="url" /></div>
-  <div class="row"><label asp-for="F.WebsiteUrl">Website URL</label><input asp-for="F.WebsiteUrl" type="url" /></div>
-  <div class="row"><label asp-for="F.Description">About</label><textarea asp-for="F.Description" rows="4"></textarea></div>
-  <div class="row chk"><input asp-for="F.IsActive" /><label asp-for="F.IsActive" class="admin-label-inline">Active</label></div>
-  <button type="submit" class="btn-primary"><span>Save</span></button>
-</form>
+@{
+    ViewData["Title"] = "Edit developer";
+    ViewData["AdminSection"] = "developers";
+}
+
+<div class="admin-back"><a asp-page="Index">← Developers</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">@(string.IsNullOrWhiteSpace(Model.F.Name) ? "Edit developer" : Model.F.Name)</h1>
+      <p class="as-form-page__sub">Update the developer profile shown on listings linked to this brand.</p>
+    </div>
+    <div class="as-form-page__pill" style="background:@(Model.F.IsActive ? "var(--as-accent-08)" : "var(--as-soft)");border-color:@(Model.F.IsActive ? "var(--as-accent-50,rgba(245,158,11,.4))" : "var(--as-border)");color:@(Model.F.IsActive ? "var(--as-accent)" : "var(--as-mute)");">
+      @(Model.F.IsActive ? "Active" : "Inactive")
+    </div>
+  </header>
+
+  <form method="post">
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Brand basics</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="F.Name">Developer name <span class="req">*</span></label>
+          <input asp-for="F.Name" />
+        </div>
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.Headquarters">Headquarters</label>
+            <input asp-for="F.Headquarters" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.EstablishedYear">Established year</label>
+            <input asp-for="F.EstablishedYear" type="number" />
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.Description">About</label>
+          <textarea asp-for="F.Description" rows="4"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Branding &amp; web</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="F.LogoUrl">Logo URL</label>
+          <input asp-for="F.LogoUrl" type="url" placeholder="https://…/logo.png" />
+        </div>
+        <div class="as-field">
+          <label asp-for="F.WebsiteUrl">Website URL</label>
+          <input asp-for="F.WebsiteUrl" type="url" placeholder="https://developer.com" />
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Visibility</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <label class="as-toggle">
+          <input asp-for="F.IsActive" />
+          <span class="as-toggle__switch"></span>
+          <span class="as-toggle__text">
+            <span class="as-toggle__title">Active</span>
+            <span class="as-toggle__sub">Inactive developers are hidden from listing dropdowns and the public Developers page.</span>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info"><span class="dot" style="background:@(Model.F.IsActive ? "var(--as-success)" : "var(--as-mute)");"></span>@(Model.F.IsActive ? "Visible to listings &amp; public" : "Hidden")</div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Save changes
+        </button>
+      </div>
+    </footer>
+  </form>
+</div>

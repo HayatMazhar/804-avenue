@@ -7,12 +7,12 @@
   <div class="container">
     <div class="footer-top">
       <div class="footer-brand">
-        <a asp-page="/Index" class="nav-logo">
-          <svg class="nav-logo-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
-          <div class="nav-logo-text">
-            <span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span>
-            <span class="nav-logo-sub">@site?.NavTagline</span>
-          </div>
+        <a asp-page="/Index" class="footer-logo" aria-label="804 Avenue — Properties &amp; Contracting">
+          <img src="~/assets/img/brand/logo-804avenue.png"
+               alt="804 Avenue — Properties &amp; Contracting"
+               class="footer-logo-img"
+               width="200" height="64"
+               loading="lazy" decoding="async" />
         </a>
         <p class="footer-tagline">@site?.FooterTagline</p>
         <div class="footer-socials">
@@ -37,14 +37,14 @@
           <li><a asp-page="/Contracting">Contracting</a></li>
           <li><a asp-page="/Maintenance">Maintenance</a></li>
           <li><a asp-page="/FacilityManagement">Facility Management</a></li>
-          <li><a asp-page="/Projects">Our Projects</a></li>
+          <li><a asp-page="/Projects/Index">Our Projects</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Properties</h4>
         <ul>
-          <li><a asp-page="/Properties" asp-route-offer="sale">Buy</a></li>
-          <li><a asp-page="/Properties" asp-route-offer="rent">Rent</a></li>
+          <li><a asp-page="/Properties/Index" asp-route-offer="sale">Buy</a></li>
+          <li><a asp-page="/Properties/Index" asp-route-offer="rent">Rent</a></li>
           <li><a asp-page="/AreaGuides/Index">Area Guides</a></li>
         </ul>
       </div>

@@ -2,36 +2,103 @@
 @model Avenue804.Web.Areas.Admin.Pages.Projects.CreateModel
 @{
     ViewData["Title"] = "New project";
+    ViewData["AdminSection"] = "projects";
 }
-<p class="admin-back"><a asp-page="Index">← Projects</a></p>
-<form method="post" class="admin-form">
-  <div class="row">
-    <label asp-for="Form.Title"></label>
-    <input asp-for="Form.Title" />
-    <span asp-validation-for="Form.Title" class="muted"></span>
-  </div>
-  <div class="row">
-    <label asp-for="Form.Slug">Slug (optional)</label>
-    <input asp-for="Form.Slug" placeholder="auto from title" />
-  </div>
-  <div class="row">
-    <label asp-for="Form.Summary"></label>
-    <textarea asp-for="Form.Summary" class="admin-textarea-short"></textarea>
-  </div>
-  <div class="row">
-    <label asp-for="Form.Description"></label>
-    <textarea asp-for="Form.Description"></textarea>
-  </div>
-  <div class="row">
-    <label asp-for="Form.CoverImageUrl"></label>
-    <input asp-for="Form.CoverImageUrl" />
-  </div>
-  <div class="row chk">
-    <input asp-for="Form.IsPublished" />
-    <label asp-for="Form.IsPublished" class="admin-label-inline">Published</label>
-  </div>
-  <button type="submit" class="btn-primary"><span>Create</span></button>
-</form>
-@section Scripts {
-  <partial name="_ValidationScriptsPartial" />
-}
+
+<div class="admin-back"><a asp-page="Index">← Projects</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">New project</h1>
+      <p class="as-form-page__sub">Add a project profile — you can add progress updates from the Project Progress section.</p>
+    </div>
+  </header>
+
+  <form method="post">
+    <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Basics</h2>
+          <p class="as-section__sub">Title, slug and short summary.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.Title">Title <span class="req">*</span></label>
+          <input asp-for="Form.Title" />
+          <span asp-validation-for="Form.Title" class="field-validation-error"></span>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.Slug">URL slug</label>
+          <input asp-for="Form.Slug" placeholder="auto from title if blank" />
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.Summary">Short summary</label>
+          <textarea asp-for="Form.Summary" rows="2"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Description &amp; cover</h2>
+          <p class="as-section__sub">Long description and the hero photo.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.Description">Description</label>
+          <textarea asp-for="Form.Description" rows="5"></textarea>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.CoverImageUrl">Cover image URL</label>
+          <input asp-for="Form.CoverImageUrl" placeholder="https://…/cover.jpg" />
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Visibility</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <label class="as-toggle">
+          <input asp-for="Form.IsPublished" />
+          <span class="as-toggle__switch"></span>
+          <span class="as-toggle__text">
+            <span class="as-toggle__title">Publish immediately</span>
+            <span class="as-toggle__sub">Off by default — save as draft and publish from the editor when ready.</span>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info"><span class="dot" style="background:var(--as-mute);"></span>Saving creates a draft project.</div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create project
+        </button>
+      </div>
+    </footer>
+  </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

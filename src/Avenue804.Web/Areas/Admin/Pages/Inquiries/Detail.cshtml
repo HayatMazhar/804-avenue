@@ -1,31 +1,85 @@
 @page "{id:int}"
 @model Avenue804.Web.Areas.Admin.Pages.Inquiries.DetailModel
+@using Avenue804.Web.Domain
 @{
     ViewData["Title"] = "Inquiry";
+    ViewData["AdminSection"] = "inquiries";
     var row = Model.Row!;
+    var initial = string.IsNullOrWhiteSpace(row.Name) ? "?" : row.Name.Trim()[0].ToString().ToUpperInvariant();
+    var statusBadge = row.Status switch
+    {
+        InquiryStatus.New => ("badge-new", "New"),
+        InquiryStatus.InProgress => ("badge-progress", "In progress"),
+        _ => ("badge-closed", "Closed")
+    };
 }
-<p class="admin-back"><a asp-page="Index">← Inquiries</a></p>
-<div class="detail-block">
-  <h3>@row.Subject</h3>
-  <dl class="detail-dl">
-    <dt>From</dt>
-    <dd>@row.Name &lt;@row.Email&gt;</dd>
-    <dt>Phone</dt>
-    <dd>@(string.IsNullOrWhiteSpace(row.Phone) ? "—" : row.Phone)</dd>
-    <dt>Topic</dt>
-    <dd>@(row.TopicLookup?.DisplayName ?? "—")</dd>
-    <dt>Received</dt>
-    <dd>@row.CreatedAt.LocalDateTime.ToString("f")</dd>
-  </dl>
-</div>
-<div class="detail-block">
-  <h3>Message</h3>
-  <p>@row.Message</p>
-</div>
-<form method="post" class="admin-form admin-form--narrow">
-  <div class="row">
-    <label asp-for="Status">Status</label>
-    <select asp-for="Status" asp-items="Html.GetEnumSelectList<InquiryStatus>()"></select>
+
+<div class="admin-back"><a asp-page="Index">← Inquiries</a></div>
+
+<div class="as-form-page">
+  <div class="as-detail-hero">
+    <div class="as-detail-hero__main">
+      <div class="as-detail-hero__avatar">@initial</div>
+      <div>
+        <h1 class="as-detail-hero__title">@row.Subject</h1>
+        <p class="as-detail-hero__sub">
+          <strong>@row.Name</strong> &lt;<a href="mailto:@row.Email" class="link-accent">@row.Email</a>&gt;
+          @if (!string.IsNullOrWhiteSpace(row.Phone)) { <span> · </span> <a href="tel:@row.Phone" class="link-accent">@row.Phone</a> }
+          <span> · </span> @row.CreatedAt.LocalDateTime.ToString("dd MMM yyyy · HH:mm")
+        </p>
+      </div>
+    </div>
+    <div class="as-detail-hero__actions">
+      <span class="badge @statusBadge.Item1">@statusBadge.Item2</span>
+      <a class="as-btn as-btn--primary" href="mailto:@row.Email?subject=Re: @row.Subject">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Reply
+      </a>
+    </div>
   </div>
-  <button type="submit" class="btn-primary"><span>Save status</span></button>
-</form>
+
+  <section class="as-section">
+    <header class="as-section__head">
+      <div class="as-section__icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+      </div>
+      <div class="as-section__title-wrap">
+        <h2 class="as-section__title">Message</h2>
+        <p class="as-section__sub">Topic: @(row.TopicLookup?.DisplayName ?? "—")</p>
+      </div>
+    </header>
+    <div class="as-section__body">
+      <p style="margin:0;font-size:.95rem;line-height:1.65;color:var(--as-ink);white-space:pre-wrap;">@row.Message</p>
+    </div>
+  </section>
+
+  <form method="post">
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Update status</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field" style="max-width:280px;">
+          <label asp-for="Status">Status</label>
+          <select asp-for="Status" asp-items="Html.GetEnumSelectList<InquiryStatus>()"></select>
+        </div>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info"><span class="dot" style="background:var(--as-accent);"></span>Updates the inquiry list immediately.</div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Back to list</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Save status
+        </button>
+      </div>
+    </footer>
+  </form>
+</div>
