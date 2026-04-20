@@ -3,10 +3,10 @@
 @{
     ViewData["Title"] = "Add site setting";
 }
-<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Site settings</a></p>
-<p class="muted" style="margin-bottom:16px;line-height:1.6">Use a key that matches a property under <code>Site</code> in appsettings (e.g. <code>PhoneDisplay</code>) to override public branding. You can also enter a custom key for future use.</p>
+<p class="admin-back"><a asp-page="Index">← Site settings</a></p>
+<p class="muted admin-detail-lead">Use a key that matches a property under <code>Site</code> in appsettings (e.g. <code>PhoneDisplay</code>) to override public branding. You can also enter a custom key for future use.</p>
 <form method="post" class="admin-form">
-  <div asp-validation-summary="ModelOnly" class="muted" style="color:var(--danger)"></div>
+  <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
   <div class="row">
     <label asp-for="Form.Key"></label>
     <input asp-for="Form.Key" list="site-setting-key-suggestions" maxlength="120" required autocomplete="off" placeholder="e.g. PhoneDisplay" />

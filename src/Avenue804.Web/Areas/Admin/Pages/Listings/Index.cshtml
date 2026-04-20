@@ -2,15 +2,34 @@
 @model Avenue804.Web.Areas.Admin.Pages.Listings.IndexModel
 @{
     ViewData["Title"] = "Properties";
+    ViewData["AdminSection"] = "listings";
 }
-<p style="margin-bottom:20px"><a class="btn-primary" asp-page="Create" style="text-decoration:none;display:inline-flex"><span>New listing</span></a></p>
+<div class="admin-toolbar">
+  <a class="btn-primary" asp-page="Create"><span>+ New listing</span></a>
+  <a asp-page="Review" class="btn-outline admin-btn-sm @(Model.PendingReviewCount > 0 ? "btn-outline--pending" : "")">
+    <i class="bi bi-hourglass-split me-1" aria-hidden="true"></i>Pending Review @(Model.PendingReviewCount > 0 ? $"({Model.PendingReviewCount})" : "")
+  </a>
+  <a asp-page="BulkImport" class="btn-outline admin-btn-sm"><i class="bi bi-upload me-1" aria-hidden="true"></i>Bulk Import</a>
+  <a asp-area="Admin" asp-page="/Listings/Index" asp-route-export="csv" class="btn-outline admin-btn-sm"><i class="bi bi-download me-1" aria-hidden="true"></i>Export CSV</a>
+  <form method="post" asp-page-handler="BulkPublish" id="bulkForm" class="d-inline">
+    <input type="hidden" name="publish" value="true" />
+    <button type="button" onclick="submitBulk(true)" class="btn-outline admin-btn-sm btn-outline--success">Publish selected</button>
+    <button type="button" onclick="submitBulk(false)" class="btn-outline admin-btn-sm btn-outline--warn-action">Unpublish selected</button>
+  </form>
+  <span class="muted small d-none" id="bulkCount"></span>
+</div>
+
 <div class="admin-table-wrap">
   <table class="admin-table">
     <thead>
       <tr>
+        <th><input type="checkbox" id="selectAll" class="admin-checkbox-accent" title="Select all" /></th>
         <th>Title</th>
         <th>Offer</th>
+        <th>Price</th>
         <th>Location</th>
+        <th>Views</th>
+        <th>Off-plan</th>
         <th>Published</th>
       </tr>
     </thead>
@@ -18,16 +37,48 @@
     @foreach (var row in Model.Items)
     {
       <tr>
+        <td><input type="checkbox" class="row-check admin-checkbox-accent" value="@row.Id" onchange="updateBulkCount()" /></td>
         <td><a asp-page="Edit" asp-route-id="@row.Id">@row.Title</a></td>
         <td>@row.OfferType</td>
+        <td class="muted">@(row.Price.HasValue ? "AED " + row.Price.Value.ToString("N0") : "—")</td>
         <td class="muted">@(row.Location ?? "—")</td>
-        <td>@(row.IsPublished ? "Yes" : "No")</td>
+        <td>@row.ViewCount.ToString("N0")</td>
+        <td>@(row.IsOffPlan ? "✓" : "—")</td>
+        <td><span class="badge @(row.IsPublished ? "badge-closed" : "badge-new")">@(row.IsPublished ? "Live" : "Draft")</span></td>
       </tr>
     }
     </tbody>
   </table>
 </div>
-@if (Model.Items.Count == 0)
-{
-  <p class="muted" style="margin-top:16px">No listings yet. Create and publish one to show it on the public <a asp-area="" asp-page="/Properties/Index" style="color:var(--accent)">Properties</a> page.</p>
+@if (Model.Items.Count == 0) {
+  <p class="muted admin-empty">No listings yet.</p>
+}
+
+@section Scripts {
+<script>
+document.getElementById('selectAll').addEventListener('change', function() {
+  document.querySelectorAll('.row-check').forEach(function(c) { c.checked = this.checked; }.bind(this));
+  updateBulkCount();
+});
+
+function updateBulkCount() {
+  var n = document.querySelectorAll('.row-check:checked').length;
+  var el = document.getElementById('bulkCount');
+  el.classList.toggle('d-none', n === 0);
+  el.textContent = n + ' selected';
+}
+
+function submitBulk(publish) {
+  var ids = Array.from(document.querySelectorAll('.row-check:checked')).map(c => c.value);
+  if (ids.length === 0) { alert('Select at least one listing.'); return; }
+  var form = document.getElementById('bulkForm');
+  ids.forEach(function(id) {
+    var inp = document.createElement('input');
+    inp.type = 'hidden'; inp.name = 'ids'; inp.value = id;
+    form.appendChild(inp);
+  });
+  form.querySelector('input[name=publish]').value = publish;
+  form.submit();
+}
+</script>
 }

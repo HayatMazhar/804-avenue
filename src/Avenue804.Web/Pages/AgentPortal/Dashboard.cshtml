@@ -1,0 +1,167 @@
+@page "/AgentPortal"
+@model Avenue804.Web.Pages.AgentPortal.AgentDashboardModel
+@using Avenue804.Web.Infrastructure
+@{
+    ViewData["Title"] = "Agent Dashboard";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["NavActive"] = "agent";
+    var A = Model.Agent!;
+}
+@section Styles {
+<link rel="stylesheet" href="~/css/service-pages.css" asp-append-version="true" />
+}
+
+<section class="page-hero">
+  <div class="container">
+    <h1 class="page-hero-title fade-up">@(A.Name) — <em>Agent Portal</em></h1>
+    <p class="page-hero-sub fade-up">Manage your listings, track leads, and monitor performance.</p>
+  </div>
+</section>
+
+<section class="section-pad" style="background:var(--bg-surface)">
+  <div class="container">
+
+    <!-- KPI strip -->
+    <div class="trends-kpi-grid fade-up" style="margin-bottom:32px">
+      <div class="trends-kpi"><div class="trends-kpi-label">Active listings</div><div class="trends-kpi-num">@Model.MyListings.Count</div></div>
+      <div class="trends-kpi"><div class="trends-kpi-label">Total listing views</div><div class="trends-kpi-num">@Model.TotalViews.ToString("N0")</div></div>
+      <div class="trends-kpi"><div class="trends-kpi-label">Saved by users</div><div class="trends-kpi-num">@Model.TotalSaves</div></div>
+      <div class="trends-kpi"><div class="trends-kpi-label">Open leads</div><div class="trends-kpi-num" style="color:var(--warning)">@Model.OpenLeads</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="dash-tabs fade-up">
+      <button class="dash-tab active" data-tab="listings">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
+        My Listings <span class="dash-badge">@Model.MyListings.Count</span>
+      </button>
+      <button class="dash-tab" data-tab="leads">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Leads <span class="dash-badge">@Model.Leads.Count</span>
+      </button>
+      <button class="dash-tab" data-tab="profile">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        My Profile
+      </button>
+    </div>
+
+    <!-- Listings panel -->
+    <div class="dash-panel" id="panel-listings">
+      @if (Model.MyListings.Count == 0)
+      {
+        <div class="dash-empty">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
+          <p>No listings assigned to you yet. Contact admin to link listings to your profile.</p>
+        </div>
+      }
+      else
+      {
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>Title</th><th>Price</th><th>Views</th><th>Saves</th><th>Status</th></tr></thead>
+            <tbody>
+              @foreach (var p in Model.MyListings)
+              {
+                <tr>
+                  <td><a asp-page="/Properties/Detail" asp-route-slug="@p.Slug" target="_blank" style="color:var(--accent);font-weight:600">@p.Title</a></td>
+                  <td>@(p.Price.HasValue ? "AED " + p.Price.Value.ToString("N0") : "—")</td>
+                  <td>@p.ViewCount.ToString("N0")</td>
+                  <td>@(Model.SavesPerListing.TryGetValue(p.Id, out var s) ? s.ToString() : "0")</td>
+                  <td><span class="badge @(p.IsPublished ? "badge-closed" : "badge-new")">@(p.IsPublished ? "Live" : "Draft")</span></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+    <!-- Leads panel -->
+    <div class="dash-panel" id="panel-leads" style="display:none">
+      <p class="muted" style="margin-bottom:16px">Inquiries for your listings — sorted by most recent. Update lead status to track follow-ups.</p>
+      @if (Model.Leads.Count == 0)
+      {
+        <div class="dash-empty">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <p>No leads yet. When users inquire about your listings, they'll appear here.</p>
+        </div>
+      }
+      else
+      {
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>Date</th><th>Name</th><th>Contact</th><th>Intent</th><th>Budget</th><th>Status</th><th>Notes</th></tr></thead>
+            <tbody>
+              @foreach (var lead in Model.Leads)
+              {
+                <tr>
+                  <td>@lead.CreatedAt.LocalDateTime.ToString("d MMM")</td>
+                  <td><strong>@lead.Name</strong></td>
+                  <td>
+                    <a href="tel:@lead.Phone" style="color:var(--accent)">@lead.Phone</a><br/>
+                    <a href="mailto:@lead.Email" style="color:var(--text-tertiary);font-size:.72rem">@lead.Email</a>
+                  </td>
+                  <td>@(lead.WantToLookup?.DisplayName ?? "—")</td>
+                  <td>@(lead.BudgetLookup?.DisplayName ?? "—")</td>
+                  <td>
+                    <form method="post" asp-page-handler="UpdateLead">
+                      <input type="hidden" name="leadId" value="@lead.Id" />
+                      <select name="status" onchange="this.form.submit()" style="padding:4px 8px;font-size:.7rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-primary)">
+                        @Html.Raw(string.Join("", Enum.GetValues(typeof(Avenue804.Web.Domain.InquiryStatus)).Cast<Avenue804.Web.Domain.InquiryStatus>().Select(s => $"<option value=\"{s}\"{(lead.Status == s ? " selected" : "")}>{s}</option>")))
+                      </select>
+                    </form>
+                  </td>
+                  <td>
+                    <form method="post" asp-page-handler="SaveNote" style="display:flex;gap:4px">
+                      <input type="hidden" name="leadId" value="@lead.Id" />
+                      <input type="text" name="note" value="@lead.AgentNote" placeholder="Add note…" style="padding:4px 8px;font-size:.7rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-primary);width:160px" />
+                      <button type="submit" style="padding:4px 8px;background:none;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:.65rem;cursor:pointer;color:var(--accent)">Save</button>
+                    </form>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+    <!-- Profile panel -->
+    <div class="dash-panel" id="panel-profile" style="display:none">
+      <div class="agent-profile-bar" style="margin-bottom:24px">
+        @if (!string.IsNullOrWhiteSpace(A.AvatarUrl))
+        { <img src="@A.AvatarUrl" alt="@A.Name" class="agent-logo" /> }
+        else
+        { <div class="agent-logo-text">@A.Name[0]</div> }
+        <div class="agent-info">
+          <div class="agent-name">@A.Name</div>
+          @if (!string.IsNullOrWhiteSpace(A.Title)) { <div class="agent-title">@A.Title</div> }
+        </div>
+        <a asp-page="/Account/Profile" class="btn-outline" style="padding:9px 18px;font-size:.7rem;margin-left:auto">Edit Profile</a>
+      </div>
+      <p class="section-sub">Your public agent profile: <a asp-page="/Agents/Profile" asp-route-id="@A.Id" style="color:var(--accent)">/Agents/@A.Id</a></p>
+      <div style="margin-top:16px;padding:16px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+        <div style="font-family:var(--font-nav);font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:12px">Your contact info (visible on listings)</div>
+        <div style="font-size:.85rem;color:var(--text-secondary);display:flex;flex-direction:column;gap:6px">
+          @if (!string.IsNullOrWhiteSpace(A.Phone)) { <span>📞 @A.Phone</span> }
+          @if (!string.IsNullOrWhiteSpace(A.Email)) { <span>✉️ @A.Email</span> }
+          @if (!string.IsNullOrWhiteSpace(A.WhatsAppNumber)) { <span>💬 WhatsApp @A.WhatsAppNumber</span> }
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+@section Scripts {
+<script>
+document.querySelectorAll('.dash-tab').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.dash-tab').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.dash-panel').forEach(function(p) { p.style.display = 'none'; });
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.getAttribute('data-tab')).style.display = '';
+  });
+});
+</script>
+}

@@ -6,20 +6,93 @@
 <div class="stat-grid">
   <div class="stat-card fade-up"><div class="n">@Model.NewPropertyListingInquiryCount</div><div class="l">New property inquiries</div></div>
   <div class="stat-card fade-up"><div class="n">@Model.PropertyListingInquiryCount</div><div class="l">Property inquiries total</div></div>
-  <div class="stat-card fade-up"><div class="n">@Model.NewInquiryCount</div><div class="l">New inquiries</div></div>
-  <div class="stat-card fade-up"><div class="n">@Model.InquiryCount</div><div class="l">Inquiries total</div></div>
-  <div class="stat-card fade-up"><div class="n">@Model.OwnerListingCount</div><div class="l">Listing requests</div></div>
+  <div class="stat-card fade-up"><div class="n">@Model.NewInquiryCount</div><div class="l">New contact inquiries</div></div>
   <div class="stat-card fade-up"><div class="n">@Model.PublishedListings</div><div class="l">Published listings</div></div>
-  <div class="stat-card fade-up"><div class="n">@Model.PublishedProjects</div><div class="l">Published projects</div></div>
+  <div class="stat-card fade-up"><div class="n">@Model.PublicUserCount</div><div class="l">Registered users</div></div>
+  <div class="stat-card fade-up"><div class="n">@Model.TotalViews.ToString("N0")</div><div class="l">Total listing views</div></div>
+  <div class="stat-card fade-up"><div class="n">@Model.SavedPropertyCount</div><div class="l">Saved properties</div></div>
+  @if (Model.PendingRatingCount > 0)
+  {
+    <div class="stat-card stat-card--warning fade-up"><div class="n">@Model.PendingRatingCount</div><div class="l">Reviews awaiting approval</div></div>
+  }
+  @if (Model.OpenEmergencyTickets > 0)
+  {
+    <div class="stat-card stat-card--danger fade-up"><div class="n"><i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i>@Model.OpenEmergencyTickets</div><div class="l">Open emergency tickets</div></div>
+  }
+  <div class="stat-card fade-up"><div class="n">@Model.NewServiceQuotes</div><div class="l">New contracting quotes</div></div>
+  <div class="stat-card fade-up"><div class="n">@Model.NewAmcRequests</div><div class="l">New AMC requests</div></div>
 </div>
-<div style="margin-top:36px;display:flex;flex-wrap:wrap;gap:12px">
-  <a class="btn-primary" asp-area="Admin" asp-page="/PropertyInquiries/Index" style="text-decoration:none"><span>Property inquiries</span></a>
-  <a class="btn-outline" asp-area="Admin" asp-page="/Inquiries/Index" style="text-decoration:none">Contact inquiries</a>
-  <a class="btn-outline" asp-area="Admin" asp-page="/SiteSettings/Index" style="text-decoration:none">Site settings</a>
-  <a class="btn-outline" asp-area="Admin" asp-page="/Lookups/Index" style="text-decoration:none">Lookups</a>
-  <a class="btn-outline" asp-area="Admin" asp-page="/ContentBlocks/Index" style="text-decoration:none">Content</a>
-  <a class="btn-outline" asp-area="Admin" asp-page="/OwnerRequests/Index" style="text-decoration:none">Listing requests</a>
-  <a class="btn-outline" asp-area="Admin" asp-page="/Listings/Index" style="text-decoration:none">Properties</a>
-  <a class="btn-outline" asp-area="Admin" asp-page="/Projects/Index" style="text-decoration:none">Projects</a>
+
+<!-- Inquiry trend chart (last 7 days) -->
+<div class="admin-panel admin-panel--chart">
+  <div class="admin-panel__head">Property Inquiries — Last 7 Days</div>
+  <canvas id="inquiryChart" height="80"></canvas>
 </div>
-<p class="muted" style="margin-top:28px;line-height:1.7">The <strong>Property inquiry</strong> modal saves to <strong>Property inquiries</strong>. The contact page form and legacy flow save to <strong>Contact inquiries</strong>. <strong>List your property</strong> saves to <strong>Listing requests</strong>.</p>
+
+<!-- Top listings by views -->
+@if (Model.TopListings.Count > 0)
+{
+  <div class="admin-panel admin-panel--flush admin-panel--toplist">
+    <div class="admin-panel__head">Top Properties by Views</div>
+    <table class="admin-table">
+      <thead><tr><th>#</th><th>Property</th><th>Type</th><th>Views</th><th>Saved</th></tr></thead>
+      <tbody>
+        @for (int i = 0; i < Model.TopListings.Count; i++)
+        {
+          var p = Model.TopListings[i];
+          <tr>
+            <td><strong class="admin-rank-accent">@(i + 1)</strong></td>
+            <td><a asp-area="" asp-page="/Properties/Detail" asp-route-slug="@p.Slug">@p.Title</a></td>
+            <td>@(p.OfferType == Avenue804.Web.Domain.ListingOfferType.Sale ? "For sale" : "For rent")</td>
+            <td><strong>@p.ViewCount.ToString("N0")</strong></td>
+            <td>—</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
+<div class="admin-dash-actions">
+  <a class="btn-primary" asp-area="Admin" asp-page="/PropertyInquiries/Index"><span>Property inquiries</span></a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/Inquiries/Index">Contact inquiries</a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/Listings/Index">Properties</a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/Agents/Index">Agents</a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/Users/Index">Users</a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/Ratings/Index">Reviews</a>
+  <a class="btn-outline" asp-area="Admin" asp-page="/Testimonials/Index">Testimonials</a>
+  <a class="btn-outline admin-btn-accent" asp-area="Admin" asp-page="/Features/Index"><i class="bi bi-sliders me-1" aria-hidden="true"></i>Features</a>
+</div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function() {
+  var data = @Html.Raw(Model.InquiryChartJson);
+  var ctx = document.getElementById('inquiryChart');
+  if (!ctx || !data) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.labels,
+      datasets: [{
+        label: 'Inquiries',
+        data: data.data,
+        backgroundColor: 'rgba(245,158,11,0.25)',
+        borderColor: 'rgba(245,158,11,0.8)',
+        borderWidth: 2,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { stepSize: 1, color: '#64748B' }, grid: { color: 'rgba(15,23,42,.06)' } },
+        x: { ticks: { color: '#64748B' }, grid: { display: false } }
+      }
+    }
+  });
+})();
+</script>
+}

@@ -1,0 +1,9 @@
+@page "/Account/Logout"
+@model Avenue804.Web.Pages.Account.LogoutModel
+@{
+    ViewData["Title"] = "Signed out";
+}
+<div class="auth-card" style="text-align:center;padding:48px 24px">
+  <p style="color:var(--text-secondary)">You have been signed out.</p>
+  <a asp-page="/Index" class="btn-primary" style="display:inline-flex;margin-top:20px"><span>Back to home</span></a>
+</div>

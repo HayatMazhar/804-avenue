@@ -1,0 +1,58 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Features.IndexModel
+@using Avenue804.Web.Services
+@{
+    ViewData["Title"] = "Feature Flags";
+    ViewData["AdminSection"] = "features";
+}
+<p class="muted admin-lead-muted">Enable or disable paid API features without redeployment. Changes take effect within 5 minutes (cache TTL). Disabling a feature hides its UI and skips API calls — you will not be billed for disabled features.</p>
+
+<div class="admin-features-grid">
+  @foreach (var (flag, label, description, defaultOn) in Avenue804.Web.Services.FeatureFlags.All)
+  {
+    var isOn = Model.Flags.TryGetValue(flag, out var v) && v;
+
+    <div class="admin-feature-card @(isOn ? "admin-feature-card--on" : "")">
+      <div class="admin-feature-card-head">
+        <div>
+          <div class="admin-feature-label">@label</div>
+          <div class="admin-feature-desc">@description</div>
+        </div>
+        <form method="post" class="form-flex-shrink-0">
+          <input type="hidden" name="flag" value="@flag" />
+          <input type="hidden" name="enable" value="@(!isOn)" />
+          <button type="submit" class="admin-feature-toggle @(isOn ? "admin-feature-toggle--on" : "admin-feature-toggle--off")" aria-pressed="@isOn">
+            <span class="admin-feature-toggle-knob"></span>
+          </button>
+        </form>
+      </div>
+      <div class="admin-feature-badge-row">
+        @if (flag is FeatureFlags.GoogleSignIn or FeatureFlags.FacebookSignIn or FeatureFlags.AppleSignIn)
+        {
+          <span class="admin-feature-badge admin-feature-badge--orange">OAuth API Key Required</span>
+        }
+        @if (flag is FeatureFlags.PhoneOtp)
+        {
+          <span class="admin-feature-badge admin-feature-badge--orange">Twilio — ~$0.05 / SMS</span>
+        }
+        @if (flag is FeatureFlags.EmailNotifications or FeatureFlags.UserEmailConfirm)
+        {
+          <span class="admin-feature-badge admin-feature-badge--orange">SMTP Billing</span>
+        }
+        @if (flag is FeatureFlags.GoogleMaps)
+        {
+          <span class="admin-feature-badge admin-feature-badge--orange">Google Maps API Key + Billing</span>
+        }
+        @if (flag is FeatureFlags.WhatsAppFloat or FeatureFlags.MortgageCalc or FeatureFlags.PropertyRatings or FeatureFlags.PropertyCompare or FeatureFlags.CurrencyConverter)
+        {
+          <span class="admin-feature-badge admin-feature-badge--green">Free — No API Key</span>
+        }
+        <span class="admin-feature-badge @(isOn ? "admin-feature-badge--green" : "admin-feature-badge--grey")">@(isOn ? "Enabled" : "Disabled")</span>
+        @if (defaultOn != isOn)
+        {
+          <span class="admin-feature-badge admin-feature-badge--grey">Default: @(defaultOn ? "On" : "Off")</span>
+        }
+      </div>
+    </div>
+  }
+</div>

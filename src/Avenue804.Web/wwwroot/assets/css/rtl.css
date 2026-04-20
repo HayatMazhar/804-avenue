@@ -1,0 +1,57 @@
+/* ═══════════════════════════════════════════════════════
+   804 AVENUE — Arabic RTL layout layer
+   Applied when <html dir="rtl" lang="ar" class="rtl"> is set
+   ═══════════════════════════════════════════════════════ */
+
+[dir="rtl"] body { font-family: 'Cairo', 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif; }
+
+/* Reverse flex directions */
+[dir="rtl"] .nav-inner,
+[dir="rtl"] .nav-links,
+[dir="rtl"] .nav-right,
+[dir="rtl"] .hero-btns,
+[dir="rtl"] .share-bar,
+[dir="rtl"] .agent-actions,
+[dir="rtl"] .emergency-inner,
+[dir="rtl"] .emergency-actions { flex-direction: row-reverse; }
+
+/* Text alignment */
+[dir="rtl"] .section-title,
+[dir="rtl"] .section-sub,
+[dir="rtl"] .page-hero-title,
+[dir="rtl"] .page-hero-sub,
+[dir="rtl"] .prop-name,
+[dir="rtl"] .prop-loc { text-align: right; }
+
+/* Margin/padding flips */
+[dir="rtl"] .section-tag::before { margin-right: 0; margin-left: 14px; }
+[dir="rtl"] .breadcrumb { flex-direction: row-reverse; }
+[dir="rtl"] .modal-head { flex-direction: row-reverse; }
+[dir="rtl"] .modal-field label { text-align: right; }
+[dir="rtl"] .modal-body { direction: rtl; }
+[dir="rtl"] .admin-form label { text-align: right; }
+
+/* Card text */
+[dir="rtl"] .prop-card-body,
+[dir="rtl"] .pkg-card,
+[dir="rtl"] .agent-info,
+[dir="rtl"] .cert-card { text-align: right; }
+
+/* Footer */
+[dir="rtl"] .footer-top { direction: rtl; }
+[dir="rtl"] .footer-col { text-align: right; }
+
+/* Forms */
+[dir="rtl"] select:not([multiple]) {
+  background-position: left 0.75rem center, center;
+  padding-left: 2.75rem;
+  padding-right: 13px;
+}
+
+/* Nav dropdown */
+[dir="rtl"] .nav-dropdown-menu { left: auto; right: 50%; transform: translateX(50%); }
+[dir="rtl"] .nav-dropdown-menu a { text-align: right; }
+
+/* Dashboard tabs */
+[dir="rtl"] .dash-tabs,
+[dir="rtl"] .auth-tabs { flex-direction: row-reverse; }

@@ -1,59 +1,300 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @using Avenue804.Web.Infrastructure
+@using Avenue804.Web.Data
+@inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> UserManager
 @{
     var a = ViewData["NavActive"] as string ?? "";
-    string Active(string key) => string.Equals(a, key, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    var navKey = a.Trim();
+    string Active(string key) => string.Equals(navKey, key, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    bool IsPropertiesNav()
+    {
+        if (string.IsNullOrEmpty(navKey)) return false;
+        return navKey.ToUpperInvariant() switch
+        {
+            "PROPERTIES" or "COMPARE" or "MARKET" or "VALUATION" or "MORTGAGE" or "AGENTS" or "DEVELOPERS" or "AREAGUIDES" => true,
+            _ => false,
+        };
+    }
+    bool IsServicesNav()
+    {
+        if (string.IsNullOrEmpty(navKey)) return false;
+        return navKey.ToUpperInvariant() switch
+        {
+            "CONTRACTING" or "MAINTENANCE" or "FACILITY" or "PROJECTS" or "SERVICES" => true,
+            _ => false,
+        };
+    }
     var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
+    var ctx = HttpContextAccessor.HttpContext;
+    var isAuth = ctx?.User?.Identity?.IsAuthenticated ?? false;
+    var bodyClass = ViewData["BodyClass"] as string ?? "";
+    ApplicationUser? currentUser = null;
+    if (isAuth) { currentUser = await UserManager.GetUserAsync(ctx!.User); }
+    var initials = currentUser?.DisplayName?.Length > 0
+        ? currentUser.DisplayName[0].ToString().ToUpperInvariant()
+        : currentUser?.Email?.Length > 0 ? currentUser.Email[0].ToString().ToUpperInvariant() : "U";
 }
-<nav class="navbar" id="navbar">
-  <div class="nav-inner">
-    <a asp-page="/Index" class="nav-logo">
-      <svg class="nav-logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
-      <div class="nav-logo-text">
-        <span class="nav-logo-main"><span class="logo-804">804 </span><span class="logo-avenue">AVENUE</span></span>
-        <span class="nav-logo-sub">@site?.NavTagline</span>
-      </div>
+<nav class="pf-nav" id="navbar">
+  <div class="pf-nav__inner container-fluid px-3 px-xl-5">
+
+    <!-- Brand -->
+    <a asp-page="/Index" class="pf-nav__brand">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+      <span class="pf-nav__brand-text">
+        <span class="pf-nav__brand-804">804</span><span class="pf-nav__brand-av"> AVENUE</span>
+        <span class="pf-nav__brand-sub">@site?.NavTagline</span>
+      </span>
     </a>
-    <ul class="nav-links">
-      <li><a asp-page="/Index" class="@Active("home")">Home</a></li>
-      <li class="nav-dropdown">
-        <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true" id="navServicesBtn">
+
+    <!-- Desktop nav links — Services ▾ | Properties ▾ | About | Contact -->
+    <ul class="pf-nav__links" id="mainNavLinks">
+
+      <!-- Services dropdown (core business — first) -->
+      <li class="pf-nav__item pf-nav__item--dd" id="ddServices">
+        <button class="pf-nav__link pf-nav__link--dd @(IsServicesNav() ? "active" : "")" type="button" aria-expanded="false" aria-haspopup="true">
           Services
-          <svg class="nav-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          <svg class="pf-nav__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
         </button>
-        <ul class="nav-dropdown-menu" id="navServicesMenu" role="menu" aria-labelledby="navServicesBtn">
-          <li role="none"><a role="menuitem" asp-page="/Properties" class="@Active("properties")">Properties</a></li>
-          <li role="none"><a role="menuitem" asp-page="/Contracting" class="@Active("contracting")">Contracting</a></li>
-          <li role="none"><a role="menuitem" asp-page="/Maintenance" class="@Active("maintenance")">Maintenance</a></li>
-          <li role="none"><a role="menuitem" asp-page="/FacilityManagement" class="@Active("facility")">Facility Management</a></li>
-        </ul>
+        <div class="pf-nav__dd-panel pf-nav__dd-panel--sm" role="menu">
+          <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/Contracting">
+            <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></span>
+            <span><strong>Contracting</strong><br><small>Civil, fit-out, renovation</small></span>
+          </a>
+          <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/Maintenance">
+            <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+            <span><strong>Maintenance</strong><br><small>MEP, preventive &amp; corrective</small></span>
+          </a>
+          <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/FacilityManagement">
+            <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></span>
+            <span><strong>Facility Management</strong><br><small>Building ops &amp; vendor control</small></span>
+          </a>
+          <div class="pf-nav__dd-divider"></div>
+          <a class="pf-nav__dd-link" asp-page="/Projects">Our Projects</a>
+        </div>
       </li>
-      <li><a asp-page="/About" class="@Active("about")">About Us</a></li>
-      <li><button type="button" class="nav-modal-link" data-modal-open="modal-list-property">List Your Property</button></li>
-      <li><button type="button" class="nav-modal-link" data-modal-open="modal-inquiry">Property inquiry</button></li>
-      <li><a asp-page="/Contact" class="@Active("contact")">Contact us</a></li>
+
+      <!-- Properties dropdown (secondary) -->
+      <li class="pf-nav__item pf-nav__item--dd" id="ddProperties">
+        <button class="pf-nav__link pf-nav__link--dd @(IsPropertiesNav() ? "active" : "")" type="button" aria-expanded="false" aria-haspopup="true">
+          Properties
+          <svg class="pf-nav__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="pf-nav__dd-panel pf-nav__dd-panel--sm" role="menu">
+          <a class="pf-nav__dd-link" asp-page="/Properties" asp-route-offer="sale">Buy Property</a>
+          <a class="pf-nav__dd-link" asp-page="/Properties" asp-route-offer="rent">Rent Property</a>
+          <div class="pf-nav__dd-divider"></div>
+          <a class="pf-nav__dd-link" asp-page="/AreaGuides/Index">Area Guides</a>
+        </div>
+      </li>
+
+      <!-- About -->
+      <li class="pf-nav__item">
+        <a class="pf-nav__link @Active("about")" asp-page="/About">About</a>
+      </li>
+
+      <!-- Contact -->
+      <li class="pf-nav__item">
+        <a class="pf-nav__link @Active("contact")" asp-page="/Contact">Contact</a>
+      </li>
+
     </ul>
-    <div class="nav-right">
-      <a href="@site?.TelHref" class="nav-phone">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-        @site?.PhoneDisplay
+
+    <!-- Right side actions -->
+    <div class="pf-nav__actions">
+
+      @if (!string.IsNullOrWhiteSpace(site?.PhoneDisplay))
+      {
+        <a href="@site?.TelHref" class="pf-nav__phone d-none d-xl-flex">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          @site?.PhoneDisplay
+        </a>
+      }
+
+      <a asp-page="/Contact" class="pf-nav__list-btn d-none d-lg-inline-flex">
+        Get a Quote
       </a>
+
+      @if (isAuth && currentUser != null)
+      {
+        <div class="pf-nav__avatar-wrap" id="navAvatarWrap">
+          <button class="pf-nav__avatar-btn" type="button" id="navAvatarBtn" aria-expanded="false">
+            @if (!string.IsNullOrWhiteSpace(currentUser.AvatarUrl))
+            {
+              <img src="@currentUser.AvatarUrl" alt="" class="pf-nav__avatar-img" />
+            }
+            else
+            {
+              <span class="pf-nav__avatar-initials">@initials</span>
+            }
+          </button>
+          <div class="pf-nav__user-panel" id="navUserPanel" hidden>
+            <div class="pf-nav__user-info">
+              <div class="pf-nav__user-name">@(currentUser.DisplayName ?? currentUser.Email)</div>
+              <div class="pf-nav__user-email">@currentUser.Email</div>
+            </div>
+            <div class="pf-nav__dd-divider"></div>
+            @{
+              Avenue804.Web.Domain.Agent? userAgent = null;
+              if (currentUser != null)
+              {
+                var agentDb = HttpContextAccessor.HttpContext?.RequestServices.GetRequiredService<Avenue804.Web.Data.ApplicationDbContext>();
+                userAgent = agentDb?.Agents.Find(agentDb.Agents.Where(x => x.UserId == currentUser.Id).Select(x => x.Id).FirstOrDefault());
+              }
+            }
+            @if (userAgent != null)
+            {
+              <a class="pf-nav__dd-link" asp-page="/AgentPortal/Dashboard">Agent Portal</a>
+            }
+            <a class="pf-nav__dd-link" asp-page="/Account/Dashboard">Dashboard</a>
+            <a class="pf-nav__dd-link" asp-page="/Account/Profile">My Profile</a>
+            <div class="pf-nav__dd-divider"></div>
+            <form method="post" asp-page="/Account/Logout" class="px-3 pb-2">
+              <button type="submit" class="pf-nav__signout-btn">Sign Out</button>
+            </form>
+          </div>
+        </div>
+      }
+      else
+      {
+        <a asp-page="/Account/Login" class="pf-nav__signin-btn">Sign In</a>
+      }
+
+      <button type="button" id="langToggleBtn" class="pf-nav__lang-btn">AR</button>
+
+      <!-- Mobile hamburger -->
+      <button class="pf-nav__hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+
+  <!-- Mobile drawer -->
+  <div class="pf-nav__mobile" id="navMobileDrawer" hidden>
+    <div class="pf-nav__mobile-inner">
+      <div class="pf-nav__mobile-group">
+        <div class="pf-nav__mobile-label">Services</div>
+        <a class="pf-nav__mobile-link" asp-page="/Contracting">Contracting</a>
+        <a class="pf-nav__mobile-link" asp-page="/Maintenance">Maintenance</a>
+        <a class="pf-nav__mobile-link" asp-page="/FacilityManagement">Facility Management</a>
+        <a class="pf-nav__mobile-link" asp-page="/Projects">Our Projects</a>
+      </div>
+      <div class="pf-nav__mobile-group">
+        <div class="pf-nav__mobile-label">Properties</div>
+        <a class="pf-nav__mobile-link" asp-page="/Properties" asp-route-offer="sale">Buy</a>
+        <a class="pf-nav__mobile-link" asp-page="/Properties" asp-route-offer="rent">Rent</a>
+        <a class="pf-nav__mobile-link" asp-page="/AreaGuides/Index">Area Guides</a>
+      </div>
+      <div class="pf-nav__mobile-group">
+        <a class="pf-nav__mobile-link" asp-page="/About">About</a>
+        <a class="pf-nav__mobile-link" asp-page="/Contact">Contact</a>
+      </div>
+      <div class="pf-nav__mobile-actions">
+        <a asp-page="/Contact" class="pf-nav__list-btn w-100 justify-content-center">
+          Get a Quote
+        </a>
+        @if (!isAuth)
+        {
+          <a asp-page="/Account/Login" class="pf-nav__signin-btn w-100 text-center">Sign In</a>
+        }
+      </div>
+    </div>
   </div>
 </nav>
-<div class="mobile-nav" id="mobileNav">
-  <a asp-page="/Index" class="@Active("home")" onclick="closeMobile()">Home</a>
-  <span class="mobile-nav-label">Services</span>
-  <div class="mobile-nav-sub">
-    <a asp-page="/Properties" class="@Active("properties")" onclick="closeMobile()">Properties</a>
-    <a asp-page="/Contracting" class="@Active("contracting")" onclick="closeMobile()">Contracting</a>
-    <a asp-page="/Maintenance" class="@Active("maintenance")" onclick="closeMobile()">Maintenance</a>
-    <a asp-page="/FacilityManagement" class="@Active("facility")" onclick="closeMobile()">Facility Management</a>
-  </div>
-  <a asp-page="/About" class="@Active("about")" onclick="closeMobile()">About Us</a>
-  <button type="button" class="nav-modal-link" data-modal-open="modal-list-property" onclick="closeMobile()">List Your Property</button>
-  <button type="button" class="nav-modal-link" data-modal-open="modal-inquiry" onclick="closeMobile()">Property inquiry</button>
-  <a asp-page="/Contact" class="@Active("contact")" onclick="closeMobile()">Contact us</a>
-  <a href="@site?.TelHref" class="btn-primary" onclick="closeMobile()" style="margin-top:16px"><span>Call Us</span></a>
-</div>
+
+<script>
+(function(){
+  var nav = document.getElementById('navbar');
+
+  function onScroll() {
+    if (window.scrollY > 60) nav.classList.add('pf-nav--scrolled');
+    else nav.classList.remove('pf-nav--scrolled');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Desktop dropdowns (hover with delay + click toggle)
+  document.querySelectorAll('.pf-nav__item--dd').forEach(function(item) {
+    var btn = item.querySelector('.pf-nav__link--dd');
+    var panel = item.querySelector('.pf-nav__dd-panel');
+    if (!btn || !panel) return;
+    panel.hidden = true;
+    var closeTimer = null;
+
+    function open() {
+      clearTimeout(closeTimer);
+      // close any other open dropdowns first
+      document.querySelectorAll('.pf-nav__item--dd').forEach(function(other) {
+        if (other !== item && other.classList.contains('is-open')) {
+          var op = other.querySelector('.pf-nav__dd-panel');
+          var ob = other.querySelector('.pf-nav__link--dd');
+          if (op) op.hidden = true;
+          if (ob) ob.setAttribute('aria-expanded','false');
+          other.classList.remove('is-open');
+        }
+      });
+      panel.hidden = false;
+      btn.setAttribute('aria-expanded','true');
+      item.classList.add('is-open');
+    }
+
+    function close() {
+      panel.hidden = true;
+      btn.setAttribute('aria-expanded','false');
+      item.classList.remove('is-open');
+    }
+
+    function delayedClose() {
+      closeTimer = setTimeout(close, 180);
+    }
+
+    item.addEventListener('mouseenter', open);
+    item.addEventListener('mouseleave', delayedClose);
+
+    // Keep open when cursor enters the dropdown panel
+    panel.addEventListener('mouseenter', function() { clearTimeout(closeTimer); });
+    panel.addEventListener('mouseleave', delayedClose);
+
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (panel.hidden) open(); else close();
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!item.contains(e.target)) close();
+    });
+  });
+
+  // Avatar dropdown
+  var avatarBtn = document.getElementById('navAvatarBtn');
+  var avatarWrap = document.getElementById('navAvatarWrap');
+  var userPanel = document.getElementById('navUserPanel');
+  if (avatarBtn && userPanel) {
+    avatarBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var isOpen = !userPanel.hidden;
+      userPanel.hidden = isOpen;
+      avatarBtn.setAttribute('aria-expanded', String(!isOpen));
+    });
+    document.addEventListener('click', function(e) {
+      if (avatarWrap && !avatarWrap.contains(e.target)) userPanel.hidden = true;
+    });
+  }
+
+  // Mobile hamburger
+  var hamburger = document.getElementById('navHamburger');
+  var drawer = document.getElementById('navMobileDrawer');
+  if (hamburger && drawer) {
+    hamburger.addEventListener('click', function() {
+      var open = !drawer.hidden;
+      drawer.hidden = open;
+      hamburger.classList.toggle('is-open', !open);
+      hamburger.setAttribute('aria-expanded', String(!open));
+    });
+  }
+
+  window.closeMobile = function() {
+    if (drawer) drawer.hidden = true;
+    if (hamburger) { hamburger.classList.remove('is-open'); hamburger.setAttribute('aria-expanded','false'); }
+  };
+})();
+</script>

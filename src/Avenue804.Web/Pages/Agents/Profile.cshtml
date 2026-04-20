@@ -1,0 +1,107 @@
+@page "/Agents/{id:int}"
+@model Avenue804.Web.Pages.Agents.AgentProfileModel
+@using Avenue804.Web.Infrastructure
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var A = Model.Agent!;
+    var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
+    var waNum = A.WhatsAppNumber?.Replace("+","").Replace(" ","") ?? site?.WhatsAppDigits ?? "971504399804";
+    ViewData["Title"] = A.Name + " — Property Agent";
+    ViewData["NavActive"] = "properties";
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Agent Profile</span></div>
+    <h1 class="page-hero-title fade-up">@A.Name</h1>
+    @if (!string.IsNullOrWhiteSpace(A.Title))
+    {
+      <p class="page-hero-sub fade-up">@A.Title</p>
+    }
+  </div>
+</section>
+
+<section class="section-pad areaguides-section">
+  <div class="container">
+    <div class="agent-profile-layout">
+      <!-- Agent card sidebar -->
+      <aside class="agent-profile-card fade-up">
+        @if (!string.IsNullOrWhiteSpace(A.AvatarUrl))
+        {
+          <img src="@A.AvatarUrl" alt="@A.Name" class="agent-profile-photo" />
+        }
+        else
+        {
+          <div class="agent-profile-avatar">@A.Name[0].ToString().ToUpperInvariant()</div>
+        }
+        <div class="agent-profile-name">@A.Name</div>
+        @if (!string.IsNullOrWhiteSpace(A.Title)) { <div class="agent-profile-title">@A.Title</div> }
+        @if (!string.IsNullOrWhiteSpace(A.Bio))
+        {
+          <p class="agent-profile-bio">@A.Bio</p>
+        }
+        <div class="agent-profile-divider"></div>
+        <div class="agent-profile-stats">
+          <div class="agent-stat"><strong>@Model.ListingCount</strong><span>Active listings</span></div>
+          <div class="agent-stat"><strong>@Model.TotalViews.ToString("N0")</strong><span>Listing views</span></div>
+        </div>
+        <div class="agent-profile-divider"></div>
+        <div class="agent-profile-actions">
+          @if (!string.IsNullOrWhiteSpace(A.Phone))
+          {
+            <a href="tel:@A.Phone" class="agent-btn agent-btn--phone" style="width:100%;justify-content:center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              Call @A.Phone
+            </a>
+          }
+          <a href="https://wa.me/@waNum?text=Hi @Uri.EscapeDataString(A.Name), I'd like to discuss a property." target="_blank" rel="noopener" class="agent-btn agent-btn--wa" style="width:100%;justify-content:center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+            WhatsApp
+          </a>
+          @if (!string.IsNullOrWhiteSpace(A.Email))
+          {
+            <a href="mailto:@A.Email" class="agent-btn agent-btn--email" style="width:100%;justify-content:center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Send Email
+            </a>
+          }
+        </div>
+      </aside>
+
+      <!-- Listings -->
+      <div>
+        <h2 class="section-title section-title--compact fade-up">@A.Name's <em>Listings</em></h2>
+        @if (Model.Listings.Count == 0)
+        {
+          <p class="section-sub">No active listings for this agent at the moment. <a asp-page="/Properties/Index">Browse all properties</a>.</p>
+        }
+        else
+        {
+          <div class="feat-grid">
+            @foreach (var p in Model.Listings)
+            {
+              <partial name="Shared/_PropertyCard" model="p" />
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+@section Styles {
+<style>
+.agent-profile-layout{display:grid;grid-template-columns:280px 1fr;gap:36px;align-items:start}
+.agent-profile-card{background:var(--bg-card);border:1px solid var(--border-accent);border-radius:var(--radius-lg);padding:28px;position:sticky;top:90px;text-align:center;box-shadow:0 8px 32px rgba(15,23,42,.06)}
+.agent-profile-photo{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--border-accent);margin:0 auto 14px;display:block}
+.agent-profile-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--cyan));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:2.5rem;font-weight:700;color:#fff;margin:0 auto 14px}
+.agent-profile-name{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.agent-profile-title{font-size:.75rem;color:var(--accent);font-family:var(--font-nav);font-weight:700;margin-bottom:12px}
+.agent-profile-bio{font-size:.8rem;color:var(--text-secondary);line-height:1.6;margin:0 0 8px;text-align:left}
+.agent-profile-divider{height:1px;background:var(--border-subtle);margin:16px 0}
+.agent-profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center}
+.agent-stat strong{display:block;font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--accent)}
+.agent-stat span{font-size:.65rem;color:var(--text-tertiary);font-family:var(--font-nav);letter-spacing:.06em;text-transform:uppercase}
+.agent-profile-actions{display:flex;flex-direction:column;gap:8px}
+/* responsive */
+</style>
+}

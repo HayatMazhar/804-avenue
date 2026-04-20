@@ -51,6 +51,13 @@ public class LoginModel : PageModel
             return Page();
         }
 
+        // Verify the user is an admin (has the Admin role) before signing in
+        if (!await _userManager.IsInRoleAsync(user, SeedData.AdminRole))
+        {
+            ErrorMessage = "You do not have admin access.";
+            return Page();
+        }
+
         var result = await _signInManager.PasswordSignInAsync(user, Input.Password, isPersistent: true, lockoutOnFailure: true);
         if (!result.Succeeded)
         {

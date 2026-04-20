@@ -1,0 +1,166 @@
+@page "/Properties/OffPlan"
+@model Avenue804.Web.Pages.Properties.OffPlanModel
+@using Avenue804.Web.Infrastructure
+@{
+    ViewData["Title"] = "Off-Plan & New Projects — Abu Dhabi UAE";
+    ViewData["NavActive"] = "offplan";
+    ViewData["MetaDescription"] = "Invest early in Abu Dhabi's most anticipated new developments — flexible payment plans, attractive pricing, and high appreciation potential.";
+}
+@section Styles {
+  <link rel="stylesheet" href="~/css/service-pages.css" asp-append-version="true" />
+}
+
+<!-- Page header -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up">
+      <a asp-page="/Index">Home</a><span class="sep">/</span>
+      <a asp-page="/Properties/Index">Properties</a><span class="sep">/</span>
+      <span>Off-Plan</span>
+    </div>
+    <h1 class="page-hero-title fade-up">Off-Plan &amp; <em>New Projects</em></h1>
+    <p class="page-hero-sub fade-up">Invest early in Abu Dhabi's most anticipated new developments — flexible payment plans, attractive pricing, and high appreciation potential.</p>
+  </div>
+</section>
+
+<!-- Search bar — same pattern as Properties/Index -->
+<div class="pl-searchbar">
+  <div class="container-fluid px-3 px-xl-5">
+    <form method="get" id="opSearchForm" class="pl-searchbar__form">
+      <div class="pl-searchbar__field pl-searchbar__field--wide">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" name="q" value="@Model.Keyword" placeholder="Project name, developer, area…" class="pl-searchbar__input" autocomplete="off" data-autocomplete="uae" data-ac-emirate-target="opLoc" />
+      </div>
+      <div class="pl-searchbar__sep"></div>
+      <div class="pl-searchbar__field">
+        <select name="location" id="opLoc" class="pl-searchbar__select">
+          <option value="">Any emirate</option>
+          <option value="Abu Dhabi">Abu Dhabi</option>
+          <option value="Dubai">Dubai</option>
+          <option value="Sharjah">Sharjah</option>
+        </select>
+      </div>
+      <div class="pl-searchbar__sep"></div>
+      <div class="pl-searchbar__field">
+        <select name="handover" id="opHandover" class="pl-searchbar__select">
+          <option value="">Any handover</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+          <option value="2027">2027</option>
+          <option value="2028">2028+</option>
+        </select>
+      </div>
+      <div class="pl-searchbar__sep"></div>
+      <div class="pl-searchbar__field">
+        <select name="budget" id="opBudget" class="pl-searchbar__select">
+          <option value="">Any price</option>
+          <option value="u500">Under 500K</option>
+          <option value="500-1m">500K – 1M</option>
+          <option value="1m-5m">1M – 5M</option>
+          <option value="5m+">5M+</option>
+        </select>
+      </div>
+      <button type="submit" class="pl-searchbar__btn">Search</button>
+      @{
+        var opParams = HttpContext.Request.Query;
+        bool opHasFilters = opParams.ContainsKey("q") || opParams.ContainsKey("location") || opParams.ContainsKey("handover") || opParams.ContainsKey("budget");
+      }
+      @if (opHasFilters)
+      {
+        <a asp-page="/Properties/OffPlan" class="pl-searchbar__clear" title="Clear filters">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </a>
+      }
+    </form>
+  </div>
+</div>
+
+<!-- Results -->
+<section class="section-pad offplan-content">
+  <div class="container">
+    @if (Model.TotalCount > 0)
+    {
+      <div class="pl-sortbar" style="margin-bottom:24px">
+        <div class="pl-sortbar__count"><strong>@Model.TotalCount</strong> off-plan listing@(Model.TotalCount != 1 ? "s" : "")</div>
+      </div>
+    }
+
+    @if (Model.Listings.Count == 0)
+    {
+      <div class="pl-empty fade-up">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
+        <h3>No off-plan listings yet</h3>
+        <p>Check back soon or browse our <a asp-page="/Properties/Index">ready properties</a>.</p>
+      </div>
+    }
+    else
+    {
+      <div class="offplan-listing-grid">
+        @foreach (var p in Model.Listings)
+        {
+          <a asp-page="/Properties/Detail" asp-route-slug="@p.Slug" class="offplan-card fade-up">
+            <div class="offplan-card-img">
+              <img src="@ListingFormat.ListingImageUrl(p.MainImageUrl)" alt="@p.Title" loading="lazy" />
+              @if (!string.IsNullOrWhiteSpace(p.Label))
+              {
+                <span class="pcard__label @(p.Label == "Hot Deal" ? "pcard__label--hot" : p.Label == "New" ? "pcard__label--new" : "pcard__label--featured")">@p.Label</span>
+              }
+              @if (p.CompletionPercent.HasValue)
+              {
+                <div class="offplan-progress-bar">
+                  <div style="width:@p.CompletionPercent%"></div>
+                </div>
+              }
+            </div>
+            <div class="offplan-card-body">
+              <div class="offplan-card-name">@p.Title</div>
+              @if (!string.IsNullOrWhiteSpace(p.Location))
+              {
+                <div class="offplan-card-loc">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  @p.Location
+                </div>
+              }
+              <div class="offplan-card-meta">
+                @if (p.Price.HasValue) { <span class="offplan-price">AED @p.Price.Value.ToString("N0")</span> }
+                @if (!string.IsNullOrWhiteSpace(p.HandoverDate)) { <span class="offplan-handover">Handover: <strong>@p.HandoverDate</strong></span> }
+                @if (p.CompletionPercent.HasValue) { <span class="offplan-pct">@p.CompletionPercent% complete</span> }
+              </div>
+              @if (!string.IsNullOrWhiteSpace(p.PaymentPlan))
+              {
+                <div class="offplan-payment">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
+                  @p.PaymentPlan
+                </div>
+              }
+              <div class="offplan-card-specs">
+                @if (p.Beds.HasValue) { <span>@p.Beds BR</span> }
+                @if (p.Baths.HasValue) { <span>@p.Baths Bath</span> }
+                @if (p.AreaSqft.HasValue) { <span>@p.AreaSqft.Value.ToString("N0") sqft</span> }
+              </div>
+              <div class="offplan-cta">View project →</div>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+@section Scripts {
+<script>
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var map = { location: 'opLoc', handover: 'opHandover', budget: 'opBudget' };
+  Object.keys(map).forEach(function(k) {
+    var el = document.getElementById(map[k]);
+    if (el && params.has(k)) el.value = params.get(k);
+  });
+  // Auto-submit on select change
+  ['opLoc','opHandover','opBudget'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('change', function() { document.getElementById('opSearchForm').submit(); });
+  });
+})();
+</script>
+}

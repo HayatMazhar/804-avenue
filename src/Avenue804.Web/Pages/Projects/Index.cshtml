@@ -1,20 +1,29 @@
 @page "/Projects"
 @model Avenue804.Web.Pages.Projects.IndexModel
 @{
-    ViewData["Title"] = "Projects";
+    ViewData["Title"] = "Our Projects";
+    ViewData["NavActive"] = "projects";
+    ViewData["MetaDescription"] = "Browse 804 Avenue's portfolio of completed contracting and fit-out projects across Abu Dhabi and the UAE.";
 }
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Projects</span></div>
+    <div class="breadcrumb fade-up">
+      <a asp-page="/Index">Home</a><span class="sep">/</span><span>Our Projects</span>
+    </div>
     <h1 class="page-hero-title fade-up">Our <em>Projects</em></h1>
-    <p class="page-hero-sub fade-up">Selected contracting and fit-out work from our portfolio. Entries are managed in admin under Projects.</p>
+    <p class="page-hero-sub fade-up">Selected contracting, fit-out and renovation work from our portfolio across the UAE.</p>
   </div>
 </section>
-<section class="section-pad" style="background:var(--bg-deep)">
+
+<section class="section-pad projects-section">
   <div class="container">
     @if (Model.Projects.Count == 0)
     {
-      <p class="section-sub fade-up" style="max-width:560px">No published projects yet. Add portfolio items in <a asp-area="Admin" asp-page="/Projects/Index">admin → Projects</a>.</p>
+      <div class="pl-empty fade-up">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        <h3>No published projects yet</h3>
+        <p>Portfolio items are managed in <a asp-area="Admin" asp-page="/ProjectProgress/Index">Admin → Projects</a>.</p>
+      </div>
     }
     else
     {

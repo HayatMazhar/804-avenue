@@ -1,0 +1,102 @@
+@page "/Project/{token}"
+@model Avenue804.Web.Pages.ProjectTrackerModel
+@using Avenue804.Web.Domain
+@{
+    var P = Model.Project!;
+    var stages = Enum.GetValues<ProjectStage>();
+    var currentIdx = Array.IndexOf(stages, P.CurrentStage);
+    ViewData["Title"] = (P.ProjectTitle ?? "Your Project") + " — Progress Tracker";
+    ViewData["NavActive"] = "projects";
+}
+<section class="page-hero">
+  <div class="container">
+    <h1 class="page-hero-title fade-up">@(P.ProjectTitle ?? "Your Project")</h1>
+    <p class="page-hero-sub fade-up">@(P.Location ?? "804 Avenue Contracting")</p>
+  </div>
+</section>
+
+<section class="section-pad" style="background:var(--bg-surface)">
+  <div class="container" style="max-width:860px">
+
+    <!-- Progress bar -->
+    <div class="tracker-card fade-up">
+      <div class="tracker-header">
+        <div>
+          <div class="tracker-label">Overall progress</div>
+          <div class="tracker-pct">@P.ProgressPercent%</div>
+        </div>
+        @if (P.EstimatedCompletion.HasValue)
+        {
+          <div style="text-align:right">
+            <div class="tracker-label">Estimated completion</div>
+            <div class="tracker-pct" style="font-size:1.2rem">@P.EstimatedCompletion.Value.ToString("MMMM yyyy")</div>
+          </div>
+        }
+      </div>
+      <div class="tracker-bar">
+        <div style="width:@P.ProgressPercent%"></div>
+      </div>
+    </div>
+
+    <!-- Stage steps -->
+    <div class="tracker-stages fade-up">
+      @foreach (var (stage, idx) in stages.Select((s, i) => (s, i)))
+      {
+        var done = idx < currentIdx;
+        var active = idx == currentIdx;
+        <div class="tracker-stage @(done ? "tracker-stage--done" : active ? "tracker-stage--active" : "tracker-stage--pending")">
+          <div class="tracker-stage-dot">
+            @if (done)
+            {
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+            }
+            else
+            {
+              <span>@(idx + 1)</span>
+            }
+          </div>
+          <div>
+            <div class="tracker-stage-name">@stage</div>
+            @if (active && !string.IsNullOrWhiteSpace(P.StageNotes))
+            {
+              <div class="tracker-stage-notes">@P.StageNotes</div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Contact strip -->
+    <div class="tracker-contact fade-up">
+      <p>Questions about your project? Contact your dedicated project manager.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+        <a asp-page="/Contact" class="btn-primary"><span>Contact team</span></a>
+        <a href="https://wa.me/971504399804?text=Hi, I'm checking on my project: @Uri.EscapeDataString(P.ProjectTitle ?? "my project")" target="_blank" rel="noopener" class="btn-outline">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+@section Styles {
+<style>
+.tracker-card{background:var(--bg-card);border:1px solid var(--border-accent);border-radius:var(--radius-lg);padding:24px 28px;margin-bottom:28px;box-shadow:0 8px 32px rgba(15,23,42,.06)}
+.tracker-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+.tracker-label{font-family:var(--font-nav);font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px}
+.tracker-pct{font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--accent);line-height:1}
+.tracker-bar{height:12px;background:var(--border-subtle);border-radius:999px;overflow:hidden}
+.tracker-bar div{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));border-radius:999px;transition:width .8s ease}
+.tracker-stages{display:flex;flex-direction:column;gap:0;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:28px}
+.tracker-stage{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border-subtle)}
+.tracker-stage:last-child{border-bottom:none}
+.tracker-stage--done{opacity:.7}
+.tracker-stage--active{background:linear-gradient(90deg,var(--accent-10),transparent);border-left:3px solid var(--accent)}
+.tracker-stage-dot{width:28px;height:28px;min-width:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-nav);font-size:.7rem;font-weight:700}
+.tracker-stage--done .tracker-stage-dot{background:var(--success);color:#fff}
+.tracker-stage--active .tracker-stage-dot{background:var(--accent);color:#fff;box-shadow:0 0 16px var(--accent-glow)}
+.tracker-stage--pending .tracker-stage-dot{background:var(--border-subtle);color:var(--text-tertiary)}
+.tracker-stage-name{font-family:var(--font-nav);font-size:.78rem;font-weight:700;color:var(--text-primary);letter-spacing:.04em}
+.tracker-stage-notes{font-size:.78rem;color:var(--text-secondary);margin-top:4px;line-height:1.55}
+.tracker-contact{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:24px;text-align:center}
+.tracker-contact p{color:var(--text-secondary);margin-bottom:16px}
+</style>
+}

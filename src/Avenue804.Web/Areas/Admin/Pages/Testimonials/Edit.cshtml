@@ -1,0 +1,21 @@
+@page "{id:int}"
+@model Avenue804.Web.Areas.Admin.Pages.Testimonials.EditModel
+@{ ViewData["Title"] = "Edit testimonial"; }
+<p class="admin-back"><a asp-page="Index">← Testimonials</a></p>
+<form method="post" class="admin-form">
+  <div class="row"><label asp-for="Form.AuthorName">Author name</label><input asp-for="Form.AuthorName" /></div>
+  <div class="row"><label asp-for="Form.AuthorRole">Author role</label><input asp-for="Form.AuthorRole" /></div>
+  <div class="row"><label asp-for="Form.Quote">Quote</label><textarea asp-for="Form.Quote" rows="4"></textarea></div>
+  <div class="row admin-form-row-avatar">
+    <div><label asp-for="Form.Stars">Stars</label><input asp-for="Form.Stars" type="number" min="1" max="5" /></div>
+    <div><label asp-for="Form.SortOrder">Sort order</label><input asp-for="Form.SortOrder" type="number" /></div>
+  </div>
+  <div class="row chk">
+    <input asp-for="Form.IsActive" />
+    <label asp-for="Form.IsActive" class="admin-label-inline">Active</label>
+  </div>
+  <div class="admin-flex-row">
+    <button type="submit" class="btn-primary"><span>Save</span></button>
+    <button type="submit" asp-page-handler="Delete" onclick="return confirm('Delete this testimonial?')" class="btn-outline btn-danger-outline">Delete</button>
+  </div>
+</form>

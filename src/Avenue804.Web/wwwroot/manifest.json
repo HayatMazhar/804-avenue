@@ -1,0 +1,49 @@
+{
+  "name": "804 Avenue Properties",
+  "short_name": "804 Avenue",
+  "description": "Abu Dhabi's trusted partner for real estate, construction, and property maintenance.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#EEF2FF",
+  "theme_color": "#F59E0B",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "categories": ["business", "lifestyle"],
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1512632578888-169bbbc64f33?w=192&q=80&fit=crop",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1512632578888-169bbbc64f33?w=512&q=80&fit=crop",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=390&q=80",
+      "sizes": "390x844",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Property listings"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse Properties",
+      "short_name": "Properties",
+      "url": "/Properties",
+      "description": "Browse property listings"
+    },
+    {
+      "name": "Contact Us",
+      "short_name": "Contact",
+      "url": "/Contact",
+      "description": "Get in touch with our team"
+    }
+  ]
+}

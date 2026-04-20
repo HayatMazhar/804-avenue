@@ -1,0 +1,120 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Listings.BulkImportModel
+@{
+    ViewData["Title"] = "Bulk Import Listings";
+    ViewData["AdminSection"] = "listings";
+}
+<p class="admin-back"><a asp-page="Index">← Properties</a></p>
+
+<div class="detail-block fade-up admin-detail-block">
+  <h3>Step 1 — Download CSV template</h3>
+  <p class="admin-detail-lead">
+    Fill in the template with your property data. <strong>Images:</strong> paste public URLs into MainImageUrl / GalleryUrls columns.
+    You can upload images first using the <a asp-page="Edit" asp-route-id="0" class="link-accent">listing edit page</a> and copy the returned URLs.
+  </p>
+  <a asp-area="Admin" asp-page="/Listings/BulkImport" asp-route-download="template" class="btn-primary d-inline-flex text-decoration-none">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    <span>Download CSV Template</span>
+  </a>
+</div>
+
+<div class="detail-block fade-up admin-detail-block">
+  <h3>Step 2 — Upload completed CSV</h3>
+  <p class="admin-detail-lead">
+    Upload your completed CSV. Rows with errors will be skipped and listed in the report below.
+    Maximum <strong>500 rows</strong> per upload.
+  </p>
+  <form method="post" enctype="multipart/form-data">
+    <div class="admin-form">
+      <div class="row">
+        <label>CSV file</label>
+        <input type="file" name="csvFile" accept=".csv,text/csv" required class="admin-file-input" />
+      </div>
+      <div class="row chk">
+        <input type="checkbox" name="dryRun" id="dryRunCheck" value="true" />
+        <label for="dryRunCheck" class="admin-label-inline">
+          <strong>Dry run</strong> — validate only, do not create listings
+        </label>
+      </div>
+      <button type="submit" class="btn-primary"><span>Upload &amp; Import</span></button>
+    </div>
+  </form>
+</div>
+
+@if (Model.Results != null)
+{
+  <div class="detail-block fade-up">
+    <h3>Import Report</h3>
+    <div class="admin-import-stats">
+      <div class="admin-import-stat">
+        <div class="admin-import-stat__n admin-import-stat__n--ok">@Model.Results.Created</div>
+        <div class="admin-import-stat__l">@(Model.IsDryRun ? "Would create" : "Created")</div>
+      </div>
+      <div class="admin-import-stat">
+        <div class="admin-import-stat__n admin-import-stat__n--err">@Model.Results.Errors.Count</div>
+        <div class="admin-import-stat__l">Errors</div>
+      </div>
+      <div class="admin-import-stat">
+        <div class="admin-import-stat__n admin-import-stat__n--muted">@Model.Results.Skipped</div>
+        <div class="admin-import-stat__l">Skipped</div>
+      </div>
+    </div>
+
+    @if (Model.IsDryRun && Model.Results.Created > 0)
+    {
+      <div class="auth-success">Dry run complete. No listings were created. Remove the dry-run checkbox and re-upload to import.</div>
+    }
+
+    @if (Model.Results.Errors.Any())
+    {
+      <div class="admin-scroll-box">
+        <table class="admin-table">
+          <thead><tr><th>Row</th><th>Error</th><th>Data</th></tr></thead>
+          <tbody>
+            @foreach (var e in Model.Results.Errors)
+            {
+              <tr>
+                <td class="admin-text-danger fw-bold">#@e.Row</td>
+                <td class="admin-text-danger">@e.Message</td>
+                <td class="muted small admin-td-clip">@e.Raw</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+}
+
+<div class="detail-block fade-up admin-detail-block--last">
+  <h3>CSV Column Reference</h3>
+  <div class="admin-table-scroll-h">
+    <table class="admin-table">
+      <thead><tr><th>Column</th><th>Required</th><th>Values / format</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Title</td><td class="admin-text-required">Yes</td><td>Text</td><td>Luxury 2BR Apartment Al Reem</td></tr>
+        <tr><td>OfferType</td><td class="admin-text-required">Yes</td><td>Sale or Rent</td><td>Sale</td></tr>
+        <tr><td>Price</td><td>No</td><td>Number (AED)</td><td>1500000</td></tr>
+        <tr><td>Currency</td><td>No</td><td>Default: AED</td><td>AED</td></tr>
+        <tr><td>Location</td><td>No</td><td>Area, Emirate</td><td>Al Reem Island, Abu Dhabi</td></tr>
+        <tr><td>Description</td><td>No</td><td>Text (wrap in quotes if has commas)</td><td>"Spacious 2BR..."</td></tr>
+        <tr><td>Beds</td><td>No</td><td>Number</td><td>2</td></tr>
+        <tr><td>Baths</td><td>No</td><td>Number</td><td>2</td></tr>
+        <tr><td>AreaSqft</td><td>No</td><td>Number</td><td>1200</td></tr>
+        <tr><td>MainImageUrl</td><td>No</td><td>Full URL starting https://</td><td>https://cdn.example.com/img.jpg</td></tr>
+        <tr><td>GalleryUrls</td><td>No</td><td>URLs separated by | (pipe)</td><td>https://img1.jpg|https://img2.jpg</td></tr>
+        <tr><td>Label</td><td>No</td><td>New, Hot Deal, Price Reduced, Featured</td><td>New</td></tr>
+        <tr><td>IsOffPlan</td><td>No</td><td>true or false</td><td>false</td></tr>
+        <tr><td>HandoverDate</td><td>No</td><td>Text</td><td>Q4 2026</td></tr>
+        <tr><td>PaymentPlan</td><td>No</td><td>Text</td><td>40/60</td></tr>
+        <tr><td>IsVerified</td><td>No</td><td>true or false</td><td>false</td></tr>
+        <tr><td>IsPublished</td><td>No</td><td>true or false (default: false)</td><td>true</td></tr>
+        <tr><td>Amenities</td><td>No</td><td>Codes: pool,gym,parking,balcony,maid,pets,furnished,cctv,security,lift</td><td>pool,gym,parking</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted admin-tip">
+    <i class="bi bi-lightbulb me-1" aria-hidden="true"></i><strong>Image tip:</strong> Use the listing edit page to upload images and get public URLs first.
+    Then paste those URLs into the CSV MainImageUrl column before importing.
+  </p>
+</div>

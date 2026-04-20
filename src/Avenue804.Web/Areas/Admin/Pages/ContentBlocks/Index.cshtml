@@ -4,14 +4,14 @@
 @{
     ViewData["Title"] = "Content blocks";
 }
-<p class="muted" style="margin-bottom:20px;line-height:1.65">Published HTML/text by slug. Wired slugs (edit these to change public copy):</p>
-<ul class="muted" style="margin:-8px 0 20px 1.1rem;line-height:1.7;font-size:0.86rem">
+<p class="muted admin-lead-muted">Published HTML/text by slug. Wired slugs (edit these to change public copy):</p>
+<ul class="muted admin-wired-list">
   @foreach (var s in ContentBlockSlugs.AllWiredSlugs)
   {
     <li><code>@s</code></li>
   }
 </ul>
-<p style="margin-bottom:16px"><a asp-page="Create" style="color:var(--accent);font-weight:600">+ New block</a></p>
+<p class="admin-back admin-back--tight"><a asp-page="Create">+ New block</a></p>
 <div class="admin-table-wrap">
   <table class="admin-table">
     <thead><tr><th>Slug</th><th>Title</th><th>Published</th><th>Updated</th><th></th></tr></thead>

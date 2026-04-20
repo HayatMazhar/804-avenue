@@ -16,8 +16,15 @@ public class FacilityManagementModel : PageModel
     public async Task OnGetAsync(CancellationToken cancellationToken = default)
     {
         var map = await _content.GetPublishedBodiesAsync(
-            [ContentBlockSlugs.PageFacilityHeroTitle, ContentBlockSlugs.PageFacilityHeroSubtitle],
-            cancellationToken);
+        [
+            ContentBlockSlugs.PageFacilityHeroTitle, ContentBlockSlugs.PageFacilityHeroSubtitle,
+            ContentBlockSlugs.FacilitySvc1Title, ContentBlockSlugs.FacilitySvc1Body,
+            ContentBlockSlugs.FacilitySvc2Title, ContentBlockSlugs.FacilitySvc2Body,
+            ContentBlockSlugs.FacilityWhyTag, ContentBlockSlugs.FacilityWhyTitle,
+            ContentBlockSlugs.FacilityWhyItems,
+            ContentBlockSlugs.FacilityCtaTitle, ContentBlockSlugs.FacilityCtaBody
+        ], cancellationToken);
+
         Hero = ServicePageHeroModel.FromMap(map, ContentBlockSlugs.PageFacilityHeroTitle, ContentBlockSlugs.PageFacilityHeroSubtitle);
     }
 }

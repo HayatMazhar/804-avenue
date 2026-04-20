@@ -40,5 +40,9 @@ public class PropertyListingInquiry
     public DateOnly? ExpectedMoveInDate { get; set; }
 
     public InquiryStatus Status { get; set; } = InquiryStatus.New;
+
+    // Agent CRM
+    public string? AgentNote { get; set; }
+
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 }

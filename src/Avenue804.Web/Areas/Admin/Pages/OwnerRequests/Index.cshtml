@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Listing requests";
 }
-<p class="muted" style="margin-bottom:20px">@Model.TotalCount total</p>
+<p class="muted admin-lead-muted">@Model.TotalCount total</p>
 <div class="admin-table-wrap">
   <table class="admin-table">
     <thead>
@@ -29,7 +29,7 @@
 </div>
 @if (Model.Items.Count == 0)
 {
-  <p class="muted" style="margin-top:16px">No listing requests yet.</p>
+  <p class="muted admin-empty">No listing requests yet.</p>
 }
 <div class="pager">
   @if (Model.PageNumber > 1)

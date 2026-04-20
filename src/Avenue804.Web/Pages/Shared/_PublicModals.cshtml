@@ -1,50 +1,199 @@
-<div class="modal-root" id="modal-list-property" role="dialog" aria-modal="true" aria-labelledby="modalListTitle">
-  <div class="modal-backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
-  <div class="modal-dialog" role="document">
-    <div class="modal-head">
-      <div>
-        <h2 id="modalListTitle">List Your Property</h2>
-        <p>Tell us about your property and our team will get back to you shortly.</p>
-      </div>
-      <button type="button" class="modal-close" data-modal-close aria-label="Close">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form method="post" asp-page="/Submit/Listing">
-        <div class="modal-field"><label for="lpName">Full name</label><input id="lpName" name="Name" type="text" required autocomplete="name" placeholder="Your name" maxlength="200"></div>
-        <div class="modal-field"><label for="lpEmail">Email</label><input id="lpEmail" name="Email" type="email" required autocomplete="email" placeholder="you@example.com" maxlength="256"></div>
-        <div class="modal-field"><label for="lpPhone">Phone</label><input id="lpPhone" name="Phone" type="tel" required autocomplete="tel" placeholder="+971 …" maxlength="50"></div>
-        <div class="modal-field"><label for="lpType">Listing type</label>
-          <select id="lpType" name="Intent" required>
-            <option value="">Select…</option>
-            <option value="0">For sale</option>
-            <option value="1">For rent</option>
-            <option value="2">Sale &amp; rent</option>
-          </select>
+<!-- ═══ LIST YOUR PROPERTY MODAL ═══ -->
+<div class="site-modal" id="modal-list-property" role="dialog" aria-modal="true" aria-labelledby="modalListTitle">
+  <div class="modal-background" data-modal-close tabindex="-1" aria-hidden="true"></div>
+  <div class="modal-card" style="width:min(800px,96vw)">
+    <header class="modal-card-head">
+      <div style="display:flex;align-items:center;gap:14px">
+        <span style="width:42px;height:42px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+        </span>
+        <div>
+          <p class="modal-card-title" id="modalListTitle">List Your Property</p>
+          <p style="font-size:.78rem;color:rgba(255,255,255,.8);margin:2px 0 0">Fill in the details — our team will contact you shortly.</p>
         </div>
-        <div class="modal-field"><label for="lpLoc">Location / title</label><input id="lpLoc" name="LocationOrTitle" type="text" placeholder="Area, building, or title" maxlength="500"></div>
-        <div class="modal-field"><label for="lpMsg">Details</label><textarea id="lpMsg" name="Details" placeholder="Bedrooms, size, price expectations…" maxlength="8000"></textarea></div>
-        <div class="modal-actions"><button type="submit" class="btn-primary"><span>Submit listing request</span></button></div>
+      </div>
+      <button class="delete" data-modal-close aria-label="Close" style="margin-left:auto"></button>
+    </header>
+    <section class="modal-card-body">
+      <form method="post" asp-page="/Submit/Listing" id="listPropertyForm">
+
+        <p class="modal-section-title">Your contact details</p>
+        <div class="fields-2">
+          <div class="field">
+            <label class="label">Full name <span style="color:var(--accent)">*</span></label>
+            <div class="control has-icons-left">
+              <input class="input" id="lpName" name="Name" type="text" required autocomplete="name" placeholder="Ahmed Al Mansoori" maxlength="200">
+              <span class="icon is-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Mobile number <span style="color:var(--accent)">*</span></label>
+            <div class="control has-icons-left">
+              <input class="input" id="lpPhone" name="Phone" type="tel" required autocomplete="tel" placeholder="+971 50 000 0000" maxlength="50" inputmode="tel">
+              <span class="icon is-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></span>
+            </div>
+          </div>
+        </div>
+        <div class="fields-2">
+          <div class="field">
+            <label class="label">Email address <span style="color:var(--accent)">*</span></label>
+            <div class="control has-icons-left">
+              <input class="input" id="lpEmail" name="Email" type="email" required autocomplete="email" placeholder="you@example.com" maxlength="256">
+              <span class="icon is-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">WhatsApp (if different)</label>
+            <div class="control has-icons-left">
+              <input class="input" id="lpWhatsapp" name="lpWhatsapp" type="tel" placeholder="+971 50 000 0000" maxlength="50" inputmode="tel">
+              <span class="icon is-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg></span>
+            </div>
+          </div>
+        </div>
+
+        <p class="modal-section-title">Property details</p>
+        <div class="fields-2">
+          <div class="field">
+            <label class="label">I want to <span style="color:var(--accent)">*</span></label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="lpIntent" name="Intent" required>
+                  <option value="">Select…</option>
+                  <option value="0">Sell my property</option>
+                  <option value="1">Rent my property</option>
+                  <option value="2">Sell &amp; rent</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Property type <span style="color:var(--accent)">*</span></label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="lpPropertyType" name="lpPropertyType">
+                  <option value="">Select…</option>
+                  <optgroup label="Residential">
+                    <option value="Apartment">Apartment</option>
+                    <option value="Villa">Villa</option>
+                    <option value="Townhouse">Townhouse</option>
+                    <option value="Penthouse">Penthouse</option>
+                    <option value="Studio">Studio</option>
+                  </optgroup>
+                  <optgroup label="Commercial">
+                    <option value="Office">Office Space</option>
+                    <option value="Retail">Retail Unit / Shop</option>
+                    <option value="Showroom">Showroom</option>
+                    <option value="Warehouse">Warehouse</option>
+                  </optgroup>
+                  <optgroup label="Other">
+                    <option value="Land">Land / Plot</option>
+                    <option value="Building">Whole Building</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fields-2">
+          <div class="field">
+            <label class="label">Emirate</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="lpEmirate" name="lpEmirate">
+                  <option value="">Select…</option>
+                  <option>Abu Dhabi</option><option>Dubai</option><option>Sharjah</option><option>Ajman</option><option>Ras Al Khaimah</option><option>Fujairah</option><option>Umm Al Quwain</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Area / community</label>
+            <div class="control">
+              <input class="input" id="lpArea" name="lpArea" type="text" placeholder="e.g. Al Reem Island, Al Raha" maxlength="200" data-autocomplete="uae" autocomplete="off">
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Building / project name</label>
+          <div class="control">
+            <input class="input" id="lpLocTitle" name="LocationOrTitle" type="text" placeholder="e.g. Al Ghaith Tower, Bloom Gardens" maxlength="500">
+          </div>
+        </div>
+
+        <p class="modal-section-title">Property specifications</p>
+        <div class="fields-3">
+          <div class="field">
+            <label class="label">Bedrooms</label>
+            <div class="control"><div class="select is-fullwidth"><select id="lpBeds" name="lpBeds"><option value="">—</option><option>Studio</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select></div></div>
+          </div>
+          <div class="field">
+            <label class="label">Bathrooms</label>
+            <div class="control"><div class="select is-fullwidth"><select id="lpBaths" name="lpBaths"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></div></div>
+          </div>
+          <div class="field">
+            <label class="label">Size (sqft)</label>
+            <div class="control"><input class="input" id="lpSize" name="lpSize" type="number" min="1" placeholder="e.g. 1,500" inputmode="numeric"></div>
+          </div>
+        </div>
+        <div class="fields-2">
+          <div class="field">
+            <label class="label">Asking price / rent (AED)</label>
+            <div class="control"><input class="input" id="lpPrice" name="lpPrice" type="number" min="0" placeholder="e.g. 1,500,000" inputmode="numeric"></div>
+          </div>
+          <div class="field">
+            <label class="label">Property condition</label>
+            <div class="control"><div class="select is-fullwidth"><select id="lpCondition" name="lpCondition"><option value="">Select…</option><option>Excellent / move-in ready</option><option>Good / minor touch-ups needed</option><option>Needs renovation</option><option>Under construction</option><option>Off-plan</option></select></div></div>
+          </div>
+        </div>
+
+        <p class="modal-section-title">Additional information</p>
+        <div class="fields-2">
+          <div class="field">
+            <label class="label">Available from</label>
+            <div class="control"><input class="input" id="lpAvailable" name="lpAvailable" type="date"></div>
+          </div>
+          <div class="field">
+            <label class="label">Best time to call</label>
+            <div class="control"><div class="select is-fullwidth"><select id="lpBestTime" name="lpBestTime"><option value="">Anytime</option><option>Morning (9am – 12pm)</option><option>Afternoon (12pm – 5pm)</option><option>Evening (5pm – 8pm)</option></select></div></div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Additional notes</label>
+          <div class="control">
+            <textarea class="textarea" id="lpNotes" name="Details" placeholder="Parking, views, furnished status, special features, price expectations…" maxlength="8000" rows="3"></textarea>
+          </div>
+        </div>
+        <input type="hidden" id="lpDetailsSummary" name="lpDetailsSummary">
       </form>
-    </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button type="submit" form="listPropertyForm" class="button is-primary is-fullwidth is-medium">
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></span>
+        <span>Submit Listing Request</span>
+      </button>
+      <p style="font-size:.72rem;color:var(--text-tertiary);text-align:center;width:100%;margin-top:.5rem">By submitting you agree to our <a href="/Privacy" style="color:var(--accent)">Privacy Policy</a>.</p>
+    </footer>
   </div>
 </div>
 
-<div class="modal-root" id="modal-inquiry" role="dialog" aria-modal="true" aria-labelledby="modalInquiryTitle">
-  <div class="modal-backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
-  <div class="modal-dialog" role="document" style="max-width:min(520px,96vw)">
-    <div class="modal-head">
-      <div>
-        <h2 id="modalInquiryTitle">Property inquiry</h2>
-        <p>Tell us what you are looking for — we will contact you shortly for further details.</p>
+<!-- ═══ PROPERTY INQUIRY MODAL ═══ -->
+<div class="site-modal" id="modal-inquiry" role="dialog" aria-modal="true" aria-labelledby="modalInquiryTitle">
+  <div class="modal-background" data-modal-close tabindex="-1" aria-hidden="true"></div>
+  <div class="modal-card" style="width:min(800px,96vw)">
+    <header class="modal-card-head">
+      <div style="display:flex;align-items:center;gap:14px">
+        <span style="width:42px;height:42px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </span>
+        <div>
+          <p class="modal-card-title" id="modalInquiryTitle">Property Inquiry</p>
+          <p style="font-size:.78rem;color:rgba(255,255,255,.8);margin:2px 0 0">Tell us what you're looking for — we'll find the right property.</p>
+        </div>
       </div>
-      <button type="button" class="modal-close" data-modal-close aria-label="Close">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
+      <button class="delete" data-modal-close aria-label="Close" style="margin-left:auto"></button>
+    </header>
+    <section class="modal-card-body">
       @await Component.InvokeAsync("PropertyListingInquiryForm")
-    </div>
+    </section>
   </div>
 </div>

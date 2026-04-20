@@ -19,10 +19,13 @@ public class IndexModel : PageModel
     }
 
     public IReadOnlyList<PropertyListing> FeaturedListings { get; private set; } = [];
+    public IReadOnlyDictionary<string, string> Blocks { get; private set; } = new Dictionary<string, string>();
+    public IReadOnlyList<Testimonial> Testimonials { get; private set; } = [];
 
-    public string? HeroEyebrowHtml { get; private set; }
-    public string? HeroSubtitleHtml { get; private set; }
-    public string? AboutStripLeadHtml { get; private set; }
+    // Backward-compat properties still used by the partial
+    public string? HeroEyebrowHtml => Blocks.TryGetValue(ContentBlockSlugs.HomeHeroEyebrow, out var v) ? v : null;
+    public string? HeroSubtitleHtml => Blocks.TryGetValue(ContentBlockSlugs.HomeHeroSubtitle, out var v) ? v : null;
+    public string? AboutStripLeadHtml => Blocks.TryGetValue(ContentBlockSlugs.AboutStripLead, out var v) ? v : null;
 
     public async Task OnGetAsync(CancellationToken cancellationToken = default)
     {
@@ -32,8 +35,30 @@ public class IndexModel : PageModel
             .Take(3)
             .ToListAsync(cancellationToken);
 
-        HeroEyebrowHtml = await _content.GetPublishedBodyAsync(ContentBlockSlugs.HomeHeroEyebrow, cancellationToken);
-        HeroSubtitleHtml = await _content.GetPublishedBodyAsync(ContentBlockSlugs.HomeHeroSubtitle, cancellationToken);
-        AboutStripLeadHtml = await _content.GetPublishedBodyAsync(ContentBlockSlugs.AboutStripLead, cancellationToken);
+        Testimonials = await _db.Testimonials.AsNoTracking()
+            .Where(t => t.IsActive)
+            .OrderBy(t => t.SortOrder).ThenByDescending(t => t.CreatedAt)
+            .ToListAsync(cancellationToken);
+
+        Blocks = await _content.GetPublishedBodiesAsync(
+        [
+            ContentBlockSlugs.HomeHeroEyebrow, ContentBlockSlugs.HomeHeroSubtitle,
+            ContentBlockSlugs.HomeHeroHeadline,
+            ContentBlockSlugs.AboutStripLead,
+            ContentBlockSlugs.HomeAboutTag, ContentBlockSlugs.HomeAboutTitle,
+            ContentBlockSlugs.HomeAboutCards,
+            ContentBlockSlugs.HomeStatsItems,
+            ContentBlockSlugs.HomeReTag, ContentBlockSlugs.HomeReTitle,
+            ContentBlockSlugs.HomeReCards,
+            ContentBlockSlugs.HomeContractingTag, ContentBlockSlugs.HomeContractingTitle,
+            ContentBlockSlugs.HomeContractingLead, ContentBlockSlugs.HomeContractingCards,
+            ContentBlockSlugs.HomeMaintenanceTag, ContentBlockSlugs.HomeMaintenanceTitle,
+            ContentBlockSlugs.HomeMaintenanceLead, ContentBlockSlugs.HomeMaintenanceCards,
+            ContentBlockSlugs.HomeWhyTag, ContentBlockSlugs.HomeWhyTitle,
+            ContentBlockSlugs.HomeWhyItems,
+            ContentBlockSlugs.HomeTestiTag, ContentBlockSlugs.HomeTestiTitle,
+            ContentBlockSlugs.HomeTestiItems,
+            ContentBlockSlugs.HomeCtaTitle
+        ], cancellationToken);
     }
 }

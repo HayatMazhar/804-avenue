@@ -1,0 +1,135 @@
+@page "/Properties/Compare"
+@model Avenue804.Web.Pages.Properties.CompareModel
+@using Avenue804.Web.Infrastructure
+@inject Avenue804.Web.Services.IFeatureFlagService FeatureFlagService
+@using Avenue804.Web.Services
+@{
+    ViewData["Title"] = "Compare Properties";
+    ViewData["NavActive"] = "compare";
+    bool canCompare = await FeatureFlagService.IsEnabledAsync(FeatureFlags.PropertyCompare);
+    if (!canCompare) { <p class="section-sub">Property comparison is currently unavailable.</p> return; }
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Properties/Index">Properties</a><span class="sep">/</span><span>Compare</span></div>
+    <h1 class="page-hero-title fade-up">Compare <em>Properties</em></h1>
+    <p class="page-hero-sub fade-up">Side-by-side comparison of up to 3 listings.</p>
+    @if (Model.Listings.Count > 0)
+    {
+      <div class="fade-up" style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button onclick="shareCompare()" class="share-btn share-btn--copy" style="font-size:.72rem">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          Share this comparison
+        </button>
+        <a href="https://wa.me/?text=Check+out+these+properties+I'm+comparing%3A+@Uri.EscapeDataString(Request.Scheme + "://" + Request.Host + Request.Path + Request.QueryString)" target="_blank" rel="noopener" class="share-btn share-btn--wa" style="font-size:.72rem">
+          WhatsApp
+        </a>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="section-pad" style="background:var(--bg-surface)">
+  <div class="container">
+    @if (Model.Listings.Count == 0)
+    {
+      <div class="prop-empty fade-up">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20M12 3v18"/></svg>
+        <h3>No properties selected</h3>
+        <p>Browse properties and click <strong>"Compare"</strong> on any listing to add it here (up to 3).</p>
+        <a asp-page="/Properties/Index" class="btn-primary" style="display:inline-flex;margin-top:16px"><span>Browse Properties</span></a>
+      </div>
+    }
+    else
+    {
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th class="compare-attr-col">Feature</th>
+              @foreach (var p in Model.Listings)
+              {
+                <th>
+                  <div class="compare-prop-head">
+                    <img src="@ListingFormat.ListingImageUrl(p.MainImageUrl)" alt="@p.Title" class="compare-thumb" />
+                    <a asp-page="/Properties/Detail" asp-route-slug="@p.Slug" class="compare-prop-name">@p.Title</a>
+                    <a href="/Properties/Compare?ids=@string.Join(",", Model.Listings.Where(x => x.Id != p.Id).Select(x => x.Id))" class="compare-remove">Remove ×</a>
+                  </div>
+                </th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="compare-row">
+              <td class="compare-label">Price</td>
+              @foreach (var p in Model.Listings) { <td><strong>@ListingFormat.PricePrimary(p.Price, p.Currency, p.OfferType)@(ListingFormat.ShowRentSuffix(p.OfferType) ? "/yr" : "")</strong></td> }
+            </tr>
+            <tr class="compare-row compare-row--alt">
+              <td class="compare-label">Type</td>
+              @foreach (var p in Model.Listings) { <td>@(p.OfferType == ListingOfferType.Sale ? "For Sale" : "For Rent")</td> }
+            </tr>
+            <tr class="compare-row">
+              <td class="compare-label">Location</td>
+              @foreach (var p in Model.Listings) { <td>@(p.Location ?? "—")</td> }
+            </tr>
+            <tr class="compare-row compare-row--alt">
+              <td class="compare-label">Bedrooms</td>
+              @foreach (var p in Model.Listings) { <td>@(p.Beds?.ToString() ?? "—")</td> }
+            </tr>
+            <tr class="compare-row">
+              <td class="compare-label">Bathrooms</td>
+              @foreach (var p in Model.Listings) { <td>@(p.Baths?.ToString() ?? "—")</td> }
+            </tr>
+            <tr class="compare-row compare-row--alt">
+              <td class="compare-label">Area</td>
+              @foreach (var p in Model.Listings) { <td>@(p.AreaSqft.HasValue ? p.AreaSqft.Value.ToString("N0") + " sqft" : "—")</td> }
+            </tr>
+            <tr class="compare-row">
+              <td class="compare-label">Views</td>
+              @foreach (var p in Model.Listings) { <td>@p.ViewCount.ToString("N0")</td> }
+            </tr>
+            <tr class="compare-row compare-row--alt">
+              <td class="compare-label">Label</td>
+              @foreach (var p in Model.Listings) { <td>@(p.Label ?? "—")</td> }
+            </tr>
+            <tr class="compare-row">
+              <td class="compare-label">Inquire</td>
+              @foreach (var p in Model.Listings)
+              {
+                <td><button type="button" class="btn-primary nav-modal-link" style="font-size:.65rem;padding:8px 14px;border:none;cursor:pointer" data-modal-open="modal-inquiry" data-inquiry-subject="Property: @p.Title (@p.Slug)"><span>Inquire</span></button></td>
+              }
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+@section Scripts {
+<script>
+function shareCompare() {
+  navigator.clipboard.writeText(window.location.href).then(function() {
+    alert('Comparison link copied to clipboard!');
+  });
+}
+</script>
+}
+
+@section Styles {
+<style>
+.compare-table-wrap { overflow-x: auto; }
+.compare-table { width: 100%; border-collapse: collapse; min-width: 480px; }
+.compare-attr-col { width: 140px; }
+.compare-table th, .compare-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); text-align: left; vertical-align: top; }
+.compare-table th { background: var(--bg-card); font-family: var(--font-nav); font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-secondary); }
+.compare-row--alt td { background: var(--bg-elevated); }
+.compare-label { font-family: var(--font-nav); font-size: .65rem; font-weight: 700; color: var(--text-tertiary); letter-spacing: .08em; text-transform: uppercase; }
+.compare-prop-head { display: flex; flex-direction: column; gap: 8px; min-width: 180px; }
+.compare-thumb { width: 100%; height: 120px; object-fit: cover; border-radius: var(--radius-sm); }
+.compare-prop-name { font-weight: 700; color: var(--accent); font-size: .88rem; text-decoration: none; }
+.compare-prop-name:hover { text-decoration: underline; }
+.compare-remove { font-size: .72rem; color: var(--danger); cursor: pointer; text-decoration: none; }
+.compare-remove:hover { text-decoration: underline; }
+</style>
+}

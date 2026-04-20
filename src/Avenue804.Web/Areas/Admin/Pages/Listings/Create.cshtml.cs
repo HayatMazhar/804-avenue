@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Avenue804.Web.Data;
 using Avenue804.Web.Domain;
 using Avenue804.Web.Infrastructure;
@@ -47,6 +48,7 @@ public class CreateModel : PageModel
             Baths = Form.Baths,
             AreaSqft = Form.AreaSqft,
             MainImageUrl = string.IsNullOrWhiteSpace(Form.MainImageUrl) ? null : Form.MainImageUrl.Trim(),
+            GalleryImagesJson = ParseGallery(Form.GalleryImagesJson),
             IsPublished = Form.IsPublished,
             CreatedAt = DateTimeOffset.UtcNow
         };
@@ -55,5 +57,13 @@ public class CreateModel : PageModel
         await _db.SaveChangesAsync(cancellationToken);
         TempData["ToastOk"] = "Listing created.";
         return RedirectToPage("./Edit", new { id = entity.Id });
+    }
+
+    private static string? ParseGallery(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return null;
+        var urls = raw.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                      .Where(u => u.StartsWith("http", StringComparison.OrdinalIgnoreCase)).ToArray();
+        return urls.Length == 0 ? null : JsonSerializer.Serialize(urls);
     }
 }

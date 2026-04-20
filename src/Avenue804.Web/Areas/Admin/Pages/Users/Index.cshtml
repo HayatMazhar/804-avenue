@@ -1,0 +1,60 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Users.IndexModel
+@{
+    ViewData["Title"] = "Users";
+    ViewData["AdminSection"] = "users";
+}
+<p class="muted admin-lead-muted">@Model.TotalCount registered public user@(Model.TotalCount != 1 ? "s" : "").</p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Joined</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Login via</th>
+        <th>Email confirmed</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var u in Model.Users)
+      {
+        <tr>
+          <td>@u.CreatedAt.LocalDateTime.ToString("d MMM yy")</td>
+          <td>@(u.DisplayName ?? "—")</td>
+          <td><a href="mailto:@u.Email">@u.Email</a></td>
+          <td>@(u.PhoneNumber ?? "—")</td>
+          <td>@u.LoginProvider</td>
+          <td>@(u.EmailConfirmed ? "✓" : "—")</td>
+          <td>
+            @if (u.LockoutEnabled && u.LockoutEnd.HasValue && u.LockoutEnd > DateTimeOffset.UtcNow)
+            {
+              <span class="badge badge-new">Suspended</span>
+            }
+            else
+            {
+              <span class="badge badge-closed">Active</span>
+            }
+          </td>
+          <td>
+            <form method="post" class="form-inline-block">
+              <input type="hidden" name="userId" value="@u.Id" />
+              @if (u.LockoutEnabled && u.LockoutEnd.HasValue && u.LockoutEnd > DateTimeOffset.UtcNow)
+              {
+                <button name="action" value="activate" class="btn-primary admin-btn-xs">Activate</button>
+              }
+              else
+              {
+                <button name="action" value="suspend" onclick="return confirm('Suspend this user?')" class="btn-outline admin-btn-xs btn-suspend">Suspend</button>
+              }
+            </form>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (Model.Users.Count == 0) { <p class="muted admin-empty">No public users registered yet.</p> }

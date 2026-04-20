@@ -4,6 +4,7 @@
 }
 <nav class="admin-nav" aria-label="Admin">
   <a class="@NavClass("dashboard")" asp-area="Admin" asp-page="/Index">Dashboard</a>
+  <a class="@NavClass("website") admin-nav-a--accent" asp-area="Admin" asp-page="/WebsiteContent/Index"><i class="bi bi-globe me-1" aria-hidden="true"></i>Website</a>
   <a class="@NavClass("settings")" asp-area="Admin" asp-page="/SiteSettings/Index">Settings</a>
   <a class="@NavClass("lookups")" asp-area="Admin" asp-page="/Lookups/Index">Lookups</a>
   <a class="@NavClass("content")" asp-area="Admin" asp-page="/ContentBlocks/Index">Content</a>
@@ -12,4 +13,15 @@
   <a class="@NavClass("owner")" asp-area="Admin" asp-page="/OwnerRequests/Index">Listing requests</a>
   <a class="@NavClass("listings")" asp-area="Admin" asp-page="/Listings/Index">Properties</a>
   <a class="@NavClass("projects")" asp-area="Admin" asp-page="/Projects/Index">Projects</a>
+  <a class="@NavClass("ratings")" asp-area="Admin" asp-page="/Ratings/Index">Reviews</a>
+  <a class="@NavClass("users")" asp-area="Admin" asp-page="/Users/Index">Users</a>
+  <a class="@NavClass("agents")" asp-area="Admin" asp-page="/Agents/Index">Agents</a>
+  <a class="@NavClass("testimonials")" asp-area="Admin" asp-page="/Testimonials/Index">Testimonials</a>
+  <a class="@NavClass("service-requests") admin-nav-a--warning" asp-area="Admin" asp-page="/ServiceRequests/Index"><i class="bi bi-gear me-1" aria-hidden="true"></i>Service Requests</a>
+  <a class="@NavClass("project-progress")" asp-area="Admin" asp-page="/ProjectProgress/Index">Project Tracker</a>
+  <a class="@NavClass("service-reports")" asp-area="Admin" asp-page="/ServiceReports/Index">Service Reports</a>
+  <a class="@NavClass("newsletter")" asp-area="Admin" asp-page="/Newsletter/Index">Newsletter</a>
+  <a class="@NavClass("developers")" asp-area="Admin" asp-page="/Developers/Index">Developers</a>
+  <a class="@NavClass("areaguides")" asp-area="Admin" asp-page="/AreaGuides/Index">Area Guides</a>
+  <a class="@NavClass("features") admin-nav-a--accent" asp-area="Admin" asp-page="/Features/Index"><i class="bi bi-sliders me-1" aria-hidden="true"></i>Features</a>
 </nav>

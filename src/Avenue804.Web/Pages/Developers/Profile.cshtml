@@ -1,0 +1,57 @@
+@page "/Developers/{slug}"
+@model Avenue804.Web.Pages.Developers.DeveloperProfileModel
+@using Avenue804.Web.Infrastructure
+@{
+    var D = Model.Developer!;
+    ViewData["Title"] = D.Name + " — Properties & Projects";
+    ViewData["NavActive"] = "developers";
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Properties/Index">Properties</a><span class="sep">/</span><span>@D.Name</span></div>
+    <h1 class="page-hero-title fade-up">@D.Name</h1>
+    @if (!string.IsNullOrWhiteSpace(D.Headquarters)) { <p class="page-hero-sub fade-up">@(D.EstablishedYear.HasValue ? "Est. " + D.EstablishedYear + " · " : "")@D.Headquarters</p> }
+  </div>
+</section>
+
+<section class="section-pad" style="background:var(--bg-surface)">
+  <div class="container">
+    <div class="dev-profile-bar fade-up" style="margin-bottom:36px">
+      @if (!string.IsNullOrWhiteSpace(D.LogoUrl))
+      {
+        <img src="@D.LogoUrl" alt="@D.Name" class="dev-logo" />
+      }
+      else
+      {
+        <div class="dev-logo-text">@D.Name[0]</div>
+      }
+      <div class="dev-info">
+        <div class="dev-name">@D.Name</div>
+        @if (D.EstablishedYear.HasValue) { <div class="dev-meta">Est. @D.EstablishedYear · @(D.Headquarters ?? "UAE")</div> }
+        @if (!string.IsNullOrWhiteSpace(D.Description)) { <p class="dev-desc">@D.Description</p> }
+      </div>
+      <div class="dev-actions">
+        @if (!string.IsNullOrWhiteSpace(D.WebsiteUrl))
+        {
+          <a href="@D.WebsiteUrl" target="_blank" rel="noopener" class="btn-outline" style="padding:9px 18px;font-size:.7rem">Official Website</a>
+        }
+      </div>
+    </div>
+
+    @if (Model.Listings.Count == 0)
+    {
+      <p class="section-sub">No published listings from @D.Name at the moment. <a asp-page="/Properties/Index">Browse all properties</a>.</p>
+    }
+    else
+    {
+      <div class="section-tag fade-up">@Model.Listings.Count listing@(Model.Listings.Count != 1 ? "s" : "")</div>
+      <h2 class="section-title section-title--compact fade-up">Properties by <em>@D.Name</em></h2>
+      <div class="feat-grid">
+        @foreach (var p in Model.Listings)
+        {
+          <partial name="Shared/_PropertyCard" model="p" />
+        }
+      </div>
+    }
+  </div>
+</section>

@@ -16,8 +16,19 @@ public class AboutModel : PageModel
     public async Task OnGetAsync(CancellationToken cancellationToken = default)
     {
         var map = await _content.GetPublishedBodiesAsync(
-            [ContentBlockSlugs.PageAboutHeroTitle, ContentBlockSlugs.PageAboutHeroSubtitle],
-            cancellationToken);
+        [
+            ContentBlockSlugs.PageAboutHeroTitle, ContentBlockSlugs.PageAboutHeroSubtitle,
+            ContentBlockSlugs.AboutStoryTag, ContentBlockSlugs.AboutStoryTitle,
+            ContentBlockSlugs.AboutStoryBody,
+            ContentBlockSlugs.AboutVmTag, ContentBlockSlugs.AboutVisionBody,
+            ContentBlockSlugs.AboutMissionBody,
+            ContentBlockSlugs.AboutValuesTag, ContentBlockSlugs.AboutValuesItems,
+            ContentBlockSlugs.AboutExpertiseTag, ContentBlockSlugs.AboutExpertiseLead,
+            ContentBlockSlugs.AboutExpertiseItems,
+            ContentBlockSlugs.AboutTeamLead, ContentBlockSlugs.AboutTeamItems,
+            ContentBlockSlugs.AboutWcuTag, ContentBlockSlugs.AboutWcuItems
+        ], cancellationToken);
+
         Hero = ServicePageHeroModel.FromMap(map, ContentBlockSlugs.PageAboutHeroTitle, ContentBlockSlugs.PageAboutHeroSubtitle);
     }
 }

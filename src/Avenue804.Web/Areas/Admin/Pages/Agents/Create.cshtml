@@ -1,0 +1,24 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Agents.CreateModel
+@{
+    ViewData["Title"] = "New agent";
+}
+<p class="admin-back"><a asp-page="Index">← Agents</a></p>
+<form method="post" class="admin-form">
+  <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
+  <div class="row"><label asp-for="Form.Name"></label><input asp-for="Form.Name" /></div>
+  <div class="row"><label asp-for="Form.Title"></label><input asp-for="Form.Title" placeholder="e.g. Senior Property Consultant" /></div>
+  <div class="row admin-form-row-2">
+    <div><label asp-for="Form.Phone"></label><input asp-for="Form.Phone" /></div>
+    <div><label asp-for="Form.Email"></label><input asp-for="Form.Email" type="email" /></div>
+  </div>
+  <div class="row"><label asp-for="Form.WhatsAppNumber">WhatsApp number</label><input asp-for="Form.WhatsAppNumber" placeholder="+971 50 000 0000" /></div>
+  <div class="row"><label asp-for="Form.AvatarUrl">Photo URL</label><input asp-for="Form.AvatarUrl" type="url" placeholder="https://…" /></div>
+  <div class="row"><label asp-for="Form.Bio">Bio</label><textarea asp-for="Form.Bio" rows="3"></textarea></div>
+  <div class="row chk">
+    <input asp-for="Form.IsActive" />
+    <label asp-for="Form.IsActive" class="admin-label-inline">Active</label>
+  </div>
+  <button type="submit" class="btn-primary"><span>Create Agent</span></button>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

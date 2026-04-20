@@ -1,277 +1,330 @@
 @model Avenue804.Web.Pages.IndexModel
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @using Avenue804.Web.Infrastructure
+@using Avenue804.Web.Configuration
 @{
     var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
+    var B = Model.Blocks;
+    string Txt(string slug, string fallback) => B.TryGetValue(slug, out var v) ? v : fallback;
 }
-<!-- ═══ HERO ═══ -->
-<section class="hero" id="hero">
-    <div class="hero-bg"><img src="https://images.unsplash.com/photo-1512632578888-169bbbc64f33?w=1800&q=80" alt="Abu Dhabi skyline"></div>
-    <div class="hero-mesh"></div>
-    <div class="hero-grid-overlay"></div>
-    <div class="hero-content">
-        @if (string.IsNullOrEmpty(Model.HeroEyebrowHtml))
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section class="ph-hero" id="hero">
+  <div class="ph-hero__bg">
+    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1800&q=80" alt="Construction and contracting in Abu Dhabi" />
+  </div>
+  <div class="ph-hero__overlay"></div>
+  <div class="ph-hero__content">
+    <p class="ph-hero__eyebrow">Abu Dhabi's Trusted Contracting &amp; Property Firm</p>
+    <h1 class="ph-hero__title">Build. <span class="ph-hero__hl">Maintain.</span><br>Manage.</h1>
+    <p class="ph-hero__sub">Contracting, maintenance &amp; facility management — plus real estate brokerage — all under one roof across the UAE.</p>
+    <div class="ph-hero__ctas">
+      <a asp-page="/Contact" class="ph-btn ph-btn--primary">Get a Free Quote</a>
+      <a asp-page="/Properties" class="ph-btn ph-btn--outline-white">Browse Properties</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     STATS BAR
+══════════════════════════════════════════════ -->
+<section class="ph-stats">
+  <div class="container">
+    <div class="ph-stats__grid">
+      <div class="ph-stats__item fade-up">
+        <div class="ph-stats__num" data-count="120" data-suffix="+">0</div>
+        <div class="ph-stats__label">Projects Delivered</div>
+      </div>
+      <div class="ph-stats__item fade-up">
+        <div class="ph-stats__num" data-count="15" data-suffix="+">0</div>
+        <div class="ph-stats__label">Years Experience</div>
+      </div>
+      <div class="ph-stats__item fade-up">
+        <div class="ph-stats__num" data-count="98" data-suffix="%">0</div>
+        <div class="ph-stats__label">Client Satisfaction</div>
+      </div>
+      <div class="ph-stats__item fade-up">
+        <div class="ph-stats__num" data-count="500" data-suffix="+">0</div>
+        <div class="ph-stats__label">Properties Listed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     OUR SERVICES — core business (first section)
+══════════════════════════════════════════════ -->
+<section class="section-pad section-bg-white">
+  <div class="container">
+    <p class="ph-tag ph-tag--center fade-up">What We Do</p>
+    <h2 class="ph-title ph-title--center fade-up mb-4">Contracting. Maintenance. <em>Facility Management.</em></h2>
+    <div class="ph-services__grid">
+
+      <!-- Contracting -->
+      <a class="ph-service-card fade-up" asp-page="/Contracting">
+        <div class="ph-service-card__img" style="background-image:url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80')"></div>
+        <div class="ph-service-card__overlay"></div>
+        <div class="ph-service-card__body">
+          <div class="ph-service-card__icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <h3 class="ph-service-card__title">Contracting</h3>
+          <p class="ph-service-card__sub">Civil works, interior fit-out, gypsum, flooring, glass &amp; aluminum, signage — end-to-end project delivery.</p>
+          <ul class="ph-service-card__list">
+            <li>Civil &amp; general contracting</li>
+            <li>Interior fit-out &amp; renovation</li>
+            <li>Gypsum &amp; ceiling works</li>
+            <li>Flooring, painting &amp; finishing</li>
+            <li>Glass, aluminum &amp; signage</li>
+          </ul>
+          <span class="ph-service-card__cta">Learn more →</span>
+        </div>
+      </a>
+
+      <!-- Maintenance -->
+      <a class="ph-service-card fade-up" asp-page="/Maintenance">
+        <div class="ph-service-card__img" style="background-image:url('https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&q=80')"></div>
+        <div class="ph-service-card__overlay"></div>
+        <div class="ph-service-card__body">
+          <div class="ph-service-card__icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          </div>
+          <h3 class="ph-service-card__title">Maintenance</h3>
+          <p class="ph-service-card__sub">Preventive, corrective and MEP maintenance — keeping your property in peak condition year-round.</p>
+          <ul class="ph-service-card__list">
+            <li>MEP (mechanical, electrical, plumbing)</li>
+            <li>Preventive maintenance contracts</li>
+            <li>Corrective &amp; emergency repairs</li>
+            <li>General building maintenance</li>
+            <li>Civil maintenance works</li>
+          </ul>
+          <span class="ph-service-card__cta">Learn more →</span>
+        </div>
+      </a>
+
+      <!-- Facility Management -->
+      <a class="ph-service-card fade-up" asp-page="/FacilityManagement">
+        <div class="ph-service-card__img" style="background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80')"></div>
+        <div class="ph-service-card__overlay"></div>
+        <div class="ph-service-card__body">
+          <div class="ph-service-card__icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M14 7h1M14 11h1M9 7h1M9 11h1"/></svg>
+          </div>
+          <h3 class="ph-service-card__title">Facility Management</h3>
+          <p class="ph-service-card__sub">Complete facility management for buildings, compounds and commercial complexes across the UAE.</p>
+          <ul class="ph-service-card__list">
+            <li>Building operations management</li>
+            <li>Shared services coordination</li>
+            <li>Vendor &amp; contractor management</li>
+            <li>Health, safety &amp; compliance</li>
+            <li>AMC (annual maintenance contracts)</li>
+          </ul>
+          <span class="ph-service-card__cta">Learn more →</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     ABOUT 804 AVENUE
+══════════════════════════════════════════════ -->
+<section class="section-pad" style="background:#fff">
+  <div class="container">
+    <div class="ph-about__grid">
+      <div class="ph-about__img fade-up">
+        <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=900&q=80" alt="804 Avenue office" />
+        <div class="ph-about__img-card fade-up">
+          <div class="ph-about__img-num">15+</div>
+          <div class="ph-about__img-label">Years serving the UAE</div>
+        </div>
+      </div>
+      <div class="ph-about__content">
+        <p class="ph-tag fade-up">About 804 Avenue</p>
+        <h2 class="ph-title fade-up">@Html.Raw(Txt(ContentBlockSlugs.HomeAboutTitle, "Your trusted partner in <em>property &amp; construction</em>"))</h2>
+        <p class="ph-about__text fade-up">
+          @Html.Raw(Txt(ContentBlockSlugs.AboutStripLead,
+            "804 Avenue Properties and Contracting is a dynamic company offering professional services in real estate, construction and property maintenance across the UAE. Headquartered in Abu Dhabi, we combine deep market knowledge with skilled craftsmanship to deliver exceptional results for every client."))
+        </p>
+        <div class="ph-about__points fade-up">
+          <div class="ph-about__point">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Licensed &amp; certified engineers and technicians
+          </div>
+          <div class="ph-about__point">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Real estate, contracting &amp; maintenance under one roof
+          </div>
+          <div class="ph-about__point">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Transparent pricing — no hidden fees
+          </div>
+          <div class="ph-about__point">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            On-time delivery with structured project management
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:32px">
+          <a asp-page="/About" class="ph-btn ph-btn--primary">About Us</a>
+          <a asp-page="/Contact" class="ph-btn ph-btn--outline">Get a Quote</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     FEATURED PROPERTIES (secondary — shown after services & about)
+══════════════════════════════════════════════ -->
+<section class="section-pad" style="background:#f9fafb">
+  <div class="container">
+    <div class="ph-projects__head">
+      <div>
+        <p class="ph-tag fade-up">Real Estate</p>
+        <h2 class="ph-title fade-up">Featured <em>Properties</em></h2>
+      </div>
+      <a class="ph-link-all" asp-page="/Properties">Browse all →</a>
+    </div>
+    <div class="ph-feat-grid">
+      @if (Model.FeaturedListings.Count > 0)
+      {
+        foreach (var p in Model.FeaturedListings)
         {
-            <div class="hero-eyebrow fade-up">Abu Dhabi's Trusted Property &amp; Contracting Firm</div>
+          <partial name="Shared/_PropertyCard" model="p" />
         }
-        else
+      }
+      else
+      {
+        <div class="pcard fade-up">
+          <div class="pcard__img">
+            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80" alt="Luxury Apartment" />
+            <span class="pcard__badge pcard__badge--sale">For Sale</span>
+          </div>
+          <div class="pcard__body">
+            <div class="pcard__price">AED 1,200,000</div>
+            <div class="pcard__title">Luxury 2BR Apartment</div>
+            <div class="pcard__loc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Al Reem Island, Abu Dhabi</div>
+            <div class="pcard__meta"><span class="pcard__meta-item">2 Beds</span><span class="pcard__meta-item">2 Baths</span><span class="pcard__meta-item">1,250 sqft</span></div>
+          </div>
+        </div>
+        <div class="pcard fade-up">
+          <div class="pcard__img">
+            <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&q=80" alt="Modern Villa" />
+            <span class="pcard__badge pcard__badge--rent">For Rent</span>
+          </div>
+          <div class="pcard__body">
+            <div class="pcard__price">AED 180,000 <small>/yr</small></div>
+            <div class="pcard__title">Modern 4BR Villa</div>
+            <div class="pcard__loc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Khalifa City, Abu Dhabi</div>
+            <div class="pcard__meta"><span class="pcard__meta-item">4 Beds</span><span class="pcard__meta-item">5 Baths</span><span class="pcard__meta-item">3,800 sqft</span></div>
+          </div>
+        </div>
+        <div class="pcard fade-up">
+          <div class="pcard__img">
+            <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80" alt="Penthouse" />
+            <span class="pcard__badge pcard__badge--sale">For Sale</span>
+            <span class="pcard__label pcard__label--featured">Featured</span>
+          </div>
+          <div class="pcard__body">
+            <div class="pcard__price">AED 4,500,000</div>
+            <div class="pcard__title">Sea View Penthouse</div>
+            <div class="pcard__loc"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Corniche Road, Abu Dhabi</div>
+            <div class="pcard__meta"><span class="pcard__meta-item">3 Beds</span><span class="pcard__meta-item">4 Baths</span><span class="pcard__meta-item">2,900 sqft</span></div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TESTIMONIALS
+══════════════════════════════════════════════ -->
+<section class="section-pad" style="background:#f9fafb">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="ph-tag ph-tag--center fade-up">@Html.Raw(Txt(ContentBlockSlugs.HomeTestiTag, "Client Stories"))</p>
+      <h2 class="ph-title ph-title--center fade-up">@Html.Raw(Txt(ContentBlockSlugs.HomeTestiTitle, "What our <em>clients</em> say"))</h2>
+    </div>
+    <div class="ph-testi__grid">
+      @if (Model.Testimonials.Count > 0)
+      {
+        foreach (var t in Model.Testimonials.Take(3))
         {
-            <div class="hero-eyebrow fade-up">@Html.Raw(Model.HeroEyebrowHtml)</div>
+          <div class="ph-testi-card fade-up">
+            <div class="ph-testi-card__stars">
+              @for (int s = 1; s <= Math.Min(t.Stars, 5); s++) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              }
+            </div>
+            <p class="ph-testi-card__text">@t.Quote</p>
+            <div class="ph-testi-card__author">
+              <div class="ph-testi-card__avatar">@t.AuthorName[0]</div>
+              <div>
+                <div class="ph-testi-card__name">@t.AuthorName</div>
+                @if (!string.IsNullOrWhiteSpace(t.AuthorRole)) { <div class="ph-testi-card__role">@t.AuthorRole</div> }
+              </div>
+            </div>
+          </div>
         }
-        <h1 class="hero-headline fade-up">Build.<br><span class="gradient">Buy.</span><br>Maintain.</h1>
-        @if (string.IsNullOrEmpty(Model.HeroSubtitleHtml))
-        {
-            <p class="hero-sub fade-up">From luxury property listings to complete construction, fit-out, and maintenance — 804 Avenue is your single trusted partner across the UAE.</p>
-        }
-        else
-        {
-            <p class="hero-sub fade-up">@Html.Raw(Model.HeroSubtitleHtml)</p>
-        }
-        <div class="hero-btns fade-up">
-            <a href="/Properties" class="btn-primary"><span>Explore Properties</span></a>
-            <a href="/Contracting" class="btn-outline">Our Services</a>
+      }
+      else
+      {
+        <div class="ph-testi-card fade-up">
+          <div class="ph-testi-card__stars">
+            @for (int i = 0; i < 5; i++) { <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg> }
+          </div>
+          <p class="ph-testi-card__text">804 Avenue helped us find the perfect apartment in Al Reem Island and handled the complete interior fit-out. One company for everything — seamless.</p>
+          <div class="ph-testi-card__author">
+            <div class="ph-testi-card__avatar">F</div>
+            <div><div class="ph-testi-card__name">Fatima Al Mazrouei</div><div class="ph-testi-card__role">Homeowner — Al Reem Island</div></div>
+          </div>
         </div>
+        <div class="ph-testi-card fade-up">
+          <div class="ph-testi-card__stars">
+            @for (int i = 0; i < 5; i++) { <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg> }
+          </div>
+          <p class="ph-testi-card__text">Their contracting team delivered our office renovation ahead of schedule. Exceptional quality in gypsum and finishing work. Highly recommended.</p>
+          <div class="ph-testi-card__author">
+            <div class="ph-testi-card__avatar">J</div>
+            <div><div class="ph-testi-card__name">James Mitchell</div><div class="ph-testi-card__role">CEO — Mitchell Group</div></div>
+          </div>
+        </div>
+        <div class="ph-testi-card fade-up">
+          <div class="ph-testi-card__stars">
+            @for (int i = 0; i < 5; i++) { <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg> }
+          </div>
+          <p class="ph-testi-card__text">We've used 804 Avenue for our annual maintenance contract for two years. Their preventive approach saved us from major issues. Professional and reliable.</p>
+          <div class="ph-testi-card__author">
+            <div class="ph-testi-card__avatar">A</div>
+            <div><div class="ph-testi-card__name">Ahmed Al Dhaheri</div><div class="ph-testi-card__role">Building Manager — Abu Dhabi</div></div>
+          </div>
+        </div>
+      }
     </div>
-    <div class="hero-search fade-up">
-        <div class="search-tabs">
-            <button class="search-tab active">Buy</button>
-            <button class="search-tab">Rent</button>
-            <button class="search-tab">Contracting</button>
-            <button class="search-tab">Maintenance</button>
-        </div>
-        <div class="search-fields">
-            <div class="search-field"><label>Location</label><select><option>Abu Dhabi</option><option>Dubai</option><option>Sharjah</option></select></div>
-            <div class="search-field"><label>Type</label><select><option>All Types</option><option>Apartment</option><option>Villa</option><option>Office</option><option>Commercial</option></select></div>
-            <div class="search-field"><label>Budget</label><select><option>Any Price</option><option>Under AED 500K</option><option>AED 500K - 1M</option><option>AED 1M - 5M</option><option>AED 5M+</option></select></div>
-            <button class="search-submit">Search</button>
-        </div>
-    </div>
+  </div>
 </section>
 
-<!-- ═══ STATS ═══ -->
-<section class="stats-bar" id="statsBar">
-    <div class="container">
-        <div class="stats-grid">
-            <div class="fade-up"><div class="stat-num" data-count="500" data-suffix="+">0</div><div class="stat-label">Properties Listed</div></div>
-            <div class="fade-up"><div class="stat-num" data-count="120" data-suffix="+">0</div><div class="stat-label">Projects Delivered</div></div>
-            <div class="fade-up"><div class="stat-num" data-count="15" data-suffix="+">0</div><div class="stat-label">Years Experience</div></div>
-            <div class="fade-up"><div class="stat-num" data-count="98" data-suffix="%">0</div><div class="stat-label">Client Satisfaction</div></div>
-        </div>
+<!-- ══════════════════════════════════════════════
+     FINAL CTA BANNER
+══════════════════════════════════════════════ -->
+<section class="ph-cta">
+  <div class="container">
+    <div class="ph-cta__inner fade-up">
+      <div class="ph-cta__text">
+        <h2 class="ph-cta__title">@Html.Raw(Txt(ContentBlockSlugs.HomeCtaTitle, "Ready to build, renovate or maintain?"))</h2>
+        <p class="ph-cta__sub">Call us today — contracting, maintenance &amp; FM under one roof.</p>
+        <a href="@(site?.TelHref ?? "tel:+971504399804")" class="ph-cta__phone">
+          @(site?.PhoneDisplay ?? "+971 50 43 99 804")
+        </a>
+      </div>
+      <div class="ph-cta__btns">
+        <a asp-page="/Contact" class="ph-btn ph-btn--white">Get a Free Quote</a>
+        <a asp-page="/Properties" class="ph-btn ph-btn--outline-white">Browse Properties</a>
+      </div>
     </div>
-</section>
-
-<!-- ═══ ABOUT STRIP ═══ -->
-<section class="about-strip section-pad">
-    <div class="container">
-        <div class="about-grid">
-            <div>
-                <div class="section-tag fade-up">Who We Are</div>
-                <h2 class="section-title fade-up">Your Trusted <em>Partner</em> in Property &amp; Construction</h2>
-                @if (string.IsNullOrEmpty(Model.AboutStripLeadHtml))
-                {
-                    <p class="about-desc fade-up">804 Avenue Properties and Contracting is a dynamic company offering professional services in the fields of real estate, construction, and property maintenance across the UAE. Headquartered in Abu Dhabi, we combine deep market knowledge with skilled craftsmanship to deliver exceptional results for every client.</p>
-                }
-                else
-                {
-                    <p class="about-desc fade-up">@Html.Raw(Model.AboutStripLeadHtml)</p>
-                }
-                <a href="/About" class="btn-outline fade-up">Learn More About Us</a>
-            </div>
-            <div class="about-cards">
-                <div class="about-card fade-up">
-                    <div class="about-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg></div>
-                    <div><h4>Our Vision</h4><p>To be the most trusted and innovative real estate and contracting company in the UAE.</p></div>
-                </div>
-                <div class="about-card fade-up">
-                    <div class="about-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3" /><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg></div>
-                    <div><h4>Our Mission</h4><p>To deliver exceptional quality in every property transaction, construction project, and maintenance service.</p></div>
-                </div>
-                <div class="about-card fade-up">
-                    <div class="about-card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 6L9 17l-5-5" /></svg></div>
-                    <div><h4>Our Values</h4><p>Integrity, professionalism, quality, innovation, and an unwavering focus on client satisfaction.</p></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ═══ RE SERVICES ═══ -->
-<section class="re-services section-pad">
-    <div class="container">
-        <div class="section-tag fade-up">Real Estate</div>
-        <h2 class="section-title fade-up">Your Trusted <em>Property</em> Partner</h2>
-        <div class="re-grid">
-            <div class="re-card fade-up"><div class="re-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14" /><path d="M9 21v-6h6v6" /></svg></div><h4>Property Buying &amp; Selling Brokerage</h4></div>
-            <div class="re-card fade-up"><div class="re-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M2 10h20" /></svg></div><h4>Residential &amp; Commercial Leasing</h4></div>
-            <div class="re-card fade-up"><div class="re-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6" /></svg></div><h4>Property Investment Opportunities</h4></div>
-            <div class="re-card fade-up"><div class="re-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" /><rect x="9" y="3" width="6" height="4" rx="1" /></svg></div><h4>Property Portfolio Advisory</h4></div>
-            <div class="re-card fade-up"><div class="re-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg></div><h4>Building &amp; Property Management</h4></div>
-        </div>
-        <div style="text-align:center;margin-top:40px"><a href="/Properties" class="btn-outline fade-up">View All Properties →</a></div>
-    </div>
-</section>
-
-<!-- ═══ FEATURED PROPERTIES ═══ -->
-<section class="feat-props section-pad">
-    <div class="container">
-        <div class="section-tag fade-up">Featured Listings</div>
-        <h2 class="section-title fade-up">Handpicked <em>Properties</em> For You</h2>
-        <div class="feat-grid">
-            @if (Model.FeaturedListings.Count > 0)
-            {
-                foreach (var p in Model.FeaturedListings)
-                {
-                    <partial name="Shared/_PropertyCard" model="p" />
-                }
-            }
-            else
-            {
-                <div class="prop-card fade-up">
-                    <div class="prop-card-img">
-                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80" alt="Luxury Apartment">
-                        <span class="prop-badge badge-sale">For Sale</span>
-                        <button class="prop-save" aria-label="Save"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" /></svg></button>
-                    </div>
-                    <div class="prop-card-body">
-                        <div class="prop-price">AED 1,200,000</div>
-                        <div class="prop-name">Luxury 2BR Apartment</div>
-                        <div class="prop-loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>Al Reem Island, Abu Dhabi</div>
-                        <div class="prop-meta">
-                            <span class="prop-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v11a1 1 0 001 1h16a1 1 0 001-1V7" /><path d="M2 7h20l-2-4H4z" /></svg>2 Beds</span>
-                            <span class="prop-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16a1 1 0 011 1v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4a1 1 0 011-1z" /><path d="M6 12V5a2 2 0 012-2h3a2 2 0 012 2v7" /></svg>2 Baths</span>
-                            <span class="prop-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" /></svg>1,250 sqft</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="prop-card fade-up">
-                    <div class="prop-card-img">
-                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Office">
-                        <span class="prop-badge badge-rent">For Rent</span>
-                        <button class="prop-save" aria-label="Save"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" /></svg></button>
-                    </div>
-                    <div class="prop-card-body">
-                        <div class="prop-price">AED 85,000<small>/yr</small></div>
-                        <div class="prop-name">Commercial Office Space</div>
-                        <div class="prop-loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>@(site?.Address ?? "Al Ghaith Tower, Abu Dhabi")</div>
-                        <div class="prop-meta">
-                            <span class="prop-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" /></svg>1,200 sqft</span>
-                            <span class="prop-meta-item">Office</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="prop-card fade-up">
-                    <div class="prop-card-img">
-                        <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80" alt="Villa">
-                        <span class="prop-badge badge-sale">For Sale</span>
-                        <button class="prop-save" aria-label="Save"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" /></svg></button>
-                    </div>
-                    <div class="prop-card-body">
-                        <div class="prop-price">AED 3,500,000</div>
-                        <div class="prop-name">Spacious 4BR Villa</div>
-                        <div class="prop-loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>Mohammed Bin Zayed City</div>
-                        <div class="prop-meta">
-                            <span class="prop-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v11a1 1 0 001 1h16a1 1 0 001-1V7" /><path d="M2 7h20l-2-4H4z" /></svg>4 Beds</span>
-                            <span class="prop-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16a1 1 0 011 1v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4a1 1 0 011-1z" /><path d="M6 12V5a2 2 0 012-2h3a2 2 0 012 2v7" /></svg>4 Baths</span>
-                            <span class="prop-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" /></svg>3,800 sqft</span>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-        <div style="text-align:center;margin-top:44px"><a href="/Properties" class="btn-primary fade-up"><span>Browse All Properties</span></a></div>
-    </div>
-</section>
-
-<!-- ═══ CONTRACTING ═══ -->
-<section class="contract-section section-pad">
-    <div class="container">
-        <div class="section-tag fade-up">Contracting</div>
-        <h2 class="section-title fade-up">Crafting <em>Spaces</em> with Quality and Precision</h2>
-        <p class="section-sub fade-up">Our contracting division provides reliable construction and fit-out services with a focus on quality craftsmanship and professional project management.</p>
-        <div class="contract-grid">
-            <div class="contract-card fade-up"><div class="contract-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14" /></svg></div><h4>Civil &amp; General Contracting</h4><p>Complete building construction and structural works.</p></div>
-            <div class="contract-card fade-up"><div class="contract-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="2" /><path d="M2 9h20" /></svg></div><h4>Gypsum &amp; Ceiling Works</h4><p>Precision gypsum partitions and false ceilings.</p></div>
-            <div class="contract-card fade-up"><div class="contract-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 12h18M12 3v18" /></svg></div><h4>Glass &amp; Aluminum Works</h4><p>Custom glass facades and aluminum cladding.</p></div>
-            <div class="contract-card fade-up"><div class="contract-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg></div><h4>Painting &amp; Finishing</h4><p>Professional painting, textures, and finishing works.</p></div>
-            <div class="contract-card fade-up"><div class="contract-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="6" width="22" height="12" rx="2" /><path d="M1 10h22" /></svg></div><h4>Flooring Works</h4><p>Premium marble, tile, hardwood, and epoxy flooring.</p></div>
-            <div class="contract-card fade-up"><div class="contract-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" /></svg></div><h4>Interior Fit-Out &amp; Renovation</h4><p>Complete interior transformation from concept to handover.</p></div>
-            <div class="contract-card fade-up"><div class="contract-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2" /><path d="M7 8h10M7 12h10M7 16h6" /></svg></div><h4>Internal &amp; External Signage</h4><p>Custom signage design, fabrication, and installation.</p></div>
-        </div>
-        <div style="text-align:center;margin-top:44px"><a href="/Contracting" class="btn-primary fade-up"><span>View Contracting Services</span></a></div>
-    </div>
-</section>
-
-<!-- ═══ MAINTENANCE ═══ -->
-<section class="maint-section section-pad">
-    <div class="container">
-        <div class="section-tag fade-up">Maintenance</div>
-        <h2 class="section-title fade-up">Preserving <em>Value</em> Through Professional Care</h2>
-        <p class="section-sub fade-up">Our certified maintenance team ensures your property stays in peak condition with responsive, reliable care.</p>
-        <div class="maint-grid">
-            <div class="maint-card fade-up"><div class="maint-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14" /></svg></div><h4>General Building</h4><p>Full-scope building maintenance and upkeep.</p></div>
-            <div class="maint-card fade-up"><div class="maint-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" /></svg></div><h4>Civil Maintenance</h4><p>Structural repairs and infrastructure care.</p></div>
-            <div class="maint-card fade-up"><div class="maint-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" /></svg></div><h4>MEP Maintenance</h4><p>Mechanical, electrical & plumbing systems.</p></div>
-            <div class="maint-card fade-up"><div class="maint-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg></div><h4>Preventive</h4><p>Scheduled inspections and proactive care.</p></div>
-            <div class="maint-card fade-up"><div class="maint-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg></div><h4>Corrective</h4><p>Rapid response repairs and fixes.</p></div>
-        </div>
-        <div style="text-align:center;margin-top:40px"><a href="/Maintenance" class="btn-outline fade-up">Learn More →</a></div>
-    </div>
-</section>
-
-<!-- ═══ WHY US ═══ -->
-<section class="why-section section-pad">
-    <div class="container" style="text-align:center">
-        <div class="section-tag fade-up" style="justify-content:center">Why 804 Avenue</div>
-        <h2 class="section-title fade-up" style="max-width:600px;margin:0 auto 16px">One Partner. <em>Every</em> Solution.</h2>
-        <div class="why-grid">
-            <div class="why-item fade-up"><div class="why-num">01</div><h4>All-in-One Provider</h4><p>Real estate, contracting, and maintenance under one roof.</p></div>
-            <div class="why-item fade-up"><div class="why-num">02</div><h4>Licensed &amp; Certified</h4><p>Fully licensed engineers, technicians, and consultants.</p></div>
-            <div class="why-item fade-up"><div class="why-num">03</div><h4>On-Time Delivery</h4><p>Structured project management at every phase.</p></div>
-            <div class="why-item fade-up"><div class="why-num">04</div><h4>Transparent Pricing</h4><p>No hidden fees — detailed cost breakdowns always.</p></div>
-            <div class="why-item fade-up"><div class="why-num">05</div><h4>Client-First</h4><p>Responsive support before, during, and after.</p></div>
-        </div>
-    </div>
-</section>
-
-<!-- ═══ TESTIMONIALS ═══ -->
-<section class="testi-section section-pad">
-    <div class="container" style="text-align:center">
-        <div class="section-tag fade-up" style="justify-content:center">Client Stories</div>
-        <h2 class="section-title fade-up">What Our <em>Clients</em> Say</h2>
-        <div class="testi-grid">
-            <div class="testi-card fade-up">
-                <div class="testi-quote">&ldquo;</div>
-                <p class="testi-text">804 Avenue helped us find the perfect apartment in Al Reem Island and handled the complete interior fit-out. One company for everything — seamless.</p>
-                <div class="testi-stars"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg></div>
-                <div class="testi-author">Fatima Al Mazrouei</div>
-                <div class="testi-role">Homeowner — Al Reem Island</div>
-            </div>
-            <div class="testi-card fade-up">
-                <div class="testi-quote">&ldquo;</div>
-                <p class="testi-text">Their contracting team delivered our office renovation ahead of schedule. The quality of gypsum and painting work was exceptional. Highly recommended.</p>
-                <div class="testi-stars"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg></div>
-                <div class="testi-author">James Mitchell</div>
-                <div class="testi-role">CEO — Mitchell Group</div>
-            </div>
-            <div class="testi-card fade-up">
-                <div class="testi-quote">&ldquo;</div>
-                <p class="testi-text">We've used 804 Avenue for our annual maintenance contract for two years. Their preventive approach has saved us from major issues. Professional and reliable.</p>
-                <div class="testi-stars"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z" /></svg></div>
-                <div class="testi-author">Ahmed Al Dhaheri</div>
-                <div class="testi-role">Building Manager — Abu Dhabi</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ═══ CTA ═══ -->
-<section class="cta-banner">
-    <div class="container">
-        <h2 class="cta-title fade-up">Ready to Build, Buy or Maintain?</h2>
-        <a href="@(site?.TelHref ?? "tel:+971504399804")" class="cta-phone fade-up" style="text-decoration:none;color:inherit;display:inline-block">@(site?.PhoneDisplay ?? "+971 50 43 99 804")</a>
-        <div class="cta-btns fade-up">
-            <a href="/Properties" class="btn-primary"><span>Browse Properties</span></a>
-            <a href="/Contact" class="btn-outline">Get a Quote</a>
-        </div>
-    </div>
+  </div>
 </section>

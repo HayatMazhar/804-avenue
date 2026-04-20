@@ -1,100 +1,64 @@
 @model Avenue804.Web.Models.Public.ServicePageHeroModel
+@using Avenue804.Web.Configuration
 <section class="page-hero">
   <div class="container">
     <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Facility Management</span></div>
     <h1 class="page-hero-title fade-up">
-      @if (string.IsNullOrEmpty(Model.HeroTitleHtml))
-      {
-        <text>Integrated <em>Facility</em> Management</text>
-      }
-      else
-      {
-        @Html.Raw(Model.HeroTitleHtml)
-      }
+      @if (string.IsNullOrEmpty(Model.HeroTitleHtml)) { <text>Integrated <em>Facility</em> Management</text> }
+      else { @Html.Raw(Model.HeroTitleHtml) }
     </h1>
     <p class="page-hero-sub fade-up">
-      @if (string.IsNullOrEmpty(Model.HeroSubtitleHtml))
-      {
-        <text>End-to-end facility operations for offices, retail, and residential towers — combining maintenance, soft services, security coordination, and vendor management under one accountable partner across Abu Dhabi and the UAE.</text>
-      }
-      else
-      {
-        @Html.Raw(Model.HeroSubtitleHtml)
-      }
+      @if (string.IsNullOrEmpty(Model.HeroSubtitleHtml)) { <text>End-to-end facility operations for offices, retail, and residential towers — combining maintenance, soft services, security coordination, and vendor management under one accountable partner across Abu Dhabi and the UAE.</text> }
+      else { @Html.Raw(Model.HeroSubtitleHtml) }
     </p>
   </div>
 </section>
 
 <section class="svc-block section-pad">
-  <div class="container">
-    <div class="svc-grid">
-      <div class="svc-img fade-up">
-        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Modern office facility">
-      </div>
-      <div class="svc-content fade-up">
-        <span class="section-tag">Operations</span>
-        <h2>Building <em>Operations</em> &amp; Compliance</h2>
-        <p>We align day-to-day building performance with landlord and tenant expectations — from helpdesk and work orders to statutory inspections, documentation, and lifecycle planning.</p>
-        <ul class="svc-list">
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Central helpdesk and SLA-based ticketing</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Vendor onboarding, contracts, and performance reviews</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Statutory testing coordination (fire, lift, electrical)</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Monthly KPI reporting and asset registers</li>
-        </ul>
-      </div>
+  <div class="container"><div class="svc-grid">
+    <div class="svc-img fade-up"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Modern office facility"></div>
+    <div class="svc-content fade-up">
+      <span class="section-tag">Operations</span>
+      <h2>@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilitySvc1Title, "Building <em>Operations</em> &amp; Compliance"))</h2>
+      @Html.Raw(Model.GetOr(ContentBlockSlugs.FacilitySvc1Body, @"<p>We align day-to-day building performance with landlord and tenant expectations — from helpdesk and work orders to statutory inspections, documentation, and lifecycle planning.</p>
+<ul class=""svc-list""><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Central helpdesk and SLA-based ticketing</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Vendor onboarding, contracts, and performance reviews</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Statutory testing coordination (fire, lift, electrical)</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Monthly KPI reporting and asset registers</li></ul>"))
     </div>
-  </div>
+  </div></div>
 </section>
 
 <section class="svc-block section-pad">
-  <div class="container">
-    <div class="svc-grid reverse">
-      <div class="svc-img fade-up">
-        <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=800&q=80" alt="Facility services team">
-      </div>
-      <div class="svc-content fade-up">
-        <span class="section-tag">Soft Services</span>
-        <h2>Soft <em>Services</em> &amp; Guest Experience</h2>
-        <p>Reception, housekeeping, landscaping, waste, and parking operations — delivered with consistent standards, trained supervisors, and clear escalation paths.</p>
-        <ul class="svc-list">
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Reception, concierge, and visitor management</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Cleaning, pest control, and waste programs</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Landscaping and façade cleaning schedules</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Security liaison and access control coordination</li>
-        </ul>
-      </div>
+  <div class="container"><div class="svc-grid reverse">
+    <div class="svc-img fade-up"><img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=800&q=80" alt="Facility services team"></div>
+    <div class="svc-content fade-up">
+      <span class="section-tag">Soft Services</span>
+      <h2>@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilitySvc2Title, "Soft <em>Services</em> &amp; Guest Experience"))</h2>
+      @Html.Raw(Model.GetOr(ContentBlockSlugs.FacilitySvc2Body, @"<p>Reception, housekeeping, landscaping, waste, and parking operations — delivered with consistent standards, trained supervisors, and clear escalation paths.</p>
+<ul class=""svc-list""><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Reception, concierge, and visitor management</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Cleaning, pest control, and waste programs</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Landscaping and façade cleaning schedules</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Security liaison and access control coordination</li></ul>"))
     </div>
-  </div>
+  </div></div>
 </section>
 
 <section class="why-maint section-pad">
   <div class="container" style="text-align:center">
-    <div class="section-tag fade-up" style="justify-content:center">Why FM with 804</div>
-    <h2 class="section-title fade-up" style="max-width:640px;margin:0 auto 16px">One accountable <em>partner</em></h2>
+    <div class="section-tag fade-up" style="justify-content:center">@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilityWhyTag, "Why FM with 804"))</div>
+    <h2 class="section-title fade-up" style="max-width:640px;margin:0 auto 16px">@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilityWhyTitle, "One accountable <em>partner</em>"))</h2>
     <div class="why-grid">
-      <div class="why-card fade-up">
-        <div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <h4>Single point of contact</h4>
-        <p>One FM lead coordinates maintenance, soft services, and contractors — fewer handoffs, faster resolution.</p>
-      </div>
-      <div class="why-card fade-up">
-        <div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div>
-        <h4>Cost transparency</h4>
-        <p>Clear scopes, budgets, and variance reporting so owners always know where spend is going.</p>
-      </div>
-      <div class="why-card fade-up">
-        <div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-        <h4>24/7 readiness</h4>
-        <p>After-hours escalation paths aligned with your building’s critical systems and tenant mix.</p>
-      </div>
+      @if (Model.Get(ContentBlockSlugs.FacilityWhyItems) is string whyItems)
+      { @Html.Raw(whyItems) }
+      else
+      {
+        <div class="why-card fade-up"><div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>Single point of contact</h4><p>One FM lead coordinates maintenance, soft services, and contractors — fewer handoffs, faster resolution.</p></div>
+        <div class="why-card fade-up"><div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div><h4>Cost transparency</h4><p>Clear scopes, budgets, and variance reporting so owners always know where spend is going.</p></div>
+        <div class="why-card fade-up"><div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><h4>24/7 readiness</h4><p>After-hours escalation paths aligned with your building's critical systems and tenant mix.</p></div>
+      }
     </div>
   </div>
 </section>
 
 <section class="cta-banner">
   <div class="container">
-    <h2 class="cta-title fade-up">Discuss your <em>facility</em> scope</h2>
-    <p class="cta-sub fade-up">Share your asset type, size, and service hours — we will propose a tailored FM model and transition plan.</p>
+    <h2 class="cta-title fade-up">@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilityCtaTitle, "Discuss your <em>facility</em> scope"))</h2>
+    <p class="cta-sub fade-up">@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilityCtaBody, "Share your asset type, size, and service hours — we will propose a tailored FM model and transition plan."))</p>
     <div class="cta-btns fade-up">
       <a asp-page="/Contact" class="btn-primary"><span>Talk to our FM team</span></a>
       <a asp-page="/Maintenance" class="btn-outline">Maintenance services</a>

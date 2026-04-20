@@ -1,0 +1,93 @@
+using System.ComponentModel.DataAnnotations;
+using Avenue804.Web.Data;
+using Avenue804.Web.Domain;
+using Avenue804.Web.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace Avenue804.Web.Pages.Submit;
+
+public class ServiceQuoteModel : PageModel
+{
+    private readonly ApplicationDbContext _db;
+    private readonly IEmailSender _email;
+    private readonly IConfiguration _cfg;
+    private readonly IFeatureFlagService _flags;
+
+    public ServiceQuoteModel(ApplicationDbContext db, IEmailSender email, IConfiguration cfg, IFeatureFlagService flags)
+    {
+        _db = db;
+        _email = email;
+        _cfg = cfg;
+        _flags = flags;
+    }
+
+    public IActionResult OnGet() => RedirectToPage("/Contracting");
+
+    public async Task<IActionResult> OnPostAsync(
+        [Required, StringLength(200)] string name,
+        [Required, StringLength(50)] string phone,
+        [Required, EmailAddress, StringLength(256)] string email,
+        [StringLength(200)] string? company,
+        ServiceType serviceType,
+        [StringLength(4000)] string? projectDescription,
+        decimal? areaSqm,
+        [StringLength(400)] string? location,
+        [StringLength(200)] string? timeline,
+        decimal? budget,
+        [StringLength(100)] string? estimateRange,
+        string? returnPage,
+        CancellationToken ct = default)
+    {
+        if (!ModelState.IsValid)
+        {
+            TempData["ToastError"] = "Please complete all required fields.";
+            return !string.IsNullOrEmpty(returnPage) && Url.IsLocalUrl(returnPage) ? LocalRedirect(returnPage) : RedirectToPage("/Contracting");
+        }
+
+        var req = new ServiceQuoteRequest
+        {
+            Name = name.Trim(),
+            Phone = phone.Trim(),
+            Email = email.Trim(),
+            Company = company?.Trim(),
+            ServiceType = serviceType,
+            ProjectDescription = projectDescription?.Trim(),
+            AreaSqm = areaSqm,
+            Location = location?.Trim(),
+            Timeline = timeline?.Trim(),
+            Budget = budget,
+            EstimateRange = estimateRange?.Trim()
+        };
+
+        _db.ServiceQuoteRequests.Add(req);
+        await _db.SaveChangesAsync(ct);
+
+        if (await _flags.IsEnabledAsync(FeatureFlags.EmailNotifications, ct))
+        {
+            var adminEmail = _cfg["Site:Email"] ?? "info@804avenue.com";
+            await _email.SendAsync(adminEmail,
+                $"New Service Quote Request — {serviceType} from {name}",
+                $"""
+                <h3>New service quote request</h3>
+                <table>
+                  <tr><td><strong>Name:</strong></td><td>{name}</td></tr>
+                  <tr><td><strong>Email:</strong></td><td>{email}</td></tr>
+                  <tr><td><strong>Phone:</strong></td><td>{phone}</td></tr>
+                  <tr><td><strong>Company:</strong></td><td>{company ?? "—"}</td></tr>
+                  <tr><td><strong>Service:</strong></td><td>{serviceType}</td></tr>
+                  <tr><td><strong>Area:</strong></td><td>{(areaSqm.HasValue ? areaSqm + " sqm" : "—")}</td></tr>
+                  <tr><td><strong>Location:</strong></td><td>{location ?? "—"}</td></tr>
+                  <tr><td><strong>Timeline:</strong></td><td>{timeline ?? "—"}</td></tr>
+                  <tr><td><strong>Budget:</strong></td><td>{(budget.HasValue ? "AED " + budget.Value.ToString("N0") : "—")}</td></tr>
+                  <tr><td><strong>Estimate shown:</strong></td><td>{estimateRange ?? "—"}</td></tr>
+                  <tr><td><strong>Description:</strong></td><td>{projectDescription ?? "—"}</td></tr>
+                </table>
+                <p><a href="/Admin/ServiceRequests">View in admin</a></p>
+                """, ct);
+        }
+
+        TempData["ToastOk"] = "Thank you! We will review your project details and send a formal quote within 24 hours.";
+        return !string.IsNullOrEmpty(returnPage) && Url.IsLocalUrl(returnPage) ? LocalRedirect(returnPage) : RedirectToPage("/Contracting");
+    }
+}

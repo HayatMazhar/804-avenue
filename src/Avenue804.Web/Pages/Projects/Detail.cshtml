@@ -2,13 +2,20 @@
 @model Avenue804.Web.Pages.Projects.DetailModel
 @{
   var P = Model.Project!;
+  ViewData["Title"] = P.Title;
+  ViewData["NavActive"] = "projects";
   var img = string.IsNullOrWhiteSpace(P.CoverImageUrl)
     ? "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1600&q=80"
     : P.CoverImageUrl.Trim();
 }
+
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Projects/Index">Projects</a><span class="sep">/</span><span>@P.Title</span></div>
+    <div class="breadcrumb fade-up">
+      <a asp-page="/Index">Home</a><span class="sep">/</span>
+      <a asp-page="/Projects/Index">Projects</a><span class="sep">/</span>
+      <span>@P.Title</span>
+    </div>
     <h1 class="page-hero-title fade-up">@P.Title</h1>
     @if (!string.IsNullOrWhiteSpace(P.Summary))
     {
@@ -16,7 +23,8 @@
     }
   </div>
 </section>
-<section class="section-pad" style="background:var(--bg-deep)">
+
+<section class="section-pad projects-section">
   <div class="container">
     <div class="listing-detail-layout fade-up">
       <div>
@@ -25,15 +33,36 @@
         </div>
         @if (!string.IsNullOrWhiteSpace(P.Description))
         {
-          <div class="section-sub" style="margin-top:28px;max-width:none;white-space:pre-wrap;line-height:1.75">@P.Description</div>
+          <div class="proj-detail-desc">@P.Description</div>
         }
       </div>
-      <aside class="prop-card" style="padding:24px;position:sticky;top:100px">
-        <p class="section-sub" style="margin:0 0 20px;font-size:0.9rem">Interested in similar work for your space?</p>
-        <button type="button" class="btn-primary nav-modal-link" style="width:100%;justify-content:center;margin-bottom:12px;border:none;cursor:pointer" data-modal-open="modal-inquiry" data-inquiry-subject="Project: @P.Title (@P.Slug)"><span>Send an inquiry</span></button>
-        <a asp-page="/Contracting" class="btn-outline" style="display:flex;justify-content:center;text-decoration:none;margin-bottom:12px">Contracting services</a>
-        <a asp-page="/Contact" class="btn-outline" style="display:flex;justify-content:center;text-decoration:none">Contact us</a>
+      <aside class="proj-detail-sidebar">
+        <p class="proj-detail-sidebar__heading">Interested in similar work?</p>
+        <button type="button" class="proj-detail-sidebar__btn btn-primary nav-modal-link" data-modal-open="modal-inquiry" data-inquiry-subject="Project: @P.Title (@P.Slug)">
+          <span>Send an inquiry</span>
+        </button>
+        <a asp-page="/Contracting" class="proj-detail-sidebar__btn btn-outline">Contracting services</a>
+        <a asp-page="/Contact" class="proj-detail-sidebar__btn btn-outline">Contact us</a>
       </aside>
     </div>
   </div>
 </section>
+
+@section Styles {
+<style>
+.proj-detail-desc { font-size: .95rem; color: #6b7280; line-height: 1.8; margin-top: 28px; white-space: pre-wrap; }
+.proj-detail-sidebar {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 24px;
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.proj-detail-sidebar__heading { font-size: .88rem; color: #6b7280; margin: 0 0 4px; }
+.proj-detail-sidebar__btn { display: flex; justify-content: center; width: 100%; border: none; cursor: pointer; text-decoration: none; }
+</style>
+}

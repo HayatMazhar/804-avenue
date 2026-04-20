@@ -1,0 +1,26 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Agents.IndexModel
+@{
+    ViewData["Title"] = "Agents";
+    ViewData["AdminSection"] = "agents";
+}
+<p class="admin-back admin-back--tight"><a asp-page="Create">+ New agent</a></p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead><tr><th>Name</th><th>Title</th><th>Email</th><th>Phone</th><th>Listings</th><th>Active</th></tr></thead>
+    <tbody>
+      @foreach (var a in Model.Agents)
+      {
+        <tr>
+          <td><a asp-page="Edit" asp-route-id="@a.Id">@a.Name</a></td>
+          <td>@(a.Title ?? "—")</td>
+          <td>@(a.Email ?? "—")</td>
+          <td>@(a.Phone ?? "—")</td>
+          <td>@a.Listings.Count</td>
+          <td>@(a.IsActive ? "✓" : "—")</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (Model.Agents.Count == 0) { <p class="muted admin-empty">No agents yet.</p> }

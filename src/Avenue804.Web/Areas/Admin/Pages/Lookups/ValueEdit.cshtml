@@ -3,9 +3,9 @@
 @{
     ViewData["Title"] = "Edit lookup value";
 }
-<p style="margin-bottom:20px"><a asp-page="Values" asp-route-categoryId="@Model.CategoryId" style="color:var(--accent);font-weight:600">← @Model.CategoryName</a></p>
+<p class="admin-back"><a asp-page="Values" asp-route-categoryId="@Model.CategoryId">← @Model.CategoryName</a></p>
 <form method="post" class="admin-form">
-  <div asp-validation-summary="ModelOnly" class="muted" style="color:var(--danger)"></div>
+  <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
   <div class="row">
     <label asp-for="Form.Code"></label>
     <input asp-for="Form.Code" required />
@@ -20,16 +20,16 @@
     <input asp-for="Form.SortOrder" type="number" />
   </div>
   <div class="row chk">
-    <label asp-for="Form.IsActive"></label>
     <input asp-for="Form.IsActive" />
+    <label asp-for="Form.IsActive" class="admin-label-inline"></label>
   </div>
   <div class="row">
     <label asp-for="Form.Metadata"></label>
     <input asp-for="Form.Metadata" />
   </div>
-  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+  <div class="admin-flex-row">
     <button type="submit" class="btn-primary"><span>Save</span></button>
-    <button type="submit" class="btn-outline" style="border-color:var(--danger);color:var(--danger)" asp-page-handler="Delete" formnovalidate onclick="return confirm('Delete this value?');">Delete</button>
+    <button type="submit" class="btn-outline btn-danger-outline" asp-page-handler="Delete" formnovalidate onclick="return confirm('Delete this value?');">Delete</button>
   </div>
 </form>
 @section Scripts {

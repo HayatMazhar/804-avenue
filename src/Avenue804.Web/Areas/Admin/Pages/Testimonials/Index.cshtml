@@ -1,0 +1,26 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Testimonials.IndexModel
+@{
+    ViewData["Title"] = "Testimonials";
+    ViewData["AdminSection"] = "testimonials";
+}
+<p class="admin-back admin-back--tight"><a asp-page="Create">+ Add testimonial</a></p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead><tr><th>Order</th><th>Author</th><th>Role</th><th>Stars</th><th>Quote</th><th>Active</th></tr></thead>
+    <tbody>
+      @foreach (var t in Model.Items)
+      {
+        <tr>
+          <td>@t.SortOrder</td>
+          <td><a asp-page="Edit" asp-route-id="@t.Id">@t.AuthorName</a></td>
+          <td>@(t.AuthorRole ?? "—")</td>
+          <td>@("★".PadRight(t.Stars, '★')[..t.Stars])</td>
+          <td class="admin-td-quote">@t.Quote</td>
+          <td>@(t.IsActive ? "✓" : "—")</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (Model.Items.Count == 0) { <p class="muted admin-empty">No testimonials yet.</p> }

@@ -1,42 +1,94 @@
 @model Avenue804.Web.Domain.PropertyListing
-<a asp-page="/Properties/Detail" asp-route-slug="@Model.Slug" class="prop-card fade-up" style="text-decoration:none;color:inherit;display:block">
-  <div class="prop-card-img">
+@inject Avenue804.Web.Services.IFeatureFlagService FeatureFlagService
+@using Avenue804.Web.Services
+@{
+    bool compareEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.PropertyCompare);
+    var labelCss = Model.Label switch {
+        "Hot Deal"      => "pcard__label pcard__label--hot",
+        "New"           => "pcard__label pcard__label--new",
+        "Price Reduced" => "pcard__label pcard__label--reduced",
+        "Featured"      => "pcard__label pcard__label--featured",
+        _ => null
+    };
+}
+<a asp-page="/Properties/Detail" asp-route-slug="@Model.Slug" class="pcard fade-up" style="text-decoration:none;color:inherit;display:block">
+  <div class="pcard__img">
     <img src="@ListingFormat.ListingImageUrl(Model.MainImageUrl)" alt="@Model.Title" loading="lazy" />
+    <!-- Offer badge -->
     @if (Model.OfferType == ListingOfferType.Sale)
     {
-      <span class="prop-badge badge-sale">For sale</span>
+      <span class="pcard__badge pcard__badge--sale">For Sale</span>
     }
     else
     {
-      <span class="prop-badge badge-rent">For rent</span>
+      <span class="pcard__badge pcard__badge--rent">For Rent</span>
     }
+    <!-- Label -->
+    @if (labelCss != null)
+    {
+      <span class="@labelCss">@Model.Label</span>
+    }
+    <!-- Verified -->
+    @if (Model.IsVerified)
+    {
+      <span class="pcard__verified">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        Verified
+      </span>
+    }
+    <!-- Views -->
+    <div class="pcard__views">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      @Model.ViewCount.ToString("N0")
+    </div>
+    <!-- Save button -->
+    <button class="pcard__save" aria-label="Save property" onclick="event.preventDefault(); toggleSave('@Model.Slug')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    </button>
   </div>
-  <div class="prop-card-body">
-    <div class="prop-price">
+  <div class="pcard__body">
+    <div class="pcard__price">
       @ListingFormat.PricePrimary(Model.Price, Model.Currency, Model.OfferType)
-      @if (ListingFormat.ShowRentSuffix(Model.OfferType))
+      @if (ListingFormat.ShowRentSuffix(Model.OfferType)) { <small>/yr</small> }
+      @if (Model.PreviousPrice.HasValue && Model.Price < Model.PreviousPrice)
       {
-        <small>/yr</small>
+        <span class="pcard__price-old">@((Model.PreviousPrice.Value / 1000m).ToString("N0"))K</span>
       }
     </div>
-    <div class="prop-name">@Model.Title</div>
-    <div class="prop-loc">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    <div class="pcard__title">@Model.Title</div>
+    <div class="pcard__loc">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
       @(string.IsNullOrWhiteSpace(Model.Location) ? "Abu Dhabi, UAE" : Model.Location)
     </div>
-    <div class="prop-meta">
+    <div class="pcard__meta">
       @if (Model.Beds is int beds)
       {
-        <span class="prop-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v11a1 1 0 001 1h16a1 1 0 001-1V7"/><path d="M2 7h20l-2-4H4z"/></svg>@beds Beds</span>
+        <span class="pcard__meta-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v11a1 1 0 001 1h16a1 1 0 001-1V7"/><path d="M2 7h20l-2-4H4z"/></svg>
+          @beds @(beds == 1 ? "Bed" : "Beds")
+        </span>
       }
       @if (Model.Baths is int baths)
       {
-        <span class="prop-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16a1 1 0 011 1v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3a2 2 0 012 2v7"/></svg>@baths Baths</span>
+        <span class="pcard__meta-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16a1 1 0 011 1v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3a2 2 0 012 2v7"/></svg>
+          @baths @(baths == 1 ? "Bath" : "Baths")
+        </span>
       }
       @if (Model.AreaSqft is int sq)
       {
-        <span class="prop-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>@sq.ToString("N0") sqft</span>
+        <span class="pcard__meta-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          @sq.ToString("N0") sqft
+        </span>
       }
     </div>
   </div>
+  @if (compareEnabled)
+  {
+    <div class="pcard__compare" onclick="event.preventDefault(); toggleCompare(@Model.Id, '@Model.Slug')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20M12 3v18"/></svg>
+      Compare
+    </div>
+  }
 </a>

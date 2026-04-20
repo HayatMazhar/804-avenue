@@ -16,8 +16,19 @@ public class MaintenanceModel : PageModel
     public async Task OnGetAsync(CancellationToken cancellationToken = default)
     {
         var map = await _content.GetPublishedBodiesAsync(
-            [ContentBlockSlugs.PageMaintenanceHeroTitle, ContentBlockSlugs.PageMaintenanceHeroSubtitle],
-            cancellationToken);
+        [
+            ContentBlockSlugs.PageMaintenanceHeroTitle, ContentBlockSlugs.PageMaintenanceHeroSubtitle,
+            ContentBlockSlugs.MaintenanceSvc1Title, ContentBlockSlugs.MaintenanceSvc1Body,
+            ContentBlockSlugs.MaintenanceSvc2Title, ContentBlockSlugs.MaintenanceSvc2Body,
+            ContentBlockSlugs.MaintenanceSvc3Title, ContentBlockSlugs.MaintenanceSvc3Body,
+            ContentBlockSlugs.MaintenanceSvc4Title, ContentBlockSlugs.MaintenanceSvc4Body,
+            ContentBlockSlugs.MaintenanceSvc5Title, ContentBlockSlugs.MaintenanceSvc5Body,
+            ContentBlockSlugs.MaintenanceWhyItems,
+            ContentBlockSlugs.MaintenanceContractTitle, ContentBlockSlugs.MaintenanceContractBody,
+            ContentBlockSlugs.MaintenanceContractFeatures,
+            ContentBlockSlugs.MaintenanceCtaTitle, ContentBlockSlugs.MaintenanceCtaBody
+        ], cancellationToken);
+
         Hero = ServicePageHeroModel.FromMap(map, ContentBlockSlugs.PageMaintenanceHeroTitle, ContentBlockSlugs.PageMaintenanceHeroSubtitle);
     }
 }

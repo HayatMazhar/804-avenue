@@ -4,7 +4,7 @@
     ViewData["Title"] = "Inquiry";
     var row = Model.Row!;
 }
-<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Inquiries</a></p>
+<p class="admin-back"><a asp-page="Index">← Inquiries</a></p>
 <div class="detail-block">
   <h3>@row.Subject</h3>
   <dl class="detail-dl">
@@ -22,7 +22,7 @@
   <h3>Message</h3>
   <p>@row.Message</p>
 </div>
-<form method="post" class="admin-form" style="max-width:360px">
+<form method="post" class="admin-form admin-form--narrow">
   <div class="row">
     <label asp-for="Status">Status</label>
     <select asp-for="Status" asp-items="Html.GetEnumSelectList<InquiryStatus>()"></select>

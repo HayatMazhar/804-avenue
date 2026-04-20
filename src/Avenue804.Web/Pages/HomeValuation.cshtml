@@ -1,0 +1,195 @@
+@page "/HomeValuation"
+@model Avenue804.Web.Pages.HomeValuationModel
+@{
+    ViewData["Title"] = "Free Home Valuation — Abu Dhabi Property";
+    ViewData["MetaDescription"] = "Get an instant estimate of your Abu Dhabi property's market value — based on location, type, size, and recent market activity.";
+    ViewData["NavActive"] = "valuation";
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Home Valuation</span></div>
+    <h1 class="page-hero-title fade-up">Free Property <em>Valuation</em></h1>
+    <p class="page-hero-sub fade-up">Get an instant estimate of your property's current market value — based on location, type, size, and recent market activity.</p>
+  </div>
+</section>
+
+<section class="section-pad" style="background:var(--bg-surface)">
+  <div class="container">
+    <div class="quote-grid">
+      <!-- Estimator -->
+      <div class="quote-card">
+        <div class="quote-card-head">
+          <h3>Property Value Estimator</h3>
+          <p>Enter your property details for an instant indicative value range.</p>
+        </div>
+        <div class="quote-form">
+          <div class="quote-field">
+            <label>Emirate <span style="color:var(--accent)">*</span></label>
+            <select id="valEmirate" onchange="calcVal()">
+              <option value="">Select emirate…</option>
+              <option value="abu-dhabi">Abu Dhabi</option>
+              <option value="dubai">Dubai</option>
+              <option value="sharjah">Sharjah</option>
+              <option value="ajman">Ajman</option>
+              <option value="rak">Ras Al Khaimah</option>
+            </select>
+          </div>
+          <div class="quote-field">
+            <label>Property type <span style="color:var(--accent)">*</span></label>
+            <select id="valType" onchange="calcVal()">
+              <option value="">Select type…</option>
+              <option value="apartment">Apartment</option>
+              <option value="villa">Villa / Townhouse</option>
+              <option value="penthouse">Penthouse</option>
+              <option value="studio">Studio</option>
+              <option value="office">Office Space</option>
+              <option value="retail">Retail / Showroom</option>
+              <option value="warehouse">Warehouse</option>
+              <option value="land">Land / Plot</option>
+            </select>
+          </div>
+          <div class="quote-grid-2">
+            <div class="quote-field">
+              <label>Size (sqft) <span style="color:var(--accent)">*</span></label>
+              <input type="number" id="valSqft" min="100" max="100000" placeholder="e.g. 1,200" oninput="calcVal()" />
+            </div>
+            <div class="quote-field">
+              <label>Bedrooms</label>
+              <select id="valBeds" onchange="calcVal()">
+                <option value="0">Studio</option>
+                <option value="1">1 BR</option>
+                <option value="2" selected>2 BR</option>
+                <option value="3">3 BR</option>
+                <option value="4">4 BR</option>
+                <option value="5">5+ BR</option>
+              </select>
+            </div>
+          </div>
+          <div class="quote-field">
+            <label>Property condition</label>
+            <select id="valCondition" onchange="calcVal()">
+              <option value="1.0">Move-in ready</option>
+              <option value="0.92">Good — minor touch-ups</option>
+              <option value="0.8">Needs renovation</option>
+              <option value="0.65">Significant renovation needed</option>
+            </select>
+          </div>
+          <div class="quote-field">
+            <label>Floor / view premium</label>
+            <select id="valView" onchange="calcVal()">
+              <option value="1.0">Standard / ground floor</option>
+              <option value="1.05">Mid floor</option>
+              <option value="1.12">High floor</option>
+              <option value="1.2">Sea / landmark view</option>
+              <option value="1.25">Premium corner / panoramic</option>
+            </select>
+          </div>
+
+          <!-- Result -->
+          <div class="quote-estimate" id="valResult">
+            <div class="quote-estimate-label">Estimated market value</div>
+            <div class="quote-estimate-range" id="valRange">—</div>
+            <div id="valYield" style="font-size:.78rem;color:var(--text-secondary);margin-top:4px"></div>
+            <div class="quote-estimate-note">Indicative estimate only. Based on average AED/sqft rates for this property type and location. A formal valuation requires a site inspection by a licensed valuator.</div>
+          </div>
+
+          <!-- Request formal valuation -->
+          <div style="border-top:1px solid var(--border-subtle);padding-top:20px;margin-top:16px">
+            <div class="section-tag" style="margin-bottom:12px">Get a Formal Valuation Report</div>
+            <form method="post" asp-page="/Submit/ServiceQuote">
+              <input type="hidden" name="serviceType" value="@((int)Avenue804.Web.Domain.ServiceType.BundlePackage)" />
+              <input type="hidden" name="returnPage" value="/HomeValuation" />
+              <input type="hidden" name="estimateRange" id="valEstHidden" />
+              <div class="quote-grid-2">
+                <div class="quote-field"><label>Name *</label><input type="text" name="name" required placeholder="Ahmed Al Mansoori" maxlength="200" /></div>
+                <div class="quote-field"><label>Mobile *</label><input type="tel" name="phone" required placeholder="+971 50 000 0000" maxlength="50" /></div>
+              </div>
+              <div class="quote-field"><label>Email *</label><input type="email" name="email" required placeholder="you@example.com" maxlength="256" /></div>
+              <div class="quote-field"><label>Property address</label><input type="text" name="location" placeholder="Building name, unit, area" maxlength="400" /></div>
+              <button type="submit" class="btn-primary" style="width:100%;justify-content:center"><span>Request Formal Valuation</span></button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info panels -->
+      <div class="quote-info">
+        <div class="quote-info-card">
+          <div class="quote-info-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div>
+          <h4>Why get a valuation?</h4>
+          <p>Whether you're selling, refinancing, or planning major works — an accurate valuation helps you make confident decisions and negotiate from a position of knowledge.</p>
+        </div>
+        <div class="quote-info-card">
+          <div class="quote-info-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <h4>How long does a formal valuation take?</h4>
+          <p>Site inspection within <strong>2–3 business days</strong>. Formal valuation report delivered within <strong>5 business days</strong> of inspection, compliant with RICS and UAE standards.</p>
+        </div>
+        <div class="quote-info-card">
+          <div class="quote-info-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/></svg></div>
+          <h4>What's included?</h4>
+          <p>Comparable sales analysis, market trend report, condition assessment, rental yield projection, and a certified valuation report for mortgage, insurance, or sale purposes.</p>
+        </div>
+        <div class="quote-info-card">
+          <div class="quote-info-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M12 8v8m-4-4h8"/></svg></div>
+          <h4>Factors affecting value</h4>
+          <ul style="font-size:.8rem;color:var(--text-secondary);line-height:1.7;margin:0;padding-left:16px">
+            <li>Location and community quality</li>
+            <li>Floor, view, and orientation</li>
+            <li>Condition and recent renovation</li>
+            <li>Amenities and parking</li>
+            <li>Developer reputation (off-plan)</li>
+            <li>Market supply and demand</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@section Scripts {
+<script>
+// AED per sqft baseline rates (rough averages per emirate + property type)
+var _valBase = {
+  'abu-dhabi': { apartment: 1350, villa: 950, penthouse: 2200, studio: 1100, office: 1100, retail: 900, warehouse: 450, land: 400 },
+  'dubai':     { apartment: 1500, villa: 1100, penthouse: 3000, studio: 1200, office: 1300, retail: 1100, warehouse: 500, land: 500 },
+  'sharjah':   { apartment: 600,  villa: 500,  penthouse: 900,  studio: 500,  office: 550,  retail: 480, warehouse: 280, land: 200 },
+  'ajman':     { apartment: 450,  villa: 380,  penthouse: 700,  studio: 380,  office: 400,  retail: 350, warehouse: 220, land: 150 },
+  'rak':       { apartment: 500,  villa: 420,  penthouse: 750,  studio: 420,  office: 420,  retail: 370, warehouse: 240, land: 170 }
+};
+var _bedPremium = { '0': 0.9, '1': 0.95, '2': 1.0, '3': 1.05, '4': 1.1, '5': 1.15 };
+
+function calcVal() {
+  var em = document.getElementById('valEmirate').value;
+  var type = document.getElementById('valType').value;
+  var sqft = parseFloat(document.getElementById('valSqft').value) || 0;
+  var beds = document.getElementById('valBeds').value;
+  var cond = parseFloat(document.getElementById('valCondition').value) || 1.0;
+  var view = parseFloat(document.getElementById('valView').value) || 1.0;
+  var res = document.getElementById('valResult');
+
+  if (!em || !type || sqft <= 0) { res.classList.remove('show'); return; }
+
+  var base = (_valBase[em] && _valBase[em][type]) ? _valBase[em][type] : 1000;
+  var bedMul = _bedPremium[beds] || 1.0;
+  var midVal = sqft * base * bedMul * cond * view;
+  var lo = Math.round(midVal * 0.88 / 10000) * 10000;
+  var hi = Math.round(midVal * 1.12 / 10000) * 10000;
+  var txt = 'AED ' + lo.toLocaleString() + ' – ' + hi.toLocaleString();
+
+  document.getElementById('valRange').textContent = txt;
+  document.getElementById('valEstHidden').value = txt;
+
+  // Rental yield estimate (Abu Dhabi avg ~5-7%)
+  var avgRentYield = em === 'dubai' ? 0.065 : em === 'abu-dhabi' ? 0.055 : 0.05;
+  var rentEst = Math.round(midVal * avgRentYield / 1000) * 1000;
+  var yieldEl = document.getElementById('valYield');
+  if (type === 'apartment' || type === 'villa' || type === 'studio' || type === 'penthouse') {
+    yieldEl.textContent = 'Est. annual rent: AED ' + rentEst.toLocaleString() + ' · Gross yield: ~' + (avgRentYield * 100).toFixed(1) + '%';
+  } else {
+    yieldEl.textContent = '';
+  }
+
+  res.classList.add('show');
+}
+</script>
+}

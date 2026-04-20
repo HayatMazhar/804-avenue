@@ -1,0 +1,98 @@
+@page "/AreaGuides/{slug}"
+@model Avenue804.Web.Pages.AreaGuides.AreaGuideDetailModel
+@using Avenue804.Web.Infrastructure
+@{
+    var G = Model.Guide!;
+    ViewData["Title"] = G.Name + " Area Guide";
+    ViewData["NavActive"] = "areaguides";
+}
+<section class="page-hero" @(string.IsNullOrWhiteSpace(G.HeroImageUrl) ? "" : $"style=\"background-image:linear-gradient(165deg,rgba(15,23,42,.55),rgba(15,23,42,.75)),url('{G.HeroImageUrl}');background-size:cover;background-position:center\"")>
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/AreaGuides/Index">Area Guides</a><span class="sep">/</span><span>@G.Name</span></div>
+    <h1 class="page-hero-title fade-up">@G.Name</h1>
+    @if (!string.IsNullOrWhiteSpace(G.Emirate))
+    {
+      <p class="page-hero-sub fade-up">@G.Emirate, UAE</p>
+    }
+  </div>
+</section>
+
+<section class="section-pad areaguides-section">
+  <div class="container">
+    <div class="area-detail-layout">
+      <!-- Stats sidebar -->
+      <aside class="area-stats-card fade-up">
+        <div class="area-stat-head">Market Snapshot</div>
+        @if (G.AvgPriceSaleSqft.HasValue)
+        {
+          <div class="area-stat-row"><span>Avg sale price</span><strong>AED @G.AvgPriceSaleSqft.Value.ToString("N0") / sqft</strong></div>
+        }
+        @if (G.AvgRentYearly.HasValue)
+        {
+          <div class="area-stat-row"><span>Avg 1BR rent</span><strong>AED @G.AvgRentYearly.Value.ToString("N0") / yr</strong></div>
+          <div class="area-stat-row"><span>Monthly equiv.</span><strong>AED @((G.AvgRentYearly.Value / 12).ToString("N0"))</strong></div>
+        }
+        @if (!string.IsNullOrWhiteSpace(G.PopularWith))
+        {
+          <div class="area-stat-row"><span>Popular with</span><strong>@G.PopularWith</strong></div>
+        }
+        <div class="area-stat-divider"></div>
+        @if (!string.IsNullOrWhiteSpace(G.NearbyLandmarks))
+        {
+          <div class="area-stat-section"><div class="area-stat-label">Nearby landmarks</div><p>@G.NearbyLandmarks</p></div>
+        }
+        @if (!string.IsNullOrWhiteSpace(G.SchoolsNearby))
+        {
+          <div class="area-stat-section"><div class="area-stat-label">Schools</div><p>@G.SchoolsNearby</p></div>
+        }
+        @if (!string.IsNullOrWhiteSpace(G.TransportLinks))
+        {
+          <div class="area-stat-section"><div class="area-stat-label">Transport</div><p>@G.TransportLinks</p></div>
+        }
+        <div class="area-stat-divider"></div>
+        <a asp-page="/Properties/Index" asp-route-location="@G.Name" class="btn-primary" style="display:flex;justify-content:center;margin-top:4px"><span>Browse properties in @G.Name</span></a>
+        <a asp-page="/Contact" class="btn-outline" style="display:flex;justify-content:center;margin-top:10px">Talk to an agent</a>
+      </aside>
+
+      <!-- Main content -->
+      <div>
+        @if (!string.IsNullOrWhiteSpace(G.Overview))
+        {
+          <div class="area-overview fade-up">@Html.Raw(G.Overview)</div>
+        }
+
+        <!-- Listings in this area -->
+        @if (Model.AreaListings.Count > 0)
+        {
+          <h3 class="section-title fade-up mt-5 mb-4">Properties in <em>@G.Name</em></h3>
+          <div class="feat-grid">
+            @foreach (var p in Model.AreaListings)
+            {
+              <partial name="Shared/_PropertyCard" model="p" />
+            }
+          </div>
+          <div style="text-align:center;margin-top:24px">
+            <a asp-page="/Properties/Index" asp-route-location="@G.Name" class="btn-outline fade-up">View all @G.Name properties →</a>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+@section Styles {
+<style>
+.area-detail-layout{display:grid;grid-template-columns:300px 1fr;gap:36px;align-items:start}
+.area-stats-card{background:var(--bg-card);border:1px solid var(--border-accent);border-radius:var(--radius-md);padding:22px;position:sticky;top:90px;box-shadow:0 8px 32px rgba(15,23,42,.06),inset 0 1px 0 rgba(255,255,255,.65)}
+.area-stat-head{font-family:var(--font-nav);font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.area-stat-row{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border-subtle)}
+.area-stat-row strong{color:var(--text-primary);font-weight:700}
+.area-stat-divider{height:1px;background:var(--border-subtle);margin:16px 0}
+.area-stat-label{font-family:var(--font-nav);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px}
+.area-stat-section p{font-size:.78rem;color:var(--text-secondary);line-height:1.55;margin:0 0 12px}
+.area-overview{font-size:.95rem;color:var(--text-secondary);line-height:1.8}
+.area-overview h3,.area-overview h4{font-family:var(--font-display);color:var(--text-primary);margin:20px 0 8px}
+.area-overview p{margin-bottom:14px}
+/* responsive handled separately */
+</style>
+}

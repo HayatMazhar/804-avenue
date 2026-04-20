@@ -1,0 +1,35 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.ProjectProgress.IndexModel
+@using Avenue804.Web.Domain
+@{
+    ViewData["Title"] = "Project Progress";
+    ViewData["AdminSection"] = "project-progress";
+}
+<p class="admin-back"><a asp-page="Create">+ Add project</a></p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead><tr><th>Project</th><th>Client</th><th>Stage</th><th>Progress</th><th>Est. Completion</th><th>Actions</th></tr></thead>
+    <tbody>
+      @foreach (var p in Model.Items)
+      {
+        <tr>
+          <td><a asp-page="Edit" asp-route-id="@p.Id">@(p.ProjectTitle ?? "Untitled")</a><br /><span class="muted small">@(p.Location ?? "")</span></td>
+          <td>@p.ClientName<br /><span class="muted small">@p.ClientEmail</span></td>
+          <td><span class="badge badge-@(p.CurrentStage == ProjectStage.Handover ? "closed" : p.CurrentStage >= ProjectStage.Execution ? "progress" : "new")">@p.CurrentStage</span></td>
+          <td>
+            <div class="admin-progress-cell">
+              <div class="admin-progress-track"><div class="admin-progress-fill" style="width:@p.ProgressPercent%"></div></div>
+              <span class="admin-progress-pct">@p.ProgressPercent%</span>
+            </div>
+          </td>
+          <td>@(p.EstimatedCompletion.HasValue ? p.EstimatedCompletion.Value.ToString("MMM yyyy") : "—")</td>
+          <td>
+            <a asp-page="Edit" asp-route-id="@p.Id" class="small fw-semibold link-accent">Edit</a> ·
+            <a asp-area="" asp-page="/Project" asp-route-token="@p.AccessToken" target="_blank" class="small text-muted">Client link</a>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (!Model.Items.Any()) { <p class="muted admin-empty">No projects yet.</p> }

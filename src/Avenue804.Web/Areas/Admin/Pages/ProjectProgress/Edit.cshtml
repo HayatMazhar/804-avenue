@@ -1,0 +1,27 @@
+@page "{id:int}"
+@model Avenue804.Web.Areas.Admin.Pages.ProjectProgress.EditModel
+@using Avenue804.Web.Domain
+@{ ViewData["Title"] = "Edit Project"; }
+<p class="admin-back"><a asp-page="Index">← Project Progress</a></p>
+<div class="admin-client-link">
+  <span class="admin-client-link__label">Client link</span>
+  <a asp-area="" asp-page="/Project" asp-route-token="@Model.AccessToken" target="_blank">/Project/@Model.AccessToken</a>
+  <button type="button" class="btn-copy" onclick="navigator.clipboard.writeText(window.location.origin+'/Project/@Model.AccessToken')">Copy</button>
+</div>
+<form method="post" class="admin-form">
+  <div class="row admin-form-row-2">
+    <div><label asp-for="F.ClientName">Client name *</label><input asp-for="F.ClientName" /></div>
+    <div><label asp-for="F.ClientEmail">Client email *</label><input asp-for="F.ClientEmail" type="email" /></div>
+  </div>
+  <div class="row admin-form-row-2">
+    <div><label asp-for="F.ProjectTitle">Project title</label><input asp-for="F.ProjectTitle" /></div>
+    <div><label asp-for="F.Location">Location</label><input asp-for="F.Location" /></div>
+  </div>
+  <div class="row admin-form-row-3">
+    <div><label asp-for="F.CurrentStage">Current stage</label><select asp-for="F.CurrentStage" asp-items="Html.GetEnumSelectList<ProjectStage>()"></select></div>
+    <div><label asp-for="F.ProgressPercent">Progress %</label><input asp-for="F.ProgressPercent" type="number" min="0" max="100" /></div>
+    <div><label asp-for="F.EstimatedCompletion">Est. completion</label><input asp-for="F.EstimatedCompletion" type="date" /></div>
+  </div>
+  <div class="row"><label asp-for="F.StageNotes">Stage notes (visible to client)</label><textarea asp-for="F.StageNotes" rows="3"></textarea></div>
+  <button type="submit" class="btn-primary"><span>Save</span></button>
+</form>

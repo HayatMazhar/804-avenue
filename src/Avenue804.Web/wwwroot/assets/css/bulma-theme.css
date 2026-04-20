@@ -1,0 +1,284 @@
+/* ═══════════════════════════════════════════════════════════════════
+   804 AVENUE — Bulma Theme Override
+   Overrides Bulma's default variables/classes with our amber-gold design.
+   Loaded AFTER bulma.min.css so these take precedence.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Map Bulma classes → our design tokens ─────────────────── */
+
+/* Primary colour = accent (amber gold) */
+:root {
+  --bulma-primary:       var(--accent,  #F59E0B);
+  --bulma-primary-dark:  var(--accent-hover, #D97706);
+  --bulma-primary-light: var(--accent-10, rgba(245,158,11,.12));
+  --bulma-link:          var(--accent, #F59E0B);
+}
+
+/* ── 2. Bulma base overrides ─────────────────────────────────────── */
+html { font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif); font-size: 16px; }
+body { background: var(--bg-deep, #EEF2FF); color: var(--text-secondary, #475569); line-height: 1.65; }
+
+/* ── 3. Bulma .input / .textarea ─────────────────────────────────── */
+.input, .textarea, .select select {
+  font-family: var(--font-body) !important;
+  font-size: .85rem !important;
+  color: var(--text-primary) !important;
+  background-color: #fff !important;
+  border-color: #e2e5e9 !important;
+  border-radius: var(--radius-sm, 8px) !important;
+  border-width: 1.5px !important;
+  box-shadow: none !important;
+  transition: border-color .2s, box-shadow .2s !important;
+  height: 2.7em !important;
+}
+.input::placeholder, .textarea::placeholder { color: var(--text-tertiary) !important; opacity: .8; }
+.input:hover:not(.is-static):not([disabled]),
+.textarea:hover:not([disabled]),
+.select:not(.is-multiple):not(.is-loading):hover select {
+  border-color: #c9cdd3 !important;
+  background-color: #fff !important;
+}
+.input:focus, .input.is-focused, .input:active, .input.is-active,
+.textarea:focus, .textarea.is-focused,
+.select select:focus {
+  border-color: var(--accent) !important;
+  background-color: #fff !important;
+  box-shadow: 0 0 0 3px var(--accent-15) !important;
+}
+
+/* ── 4. Bulma .select wrapper ────────────────────────────────────── */
+.select { width: 100%; }
+.select:not(.is-multiple) { height: auto; }
+.select:not(.is-multiple):not(.is-loading)::after {
+  border-color: var(--accent) !important;
+  border-width: 2px !important;
+  top: 55% !important;
+  right: 1rem !important;
+  width: .55em !important;
+  height: .55em !important;
+}
+.select select {
+  width: 100%;
+  padding-right: 2.5em !important;
+  height: 2.5em !important;
+  cursor: pointer;
+}
+.select select option { background: var(--bg-card); color: var(--text-primary); padding: 8px; }
+
+/* ── 5. Bulma .label ─────────────────────────────────────────────── */
+.label {
+  font-family: var(--font-nav, 'Plus Jakarta Sans', sans-serif) !important;
+  font-size: .6rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .14em !important;
+  text-transform: uppercase !important;
+  color: var(--text-tertiary) !important;
+  margin-bottom: .5rem !important;
+}
+/* Focus highlight */
+.field:focus-within > .label { color: var(--accent) !important; }
+
+/* ── 6. Bulma .button ────────────────────────────────────────────── */
+.button {
+  font-family: var(--font-nav) !important;
+  font-weight: 700 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  font-size: .76rem !important;
+  border-radius: var(--radius-sm) !important;
+  height: 2.75em !important;
+  padding-left: 1.25em !important;
+  padding-right: 1.25em !important;
+  transition: all .2s ease !important;
+  border-width: 1.5px !important;
+}
+.button.is-primary {
+  background: var(--accent) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px var(--accent-glow) !important;
+}
+.button.is-primary:hover {
+  background: var(--accent-hover) !important;
+  box-shadow: 0 6px 20px var(--accent-glow) !important;
+  transform: translateY(-1px);
+}
+.button.is-primary.is-loading::after { border-color: transparent transparent #fff #fff !important; }
+.button.is-light {
+  background: var(--bg-surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text-secondary) !important;
+}
+.button.is-light:hover {
+  background: var(--bg-elevated) !important;
+  border-color: var(--border-accent) !important;
+  color: var(--text-primary) !important;
+}
+.button.is-fullwidth { width: 100%; justify-content: center; }
+.button.is-danger { background: var(--danger, #DC2626) !important; border-color: transparent !important; color: #fff !important; }
+.button.is-success { background: var(--success, #059669) !important; border-color: transparent !important; color: #fff !important; }
+.button.is-warning { background: var(--warning, #D97706) !important; border-color: transparent !important; color: #fff !important; }
+
+/* Large CTA button */
+.button.is-primary.is-medium { font-size: .82rem !important; padding: 1.3em 2em !important; height: auto !important; }
+
+/* ── 7. Bulma .field / .control / .help ──────────────────────────── */
+.field { margin-bottom: 1.1rem; }
+.field.is-grouped { gap: .75rem; }
+.control { position: relative; }
+.control.has-icons-left .input { padding-left: 2.5em !important; }
+.control.has-icons-left .icon.is-left { color: var(--text-tertiary); }
+.control.has-icons-right .input { padding-right: 2.5em !important; }
+.help { font-size: .75rem !important; margin-top: .35rem !important; }
+.help.is-danger { color: var(--danger) !important; }
+.help.is-success { color: var(--success) !important; }
+
+/* ── 8. Bulma .checkbox / .radio ─────────────────────────────────── */
+.checkbox input[type="checkbox"],
+.radio input[type="radio"] { margin-right: .5rem; accent-color: var(--accent); }
+.checkbox, .radio { color: var(--text-secondary) !important; font-size: .88rem !important; }
+.checkbox:hover, .radio:hover { color: var(--text-primary) !important; }
+
+/* ── 9. Bulma .modal ─────────────────────────────────────────────── */
+.modal-background {
+  background: rgba(15,23,42,.5) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+.modal-card {
+  border-radius: var(--radius-lg, 22px) !important;
+  overflow: hidden !important;
+  box-shadow: 0 32px 80px rgba(15,23,42,.18), 0 0 60px var(--accent-10) !important;
+  max-height: calc(100vh - 40px) !important;
+}
+.modal-card-head {
+  background: linear-gradient(135deg, var(--accent), var(--cyan, #00B8C4)) !important;
+  border-bottom: none !important;
+  padding: 1.25rem 1.5rem !important;
+  border-radius: 0 !important;
+}
+.modal-card-title { color: #fff !important; font-family: var(--font-display) !important; font-size: 1.25rem !important; font-weight: 700 !important; letter-spacing: -.02em !important; }
+.delete { background: rgba(255,255,255,.2) !important; transition: background .2s !important; }
+.delete:hover { background: rgba(255,255,255,.35) !important; }
+.modal-card-body {
+  background: var(--bg-card) !important;
+  padding: 1.5rem !important;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-20) transparent;
+}
+.modal-card-body::-webkit-scrollbar { width: 5px; }
+.modal-card-body::-webkit-scrollbar-thumb { background: var(--accent-20); border-radius: 999px; }
+.modal-card-foot {
+  background: var(--bg-elevated) !important;
+  border-top: 1px solid var(--border-subtle) !important;
+  padding: 1rem 1.5rem !important;
+  gap: .75rem !important;
+}
+
+/* Section dividers inside modal body */
+.modal-section-title {
+  font-family: var(--font-nav);
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 1.25rem 0 .9rem;
+}
+.modal-section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-accent), transparent); }
+.modal-section-title:first-child { margin-top: 0; }
+
+/* ── 10. Bulma .card ─────────────────────────────────────────────── */
+.card {
+  border-radius: var(--radius-md) !important;
+  border: 1px solid var(--border-subtle) !important;
+  box-shadow: 0 4px 20px rgba(15,23,42,.06), inset 0 1px 0 rgba(255,255,255,.65) !important;
+  background: var(--bg-card) !important;
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 18px 48px rgba(15,23,42,.1), 0 0 0 1px var(--accent-10) !important; }
+.card-header { border-bottom: 1px solid var(--border-subtle) !important; background: linear-gradient(165deg, var(--bg-card), var(--bg-elevated)) !important; }
+.card-header-title { font-family: var(--font-display) !important; font-weight: 700 !important; color: var(--text-primary) !important; }
+.card-content { background: var(--bg-card); padding: 1.25rem !important; }
+.card-footer { border-top: 1px solid var(--border-subtle) !important; background: var(--bg-elevated) !important; }
+.card-footer-item { font-size: .82rem; color: var(--text-secondary); }
+.card-footer-item:not(:last-child) { border-right: 1px solid var(--border-subtle) !important; }
+
+/* ── 11. Bulma .notification ─────────────────────────────────────── */
+.notification { border-radius: var(--radius-sm) !important; font-size: .88rem !important; }
+.notification.is-success { background: rgba(5,150,105,.1) !important; color: var(--success) !important; border: 1px solid rgba(5,150,105,.3); }
+.notification.is-danger  { background: rgba(220,38,38,.08) !important; color: var(--danger) !important; border: 1px solid rgba(220,38,38,.25); }
+.notification.is-warning { background: rgba(245,158,11,.1) !important; color: var(--warning) !important; border: 1px solid rgba(245,158,11,.25); }
+.notification.is-info    { background: var(--accent-10) !important; color: var(--accent) !important; border: 1px solid var(--accent-15); }
+
+/* ── 12. Bulma .tag ──────────────────────────────────────────────── */
+.tag { border-radius: 999px !important; font-family: var(--font-nav) !important; font-size: .6rem !important; font-weight: 700 !important; letter-spacing: .08em !important; text-transform: uppercase !important; }
+.tag.is-primary { background: var(--accent) !important; color: #fff !important; }
+.tag.is-success { background: var(--success) !important; color: #fff !important; }
+.tag.is-danger  { background: var(--danger) !important; color: #fff !important; }
+.tag.is-warning { background: var(--warning) !important; color: #fff !important; }
+.tag.is-light   { background: var(--bg-surface) !important; color: var(--text-secondary) !important; border: 1px solid var(--border-subtle); }
+
+/* ── 13. Bulma .navbar (used in admin) ───────────────────────────── */
+.navbar { border-bottom: 1px solid var(--border-subtle) !important; background: var(--bg-card) !important; }
+.navbar-item, .navbar-link { color: var(--text-secondary) !important; font-family: var(--font-nav) !important; font-size: .72rem !important; font-weight: 600 !important; letter-spacing: .08em !important; text-transform: uppercase !important; }
+.navbar-item.is-active, .navbar-item:hover, .navbar-link:hover { color: var(--accent) !important; background: var(--accent-10) !important; }
+
+/* ── 14. Bulma .table ────────────────────────────────────────────── */
+.table { background: var(--bg-card) !important; color: var(--text-secondary) !important; border-radius: var(--radius-md); overflow: hidden; }
+.table thead th { background: var(--bg-elevated) !important; color: var(--text-tertiary) !important; font-family: var(--font-nav) !important; font-size: .6rem !important; font-weight: 700 !important; letter-spacing: .12em !important; text-transform: uppercase !important; border-bottom: 1px solid var(--border-subtle) !important; padding: .9rem 1rem !important; }
+.table tbody td { border-bottom: 1px solid var(--border-subtle) !important; padding: .85rem 1rem !important; vertical-align: middle !important; }
+.table tbody tr:hover td { background: var(--accent-10) !important; }
+.table.is-striped tbody tr:nth-child(even) td { background: var(--bg-surface) !important; }
+
+/* ── 15. Bulma .columns override ────────────────────────────────── */
+.columns { margin-left: -.75rem; margin-right: -.75rem; margin-top: 0; }
+.column { padding: .75rem; }
+
+/* ── 16. Bulma .tabs ─────────────────────────────────────────────── */
+.tabs { border-bottom: 1px solid var(--border-subtle) !important; }
+.tabs a { border-bottom-color: var(--border-subtle) !important; color: var(--text-secondary) !important; font-family: var(--font-nav) !important; font-size: .68rem !important; font-weight: 700 !important; letter-spacing: .08em !important; text-transform: uppercase !important; padding: .9rem 1.25rem !important; }
+.tabs a:hover { border-bottom-color: var(--accent) !important; color: var(--accent) !important; background: var(--accent-10) !important; }
+.tabs li.is-active a { border-bottom-color: var(--accent) !important; color: var(--accent) !important; }
+
+/* ── 17. Breadcrumb ──────────────────────────────────────────────── */
+.breadcrumb li + li::before { color: var(--accent) !important; }
+.breadcrumb a { color: var(--text-secondary) !important; font-size: .72rem; font-family: var(--font-nav); }
+.breadcrumb a:hover { color: var(--accent) !important; }
+.breadcrumb li.is-active a { color: var(--text-tertiary) !important; }
+
+/* ── 18. Bulma .progress bar ─────────────────────────────────────── */
+.progress { border-radius: 999px !important; height: .5rem !important; }
+.progress.is-primary::-webkit-progress-value { background: linear-gradient(90deg, var(--accent), var(--cyan, #00B8C4)) !important; }
+.progress.is-primary { background: var(--border-subtle) !important; }
+
+/* ── 19. Form field grid helper ──────────────────────────────────── */
+.fields-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+.fields-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 .75rem; }
+@media (max-width: 640px) { .fields-2, .fields-3 { grid-template-columns: 1fr; } }
+
+/* ── 19b. Protect custom nav from Bulma reset ────────────────────── */
+/* Bulma resets `nav` as block with min-height. Our navbar uses its own classes. */
+nav.navbar { min-height: unset; }
+.nav-inner, .nav-links, .nav-logo, .nav-right,
+.nav-dropdown, .nav-dropdown-menu { box-sizing: border-box; }
+
+/* Bulma .title/.subtitle conflict — ensure our headings win */
+h1.page-hero-title, h1.hero-headline {
+  font-family: var(--font-display) !important;
+  line-height: inherit !important;
+}
+
+/* ── 20. Social login buttons ────────────────────────────────────── */
+.button.is-google  { background: #fff !important; color: #3c4043 !important; border-color: #dadce0 !important; }
+.button.is-google:hover  { background: #f8f9fa !important; box-shadow: 0 2px 10px rgba(0,0,0,.1) !important; }
+.button.is-facebook { background: #1877F2 !important; border-color: transparent !important; color: #fff !important; }
+.button.is-facebook:hover { background: #166FE5 !important; }
+.button.is-apple { background: #000 !important; border-color: transparent !important; color: #fff !important; }
+.button.is-apple:hover { background: #111 !important; }
+.button.is-whatsapp { background: #25D366 !important; border-color: transparent !important; color: #fff !important; }
+.button.is-whatsapp:hover { background: #128C7E !important; }

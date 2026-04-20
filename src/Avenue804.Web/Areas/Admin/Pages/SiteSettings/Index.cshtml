@@ -3,8 +3,8 @@
 @{
     ViewData["Title"] = "Site settings";
 }
-<p class="muted" style="margin-bottom:20px">Values here override the <code>Site</code> section in appsettings. Clear or edit to change public contact details and branding.</p>
-<p style="margin-bottom:16px"><a asp-page="Create" style="color:var(--accent);font-weight:600">+ Add setting</a></p>
+<p class="muted admin-lead-muted">Values here override the <code>Site</code> section in appsettings. Clear or edit to change public contact details and branding.</p>
+<p class="admin-back admin-back--tight"><a asp-page="Create">+ Add setting</a></p>
 <div class="admin-table-wrap">
   <table class="admin-table">
     <thead><tr><th>Key</th><th>Value</th><th></th></tr></thead>
@@ -13,7 +13,7 @@
     {
       <tr>
         <td><code>@r.Key</code></td>
-        <td style="max-width:420px;word-break:break-word">@(r.Value.Length > 120 ? r.Value[..120] + "…" : r.Value)</td>
+        <td class="admin-td-clip">@(r.Value.Length > 120 ? r.Value[..120] + "…" : r.Value)</td>
         <td><a asp-page="Edit" asp-route-id="@r.Id">Edit</a></td>
       </tr>
     }

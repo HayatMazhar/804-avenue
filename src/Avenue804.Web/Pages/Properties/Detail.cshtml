@@ -1,43 +1,418 @@
 @page "/Properties/{slug}"
 @model Avenue804.Web.Pages.Properties.DetailModel
+@using Avenue804.Web.Infrastructure
+@using Avenue804.Web.Services
+@inject Avenue804.Web.Services.IFeatureFlagService FeatureFlagService
 @{
+    ViewData["NavActive"] = "properties";
     var L = Model.Listing!;
+    // Investment score: 1-10 based on price/sqft vs emirate average, views, yield potential
+    int investScore = 0;
+    if (L.OfferType == ListingOfferType.Sale && L.Price.HasValue && L.AreaSqft.HasValue && L.AreaSqft.Value > 0)
+    {
+        var psfAed = (double)L.Price.Value / L.AreaSqft.Value;
+        // Abu Dhabi avg ~1350/sqft sale — cheaper = higher score
+        var relScore = Math.Max(1, Math.Min(10, (int)(10 - (psfAed / 1350 * 5))));
+        investScore = relScore + (L.ViewCount > 100 ? 1 : 0);
+        investScore = Math.Min(10, Math.Max(1, investScore));
+    }
+    var shareUrl = $"{Request.Scheme}://{Request.Host}/Properties/{L.Slug}";
+    var shareTitle = Uri.EscapeDataString(L.Title + " — 804 Avenue Properties");
+    var shareUrlEnc = Uri.EscapeDataString(shareUrl);
+    bool currencyEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.CurrencyConverter);
+    bool ratingsEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.PropertyRatings);
+    bool mortgageEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.MortgageCalc);
 }
+@section Head {
+  @{
+    var jsonLd = new System.Text.StringBuilder();
+    jsonLd.Append("{");
+    jsonLd.Append("\"@context\":\"https://schema.org\",");
+    jsonLd.Append("\"@type\":\"RealEstateListing\",");
+    jsonLd.Append($"\"name\":\"{System.Text.Json.JsonEncodedText.Encode(L.Title)}\",");
+    if (!string.IsNullOrWhiteSpace(L.Description))
+      jsonLd.Append($"\"description\":\"{System.Text.Json.JsonEncodedText.Encode(L.Description.Length > 300 ? L.Description[..300] : L.Description)}\",");
+    jsonLd.Append($"\"url\":\"{shareUrl}\",");
+    if (!string.IsNullOrWhiteSpace(L.MainImageUrl))
+      jsonLd.Append($"\"image\":\"{L.MainImageUrl}\",");
+    if (L.Price.HasValue)
+    {
+      jsonLd.Append("\"offers\":{");
+      jsonLd.Append("\"@type\":\"Offer\",");
+      jsonLd.Append($"\"price\":\"{(int)L.Price.Value}\",");
+      jsonLd.Append("\"priceCurrency\":\"AED\",");
+      jsonLd.Append($"\"availability\":\"https://schema.org/InStock\"");
+      jsonLd.Append("},");
+    }
+    if (!string.IsNullOrWhiteSpace(L.Location))
+    {
+      jsonLd.Append("\"address\":{");
+      jsonLd.Append("\"@type\":\"PostalAddress\",");
+      jsonLd.Append($"\"addressLocality\":\"{System.Text.Json.JsonEncodedText.Encode(L.Location)}\",");
+      jsonLd.Append("\"addressCountry\":\"AE\"");
+      jsonLd.Append("},");
+    }
+    jsonLd.Append("\"provider\":{\"@type\":\"Organization\",\"name\":\"804 Avenue\",\"url\":\"https://www.804avenue.ae\"}");
+    jsonLd.Append("}");
+  }
+  <script type="application/ld+json">@Html.Raw(jsonLd.ToString())</script>
+  <meta property="og:title" content="@L.Title — 804 Avenue" />
+  <meta property="og:description" content="@ViewData["MetaDescription"]" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="@shareUrl" />
+  @if (!string.IsNullOrWhiteSpace(L.MainImageUrl))
+  {
+    <meta property="og:image" content="@L.MainImageUrl" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="@L.MainImageUrl" />
+  }
+  <meta name="twitter:title" content="@L.Title — 804 Avenue" />
+  <meta name="twitter:description" content="@(ViewData["MetaDescription"] as string ?? "")" />
+}
+
 <section class="page-hero">
   <div class="container">
     <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Properties/Index">Properties</a><span class="sep">/</span><span>@L.Title</span></div>
     <h1 class="page-hero-title fade-up">@L.Title</h1>
-    <p class="page-hero-sub fade-up">
-      @if (!string.IsNullOrWhiteSpace(L.Location))
-      {
-        @L.Location
-      }
-      else
-      {
-        <text>Abu Dhabi, UAE</text>
-      }
-    </p>
+    <div class="prop-hero-row fade-up">
+      <p class="page-hero-sub" style="margin:0">
+        @if (!string.IsNullOrWhiteSpace(L.Location)) { @L.Location } else { <text>Abu Dhabi, UAE</text> }
+      </p>
+      <div class="prop-hero-meta">
+        @if (Model.RatingCount > 0)
+        {
+        <div class="rating-summary-sm">
+          <span class="stars-sm">@for (int s = 1; s <= 5; s++) { <span class="@(s <= Math.Round(Model.AverageRating) ? "star-on" : "star-off")">★</span> }</span>
+          <span class="rating-avg">@Model.AverageRating.ToString("0.#")</span>
+          <span class="rating-count">(@Model.RatingCount review@(Model.RatingCount != 1 ? "s" : ""))</span>
+        </div>
+        }
+        <span class="view-count-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          @L.ViewCount.ToString("N0") view@(L.ViewCount != 1 ? "s" : "")
+        </span>
+      </div>
+    </div>
   </div>
 </section>
-<section class="section-pad" style="background:var(--bg-deep)">
+
+<section class="section-pad" style="background:var(--bg-surface)">
   <div class="container">
     <div class="listing-detail-layout fade-up">
+      <!-- Main content -->
       <div>
-        <div class="listing-detail-media">
-          <img src="@ListingFormat.ListingImageUrl(L.MainImageUrl)" alt="@L.Title" />
+        @{
+          var allImages = ListingFormat.GalleryUrls(L);
+        }
+        <div class="listing-gallery">
+          <div class="gallery-main" onclick="openLightbox(0)">
+            <img id="galleryMainImg" src="@allImages[0]" alt="@L.Title" />
+            <span class="gallery-count-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              @allImages.Count photo@(allImages.Count != 1 ? "s" : "")
+            </span>
+          </div>
+          @if (allImages.Count > 1)
+          {
+            <div class="gallery-thumbs">
+              @for (int i = 1; i < Math.Min(allImages.Count, 5); i++)
+              {
+                var idx = i;
+                <button type="button" class="gallery-thumb" onclick="openLightbox(@idx)">
+                  <img src="@allImages[idx]" alt="Photo @(idx + 1)" />
+                  @if (i == 4 && allImages.Count > 5)
+                  {
+                    <span class="gallery-more">+@(allImages.Count - 5)</span>
+                  }
+                </button>
+              }
+            </div>
+          }
         </div>
+
+        <!-- Lightbox -->
+        <div class="lightbox" id="lightbox" onclick="closeLightbox()" style="display:none">
+          <button class="lightbox-close" onclick="closeLightbox()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+          <button class="lightbox-prev" onclick="event.stopPropagation();shiftLightbox(-1)">&#8249;</button>
+          <div class="lightbox-img-wrap" onclick="event.stopPropagation()">
+            <img id="lightboxImg" src="" alt="@L.Title" />
+          </div>
+          <button class="lightbox-next" onclick="event.stopPropagation();shiftLightbox(1)">&#8250;</button>
+          <div class="lightbox-counter" id="lightboxCounter"></div>
+        </div>
+
+        <!-- Print / brochure button -->
+        <div style="display:flex;gap:10px;margin-bottom:16px">
+          <button onclick="window.print()" class="share-btn" style="padding:8px 16px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print / Save PDF
+          </button>
+        </div>
+
+        <!-- Share bar -->
+        <div class="share-bar">
+          <span class="share-label">Share</span>
+          <a href="https://wa.me/?text=@shareTitle%20@shareUrlEnc" target="_blank" rel="noopener" class="share-btn share-btn--wa" title="Share on WhatsApp">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
+            WhatsApp
+          </a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=@shareUrlEnc" target="_blank" rel="noopener" class="share-btn share-btn--fb" title="Share on Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.025 4.388 11.022 10.125 11.927v-8.436H7.078v-3.491h3.047v-2.66c0-3.025 1.791-4.694 4.533-4.694 1.313 0 2.686.235 2.686.235v2.953h-1.514c-1.491 0-1.955.93-1.955 1.884v2.282h3.328l-.532 3.491h-2.796v8.436C19.612 23.095 24 18.098 24 12.073z"/></svg>
+            Facebook
+          </a>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url=@shareUrlEnc" target="_blank" rel="noopener" class="share-btn share-btn--li" title="Share on LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://twitter.com/intent/tweet?url=@shareUrlEnc&text=@shareTitle" target="_blank" rel="noopener" class="share-btn share-btn--x" title="Share on X">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            X
+          </a>
+          <button class="share-btn share-btn--copy" onclick="copyLink('@shareUrl', this)" title="Copy link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            Copy Link
+          </button>
+        </div>
+
         @if (!string.IsNullOrWhiteSpace(L.Description))
         {
           <div class="section-sub" style="margin-top:28px;max-width:none;white-space:pre-wrap;line-height:1.75">@L.Description</div>
         }
+
+        <!-- Price history chart -->
+        @if (!string.IsNullOrWhiteSpace(L.PriceHistoryJson) || L.PreviousPrice.HasValue)
+        {
+          <div class="price-history-section fade-up">
+            <h3 class="amenities-title">Price History</h3>
+            <canvas id="priceHistoryChart" height="80"></canvas>
+          </div>
+        }
+
+        <!-- Off-plan badge -->
+        @if (L.IsOffPlan)
+        {
+          <div class="offplan-strip fade-up">
+            <div class="offplan-item"><span>Status</span><strong>Off-Plan</strong></div>
+            @if (!string.IsNullOrWhiteSpace(L.HandoverDate)) { <div class="offplan-item"><span>Handover</span><strong>@L.HandoverDate</strong></div> }
+            @if (L.CompletionPercent.HasValue) { <div class="offplan-item"><span>Completion</span><strong>@L.CompletionPercent%</strong><div class="offplan-bar"><div class="offplan-progress" style="width:@L.CompletionPercent%"></div></div></div> }
+            @if (!string.IsNullOrWhiteSpace(L.PaymentPlan)) { <div class="offplan-item offplan-item--wide"><span>Payment plan</span><strong>@L.PaymentPlan</strong></div> }
+          </div>
+        }
+
+        <!-- Amenities -->
+        @if (!string.IsNullOrWhiteSpace(L.AmenitiesJson))
+        {
+          var amenityMap = new Dictionary<string,string>{{"pool","Swimming Pool"},{"gym","Gym"},{"parking","Covered Parking"},{"security","24/7 Security"},{"cctv","CCTV"},{"concierge","Concierge"},{"maid","Maid's Room"},{"balcony","Balcony"},{"pets","Pets Allowed"},{"view","Sea / City View"},{"furnished","Fully Furnished"},{"kitchen","Open Kitchen"},{"study","Study Room"},{"laundry","Laundry Room"},{"central_ac","Central A/C"},{"lift","Elevator"},{"bbq","BBQ Area"},{"kids","Kids Play Area"}};
+          var codes = L.AmenitiesJson.Split(',', StringSplitOptions.RemoveEmptyEntries);
+          <div class="amenities-section fade-up">
+            <h3 class="amenities-title">Amenities &amp; Features</h3>
+            <div class="amenities-grid">
+              @foreach (var code in codes)
+              {
+                var label = amenityMap.TryGetValue(code, out var lbl) ? lbl : code;
+                <div class="amenity-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                  @label
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Floor plan -->
+        @if (!string.IsNullOrWhiteSpace(L.FloorPlanUrl))
+        {
+          <div class="floorplan-section fade-up">
+            <h3 class="amenities-title">Floor Plan</h3>
+            <div class="floorplan-wrap">
+              <img src="@L.FloorPlanUrl" alt="@L.Title floor plan" class="floorplan-img" onclick="openFloorPlan()" style="cursor:zoom-in" />
+              <button onclick="openFloorPlan()" class="floorplan-zoom">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                View full plan
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Virtual tour -->
+        @if (!string.IsNullOrWhiteSpace(L.VirtualTourUrl))
+        {
+          <div class="tour-section fade-up">
+            <h3 class="amenities-title">Virtual Tour</h3>
+            <div class="tour-embed">
+              @if (L.VirtualTourUrl.Contains("matterport.com"))
+              {
+                var mId = L.VirtualTourUrl.Split('/').LastOrDefault(s => s.Length > 5) ?? "";
+                <iframe src="https://my.matterport.com/show/?m=@mId&play=1" width="100%" height="400" frameborder="0" allowfullscreen allow="xr-spatial-tracking"></iframe>
+              }
+              else if (L.VirtualTourUrl.Contains("youtube.com") || L.VirtualTourUrl.Contains("youtu.be"))
+              {
+                var yId = L.VirtualTourUrl.Contains("v=") ? L.VirtualTourUrl.Split("v=")[1].Split('&')[0] : L.VirtualTourUrl.Split('/').Last();
+                <iframe src="https://www.youtube.com/embed/@yId" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
+              }
+              else
+              {
+                <a href="@L.VirtualTourUrl" target="_blank" rel="noopener" class="btn-outline" style="display:inline-flex">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+                  Open Virtual Tour
+                </a>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- ROI Calculator -->
+        @if (mortgageEnabled && L.OfferType == ListingOfferType.Sale && L.Price.HasValue)
+        {
+          <div class="roi-section fade-up">
+            <h3 class="amenities-title">Rental Yield &amp; ROI Calculator</h3>
+            <div class="roi-grid">
+              <div class="roi-input">
+                <label>Purchase price (AED)</label>
+                <input type="number" id="roiPrice" value="@((int)L.Price.Value)" oninput="calcRoi()" />
+              </div>
+              <div class="roi-input">
+                <label>Expected annual rent (AED)</label>
+                <input type="number" id="roiRent" placeholder="e.g. 80000" oninput="calcRoi()" />
+              </div>
+              <div class="roi-input">
+                <label>Service charge / yr (AED)</label>
+                <input type="number" id="roiCharge" value="0" oninput="calcRoi()" />
+              </div>
+            </div>
+            <div class="roi-results" id="roiResults" style="display:none">
+              <div class="roi-result-item"><span>Gross yield</span><strong id="roiGross">—</strong></div>
+              <div class="roi-result-item"><span>Net yield</span><strong id="roiNet">—</strong></div>
+              <div class="roi-result-item"><span>Annual income</span><strong id="roiIncome">—</strong></div>
+              <div class="roi-result-item"><span>Monthly income</span><strong id="roiMonthly">—</strong></div>
+              <div class="roi-result-item"><span>Payback period</span><strong id="roiPayback">—</strong></div>
+            </div>
+          </div>
+        }
+
+        <!-- Commute / Distances to key landmarks -->
+        @if (!string.IsNullOrWhiteSpace(L.Location))
+        {
+          <div class="commute-section fade-up">
+            <h3 class="amenities-title">Distances &amp; Nearby</h3>
+            <div class="commute-grid">
+              @{
+                var landmarks = new[] {
+                  ("ADGM / Al Maryah", "business"),
+                  ("Abu Dhabi Mall", "shopping"),
+                  ("Abu Dhabi Airport (AUH)", "flight"),
+                  ("ADNEC", "event"),
+                  ("Yas Island", "entertainment"),
+                  ("Dubai City Centre", "city"),
+                };
+              }
+              @foreach (var (name, icon) in landmarks)
+              {
+                var mapsUrl = $"https://www.google.com/maps/dir/?api=1&origin={Uri.EscapeDataString(L.Location)},+UAE&destination={Uri.EscapeDataString(name)}+Abu+Dhabi&travelmode=driving";
+                <a href="@mapsUrl" target="_blank" rel="noopener" class="commute-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>@name</span>
+                  <span class="commute-dir">Get directions →</span>
+                </a>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Ratings & Reviews section -->
+        @if (ratingsEnabled)
+        {
+        <div class="ratings-section" style="margin-top:44px">
+          <h3 class="section-title">Reviews &amp; Ratings</h3>
+
+          @if (Model.RatingCount > 0)
+          {
+            <div class="rating-aggregate">
+              <div class="rating-big">@Model.AverageRating.ToString("0.#")</div>
+              <div>
+                <div class="stars-lg">@for (int s = 1; s <= 5; s++) { <span class="@(s <= Math.Round(Model.AverageRating) ? "star-on" : "star-off")">★</span> }</div>
+                <div class="rating-count">Based on @Model.RatingCount review@(Model.RatingCount != 1 ? "s" : "")</div>
+              </div>
+            </div>
+          }
+
+          @if (User.Identity?.IsAuthenticated == true)
+          {
+            <div class="review-form-wrap">
+              <h3 class="review-form-heading">@(Model.UserRating != null ? "Update Your Review" : "Leave a Review")</h3>
+              <form method="post" asp-page="/Submit/Rating">
+                <input type="hidden" name="listingId" value="@L.Id" />
+                <input type="hidden" name="returnUrl" value="/Properties/@L.Slug" />
+                <div class="star-picker" id="starPicker">
+                  <input type="hidden" name="stars" id="starsInput" value="@(Model.UserRating?.Stars ?? 0)" />
+                  @for (int s = 1; s <= 5; s++)
+                  {
+                    <button type="button" class="star-pick @(Model.UserRating != null && s <= Model.UserRating.Stars ? "star-on" : "")" data-val="@s">★</button>
+                  }
+                </div>
+                <div class="modal-field" style="margin-top:12px">
+                  <label>Your review (optional)</label>
+                  <textarea name="review" rows="3" maxlength="2000" placeholder="Share your experience with this property…">@Model.UserRating?.Review</textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="margin-top:4px"><span>@(Model.UserRating != null ? "Update Review" : "Submit Review")</span></button>
+              </form>
+            </div>
+          }
+          else
+          {
+            <p class="section-sub" style="margin-top:16px"><a asp-page="/Account/Login">Sign in</a> to leave a review.</p>
+          }
+
+          @if (Model.ApprovedRatings.Any())
+          {
+            <div class="reviews-list" style="margin-top:32px">
+              @foreach (var r in @Model.ApprovedRatings)
+              {
+                <div class="review-item fade-up">
+                  <div class="review-item-head">
+                    <div class="review-avatar">@((r.User.DisplayName ?? r.User.Email ?? "U")[0].ToString().ToUpperInvariant())</div>
+                    <div>
+                      <div class="review-user">@(r.User.DisplayName ?? r.User.Email ?? "Anonymous")</div>
+                      <div class="stars-sm">@for (int s = 1; s <= 5; s++) { <span class="@(s <= r.Stars ? "star-on" : "star-off")">★</span> }</div>
+                    </div>
+                    <div class="review-date">@r.CreatedAt.LocalDateTime.ToString("d MMM yyyy")</div>
+                  </div>
+                  @if (!string.IsNullOrWhiteSpace(r.Review))
+                  {
+                    <p class="review-body">@r.Review</p>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+        } @* end ratingsEnabled *@
       </div>
+
+      <!-- Sidebar -->
       <aside class="prop-card" style="padding:24px;position:sticky;top:100px">
+        @{ var showVerified = L.IsVerified; }
+        @if (showVerified)
+        {
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.3);border-radius:var(--radius-sm);margin-bottom:14px;font-size:.78rem;color:var(--success);font-weight:700">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+            Verified Listing — Documents checked by 804 Avenue team
+          </div>
+        }
+
+        @if (investScore > 0)
+        {
+          <div class="invest-score" title="Investment potential score out of 10">
+            <span class="invest-score-label">Investment Score</span>
+            <span class="invest-score-num @(investScore >= 8 ? "invest-high" : investScore >= 5 ? "invest-mid" : "invest-low")">@investScore/10</span>
+          </div>
+        }
+
         <div class="prop-price" style="margin-bottom:12px">
           @ListingFormat.PricePrimary(L.Price, L.Currency, L.OfferType)
-          @if (ListingFormat.ShowRentSuffix(L.OfferType))
-          {
-            <small>/yr</small>
-          }
+          @if (ListingFormat.ShowRentSuffix(L.OfferType)) { <small>/yr</small> }
         </div>
         @if (L.OfferType == ListingOfferType.Sale)
         {
@@ -48,22 +423,384 @@
           <span class="prop-badge badge-rent" style="position:static;display:inline-block;margin-bottom:16px">For rent</span>
         }
         <div class="prop-meta" style="flex-wrap:wrap;margin-bottom:20px">
-          @if (L.Beds is int beds)
-          {
-            <span class="prop-meta-item">@beds beds</span>
-          }
-          @if (L.Baths is int baths)
-          {
-            <span class="prop-meta-item">@baths baths</span>
-          }
-          @if (L.AreaSqft is int sq)
-          {
-            <span class="prop-meta-item">@sq.ToString("N0") sqft</span>
-          }
+          @if (L.Beds is int beds) { <span class="prop-meta-item">@beds beds</span> }
+          @if (L.Baths is int baths) { <span class="prop-meta-item">@baths baths</span> }
+          @if (L.AreaSqft is int sq) { <span class="prop-meta-item">@sq.ToString("N0") sqft</span> }
         </div>
+
+        <!-- Save button -->
+        <form method="post" asp-page="/Api/SaveProperty" style="margin-bottom:12px">
+          <input type="hidden" name="listingId" value="@L.Id" />
+          <input type="hidden" name="save" value="@(!Model.IsSaved)" />
+          <input type="hidden" name="returnUrl" value="/Properties/@L.Slug" />
+          <button type="submit" class="save-btn-large @(Model.IsSaved ? "saved" : "")" @(!User.Identity?.IsAuthenticated ?? true ? "type=\"button\" onclick=\"signInToSave()\"" : "")>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="@(Model.IsSaved ? "currentColor" : "none")" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            @(Model.IsSaved ? "Saved" : "Save Property")
+          </button>
+        </form>
+
         <button type="button" class="btn-primary nav-modal-link" style="width:100%;justify-content:center;margin-bottom:12px;border:none;cursor:pointer" data-modal-open="modal-inquiry" data-inquiry-subject="Property: @L.Title (@L.Slug)"><span>Inquire about this property</span></button>
         <a asp-page="/Contact" class="btn-outline" style="display:flex;justify-content:center;text-decoration:none">Contact us</a>
+
+        @if (currencyEnabled && L.Price.HasValue)
+        {
+          <div class="currency-bar" style="margin-top:12px">
+            <label>Show price in</label>
+            <select id="currencySelect" onchange="convertCurrency()" style="min-width:90px">
+              <option value="AED">AED</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
+            <div id="convertedPrice" class="price-converted" style="display:none"></div>
+            <span class="rate-note">Approx. rates — verify with your bank</span>
+          </div>
+        }
+
+        <!-- Agent card -->
+        @if (L.Agent != null && L.Agent.IsActive)
+        {
+          <div class="agent-card">
+            <div class="agent-avatar-wrap">
+              @if (!string.IsNullOrWhiteSpace(L.Agent.AvatarUrl))
+              {
+                <img src="@L.Agent.AvatarUrl" alt="@L.Agent.Name" class="agent-avatar-img" />
+              }
+              else
+              {
+                <div class="agent-avatar-init">@L.Agent.Name[0].ToString().ToUpperInvariant()</div>
+              }
+            </div>
+            <div class="agent-info">
+              <div class="agent-name">@L.Agent.Name</div>
+              @if (!string.IsNullOrWhiteSpace(L.Agent.Title))
+              {
+                <div class="agent-title">@L.Agent.Title</div>
+              }
+              @if (!string.IsNullOrWhiteSpace(L.Agent.Bio))
+              {
+                <p class="agent-bio">@L.Agent.Bio</p>
+              }
+              <div class="agent-actions">
+                @if (!string.IsNullOrWhiteSpace(L.Agent.Phone))
+                {
+                  <a href="tel:@L.Agent.Phone" class="agent-btn agent-btn--phone">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                    Call
+                  </a>
+                }
+                @if (!string.IsNullOrWhiteSpace(L.Agent.WhatsAppNumber))
+                {
+                  var waNum = L.Agent.WhatsAppNumber.Replace("+", "").Replace(" ", "");
+                  var waMsg = Uri.EscapeDataString($"Hi, I'm interested in the property: {L.Title}");
+                  <a href="https://wa.me/@waNum?text=@waMsg" target="_blank" rel="noopener" class="agent-btn agent-btn--wa">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
+                    WhatsApp
+                  </a>
+                }
+                @if (!string.IsNullOrWhiteSpace(L.Agent.Email))
+                {
+                  <a href="mailto:@L.Agent.Email" class="agent-btn agent-btn--email">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Email
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- WhatsApp mortgage share button (shown once calc is used) -->
+        <div id="waMortgageBtn" style="display:none;margin-bottom:12px">
+          <button onclick="shareWhatsAppMortgage(@((int?)L.Price ?? 0), parseInt(document.getElementById('calcMonthly')?.textContent?.replace(/[^0-9]/g,''))||0, '@L.Title')" class="emergency-btn emergency-btn--wa" style="width:100%;justify-content:center;border-radius:var(--radius-sm)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+            Share mortgage summary on WhatsApp
+          </button>
+        </div>
+
+        <!-- Mortgage / Rent Calculator -->
+        @if (mortgageEnabled && L.OfferType == ListingOfferType.Sale)
+        {
+          <div class="calc-widget" id="mortgageCalc">
+            <div class="calc-toggle" onclick="toggleCalc()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></svg>
+              Mortgage Calculator
+              <svg class="calc-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="calc-body" id="calcBody" style="display:none">
+              <div class="modal-field" style="margin-bottom:12px">
+                <label>Property price (AED)</label>
+                <input type="number" id="calcPrice" value="@((int?)L.Price ?? 0)" min="0" oninput="calcMortgage()" />
+              </div>
+              <div class="modal-field" style="margin-bottom:12px">
+                <label>Down payment (%)</label>
+                <input type="range" id="calcDown" min="20" max="80" value="25" oninput="calcMortgage(); document.getElementById('calcDownVal').textContent=this.value+'%'" style="width:100%;accent-color:var(--accent)" />
+                <span id="calcDownVal" style="font-size:.78rem;color:var(--accent);font-weight:700">25%</span>
+              </div>
+              <div class="modal-field" style="margin-bottom:12px">
+                <label>Interest rate (% p.a.)</label>
+                <input type="number" id="calcRate" value="4.5" min="0" max="30" step="0.1" oninput="calcMortgage()" />
+              </div>
+              <div class="modal-field" style="margin-bottom:12px">
+                <label>Loan term (years)</label>
+                <select id="calcTerm" onchange="calcMortgage()">
+                  <option value="10">10 years</option>
+                  <option value="15">15 years</option>
+                  <option value="20">20 years</option>
+                  <option value="25" selected>25 years</option>
+                </select>
+              </div>
+              <div class="calc-result" id="calcResult">
+                <div class="calc-result-row"><span>Monthly payment</span><strong id="calcMonthly">—</strong></div>
+                <div class="calc-result-row"><span>Loan amount</span><strong id="calcLoan">—</strong></div>
+                <div class="calc-result-row"><span>Total interest</span><strong id="calcInterest">—</strong></div>
+              </div>
+              <p style="font-size:.68rem;color:var(--text-tertiary);margin-top:8px;line-height:1.5">Indicative only. Rates and eligibility subject to bank approval.</p>
+            </div>
+          </div>
+        }
+        else if (mortgageEnabled && L.OfferType == ListingOfferType.Rent && L.Price.HasValue)
+        {
+          <div class="calc-widget">
+            <div class="calc-result" style="border:none;background:none;padding:0;margin-top:16px">
+              <div class="calc-result-row"><span>Annual rent</span><strong>AED @L.Price.Value.ToString("N0")</strong></div>
+              <div class="calc-result-row"><span>Monthly equiv.</span><strong>AED @((L.Price.Value / 12).ToString("N0"))</strong></div>
+              <div class="calc-result-row"><span>Weekly equiv.</span><strong>AED @((L.Price.Value / 52).ToString("N0"))</strong></div>
+            </div>
+          </div>
+        }
       </aside>
     </div>
   </div>
 </section>
+
+<!-- Developer Profile -->
+@if (L.Developer != null && L.Developer.IsActive)
+{
+  <section style="background:var(--bg-deep);padding:40px 0">
+    <div class="container">
+      <div class="dev-profile-bar fade-up">
+        @if (!string.IsNullOrWhiteSpace(L.Developer.LogoUrl))
+        {
+          <img src="@L.Developer.LogoUrl" alt="@L.Developer.Name" class="dev-logo" />
+        }
+        else
+        {
+          <div class="dev-logo-text">@L.Developer.Name[0]</div>
+        }
+        <div class="dev-info">
+          <div class="dev-name">@L.Developer.Name</div>
+          @if (L.Developer.EstablishedYear.HasValue) { <div class="dev-meta">Est. @L.Developer.EstablishedYear · @(L.Developer.Headquarters ?? "UAE")</div> }
+          @if (!string.IsNullOrWhiteSpace(L.Developer.Description)) { <p class="dev-desc">@L.Developer.Description</p> }
+        </div>
+        <div class="dev-actions">
+          @if (!string.IsNullOrWhiteSpace(L.Developer.WebsiteUrl))
+          {
+            <a href="@L.Developer.WebsiteUrl" target="_blank" rel="noopener" class="btn-outline" style="padding:9px 18px;font-size:.7rem">Developer Website</a>
+          }
+          <a asp-page="/Developers/Profile" asp-route-slug="@L.Developer.Slug" class="btn-outline" style="padding:9px 18px;font-size:.7rem">All Projects</a>
+        </div>
+      </div>
+    </div>
+  </section>
+}
+
+<!-- Similar properties -->
+@if (Model.SimilarListings.Count > 0)
+{
+  <section class="section-pad" style="background:var(--bg-deep)">
+    <div class="container">
+      <div class="section-tag fade-up">Similar Properties</div>
+      <h2 class="section-title fade-up">You Might Also <em>Like</em></h2>
+      <div class="feat-grid">
+        @foreach (var p in Model.SimilarListings)
+        {
+          <partial name="Shared/_PropertyCard" model="p" />
+        }
+      </div>
+    </div>
+  </section>
+}
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+function copyLink(url, btn) {
+  navigator.clipboard.writeText(url).then(function() {
+    var orig = btn.innerHTML;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Copied!';
+    setTimeout(function() { btn.innerHTML = orig; }, 2000);
+  });
+}
+
+// Price history chart
+(function() {
+  var ctx = document.getElementById('priceHistoryChart');
+  if (!ctx) return;
+  var history = @Html.Raw(!string.IsNullOrWhiteSpace(L.PriceHistoryJson) ? L.PriceHistoryJson : "[]");
+  if (L.PreviousPrice && !history.some(function(h) { return h.price === @((long?)L.PreviousPrice ?? 0); }))
+    history.push({ date: '@((L.UpdatedAt ?? L.CreatedAt).AddDays(-30).ToString("yyyy-MM-dd"))', price: @((long?)L.PreviousPrice ?? 0) });
+  var currentPrice = @((long?)L.Price ?? 0);
+  if (currentPrice > 0) history.push({ date: '@(DateTimeOffset.UtcNow.ToString("yyyy-MM-dd"))', price: currentPrice });
+  if (history.length < 2) { ctx.closest('.price-history-section').style.display='none'; return; }
+  history.sort(function(a,b) { return a.date.localeCompare(b.date); });
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: history.map(function(h) { return h.date; }),
+      datasets: [{
+        label: 'Price (AED)', data: history.map(function(h) { return h.price; }),
+        borderColor: 'rgba(245,158,11,0.9)', backgroundColor: 'rgba(245,158,11,0.08)',
+        borderWidth: 2, fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: 'rgba(245,158,11,1)'
+      }]
+    },
+    options: {
+      responsive: true, plugins: { legend: { display: false } },
+      scales: {
+        y: { ticks: { color: '#64748B', callback: function(v) { return 'AED ' + (v/1000000).toFixed(1) + 'M'; }}, grid: { color: 'rgba(15,23,42,.06)' } },
+        x: { ticks: { color: '#64748B' }, grid: { display: false } }
+      }
+    }
+  });
+})();
+
+// ROI Calculator
+function calcRoi() {
+  var price = parseFloat(document.getElementById('roiPrice')?.value) || 0;
+  var rent = parseFloat(document.getElementById('roiRent')?.value) || 0;
+  var charge = parseFloat(document.getElementById('roiCharge')?.value) || 0;
+  var res = document.getElementById('roiResults');
+  if (!res || price <= 0 || rent <= 0) { if (res) res.style.display = 'none'; return; }
+  var gross = (rent / price * 100).toFixed(2);
+  var net = ((rent - charge) / price * 100).toFixed(2);
+  var payback = rent > 0 ? (price / rent).toFixed(1) : '—';
+  var monthly = Math.round(rent / 12).toLocaleString();
+  document.getElementById('roiGross').textContent = gross + '%';
+  document.getElementById('roiNet').textContent = net + '%';
+  document.getElementById('roiIncome').textContent = 'AED ' + Math.round(rent).toLocaleString();
+  document.getElementById('roiMonthly').textContent = 'AED ' + monthly;
+  document.getElementById('roiPayback').textContent = payback + ' yrs';
+  res.style.display = 'grid';
+}
+
+// Floor plan lightbox
+function openFloorPlan() {
+  var url = '@(L.FloorPlanUrl ?? "")';
+  if (!url) return;
+  var lb = document.createElement('div');
+  lb.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(5,8,14,.96);display:flex;align-items:center;justify-content:center;cursor:zoom-out';
+  lb.onclick = function() { document.body.removeChild(lb); };
+  var img = document.createElement('img');
+  img.src = url; img.style.cssText = 'max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px';
+  lb.appendChild(img);
+  document.body.appendChild(lb);
+}
+
+// Recently viewed — save to sessionStorage
+(function trackViewed() {
+  var key = '804-viewed';
+  var viewed = JSON.parse(sessionStorage.getItem(key) || '[]');
+  var id = @(L.Id);
+  viewed = viewed.filter(function(v) { return v.id !== id; });
+  viewed.unshift({ id: id, slug: '@L.Slug', title: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(L.Title)), img: '@ListingFormat.ListingImageUrl(L.MainImageUrl)' });
+  if (viewed.length > 10) viewed = viewed.slice(0, 10);
+  sessionStorage.setItem(key, JSON.stringify(viewed));
+})();
+
+// Currency converter (static approximate rates)
+var _aedPrice = @(L.Price.HasValue ? ((decimal)L.Price.Value).ToString("F0", System.Globalization.CultureInfo.InvariantCulture) : "0");
+var _rates = { AED: 1, USD: 0.2723, EUR: 0.2497, GBP: 0.2131 };
+function convertCurrency() {
+  var sel = document.getElementById('currencySelect');
+  var out = document.getElementById('convertedPrice');
+  if (!sel || !out || !_aedPrice) return;
+  var cur = sel.value;
+  if (cur === 'AED') { out.style.display = 'none'; return; }
+  var converted = Math.round(_aedPrice * (_rates[cur] || 1));
+  out.textContent = '≈ ' + cur + ' ' + converted.toLocaleString();
+  out.style.display = '';
+}
+
+// Gallery lightbox
+var _galleryImages = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(allImages));
+var _lightboxIdx = 0;
+function openLightbox(idx) {
+  _lightboxIdx = idx;
+  var lb = document.getElementById('lightbox');
+  var img = document.getElementById('lightboxImg');
+  if (!lb || !img) return;
+  img.src = _galleryImages[idx];
+  document.getElementById('lightboxCounter').textContent = (idx+1) + ' / ' + _galleryImages.length;
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
+function shiftLightbox(dir) {
+  var next = (_lightboxIdx + dir + _galleryImages.length) % _galleryImages.length;
+  openLightbox(next);
+}
+document.addEventListener('keydown', function(e) {
+  var lb = document.getElementById('lightbox');
+  if (!lb || lb.style.display === 'none') return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') shiftLightbox(1);
+  if (e.key === 'ArrowLeft') shiftLightbox(-1);
+});
+
+function toggleCalc() {
+  var body = document.getElementById('calcBody');
+  var chevron = document.querySelector('.calc-chevron');
+  if (!body) return;
+  var open = body.style.display === '';
+  body.style.display = open ? 'none' : '';
+  if (chevron) chevron.style.transform = open ? '' : 'rotate(180deg)';
+  if (!open) calcMortgage();
+}
+
+function calcMortgage() {
+  var price = parseFloat(document.getElementById('calcPrice')?.value) || 0;
+  var downPct = parseFloat(document.getElementById('calcDown')?.value) || 25;
+  var rate = parseFloat(document.getElementById('calcRate')?.value) || 4.5;
+  var years = parseInt(document.getElementById('calcTerm')?.value) || 25;
+
+  var loan = price * (1 - downPct / 100);
+  var months = years * 12;
+  var r = (rate / 100) / 12;
+  var monthly = r === 0 ? loan / months : (loan * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+  var totalInterest = (monthly * months) - loan;
+  var waBtn = document.getElementById('waMortgageBtn');
+  if (waBtn) waBtn.style.display = monthly > 0 ? '' : 'none';
+
+  var fmt = function(v) { return 'AED ' + Math.round(v).toLocaleString(); };
+  var el = function(id) { return document.getElementById(id); };
+  if (el('calcMonthly')) el('calcMonthly').textContent = fmt(monthly);
+  if (el('calcLoan')) el('calcLoan').textContent = fmt(loan);
+  if (el('calcInterest')) el('calcInterest').textContent = fmt(totalInterest);
+}
+
+function signInToSave() {
+  window.location.href = '/Account/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+}
+
+// Star picker
+(function() {
+  var picker = document.getElementById('starPicker');
+  var input = document.getElementById('starsInput');
+  if (!picker || !input) return;
+  var stars = Array.from(picker.querySelectorAll('.star-pick'));
+  function setVal(v) {
+    input.value = v;
+    stars.forEach(function(s, i) { s.classList.toggle('star-on', i < v); });
+  }
+  stars.forEach(function(s) {
+    s.addEventListener('click', function() { setVal(+this.getAttribute('data-val')); });
+    s.addEventListener('mouseenter', function() { stars.forEach(function(x, i) { x.classList.toggle('star-hover', i < +s.getAttribute('data-val')); }); });
+    s.addEventListener('mouseleave', function() { stars.forEach(function(x) { x.classList.remove('star-hover'); }); });
+  });
+})();
+</script>
+}

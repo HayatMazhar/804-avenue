@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Edit project";
 }
-<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Projects</a></p>
+<p class="admin-back"><a asp-page="Index">← Projects</a></p>
 <form method="post" class="admin-form">
   <div class="row">
     <label asp-for="Form.Title"></label>
@@ -16,7 +16,7 @@
   </div>
   <div class="row">
     <label asp-for="Form.Summary"></label>
-    <textarea asp-for="Form.Summary" style="min-height:80px"></textarea>
+    <textarea asp-for="Form.Summary" class="admin-textarea-short"></textarea>
   </div>
   <div class="row">
     <label asp-for="Form.Description"></label>
@@ -28,12 +28,12 @@
   </div>
   <div class="row chk">
     <input asp-for="Form.IsPublished" />
-    <label asp-for="Form.IsPublished" style="margin:0;font-size:0.88rem;text-transform:none;letter-spacing:normal">Published</label>
+    <label asp-for="Form.IsPublished" class="admin-label-inline">Published</label>
   </div>
   <button type="submit" class="btn-primary"><span>Save</span></button>
 </form>
-<form method="post" asp-page-handler="Delete" style="margin-top:28px" onsubmit="return confirm('Delete this project?');">
-  <button type="submit" class="btn-outline" style="border-color:var(--danger);color:var(--danger)">Delete project</button>
+<form method="post" asp-page-handler="Delete" class="admin-form-delete" onsubmit="return confirm('Delete this project?');">
+  <button type="submit" class="btn-outline btn-danger-outline">Delete project</button>
 </form>
 @section Scripts {
   <partial name="_ValidationScriptsPartial" />

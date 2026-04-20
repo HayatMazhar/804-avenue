@@ -1,0 +1,271 @@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Avenue804.Web.Infrastructure
+@using Avenue804.Web.Domain
+@{
+    var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
+    var waNum = site?.WhatsAppDigits ?? "971504399804";
+    var phone = site?.TelHref ?? "tel:+971504399804";
+    var phoneDisplay = site?.PhoneDisplay ?? "+971 50 43 99 804";
+}
+
+<!-- ═══ EMERGENCY STRIP ═══ -->
+<section class="emergency-section" id="emergency">
+  <div class="container">
+    <div class="emergency-inner">
+      <div class="emergency-badge">
+        <div class="emergency-pulse"></div>
+        <div>
+          <div class="emergency-label">Available now</div>
+          <div class="emergency-title">24/7 Emergency Maintenance Response</div>
+        </div>
+      </div>
+      <div class="emergency-actions">
+        <a href="https://wa.me/@waNum?text=EMERGENCY%3A+I+need+urgent+maintenance+assistance" target="_blank" rel="noopener" class="emergency-btn emergency-btn--wa">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+          WhatsApp Now
+        </a>
+        <a href="@phone" class="emergency-btn emergency-btn--call">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          @phoneDisplay
+        </a>
+        <button onclick="document.getElementById('ticketModal').style.display='flex'" class="emergency-btn emergency-btn--form">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Log a Ticket
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AMC CALCULATOR ═══ -->
+<section class="quote-section" id="amc-quote">
+  <div class="container">
+    <div class="section-tag fade-up" style="justify-content:center">AMC Estimator</div>
+    <h2 class="section-title fade-up" style="text-align:center;max-width:640px;margin:0 auto 12px">Annual Maintenance Contract <em>Cost Estimator</em></h2>
+    <p class="section-sub fade-up" style="text-align:center;margin:0 auto 36px">Get an indicative AMC range based on your building size, type, and required services.</p>
+
+    <div class="amc-calc fade-up">
+      <div class="amc-grid">
+        <div>
+          <div class="quote-field">
+            <label>Building type</label>
+            <select id="amcBType" name="buildingType" onchange="calcAmc()">
+              <option value="Residential">Residential</option>
+              <option value="Commercial">Commercial / Office</option>
+              <option value="Retail">Retail / Mall</option>
+              <option value="Industrial">Industrial / Warehouse</option>
+              <option value="Mixed">Mixed-use</option>
+            </select>
+          </div>
+          <div class="quote-grid-2">
+            <div class="quote-field">
+              <label>No. of floors</label>
+              <input type="number" id="amcFloors" min="1" max="100" value="5" oninput="calcAmc()" />
+            </div>
+            <div class="quote-field">
+              <label>No. of units</label>
+              <input type="number" id="amcUnits" min="1" max="2000" value="20" oninput="calcAmc()" />
+            </div>
+          </div>
+          <div class="quote-field">
+            <label>Total area (sqm)</label>
+            <input type="number" id="amcArea" min="100" max="500000" value="2000" oninput="calcAmc()" />
+          </div>
+        </div>
+        <div>
+          <div class="quote-field"><label>Services required</label></div>
+          <div class="amc-services-grid">
+            <label class="amc-service-check"><input type="checkbox" value="general" id="amcGeneral" onchange="calcAmc()" checked /> General building</label>
+            <label class="amc-service-check"><input type="checkbox" value="civil" id="amcCivil" onchange="calcAmc()" /> Civil maintenance</label>
+            <label class="amc-service-check"><input type="checkbox" value="mep" id="amcMep" onchange="calcAmc()" /> MEP systems</label>
+            <label class="amc-service-check"><input type="checkbox" value="hvac" id="amcHvac" onchange="calcAmc()" /> HVAC service</label>
+            <label class="amc-service-check"><input type="checkbox" value="lift" id="amcLift" onchange="calcAmc()" /> Lifts / escalators</label>
+            <label class="amc-service-check"><input type="checkbox" value="pool" id="amcPool" onchange="calcAmc()" /> Pool &amp; gym</label>
+            <label class="amc-service-check"><input type="checkbox" value="landscape" id="amcLandscape" onchange="calcAmc()" /> Landscaping</label>
+            <label class="amc-service-check"><input type="checkbox" value="pest" id="amcPest" onchange="calcAmc()" /> Pest control</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="amc-result" id="amcResult">
+        <div class="amc-result-header">Estimated Annual Maintenance Contract</div>
+        <div class="amc-result-grid">
+          <div class="amc-result-item"><label>Annual AMC estimate</label><strong id="amcAnnual">AED —</strong></div>
+          <div class="amc-result-item"><label>Monthly equivalent</label><strong id="amcMonthly">AED —</strong></div>
+          <div class="amc-result-item"><label>Preventive maintenance visits/yr</label><strong id="amcVisits">—</strong></div>
+          <div class="amc-result-item"><label>Est. savings vs reactive</label><strong id="amcSavings" style="color:var(--success)">—</strong></div>
+        </div>
+        <p style="font-size:.72rem;color:var(--text-secondary);margin-top:12px">Indicative estimate only. Final AMC pricing is based on a site survey and agreed scope of services.</p>
+      </div>
+
+      <form method="post" asp-page="/Submit/AmcRequest" id="amcForm" style="margin-top:24px;padding-top:24px;border-top:1px solid var(--border-subtle)">
+        <input type="hidden" name="buildingType" id="amcBTypeHidden" value="Residential" />
+        <input type="hidden" name="numberOfFloors" id="amcFloorsHidden" value="5" />
+        <input type="hidden" name="numberOfUnits" id="amcUnitsHidden" value="20" />
+        <input type="hidden" name="totalAreaSqm" id="amcAreaHidden" value="2000" />
+        <input type="hidden" name="servicesNeeded" id="amcServicesHidden" value="" />
+        <input type="hidden" name="estimateRange" id="amcEstimateHidden" value="" />
+
+        <div class="section-tag" style="margin-bottom:16px">Request Formal AMC Quote</div>
+        <div class="quote-grid-2">
+          <div class="quote-field"><label>Your name <span style="color:var(--accent)">*</span></label><input type="text" name="name" required autocomplete="name" placeholder="Ahmed Al Mansoori" maxlength="200" /></div>
+          <div class="quote-field"><label>Company (optional)</label><input type="text" name="company" placeholder="Building management or owner" maxlength="200" /></div>
+        </div>
+        <div class="quote-grid-2">
+          <div class="quote-field"><label>Mobile <span style="color:var(--accent)">*</span></label><input type="tel" name="phone" required inputmode="tel" placeholder="+971 50 000 0000" maxlength="50" /></div>
+          <div class="quote-field"><label>Email <span style="color:var(--accent)">*</span></label><input type="email" name="email" required placeholder="you@example.com" maxlength="256" /></div>
+        </div>
+        <div class="quote-field"><label>Building location</label><input type="text" name="location" placeholder="e.g. Al Reem Island, Abu Dhabi" maxlength="400" /></div>
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;margin-top:4px" onclick="syncAmcHiddens()">
+          <span>Request AMC Proposal</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MAINTENANCE PACKAGES ═══ -->
+<section class="packages-section">
+  <div class="container">
+    <div class="section-tag fade-up" style="justify-content:center">AMC Packages</div>
+    <h2 class="section-title fade-up" style="text-align:center;max-width:640px;margin:0 auto 12px">Maintenance <em>Packages</em></h2>
+    <p class="section-sub fade-up" style="text-align:center;margin:0 auto">Structured Annual Maintenance Contracts designed around your building's needs.</p>
+
+    <div class="packages-grid" style="margin-top:44px">
+      <div class="pkg-card fade-up">
+        <div class="pkg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg></div>
+        <div class="pkg-name">Building Care</div>
+        <div class="pkg-tagline">Essential upkeep for small residential buildings</div>
+        <div class="pkg-price">From AED 18,000<small> / yr</small></div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-list">
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Quarterly preventive visits</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>General building maintenance</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Pest control (4x/yr)</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>48-hour corrective response</li>
+          <li class="pkg-item pkg-item--off"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>24/7 emergency line</li>
+          <li class="pkg-item pkg-item--off"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>Monthly KPI report</li>
+        </ul>
+        <a href="#amc-quote" class="btn-outline" style="display:flex;justify-content:center">Get Quote</a>
+      </div>
+
+      <div class="pkg-card pkg-card--featured fade-up">
+        <div class="pkg-icon" style="background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+        <div class="pkg-name">Total Care</div>
+        <div class="pkg-tagline">Comprehensive AMC for medium buildings</div>
+        <div class="pkg-price">From AED 65,000<small> / yr</small></div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-list">
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Monthly preventive visits</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>General + Civil + MEP</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>HVAC servicing (12x/yr)</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>24/7 emergency response</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Dedicated account manager</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Monthly KPI report</li>
+        </ul>
+        <a href="#amc-quote" class="btn-primary" style="display:flex;justify-content:center"><span>Get Quote</span></a>
+      </div>
+
+      <div class="pkg-card fade-up">
+        <div class="pkg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="pkg-name">FM Integrated</div>
+        <div class="pkg-tagline">Full facility management + maintenance</div>
+        <div class="pkg-price">Custom<small> pricing</small></div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-list">
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>All maintenance services</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Soft services (cleaning, pest, landscape)</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>On-site FM manager</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Statutory compliance management</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Tenant helpdesk portal</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Budget vs actual reporting</li>
+        </ul>
+        <a href="/FacilityManagement" class="btn-outline" style="display:flex;justify-content:center">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MAINTENANCE TICKET MODAL ═══ -->
+<div id="ticketModal" style="display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:16px;background:rgba(15,23,42,.5);backdrop-filter:blur(8px)">
+  <div style="background:var(--bg-card);border:1px solid var(--border-accent);border-radius:var(--radius-lg);width:100%;max-width:520px;max-height:calc(100vh - 32px);overflow-y:auto;box-shadow:0 32px 80px rgba(15,23,42,.2)">
+    <div style="height:4px;background:linear-gradient(90deg,#DC2626,#F97316);border-radius:var(--radius-lg) var(--radius-lg) 0 0"></div>
+    <div style="padding:22px 26px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+      <div>
+        <h2 style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--text-primary)">Submit Maintenance Request</h2>
+        <p style="font-size:.82rem;color:var(--text-secondary);margin-top:4px">For emergencies, use the WhatsApp or call button above for fastest response.</p>
+      </div>
+      <button onclick="document.getElementById('ticketModal').style.display='none'" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;font-size:1.3rem;padding:4px">✕</button>
+    </div>
+    <form method="post" asp-page="/Submit/MaintenanceRequest" style="padding:20px 26px 26px">
+      <div class="quote-field"><label>Priority</label>
+        <div class="priority-selector">
+          <label class="priority-option"><input type="radio" name="priority" value="@((int)TicketPriority.Normal)" checked /> Normal</label>
+          <label class="priority-option"><input type="radio" name="priority" value="@((int)TicketPriority.High)" /> High</label>
+          <label class="priority-option priority-option--emergency"><input type="radio" name="priority" value="@((int)TicketPriority.Emergency)" /> 🚨 Emergency</label>
+        </div>
+      </div>
+      <div class="quote-grid-2">
+        <div class="quote-field"><label>Your name *</label><input type="text" name="name" required maxlength="200" placeholder="Ahmed Al Mansoori" autocomplete="name" /></div>
+        <div class="quote-field"><label>Mobile *</label><input type="tel" name="phone" required maxlength="50" placeholder="+971 50 000 0000" inputmode="tel" /></div>
+      </div>
+      <div class="quote-field"><label>Email *</label><input type="email" name="email" required maxlength="256" placeholder="you@example.com" /></div>
+      <div class="quote-field"><label>Building / location *</label><input type="text" name="buildingOrLocation" required maxlength="400" placeholder="Building name, floor, unit number, emirate" /></div>
+      <div class="quote-field"><label>Describe the issue *</label><textarea name="issueDescription" required rows="3" maxlength="4000" placeholder="Describe the problem in detail — what is broken, since when, any visible damage…"></textarea></div>
+      <button type="submit" class="btn-primary" style="width:100%;justify-content:center;background:linear-gradient(135deg,#DC2626,#F97316)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9z"/></svg>
+        <span>Submit Maintenance Ticket</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+@section Scripts {
+<script>
+// AMC calculator
+var _amcBase = { Residential: 12, Commercial: 16, Retail: 18, Industrial: 10, Mixed: 14 }; // AED per sqm per year base
+var _amcServices = { general: 1.0, civil: 0.8, mep: 1.2, hvac: 1.5, lift: 0.6, pool: 0.7, landscape: 0.5, pest: 0.3 };
+
+function calcAmc() {
+  var btype = document.getElementById('amcBType').value;
+  var floors = parseInt(document.getElementById('amcFloors').value) || 5;
+  var units = parseInt(document.getElementById('amcUnits').value) || 20;
+  var area = parseFloat(document.getElementById('amcArea').value) || 2000;
+
+  var checked = [];
+  Object.keys(_amcServices).forEach(function(k) {
+    if (document.getElementById('amc' + k.charAt(0).toUpperCase() + k.slice(1)).checked) checked.push(k);
+  });
+
+  if (checked.length === 0) { document.getElementById('amcResult').style.background = 'var(--bg-surface)'; return; }
+
+  var serviceMultiplier = checked.reduce(function(s, k) { return s + _amcServices[k]; }, 0);
+  var base = (_amcBase[btype] || 12) * area * serviceMultiplier;
+  var lo = Math.round(base * 0.85 / 500) * 500;
+  var hi = Math.round(base * 1.25 / 500) * 500;
+  var monthly = Math.round((lo + hi) / 2 / 12 / 100) * 100;
+  var visits = Math.min(checked.length * 4, 52);
+  var savings = Math.round(hi * 0.4 / 1000) * 1000;
+
+  document.getElementById('amcAnnual').textContent = 'AED ' + lo.toLocaleString() + ' – ' + hi.toLocaleString();
+  document.getElementById('amcMonthly').textContent = 'AED ' + monthly.toLocaleString();
+  document.getElementById('amcVisits').textContent = visits + 'x';
+  document.getElementById('amcSavings').textContent = 'AED ' + savings.toLocaleString();
+  document.getElementById('amcEstimateHidden').value = 'AED ' + lo.toLocaleString() + ' – ' + hi.toLocaleString();
+}
+
+function syncAmcHiddens() {
+  document.getElementById('amcBTypeHidden').value = document.getElementById('amcBType').value;
+  document.getElementById('amcFloorsHidden').value = document.getElementById('amcFloors').value;
+  document.getElementById('amcUnitsHidden').value = document.getElementById('amcUnits').value;
+  document.getElementById('amcAreaHidden').value = document.getElementById('amcArea').value;
+  var services = [];
+  ['general','civil','mep','hvac','lift','pool','landscape','pest'].forEach(function(k) {
+    if (document.getElementById('amc' + k.charAt(0).toUpperCase() + k.slice(1)).checked) services.push(k);
+  });
+  document.getElementById('amcServicesHidden').value = services.join(',');
+}
+
+calcAmc(); // init on load
+</script>
+}

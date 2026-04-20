@@ -9,7 +9,7 @@
         _ => "badge badge-closed"
     };
 }
-<p class="muted" style="margin-bottom:20px">@Model.TotalCount total</p>
+<p class="muted admin-lead-muted">@Model.TotalCount total</p>
 <div class="admin-table-wrap">
   <table class="admin-table">
     <thead>
@@ -28,9 +28,9 @@
         <td>@row.CreatedAt.LocalDateTime.ToString("g")</td>
         <td>
           <a asp-page="Detail" asp-route-id="@row.Id">@row.Name</a><br />
-          <span class="muted" style="font-size:0.82rem">@row.Email</span>
+          <span class="muted small">@row.Email</span>
         </td>
-        <td class="muted" style="font-size:0.86rem">@(row.TopicLookup?.DisplayName ?? "—")</td>
+        <td class="muted small">@(row.TopicLookup?.DisplayName ?? "—")</td>
         <td>@row.Subject</td>
         <td><span class="@BadgeClass(row.Status)">@row.Status</span></td>
       </tr>
@@ -40,7 +40,7 @@
 </div>
 @if (Model.Items.Count == 0)
 {
-  <p class="muted" style="margin-top:16px">No inquiries yet.</p>
+  <p class="muted admin-empty">No inquiries yet.</p>
 }
 <div class="pager">
   @if (Model.PageNumber > 1)

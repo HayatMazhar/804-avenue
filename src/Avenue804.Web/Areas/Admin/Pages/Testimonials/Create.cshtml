@@ -1,0 +1,18 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Testimonials.CreateModel
+@{ ViewData["Title"] = "Add testimonial"; }
+<p class="admin-back"><a asp-page="Index">← Testimonials</a></p>
+<form method="post" class="admin-form">
+  <div class="row"><label asp-for="Form.AuthorName">Author name</label><input asp-for="Form.AuthorName" /></div>
+  <div class="row"><label asp-for="Form.AuthorRole">Author role / title</label><input asp-for="Form.AuthorRole" placeholder="e.g. Homeowner — Al Reem Island" /></div>
+  <div class="row"><label asp-for="Form.Quote">Quote</label><textarea asp-for="Form.Quote" rows="4" placeholder="What they said about us…"></textarea></div>
+  <div class="row admin-form-row-avatar">
+    <div><label asp-for="Form.Stars">Stars (1-5)</label><input asp-for="Form.Stars" type="number" min="1" max="5" /></div>
+    <div><label asp-for="Form.SortOrder">Sort order</label><input asp-for="Form.SortOrder" type="number" /></div>
+  </div>
+  <div class="row chk">
+    <input asp-for="Form.IsActive" />
+    <label asp-for="Form.IsActive" class="admin-label-inline">Active</label>
+  </div>
+  <button type="submit" class="btn-primary"><span>Save</span></button>
+</form>

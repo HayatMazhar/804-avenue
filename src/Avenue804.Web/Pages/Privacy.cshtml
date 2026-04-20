@@ -1,8 +1,18 @@
-﻿@page
+@page
 @model PrivacyModel
 @{
     ViewData["Title"] = "Privacy Policy";
+    ViewData["MetaDescription"] = "804 Avenue privacy policy — how we collect, use, and protect your personal information.";
 }
-<h1>@ViewData["Title"]</h1>
-
-<p>Use this page to detail your site's privacy policy.</p>
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Privacy Policy</span></div>
+    <h1 class="page-hero-title fade-up">Privacy <em>Policy</em></h1>
+  </div>
+</section>
+<section class="section-pad section-bg-white">
+  <div class="container" style="max-width:800px">
+    <p>This page details the privacy policy for 804 Avenue Properties and Contracting. We are committed to protecting your personal information and your right to privacy.</p>
+    <p>If you have any questions or concerns about this policy, please contact us at the details on our <a asp-page="/Contact">Contact</a> page.</p>
+  </div>
+</section>

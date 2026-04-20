@@ -3,65 +3,157 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @using Avenue804.Web.Infrastructure
 @{
-    ViewData["Title"] = "Contact us";
+    ViewData["Title"] = "Contact Us";
+    ViewData["MetaDescription"] = "Get in touch with 804 Avenue — Abu Dhabi office address, phone, email, and WhatsApp. Request a free quote for contracting, maintenance, or real estate services.";
     ViewData["NavActive"] = "contact";
+    var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
 }
+
+<!-- Page header -->
 <section class="page-hero">
   <div class="container">
     <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Contact</span></div>
     <h1 class="page-hero-title fade-up"><em>Contact</em> us</h1>
-    @{
-      var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
-    }
-    <p class="page-hero-sub fade-up">@site?.Address · <a href="@site?.TelHref">@site?.PhoneDisplay</a> · <a href="mailto:@site?.Email">@site?.Email</a></p>
+    <p class="page-hero-sub fade-up">
+      @site?.Address
+      @if (!string.IsNullOrWhiteSpace(site?.PhoneDisplay)) { <text>· <a href="@site.TelHref">@site.PhoneDisplay</a></text> }
+      @if (!string.IsNullOrWhiteSpace(site?.Email)) { <text>· <a href="mailto:@site.Email">@site.Email</a></text> }
+    </p>
   </div>
 </section>
-<section class="section-pad" style="background:var(--bg-surface)">
-  <div class="container" style="max-width:640px">
-    <p class="section-sub fade-up" style="margin-bottom:28px">Send a message and we will respond as soon as possible. For structured property interest (rent / buy / type / location), use <strong>Property inquiry</strong> in the main menu on any page.</p>
-    <form method="post" class="admin-form" style="max-width:none">
-      <div class="row">
-        <label asp-for="Form.Name"></label>
-        <input asp-for="Form.Name" autocomplete="name" placeholder="Your name" />
-        <span asp-validation-for="Form.Name" class="muted"></span>
+
+<!-- Contact body -->
+<section class="section-pad contact-section">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- Form column -->
+      <div class="contact-form-col fade-up">
+        <div class="contact-card">
+          <h2 class="contact-card__title">Send us a message</h2>
+          <p class="contact-card__sub">For property interest, use <strong>Property Inquiry</strong> from the nav instead.</p>
+
+          <div asp-validation-summary="ModelOnly" class="contact-alert contact-alert--error"></div>
+
+          <form method="post" class="contact-form">
+            <div class="contact-form__row">
+              <div class="contact-form__group">
+                <label class="contact-form__label">Your name</label>
+                <div class="contact-form__input-wrap">
+                  <svg class="contact-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <input class="contact-form__input" asp-for="Form.Name" autocomplete="name" placeholder="Ahmed Al Mansoori" />
+                </div>
+                <span asp-validation-for="Form.Name" class="contact-form__error"></span>
+              </div>
+              <div class="contact-form__group">
+                <label class="contact-form__label">Email address</label>
+                <div class="contact-form__input-wrap">
+                  <svg class="contact-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <input class="contact-form__input" asp-for="Form.Email" type="email" autocomplete="email" placeholder="you@example.com" />
+                </div>
+                <span asp-validation-for="Form.Email" class="contact-form__error"></span>
+              </div>
+            </div>
+
+            <div class="contact-form__row">
+              <div class="contact-form__group">
+                <label class="contact-form__label">Phone <span class="contact-form__optional">(optional)</span></label>
+                <div class="contact-form__input-wrap">
+                  <svg class="contact-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  <input class="contact-form__input" asp-for="Form.Phone" type="tel" autocomplete="tel" placeholder="+971 50 000 0000" />
+                </div>
+                <span asp-validation-for="Form.Phone" class="contact-form__error"></span>
+              </div>
+              <div class="contact-form__group">
+                <label class="contact-form__label">Topic</label>
+                @await Component.InvokeAsync("InquiryTopicSelect", new { inputName = "Form.TopicLookupValueId", selectId = "contactTopic", optional = true, selectedValue = Model.Form.TopicLookupValueId?.ToString(), fieldWrapperClass = "" })
+              </div>
+            </div>
+
+            <div class="contact-form__group">
+              <label class="contact-form__label">Subject</label>
+              <div class="contact-form__input-wrap">
+                <svg class="contact-form__icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                <input class="contact-form__input" asp-for="Form.Subject" placeholder="How can we help?" />
+              </div>
+              <span asp-validation-for="Form.Subject" class="contact-form__error"></span>
+            </div>
+
+            <div class="contact-form__group">
+              <label class="contact-form__label">Message</label>
+              <textarea class="contact-form__input contact-form__textarea" asp-for="Form.Message" rows="5" placeholder="Tell us more about what you need…"></textarea>
+              <span asp-validation-for="Form.Message" class="contact-form__error"></span>
+            </div>
+
+            <button type="submit" class="contact-form__submit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+              Send Message
+            </button>
+          </form>
+        </div>
       </div>
-      <div class="row">
-        <label asp-for="Form.Email"></label>
-        <input asp-for="Form.Email" autocomplete="email" placeholder="you@example.com" />
-        <span asp-validation-for="Form.Email" class="muted"></span>
+
+      <!-- Info column -->
+      <div class="contact-info-col fade-up">
+        <div class="contact-info-card">
+          <div class="contact-info-item">
+            <div class="contact-info-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="contact-info-label">Office Address</div>
+              <div class="contact-info-value">@site?.Address</div>
+            </div>
+          </div>
+          @if (!string.IsNullOrWhiteSpace(site?.PhoneDisplay))
+          {
+            <div class="contact-info-item">
+              <div class="contact-info-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              </div>
+              <div>
+                <div class="contact-info-label">Call us</div>
+                <a class="contact-info-value contact-info-link" href="@site.TelHref">@site.PhoneDisplay</a>
+              </div>
+            </div>
+          }
+          @if (!string.IsNullOrWhiteSpace(site?.Email))
+          {
+            <div class="contact-info-item">
+              <div class="contact-info-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div>
+                <div class="contact-info-label">Email us</div>
+                <a class="contact-info-value contact-info-link" href="mailto:@site.Email">@site.Email</a>
+              </div>
+            </div>
+          }
+          @if (!string.IsNullOrWhiteSpace(site?.WhatsAppHref))
+          {
+            <div class="contact-info-item">
+              <div class="contact-info-icon contact-info-icon--wa">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              </div>
+              <div>
+                <div class="contact-info-label">WhatsApp</div>
+                <a class="contact-info-value contact-info-link" href="@site.WhatsAppHref" target="_blank" rel="noopener">Chat on WhatsApp</a>
+              </div>
+            </div>
+          }
+          <div class="contact-info-hours">
+            <div class="contact-info-label contact-info-hours-title">Business hours</div>
+            <div class="contact-info-hours-row"><span>Monday – Friday</span><span>9:00 AM – 6:00 PM</span></div>
+            <div class="contact-info-hours-row"><span>Saturday</span><span>10:00 AM – 2:00 PM</span></div>
+            <div class="contact-info-hours-row"><span>Sunday</span><span>Closed</span></div>
+          </div>
+        </div>
       </div>
-      <div class="row">
-        <label asp-for="Form.Phone"></label>
-        <input asp-for="Form.Phone" autocomplete="tel" placeholder="+971 …" />
-        <span asp-validation-for="Form.Phone" class="muted"></span>
-      </div>
-      @await Component.InvokeAsync("InquiryTopicSelect", new { inputName = "Form.TopicLookupValueId", selectId = "contactTopic", optional = true, selectedValue = Model.Form.TopicLookupValueId?.ToString(), fieldWrapperClass = "row" })
-      <div class="row">
-        <label asp-for="Form.Subject"></label>
-        <input asp-for="Form.Subject" placeholder="How can we help?" />
-        <span asp-validation-for="Form.Subject" class="muted"></span>
-      </div>
-      <div class="row">
-        <label asp-for="Form.Message"></label>
-        <textarea asp-for="Form.Message" placeholder="Your message…"></textarea>
-        <span asp-validation-for="Form.Message" class="muted"></span>
-      </div>
-      <button type="submit" class="btn-primary"><span>Send message</span></button>
-    </form>
+
+    </div>
   </div>
 </section>
-@section Styles {
-  <style>
-    .admin-form .row { margin-bottom: 18px; }
-    .admin-form label { display: block; font-family: var(--font-nav); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px; }
-    .admin-form input, .admin-form textarea, .admin-form select {
-      width: 100%; padding: 12px 14px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-primary); font-family: var(--font-body); font-size: 0.95rem; box-sizing: border-box;
-    }
-    .admin-form textarea { min-height: 140px; resize: vertical; }
-    .admin-form input:focus, .admin-form textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-15); }
-    .admin-form .validation-summary-errors { color: var(--danger); font-size: 0.88rem; margin-bottom: 16px; }
-  </style>
-}
+
 @section Scripts {
   <partial name="_ValidationScriptsPartial" />
 }

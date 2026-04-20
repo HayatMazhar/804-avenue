@@ -1,0 +1,48 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Ratings.IndexModel
+@using Avenue804.Web.Domain
+@{
+    ViewData["Title"] = "Property Reviews";
+    ViewData["AdminSection"] = "ratings";
+    string BadgeClass(bool approved) => approved ? "badge badge-closed" : "badge badge-new";
+}
+<p class="muted admin-lead-muted">Review and approve/reject user-submitted property ratings.</p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Property</th>
+        <th>User</th>
+        <th>Stars</th>
+        <th>Review</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var r in Model.Items)
+      {
+        <tr>
+          <td>@r.CreatedAt.LocalDateTime.ToString("g")</td>
+          <td><a asp-page="/Properties/Detail" asp-route-slug="@r.Listing.Slug" asp-area="">@r.Listing.Title</a></td>
+          <td>@(r.User.DisplayName ?? r.User.Email)</td>
+          <td>@("★".PadRight(r.Stars, '★').Substring(0, r.Stars))@("☆".PadLeft(5 - r.Stars, '☆').Substring(0, 5 - r.Stars))</td>
+          <td class="admin-td-ellipsis">@(string.IsNullOrWhiteSpace(r.Review) ? "—" : r.Review)</td>
+          <td><span class="@BadgeClass(r.IsApproved)">@(r.IsApproved ? "Published" : "Pending")</span></td>
+          <td>
+            <form method="post" class="form-inline-block">
+              <input type="hidden" name="id" value="@r.Id" />
+              @if (!r.IsApproved)
+              {
+                <button name="action" value="approve" class="btn-primary admin-btn-xs">Approve</button>
+              }
+              <button name="action" value="delete" onclick="return confirm('Delete this review?')" class="btn-outline admin-btn-xs btn-delete-review">Delete</button>
+            </form>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (Model.Items.Count == 0) { <p class="muted admin-empty">No reviews yet.</p> }

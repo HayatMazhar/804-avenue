@@ -8,27 +8,68 @@ namespace Avenue804.Web.Pages.Properties;
 public class IndexModel : PageModel
 {
     private readonly ApplicationDbContext _db;
-
     public IndexModel(ApplicationDbContext db) => _db = db;
 
     public IReadOnlyList<PropertyListing> Listings { get; private set; } = [];
-
     public string? Filter { get; private set; }
+    public string? SearchLocation { get; private set; }
+    public string? SearchType { get; private set; }
+    public string? SearchBudget { get; private set; }
+    public string? SearchKeyword { get; private set; }
+    public string? SortBy { get; private set; }
+    public int TotalCount { get; private set; }
 
-    public async Task OnGetAsync(string? offer, CancellationToken cancellationToken = default)
+    public async Task OnGetAsync(
+        string? offer, string? location, string? type, string? budget, string? q,
+        string? sort,
+        CancellationToken cancellationToken = default)
     {
         ViewData["NavActive"] = "properties";
-        Filter = offer;
-        var q = _db.PropertyListings.AsNoTracking()
+        Filter = offer; SearchLocation = location; SearchType = type;
+        SearchBudget = budget; SearchKeyword = q; SortBy = sort ?? "newest";
+
+        var query = _db.PropertyListings.AsNoTracking()
             .Where(p => p.IsPublished && p.Slug != null && p.Slug != "");
 
         if (string.Equals(offer, "rent", StringComparison.OrdinalIgnoreCase))
-            q = q.Where(p => p.OfferType == ListingOfferType.Rent);
+            query = query.Where(p => p.OfferType == ListingOfferType.Rent);
         else if (string.Equals(offer, "sale", StringComparison.OrdinalIgnoreCase))
-            q = q.Where(p => p.OfferType == ListingOfferType.Sale);
+            query = query.Where(p => p.OfferType == ListingOfferType.Sale);
 
-        Listings = await q
-            .OrderByDescending(p => p.UpdatedAt ?? p.CreatedAt)
-            .ToListAsync(cancellationToken);
+        if (!string.IsNullOrWhiteSpace(location) && location != "any")
+            query = query.Where(p => p.Location != null && p.Location.Contains(location));
+
+        if (!string.IsNullOrWhiteSpace(type) && type != "any")
+            query = query.Where(p => p.Title.Contains(type) || (p.Description != null && p.Description.Contains(type)));
+
+        if (!string.IsNullOrWhiteSpace(q))
+            query = query.Where(p => p.Title.Contains(q) || (p.Location != null && p.Location.Contains(q)) || (p.Description != null && p.Description.Contains(q)));
+
+        if (!string.IsNullOrWhiteSpace(budget) && budget != "any")
+        {
+            query = budget switch
+            {
+                "u500"  => query.Where(p => p.Price < 500_000),
+                "500-1m"=> query.Where(p => p.Price >= 500_000 && p.Price < 1_000_000),
+                "1m-5m" => query.Where(p => p.Price >= 1_000_000 && p.Price < 5_000_000),
+                "5m+"   => query.Where(p => p.Price >= 5_000_000),
+                _ => query
+            };
+        }
+
+        TotalCount = await query.CountAsync(cancellationToken);
+
+        query = sort switch
+        {
+            "price-asc"  => query.OrderBy(p => p.Price),
+            "price-desc" => query.OrderByDescending(p => p.Price),
+            "views"      => query.OrderByDescending(p => p.ViewCount),
+            "reduced"    => query.Where(p => p.PreviousPrice.HasValue && p.Price < p.PreviousPrice)
+                                 .OrderByDescending(p => p.UpdatedAt ?? p.CreatedAt),
+            "verified"   => query.Where(p => p.IsVerified).OrderByDescending(p => p.UpdatedAt ?? p.CreatedAt),
+            _            => query.OrderByDescending(p => p.UpdatedAt ?? p.CreatedAt)
+        };
+
+        Listings = await query.ToListAsync(cancellationToken);
     }
 }

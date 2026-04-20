@@ -1,0 +1,206 @@
+@page "/Account/Dashboard"
+@model Avenue804.Web.Pages.Account.DashboardModel
+@using Avenue804.Web.Infrastructure
+@{
+    ViewData["Title"] = "My Dashboard";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["NavActive"] = "dashboard";
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Dashboard</span></div>
+    <h1 class="page-hero-title fade-up">My <em>Dashboard</em></h1>
+    <p class="page-hero-sub fade-up">Manage your saved properties, reviews, and inquiries.</p>
+  </div>
+</section>
+
+<section class="section-pad areaguides-section">
+  <div class="container">
+
+    <!-- Profile summary -->
+    <div class="account-profile-bar fade-up">
+      <div class="account-avatar-lg">
+        @if (!string.IsNullOrWhiteSpace(Model.AvatarUrl))
+        {
+          <img src="@Model.AvatarUrl" alt="@Model.DisplayName" />
+        }
+        else
+        {
+          <span>@(Model.DisplayName?.Length > 0 ? Model.DisplayName[0].ToString().ToUpperInvariant() : "U")</span>
+        }
+      </div>
+      <div>
+        <div class="account-user-name">@(Model.DisplayName ?? Model.Email)</div>
+        <div class="account-user-meta">@Model.Email</div>
+      </div>
+      <div class="account-profile-actions">
+        <a asp-page="/Account/Profile" class="btn-outline" style="padding:10px 22px;font-size:.72rem">Edit Profile</a>
+        <form method="post" asp-page="/Account/Logout" style="display:inline">
+          <button type="submit" class="btn-outline" style="padding:10px 22px;font-size:.72rem;color:var(--danger);border-color:rgba(220,38,38,.35)">Sign Out</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="dash-tabs fade-up">
+      <button class="dash-tab active" data-tab="saved">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        Saved Properties <span class="dash-badge">@Model.SavedProperties.Count</span>
+      </button>
+      <button class="dash-tab" data-tab="reviews">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        My Reviews <span class="dash-badge">@Model.Ratings.Count</span>
+      </button>
+      <button class="dash-tab" data-tab="services">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        My Service Requests <span class="dash-badge">@(Model.ServiceQuotes.Count + Model.AmcReqs.Count + Model.MaintTickets.Count)</span>
+      </button>
+      <button class="dash-tab" data-tab="searches">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Saved Searches <span class="dash-badge">@Model.SavedSearches.Count</span>
+      </button>
+      <button class="dash-tab" data-tab="inquiries">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Inquiries <span class="dash-badge">@Model.Inquiries.Count</span>
+      </button>
+    </div>
+
+    <!-- Saved Properties -->
+    <div class="dash-panel" id="panel-saved">
+      @if (Model.SavedProperties.Count == 0)
+      {
+        <div class="dash-empty">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          <p>No saved properties yet.</p>
+          <a asp-page="/Properties/Index" class="btn-primary" style="display:inline-flex"><span>Browse Properties</span></a>
+        </div>
+      }
+      else
+      {
+        <div class="feat-grid">
+          @foreach (var item in Model.SavedProperties)
+          {
+            <div class="prop-card-wrap">
+              <partial name="Shared/_PropertyCard" model="item.Listing" />
+              <form method="post" asp-page="/Api/SaveProperty" class="unsave-form">
+                <input type="hidden" name="listingId" value="@item.ListingId" />
+                <input type="hidden" name="save" value="false" />
+                <button type="submit" class="prop-unsave-btn" title="Remove from saved">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+              </form>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Reviews -->
+    <div class="dash-panel" id="panel-reviews" style="display:none">
+      @if (Model.Ratings.Count == 0)
+      {
+        <div class="dash-empty">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <p>You haven't left any reviews yet.</p>
+        </div>
+      }
+      else
+      {
+        <div class="review-list">
+          @foreach (var r in Model.Ratings)
+          {
+            <div class="review-row">
+              <div class="review-meta">
+                <a asp-page="/Properties/Detail" asp-route-slug="@r.Listing.Slug" class="review-prop-name">@r.Listing.Title</a>
+                <div class="review-stars-sm">@for (int s = 1; s <= 5; s++) { <span class="@(s <= r.Stars ? "star-on" : "star-off")">★</span> }</div>
+                <span class="review-date">@r.CreatedAt.LocalDateTime.ToString("d MMM yyyy")</span>
+                <span class="review-status @(r.IsApproved ? "badge-approved" : "badge-pending")">@(r.IsApproved ? "Published" : "Awaiting approval")</span>
+              </div>
+              @if (!string.IsNullOrWhiteSpace(r.Review))
+              {
+                <p class="review-text">@r.Review</p>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Saved Searches -->
+    <div class="dash-panel" id="panel-searches" style="display:none">
+      @if (Model.SavedSearches.Count == 0)
+      {
+        <div class="dash-empty">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <p>No saved searches yet. Use the search on the <a asp-page="/Properties/Index">Properties page</a> and click "Save search".</p>
+        </div>
+      }
+      else
+      {
+        <div class="inquiry-list">
+          @foreach (var s in Model.SavedSearches)
+          {
+            <div class="inquiry-row">
+              <div class="inquiry-row-head">
+                <strong>@(s.Label ?? "Saved search")</strong>
+                <span class="inquiry-date">@s.CreatedAt.LocalDateTime.ToString("d MMM yyyy")</span>
+                <span class="badge @(s.AlertEnabled ? "badge-closed" : "badge-pending")">@(s.AlertEnabled ? "Alerts on" : "Alerts off")</span>
+              </div>
+              <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+                <a asp-page="/Properties/Index" asp-route-offer="@s.Offer" asp-route-location="@s.Location" asp-route-type="@s.PropertyType" asp-route-budget="@s.Budget" asp-route-q="@s.Keyword" class="btn-outline" style="padding:6px 14px;font-size:.68rem">View results</a>
+                <form method="post" asp-page="/Api/DeleteSearch">
+                  <input type="hidden" name="id" value="@s.Id" />
+                  <button type="submit" class="btn-outline" style="padding:6px 14px;font-size:.68rem;color:var(--danger);border-color:rgba(220,38,38,.35)" onclick="return confirm('Remove this saved search?')">Remove</button>
+                </form>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Inquiries -->
+    <div class="dash-panel" id="panel-inquiries" style="display:none">
+      @if (Model.Inquiries.Count == 0)
+      {
+        <div class="dash-empty">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <p>No property inquiries yet.</p>
+        </div>
+      }
+      else
+      {
+        <div class="inquiry-list">
+          @foreach (var inq in Model.Inquiries)
+          {
+            <div class="inquiry-row">
+              <div class="inquiry-row-head">
+                <span class="inquiry-date">@inq.CreatedAt.LocalDateTime.ToString("d MMM yyyy")</span>
+                <span class="badge badge-@inq.Status.ToString().ToLower()">@inq.Status</span>
+              </div>
+              <div class="inquiry-details">
+                @if (inq.WantToLookup != null) { <span><strong>Intent:</strong> @inq.WantToLookup.DisplayName</span> }
+                @if (inq.PropertyTypeLookup != null) { <span><strong>Type:</strong> @inq.PropertyTypeLookup.DisplayName</span> }
+                @if (inq.BudgetLookup != null) { <span><strong>Budget:</strong> @inq.BudgetLookup.DisplayName</span> }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+  </div>
+</section>
+
+@section Scripts {
+<script>
+document.querySelectorAll('.dash-tab').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.dash-tab').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('.dash-panel').forEach(function(p) { p.style.display = 'none'; });
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.getAttribute('data-tab')).style.display = '';
+  });
+});
+</script>
+}

@@ -1,0 +1,184 @@
+@page "/MarketTrends"
+@model Avenue804.Web.Pages.MarketTrendsModel
+@{
+    ViewData["Title"] = "Abu Dhabi Property Market Trends";
+    ViewData["MetaDescription"] = "Live market data — average prices, listing activity, and rental yields across Abu Dhabi and the UAE property market.";
+    ViewData["NavActive"] = "market";
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Market Trends</span></div>
+    <h1 class="page-hero-title fade-up">UAE Property <em>Market Trends</em></h1>
+    <p class="page-hero-sub fade-up">Live data from our portfolio — average prices, listing activity, and rental yields across Abu Dhabi and the UAE.</p>
+  </div>
+</section>
+
+<section class="section-pad" style="background:var(--bg-surface)">
+  <div class="container">
+
+    <!-- KPI cards -->
+    <div class="trends-kpi-grid fade-up">
+      <div class="trends-kpi">
+        <div class="trends-kpi-label">Total Published Listings</div>
+        <div class="trends-kpi-num">@Model.TotalListings</div>
+        <div class="trends-kpi-sub">@Model.ForSaleCount for sale · @Model.ForRentCount for rent</div>
+      </div>
+      <div class="trends-kpi">
+        <div class="trends-kpi-label">Avg Sale Price</div>
+        <div class="trends-kpi-num">@(Model.AvgSalePrice.HasValue ? "AED " + ((long)Model.AvgSalePrice.Value).ToString("N0") : "—")</div>
+        <div class="trends-kpi-sub">Across all published sale listings</div>
+      </div>
+      <div class="trends-kpi">
+        <div class="trends-kpi-label">Avg Annual Rent</div>
+        <div class="trends-kpi-num">@(Model.AvgRentPrice.HasValue ? "AED " + ((long)Model.AvgRentPrice.Value).ToString("N0") : "—")</div>
+        <div class="trends-kpi-sub">Per year across all rental listings</div>
+      </div>
+      <div class="trends-kpi">
+        <div class="trends-kpi-label">Avg Rental Yield</div>
+        <div class="trends-kpi-num">@(Model.AvgYield.HasValue ? Model.AvgYield.Value.ToString("0.0") + "%" : "—")</div>
+        <div class="trends-kpi-sub">Gross yield estimate (rent / sale)</div>
+      </div>
+      <div class="trends-kpi">
+        <div class="trends-kpi-label">Off-Plan Listings</div>
+        <div class="trends-kpi-num">@Model.OffPlanCount</div>
+        <div class="trends-kpi-sub">New projects with payment plans</div>
+      </div>
+      <div class="trends-kpi">
+        <div class="trends-kpi-label">Total Views (all listings)</div>
+        <div class="trends-kpi-num">@Model.TotalViews.ToString("N0")</div>
+        <div class="trends-kpi-sub">Cumulative listing page views</div>
+      </div>
+    </div>
+
+    <!-- Price by location bar chart -->
+    @if (Model.PriceByLocation.Any())
+    {
+      <div class="trends-chart-card fade-up" style="margin-top:44px">
+        <div class="trends-chart-title">Average Sale Price by Location <span class="trends-chart-unit">(AED)</span></div>
+        <canvas id="locationChart" height="100"></canvas>
+      </div>
+    }
+
+    <!-- Listings by property type -->
+    @if (Model.ListingsByType.Any())
+    {
+      <div class="trends-grid-2 fade-up" style="margin-top:28px">
+        <div class="trends-chart-card">
+          <div class="trends-chart-title">Listings by Offer Type</div>
+          <canvas id="typeChart" height="200"></canvas>
+        </div>
+        <div class="trends-chart-card">
+          <div class="trends-chart-title">Top Locations by Listing Count</div>
+          <div class="trends-location-list">
+            @foreach (var (loc, count) in Model.TopLocations.Take(8))
+            {
+              var pct = Model.TotalListings > 0 ? (double)count / Model.TotalListings * 100 : 0;
+              <div class="trends-loc-row">
+                <span class="trends-loc-name">@loc</span>
+                <div class="trends-loc-bar"><div style="width:@pct.ToString("0")%"></div></div>
+                <span class="trends-loc-count">@count</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Most viewed listings -->
+    @if (Model.MostViewed.Any())
+    {
+      <div class="trends-chart-card fade-up" style="margin-top:28px">
+        <div class="trends-chart-title">Most Viewed Listings</div>
+        <div class="admin-table-wrap" style="border:none;background:none;padding:0">
+          <table class="admin-table" style="background:none">
+            <thead><tr><th>Rank</th><th>Property</th><th>Location</th><th>Price</th><th>Views</th></tr></thead>
+            <tbody>
+              @for (int i = 0; i < Model.MostViewed.Count; i++)
+              {
+                var p = Model.MostViewed[i];
+                <tr>
+                  <td><strong style="color:var(--accent)">#@(i + 1)</strong></td>
+                  <td><a asp-page="/Properties/Detail" asp-route-slug="@p.Slug" style="color:var(--accent);font-weight:600">@p.Title</a></td>
+                  <td>@(p.Location ?? "—")</td>
+                  <td>@(p.Price.HasValue ? "AED " + p.Price.Value.ToString("N0") : "—")</td>
+                  <td><strong>@p.ViewCount.ToString("N0")</strong></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
+    <!-- Data freshness note -->
+    <p class="muted fade-up" style="margin-top:24px;font-size:.75rem">Data sourced from 804 Avenue's published listings. Updated in real-time. Market data reflects our active portfolio only — not total market data.</p>
+  </div>
+</section>
+
+@section Styles {
+<style>
+.trends-kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.trends-kpi{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.65)}
+.trends-kpi-label{font-family:var(--font-nav);font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:8px}
+.trends-kpi-num{font-family:var(--font-display);font-size:1.6rem;font-weight:700;color:var(--accent);line-height:1;margin-bottom:4px}
+.trends-kpi-sub{font-size:.72rem;color:var(--text-secondary)}
+.trends-chart-card{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:22px 24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.65)}
+.trends-chart-title{font-family:var(--font-nav);font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:16px}
+.trends-chart-unit{font-weight:400;color:var(--text-tertiary)}
+.trends-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.trends-location-list{display:flex;flex-direction:column;gap:10px}
+.trends-loc-row{display:grid;grid-template-columns:120px 1fr 40px;align-items:center;gap:10px}
+.trends-loc-name{font-size:.78rem;color:var(--text-secondary)}
+.trends-loc-bar{height:8px;background:var(--border-subtle);border-radius:999px;overflow:hidden}
+.trends-loc-bar div{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));border-radius:999px;transition:width .5s ease}
+.trends-loc-count{font-size:.72rem;color:var(--text-tertiary);text-align:right}
+/* responsive */
+</style>
+}
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function() {
+  var accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#F59E0B';
+  var cyan = getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim() || '#06B6D4';
+
+  // Location price chart
+  @if (Model.PriceByLocation.Any())
+  {
+    <text>
+  var locData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PriceByLocation));
+  new Chart(document.getElementById('locationChart'), {
+    type: 'bar',
+    data: {
+      labels: locData.map(function(d) { return d.location; }),
+      datasets: [{ label: 'Avg Sale Price (AED)', data: locData.map(function(d) { return d.avgPrice; }),
+        backgroundColor: 'rgba(245,158,11,0.2)', borderColor: 'rgba(245,158,11,0.8)', borderWidth: 2, borderRadius: 6 }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: {
+      y: { beginAtZero: false, ticks: { color: '#64748B', callback: function(v) { return 'AED ' + (v/1000000).toFixed(1) + 'M'; }}, grid: { color: 'rgba(15,23,42,.06)' } },
+      x: { ticks: { color: '#64748B' }, grid: { display: false } }
+    }}
+  });
+    </text>
+  }
+
+  // Type doughnut
+  @if (Model.ListingsByType.Any())
+  {
+    <text>
+  new Chart(document.getElementById('typeChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['For Sale', 'For Rent'],
+      datasets: [{ data: [@Model.ForSaleCount, @Model.ForRentCount],
+        backgroundColor: ['rgba(245,158,11,0.7)', 'rgba(6,182,212,0.7)'],
+        borderColor: ['rgba(245,158,11,1)', 'rgba(6,182,212,1)'], borderWidth: 2 }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
+  });
+    </text>
+  }
+})();
+</script>
+}

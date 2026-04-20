@@ -1,0 +1,22 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Newsletter.DigestModel
+@{ ViewData["Title"] = "Send Digest"; ViewData["AdminSection"] = "newsletter"; }
+<p class="admin-back"><a asp-page="Index">← Newsletter</a></p>
+<div class="detail-block">
+  <h3>Weekly Digest — Manual Send</h3>
+  <p class="muted admin-detail-lead">
+    The weekly digest runs automatically every <strong>Sunday at 08:00 UTC</strong>. Use this page to send it immediately for testing or on demand.<br/>
+    Recipients: all active newsletter subscribers + registered users with saved searches.
+  </p>
+  @if (!string.IsNullOrEmpty(Model.Result))
+  {
+    <div class="@(Model.Success ? "auth-success" : "auth-error") mb-3">@Model.Result</div>
+  }
+  <form method="post">
+    <div class="row chk mb-3">
+      <input type="checkbox" name="testOnly" id="testOnly" value="true" />
+      <label for="testOnly" class="admin-label-inline">Test mode — only send to admin email</label>
+    </div>
+    <button type="submit" class="btn-primary"><span>Send Digest Now</span></button>
+  </form>
+</div>

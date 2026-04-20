@@ -5,25 +5,23 @@
     var selectId = ViewData["SelectId"] as string ?? "inquiryTopic";
     var optional = ViewData["Optional"] as bool? ?? true;
     var selected = ViewData["SelectedValue"] as string;
-    var wrap = ViewData["FieldWrapperClass"] as string ?? "modal-field";
+    var wrap = ViewData["FieldWrapperClass"] as string ?? "field";
 }
 <div class="@wrap">
-  <label for="@selectId">Topic</label>
-  <select id="@selectId" name="@inputName">
-    @if (optional)
-    {
-      <option value="">Optional — select a topic</option>
-    }
-    @foreach (var v in Model)
-    {
-      if (string.Equals(selected, v.Id.ToString(), StringComparison.Ordinal))
-      {
-        <option value="@v.Id" selected>@v.DisplayName</option>
-      }
-      else
-      {
-        <option value="@v.Id">@v.DisplayName</option>
-      }
-    }
-  </select>
+  @if (wrap == "field") { <label class="label">Topic</label> }
+  else if (wrap == "row") { <label>Topic</label> }
+  <div class="control">
+    <div class="select is-fullwidth">
+      <select id="@selectId" name="@inputName">
+        @if (optional) { <option value="">Optional — select a topic</option> }
+        @foreach (var v in Model)
+        {
+          if (string.Equals(selected, v.Id.ToString(), StringComparison.Ordinal))
+          { <option value="@v.Id" selected>@v.DisplayName</option> }
+          else
+          { <option value="@v.Id">@v.DisplayName</option> }
+        }
+      </select>
+    </div>
+  </div>
 </div>

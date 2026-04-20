@@ -1,0 +1,42 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Listings.ReviewModel
+@using Avenue804.Web.Domain
+@{
+    ViewData["Title"] = "Pending Review";
+    ViewData["AdminSection"] = "listings";
+}
+<p class="muted admin-back--tight">@Model.PendingCount listing@(Model.PendingCount != 1?"s":"") awaiting review.</p>
+@if (Model.PendingCount == 0)
+{
+  <p class="muted">No listings pending review.</p>
+}
+else
+{
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>Submitted</th><th>Title</th><th>Location</th><th>Price</th><th>Type</th><th>Actions</th></tr></thead>
+      <tbody>
+        @foreach (var p in Model.Items)
+        {
+          <tr class="admin-tr-highlight">
+            <td>@p.CreatedAt.LocalDateTime.ToString("d MMM yy HH:mm")</td>
+            <td><a asp-page="Edit" asp-route-id="@p.Id" class="link-accent fw-semibold">@p.Title</a></td>
+            <td>@(p.Location ?? "—")</td>
+            <td>@(p.Price.HasValue ? "AED " + p.Price.Value.ToString("N0") : "—")</td>
+            <td>@p.OfferType</td>
+            <td>
+              <form method="post" class="admin-review-actions">
+                <input type="hidden" name="id" value="@p.Id" />
+                <button name="action" value="approve" class="btn-primary admin-btn-xs"><i class="bi bi-check-lg me-1" aria-hidden="true"></i>Approve &amp; Publish</button>
+                <div class="admin-reject-row">
+                  <input type="text" name="reason" placeholder="Rejection reason…" class="admin-input-inline-sm" />
+                  <button name="action" value="reject" class="btn-outline admin-btn-xs btn-danger-outline">Reject</button>
+                </div>
+              </form>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

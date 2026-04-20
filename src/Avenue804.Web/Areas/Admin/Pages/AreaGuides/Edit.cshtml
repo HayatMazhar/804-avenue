@@ -1,0 +1,22 @@
+@page "{id:int}"
+@model Avenue804.Web.Areas.Admin.Pages.AreaGuides.EditModel
+@{ ViewData["Title"] = "Edit Area Guide"; }
+<p class="admin-back"><a asp-page="Index">← Area Guides</a></p>
+<form method="post" class="admin-form">
+  <div class="row admin-form-row-2">
+    <div><label asp-for="F.Name">Area name *</label><input asp-for="F.Name" /></div>
+    <div><label asp-for="F.Emirate">Emirate</label><input asp-for="F.Emirate" /></div>
+  </div>
+  <div class="row"><label asp-for="F.HeroImageUrl">Hero image URL</label><input asp-for="F.HeroImageUrl" type="url" /></div>
+  <div class="row"><label asp-for="F.Overview">Overview (HTML allowed)</label><textarea asp-for="F.Overview" rows="6"></textarea></div>
+  <div class="row admin-form-row-2">
+    <div><label asp-for="F.AvgPriceSaleSqft">Avg sale / sqft (AED)</label><input asp-for="F.AvgPriceSaleSqft" type="number" /></div>
+    <div><label asp-for="F.AvgRentYearly">Avg 1BR rent / yr (AED)</label><input asp-for="F.AvgRentYearly" type="number" /></div>
+  </div>
+  <div class="row"><label asp-for="F.PopularWith">Popular with</label><input asp-for="F.PopularWith" /></div>
+  <div class="row"><label asp-for="F.NearbyLandmarks">Nearby landmarks</label><input asp-for="F.NearbyLandmarks" /></div>
+  <div class="row"><label asp-for="F.SchoolsNearby">Schools nearby</label><input asp-for="F.SchoolsNearby" /></div>
+  <div class="row"><label asp-for="F.TransportLinks">Transport links</label><input asp-for="F.TransportLinks" /></div>
+  <div class="row chk"><input asp-for="F.IsPublished" /><label asp-for="F.IsPublished" class="admin-label-inline">Published</label></div>
+  <button type="submit" class="btn-primary"><span>Save</span></button>
+</form>

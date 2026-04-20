@@ -1,0 +1,298 @@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Avenue804.Web.Infrastructure
+@using Avenue804.Web.Domain
+@{
+    var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
+    var waNum = site?.WhatsAppDigits ?? "971504399804";
+}
+
+<!-- ═══ INSTANT QUOTE CALCULATOR ═══ -->
+<section class="quote-section" id="get-quote">
+  <div class="container">
+    <div class="section-tag fade-up" style="justify-content:center">Free Estimate</div>
+    <h2 class="section-title fade-up" style="text-align:center;max-width:640px;margin:0 auto 12px">Get an Instant <em>Project Estimate</em></h2>
+    <p class="section-sub fade-up" style="text-align:center;margin:0 auto">Enter your project details and get a ballpark AED estimate in seconds — no commitment required.</p>
+
+    <div class="quote-grid">
+      <!-- Calculator form -->
+      <div class="quote-card">
+        <div class="quote-card-head">
+          <h3>Project Estimate Calculator</h3>
+          <p>Fill in your project details to get a cost range.</p>
+        </div>
+        <form class="quote-form" method="post" asp-page="/Submit/ServiceQuote" id="quoteForm">
+          <input type="hidden" name="returnPage" value="/Contracting#get-quote" />
+
+          <div class="quote-field">
+            <label>Service type <span style="color:var(--accent)">*</span></label>
+            <select name="serviceType" id="qServiceType" required onchange="calcQuote()">
+              <option value="">Select service…</option>
+              <option value="@((int)ServiceType.FitOutRenovation)">Interior Fit-Out &amp; Renovation</option>
+              <option value="@((int)ServiceType.CivilContracting)">Civil &amp; General Contracting</option>
+              <option value="@((int)ServiceType.GypsumCeiling)">Gypsum &amp; Ceiling Works</option>
+              <option value="@((int)ServiceType.GlassAluminum)">Glass &amp; Aluminum Works</option>
+              <option value="@((int)ServiceType.PaintingFinishing)">Painting &amp; Finishing</option>
+              <option value="@((int)ServiceType.Flooring)">Premium Flooring</option>
+              <option value="@((int)ServiceType.Signage)">Internal &amp; External Signage</option>
+              <option value="@((int)ServiceType.BundlePackage)">Full Fit-Out Bundle (All works)</option>
+            </select>
+          </div>
+
+          <div class="quote-grid-2">
+            <div class="quote-field">
+              <label>Area (sqm) <span style="color:var(--accent)">*</span></label>
+              <input type="number" name="areaSqm" id="qArea" min="1" max="50000" placeholder="e.g. 200" required oninput="calcQuote()" />
+            </div>
+            <div class="quote-field">
+              <label>Property type</label>
+              <select id="qPropType" onchange="calcQuote()">
+                <option value="residential">Residential</option>
+                <option value="commercial">Commercial / Office</option>
+                <option value="retail">Retail / Showroom</option>
+                <option value="industrial">Industrial / Warehouse</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Live estimate box -->
+          <div class="quote-estimate" id="quoteEstimate">
+            <div class="quote-estimate-label">Estimated project cost</div>
+            <div class="quote-estimate-range" id="quoteRange">AED —</div>
+            <div class="quote-estimate-note">Indicative range only. Actual cost depends on materials, finishes, and site conditions. Request a formal quote for accuracy.</div>
+          </div>
+          <input type="hidden" name="estimateRange" id="qEstimateHidden" />
+
+          <div class="quote-field">
+            <label>Your name <span style="color:var(--accent)">*</span></label>
+            <input type="text" name="name" required autocomplete="name" placeholder="Ahmed Al Mansoori" maxlength="200" />
+          </div>
+          <div class="quote-grid-2">
+            <div class="quote-field">
+              <label>Mobile <span style="color:var(--accent)">*</span></label>
+              <input type="tel" name="phone" required inputmode="tel" placeholder="+971 50 000 0000" maxlength="50" />
+            </div>
+            <div class="quote-field">
+              <label>Email <span style="color:var(--accent)">*</span></label>
+              <input type="email" name="email" required placeholder="you@example.com" maxlength="256" />
+            </div>
+          </div>
+          <div class="quote-grid-2">
+            <div class="quote-field">
+              <label>Company (optional)</label>
+              <input type="text" name="company" placeholder="Your company" maxlength="200" />
+            </div>
+            <div class="quote-field">
+              <label>Location / emirate</label>
+              <input type="text" name="location" placeholder="e.g. Al Reem Island, Abu Dhabi" maxlength="400" />
+            </div>
+          </div>
+          <div class="quote-field">
+            <label>Preferred timeline</label>
+            <select name="timeline">
+              <option value="">Flexible</option>
+              <option value="ASAP">As soon as possible</option>
+              <option value="1 month">Within 1 month</option>
+              <option value="3 months">Within 3 months</option>
+              <option value="6 months">Within 6 months</option>
+            </select>
+          </div>
+          <div class="quote-field">
+            <label>Brief project description</label>
+            <textarea name="projectDescription" rows="2" placeholder="Tell us more about your project, special requirements, materials preference…" maxlength="4000"></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:15px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9z"/></svg>
+            <span>Request Formal Quote</span>
+          </button>
+          <p style="font-size:.72rem;color:var(--text-tertiary);text-align:center;margin-top:10px">Free, no-obligation. Our team will visit your site and provide a detailed breakdown.</p>
+        </form>
+      </div>
+
+      <!-- Info panels -->
+      <div class="quote-info">
+        <div class="quote-info-card">
+          <div class="quote-info-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <h4>What's included in the quote?</h4>
+          <p>Our detailed quotes include material costs, labour, project management fees, authority permit fees (if applicable), and a proposed project schedule with milestones.</p>
+        </div>
+        <div class="quote-info-card">
+          <div class="quote-info-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h4>How long does it take?</h4>
+          <p>Site visit within <strong>24–48 hours</strong> of your request. Formal quote delivered within <strong>3–5 business days</strong> after the site visit and scope confirmation.</p>
+        </div>
+        <div class="quote-info-card">
+          <div class="quote-info-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </div>
+          <h4>No hidden charges</h4>
+          <p>We use a transparent, itemised pricing format. Any variation to scope is agreed in writing before proceeding — no surprise bills at handover.</p>
+        </div>
+        <div class="quote-info-card" style="background:linear-gradient(135deg,var(--accent-15),var(--accent-10));border-color:var(--border-accent)">
+          <div class="quote-info-icon" style="background:var(--accent);color:#fff">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+          </div>
+          <h4>Prefer to chat on WhatsApp?</h4>
+          <p style="margin-bottom:12px">Send us your project details and photos directly — our team responds within 2 hours.</p>
+          <a href="https://wa.me/@waNum?text=Hi%2C+I'd+like+a+contracting+quote" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex;padding:10px 20px;font-size:.7rem"><span>Chat on WhatsApp</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CERTIFICATIONS & LICENSES ═══ -->
+<section class="certs-section">
+  <div class="container" style="text-align:center">
+    <div class="section-tag fade-up" style="justify-content:center">Credentials</div>
+    <h2 class="section-title fade-up">Licensed &amp; <em>Certified</em></h2>
+    <p class="section-sub fade-up" style="margin:0 auto 16px">All our works are carried out by licensed engineers, certified technicians, and authority-approved contractors.</p>
+    <div class="certs-grid fade-up">
+      <div class="cert-card">
+        <div class="cert-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="cert-name">ADCA Licensed</div>
+        <div class="cert-body">Abu Dhabi City Authority — general contracting</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div class="cert-name">Civil Defense Approved</div>
+        <div class="cert-body">UAE Civil Defense fire &amp; safety compliance</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20 14.5 14.5 0 000-20"/><path d="M2 12h20"/></svg></div>
+        <div class="cert-name">ISO Quality Standards</div>
+        <div class="cert-body">Quality assurance on all projects</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <div class="cert-name">Licensed Engineers</div>
+        <div class="cert-body">SEAB / NCEC registered engineers on-site</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <div class="cert-name">OSHAD Compliant</div>
+        <div class="cert-body">Abu Dhabi OHS Framework certified HSE</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 21V3M16 21V3"/></svg></div>
+        <div class="cert-name">DM &amp; DMT Approved</div>
+        <div class="cert-body">Dubai Municipality &amp; DMT permits for Dubai projects</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICE PACKAGES ═══ -->
+<section class="packages-section">
+  <div class="container">
+    <div class="section-tag fade-up" style="justify-content:center">Pricing Packages</div>
+    <h2 class="section-title fade-up" style="text-align:center;max-width:640px;margin:0 auto 12px">Clear <em>Pricing</em> — No Surprises</h2>
+    <p class="section-sub fade-up" style="text-align:center;margin:0 auto">Choose a package or build a custom scope — all include project management and quality guarantee.</p>
+
+    <div class="packages-grid">
+      <!-- Essential -->
+      <div class="pkg-card fade-up">
+        <div class="pkg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg></div>
+        <div class="pkg-name">Essential</div>
+        <div class="pkg-tagline">Single-trade works for apartments &amp; small offices</div>
+        <div class="pkg-price">From AED 85<small> / sqm</small></div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-list">
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>One service discipline</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Up to 300 sqm</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Standard materials</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>6-month workmanship warranty</li>
+          <li class="pkg-item pkg-item--off"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>Dedicated project manager</li>
+          <li class="pkg-item pkg-item--off"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>3D visualisation</li>
+        </ul>
+        <a href="#get-quote" class="btn-outline" style="display:flex;justify-content:center">Get Quote</a>
+      </div>
+
+      <!-- Professional (featured) -->
+      <div class="pkg-card pkg-card--featured fade-up">
+        <div class="pkg-icon" style="background:linear-gradient(135deg,var(--accent),var(--cyan));color:#fff"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+        <div class="pkg-name">Professional</div>
+        <div class="pkg-tagline">Full fit-out or multi-trade project management</div>
+        <div class="pkg-price">From AED 220<small> / sqm</small></div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-list">
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Multi-trade coordination</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Up to 2,000 sqm</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Premium material selection</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Dedicated project manager</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>1-year workmanship warranty</li>
+          <li class="pkg-item pkg-item--off"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>3D visualisation</li>
+        </ul>
+        <a href="#get-quote" class="btn-primary" style="display:flex;justify-content:center"><span>Get Quote</span></a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="pkg-card fade-up">
+        <div class="pkg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg></div>
+        <div class="pkg-name">Enterprise</div>
+        <div class="pkg-tagline">Large-scale commercial &amp; industrial projects</div>
+        <div class="pkg-price">Custom <small>pricing</small></div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-list">
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Full turnkey delivery</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Unlimited area</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>International materials</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Senior project director</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>3D visualisation &amp; BIM</li>
+          <li class="pkg-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>2-year warranty + post-handover support</li>
+        </ul>
+        <a href="/Contact" class="btn-outline" style="display:flex;justify-content:center">Discuss Project</a>
+      </div>
+    </div>
+
+    <!-- Bundle banner -->
+    <div class="fade-up" style="margin-top:28px;background:linear-gradient(135deg,var(--accent),var(--cyan));border-radius:var(--radius-lg);padding:28px 36px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div>
+        <div style="font-family:var(--font-nav);font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:6px">Integrated Bundle</div>
+        <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:4px">Fit-Out + Maintenance AMC = <em style="font-style:normal;text-decoration:underline;text-decoration-color:rgba(255,255,255,.4)">10% off</em></div>
+        <div style="font-size:.82rem;color:rgba(255,255,255,.85)">Book a fit-out project and sign a 1-year maintenance AMC — get 10% off the AMC and priority scheduling.</div>
+      </div>
+      <a href="#get-quote" class="btn-outline" style="color:#fff;border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.12);white-space:nowrap;flex-shrink:0">Get Bundle Quote</a>
+    </div>
+  </div>
+</section>
+
+@section Scripts {
+<script>
+// Quote calculator — AED per sqm rates by service + property type modifier
+var _rates = {
+  '@((int)ServiceType.FitOutRenovation)':    { residential: [220, 420], commercial: [280, 550], retail: [300, 600], industrial: [180, 350] },
+  '@((int)ServiceType.CivilContracting)':    { residential: [350, 700], commercial: [450, 900], retail: [400, 800], industrial: [280, 550] },
+  '@((int)ServiceType.GypsumCeiling)':       { residential: [80,  160], commercial: [90,  180], retail: [100, 200], industrial: [70,  140] },
+  '@((int)ServiceType.GlassAluminum)':       { residential: [220, 450], commercial: [300, 600], retail: [280, 550], industrial: [180, 380] },
+  '@((int)ServiceType.PaintingFinishing)':   { residential: [35,  80],  commercial: [45,  95],  retail: [50,  100], industrial: [28,  60]  },
+  '@((int)ServiceType.Flooring)':            { residential: [120, 280], commercial: [150, 320], retail: [180, 400], industrial: [90,  200] },
+  '@((int)ServiceType.Signage)':             { residential: [null, null], commercial: [150, 350], retail: [200, 500], industrial: [120, 280] },
+  '@((int)ServiceType.BundlePackage)':       { residential: [380, 700], commercial: [500, 950], retail: [520, 1000], industrial: [350, 650] }
+};
+
+function calcQuote() {
+  var svc   = document.getElementById('qServiceType').value;
+  var area  = parseFloat(document.getElementById('qArea').value) || 0;
+  var ptype = document.getElementById('qPropType').value;
+  var box   = document.getElementById('quoteEstimate');
+  var range = document.getElementById('quoteRange');
+  var hidden = document.getElementById('qEstimateHidden');
+
+  if (!svc || area <= 0 || !_rates[svc]) { box.classList.remove('show'); return; }
+
+  var r = _rates[svc][ptype] || _rates[svc]['commercial'];
+  if (!r[0]) { range.textContent = 'Varies — request a site visit'; box.classList.add('show'); return; }
+
+  var lo = Math.round(area * r[0] / 1000) * 1000;
+  var hi = Math.round(area * r[1] / 1000) * 1000;
+  var txt = 'AED ' + lo.toLocaleString() + ' – ' + hi.toLocaleString();
+  range.textContent = txt;
+  hidden.value = txt;
+  box.classList.add('show');
+}
+</script>
+}

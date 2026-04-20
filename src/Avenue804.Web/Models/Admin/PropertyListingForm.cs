@@ -37,5 +37,29 @@ public class PropertyListingForm
     [StringLength(2000)]
     public string? MainImageUrl { get; set; }
 
+    /// <summary>Admin enters one URL per line; stored as JSON array on entity.</summary>
+    public string? GalleryImagesJson { get; set; }
+
+    [StringLength(50)]
+    public string? Label { get; set; }
+
+    public bool IsVerified { get; set; }
+    public ListingApprovalStatus ApprovalStatus { get; set; } = ListingApprovalStatus.Draft;
+    public string? RejectionReason { get; set; }
+
+    // SEO overrides
+    [StringLength(300)] public string? SeoTitle { get; set; }
+    [StringLength(500)] public string? SeoDescription { get; set; }
+
+    // Phase 2
+    [StringLength(2000)] public string? FloorPlanUrl { get; set; }
+    [StringLength(2000)] public string? VirtualTourUrl { get; set; }
+    public bool IsOffPlan { get; set; }
+    [StringLength(50)] public string? HandoverDate { get; set; }
+    [StringLength(300)] public string? PaymentPlan { get; set; }
+    [Range(0, 100)] public int? CompletionPercent { get; set; }
+    public int? DeveloperId { get; set; }
+    public string? AmenitiesJson { get; set; }  // comma-sep codes from checkboxes
+
     public bool IsPublished { get; set; }
 }

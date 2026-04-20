@@ -1,0 +1,63 @@
+@page "/AreaGuides"
+@model Avenue804.Web.Pages.AreaGuides.AreaGuidesIndexModel
+@{
+    ViewData["Title"] = "Area Guides — UAE Communities";
+    ViewData["NavActive"] = "areaguides";
+    ViewData["MetaDescription"] = "Explore property communities across Abu Dhabi, Dubai and the UAE — average prices, lifestyle, transport and schools.";
+}
+
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up">
+      <a asp-page="/Index">Home</a><span class="sep">/</span><span>Area Guides</span>
+    </div>
+    <h1 class="page-hero-title fade-up">UAE <em>Area Guides</em></h1>
+    <p class="page-hero-sub fade-up">Explore communities across Abu Dhabi, Dubai, and beyond — property prices, schools, transport, and lifestyle at a glance.</p>
+  </div>
+</section>
+
+<section class="section-pad areaguides-section">
+  <div class="container">
+    @if (!Model.Grouped.Any())
+    {
+      <div class="pl-empty fade-up">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <h3>No area guides yet</h3>
+        <p>Area guides are managed in <a asp-area="Admin" asp-page="/AreaGuides/Index">Admin → Area Guides</a>.</p>
+      </div>
+    }
+    else
+    {
+      @foreach (var emirate in Model.Grouped.Keys.OrderBy(k => k))
+      {
+        <h2 class="areaguides-emirate fade-up">@emirate</h2>
+        <div class="areas-grid fade-up">
+          @foreach (var g in Model.Grouped[emirate])
+          {
+            <a asp-page="/AreaGuides/Detail" asp-route-slug="@g.Slug" class="area-card">
+              @if (!string.IsNullOrWhiteSpace(g.HeroImageUrl))
+              {
+                <div class="area-card-img" style="background-image:url('@g.HeroImageUrl')"></div>
+              }
+              else
+              {
+                <div class="area-card-img area-card-img--placeholder"></div>
+              }
+              <div class="area-card-body">
+                <div class="area-card-name">@g.Name</div>
+                @if (g.AvgPriceSaleSqft.HasValue)
+                {
+                  <div class="area-card-stat">AED @g.AvgPriceSaleSqft.Value.ToString("N0") / sqft</div>
+                }
+                @if (!string.IsNullOrWhiteSpace(g.PopularWith))
+                {
+                  <div class="area-card-tags">@g.PopularWith</div>
+                }
+              </div>
+            </a>
+          }
+        </div>
+      }
+    }
+  </div>
+</section>

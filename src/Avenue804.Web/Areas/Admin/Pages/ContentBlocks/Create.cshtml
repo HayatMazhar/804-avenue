@@ -3,9 +3,9 @@
 @{
     ViewData["Title"] = "New content block";
 }
-<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Content blocks</a></p>
-<form method="post" class="admin-form" style="max-width:720px">
-  <div asp-validation-summary="ModelOnly" class="muted" style="color:var(--danger)"></div>
+<p class="admin-back"><a asp-page="Index">← Content blocks</a></p>
+<form method="post" class="admin-form admin-form--wide">
+  <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
   <div class="row">
     <label asp-for="Form.Slug"></label>
     <input asp-for="Form.Slug" required placeholder="e.g. home.hero.subtitle" />
@@ -22,7 +22,7 @@
   </div>
   <div class="row chk">
     <input asp-for="Form.IsPublished" />
-    <label asp-for="Form.IsPublished" style="margin:0">Published</label>
+    <label asp-for="Form.IsPublished" class="admin-label-inline">Published</label>
   </div>
   <button type="submit" class="btn-primary"><span>Save</span></button>
 </form>

@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Edit listing";
 }
-<p style="margin-bottom:20px"><a asp-page="Index" style="color:var(--accent);font-weight:600">← Properties</a></p>
+<p class="admin-back"><a asp-page="Index">← Properties</a></p>
 <form method="post" class="admin-form">
   <div class="row">
     <label asp-for="Form.Title"></label>
@@ -14,7 +14,7 @@
     <label asp-for="Form.Slug">Slug (optional)</label>
     <input asp-for="Form.Slug" placeholder="auto from title" />
   </div>
-  <div class="row" style="display:grid;grid-template-columns:1fr 120px;gap:16px">
+  <div class="row admin-form-row-price">
     <div>
       <label asp-for="Form.Price"></label>
       <input asp-for="Form.Price" />
@@ -24,19 +24,28 @@
       <input asp-for="Form.Currency" />
     </div>
   </div>
-  <div class="row">
-    <label asp-for="Form.OfferType"></label>
-    <select asp-for="Form.OfferType" asp-items="Html.GetEnumSelectList<ListingOfferType>()"></select>
+  <div class="row admin-form-row-2">
+    <div>
+      <label asp-for="Form.OfferType"></label>
+      <select asp-for="Form.OfferType" asp-items="Html.GetEnumSelectList<ListingOfferType>()"></select>
+    </div>
+    <div>
+      <label asp-for="Form.DeveloperId">Developer (optional)</label>
+      <select asp-for="Form.DeveloperId">
+        <option value="">— None —</option>
+        @Html.Raw(string.Join("", Model.Developers.Select(d => $"<option value=\"{d.Id}\"{(Model.Form.DeveloperId == d.Id ? " selected" : "")}>{d.Name}</option>")))
+      </select>
+    </div>
   </div>
   <div class="row">
-    <label asp-for="Form.Location"></label>
-    <input asp-for="Form.Location" />
+    <label asp-for="Form.Location">Location (area, community)</label>
+    <input asp-for="Form.Location" data-autocomplete="uae" autocomplete="off" placeholder="e.g. Al Reem Island, Abu Dhabi" />
   </div>
   <div class="row">
     <label asp-for="Form.Description"></label>
     <textarea asp-for="Form.Description"></textarea>
   </div>
-  <div class="row" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+  <div class="row admin-form-row-3">
     <div>
       <label asp-for="Form.Beds"></label>
       <input asp-for="Form.Beds" />
@@ -50,21 +59,299 @@
       <input asp-for="Form.AreaSqft" />
     </div>
   </div>
+  <!-- Main image upload -->
   <div class="row">
-    <label asp-for="Form.MainImageUrl"></label>
-    <input asp-for="Form.MainImageUrl" />
+    <label>Main photo</label>
+    <div class="img-uploader" id="mainImgUploader">
+      <div class="img-uploader-drop" id="mainDropZone">
+        @if (!string.IsNullOrWhiteSpace(Model.Form.MainImageUrl))
+        {
+          <div class="img-preview-wrap">
+            <img src="@Model.Form.MainImageUrl" alt="Main photo" class="img-preview-thumb" />
+            <button type="button" class="img-remove-btn" onclick="clearMainImage()">✕</button>
+          </div>
+        }
+        <div class="img-drop-hint @(string.IsNullOrWhiteSpace(Model.Form.MainImageUrl) ? "" : "d-none")" id="mainDropHint">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p>Drag &amp; drop or <label for="mainFileInput" class="admin-browse-link">browse</label></p>
+          <small>JPG, PNG, WebP · Max 10 MB</small>
+        </div>
+        <input type="file" id="mainFileInput" accept="image/*" class="visually-hidden" onchange="uploadMain(this)" />
+      </div>
+      <div class="img-upload-progress d-none" id="mainProgress">
+        <div class="img-progress-bar"><div id="mainProgressBar"></div></div>
+        <span id="mainProgressText">Uploading…</span>
+      </div>
+    </div>
+    <input asp-for="Form.MainImageUrl" id="mainImageUrl" placeholder="Or paste URL directly: https://…" class="admin-input-mt" />
+  </div>
+
+  <!-- Gallery images upload -->
+  <div class="row">
+    <label>Gallery photos (up to 20)</label>
+    <div class="img-gallery-uploader" id="galleryUploader">
+      <div class="img-gallery-grid" id="galleryGrid"></div>
+      <label class="img-add-btn" for="galleryFileInput">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add photos
+      </label>
+      <input type="file" id="galleryFileInput" accept="image/*" multiple class="visually-hidden" onchange="uploadGallery(this)" />
+    </div>
+    <input asp-for="Form.GalleryImagesJson" id="galleryUrlsField" type="hidden" />
+    <textarea id="galleryUrlsFallback" name="_galleryFallback" rows="3" placeholder="Or paste URLs one per line:&#10;https://image1.jpg&#10;https://image2.jpg" class="admin-textarea-gallery-fallback" onchange="syncGalleryFromText(this)">@Model.Form.GalleryImagesJson</textarea>
+    <small class="muted">Upload photos directly or paste URLs. Drag to reorder (coming soon).</small>
+  </div>
+  <div class="row admin-form-row-2">
+    <div>
+      <label asp-for="Form.FloorPlanUrl">Floor plan image URL</label>
+      <input asp-for="Form.FloorPlanUrl" type="url" placeholder="https://…/floorplan.jpg" />
+    </div>
+    <div>
+      <label asp-for="Form.VirtualTourUrl">Virtual tour URL (Matterport / YouTube 360°)</label>
+      <input asp-for="Form.VirtualTourUrl" type="url" placeholder="https://my.matterport.com/…" />
+    </div>
+  </div>
+
+  <div class="row">
+    <label>Amenities</label>
+    <div class="admin-amenity-grid">
+      @{
+        var amenities = new[] {
+          ("pool","Swimming Pool"),("gym","Gym / Fitness Centre"),("parking","Covered Parking"),
+          ("security","24/7 Security"),("cctv","CCTV"),("concierge","Concierge"),
+          ("maid","Maid's Room"),("balcony","Balcony"),("pets","Pets Allowed"),
+          ("view","Sea / City View"),("furnished","Fully Furnished"),("kitchen","Open Kitchen"),
+          ("study","Study / Home Office"),("laundry","Laundry Room"),("central_ac","Central A/C"),
+          ("lift","Elevator / Lift"),("bbq","BBQ Area"),("kids","Kids Play Area")
+        };
+        var currentAmenities = (Model.Form.AmenitiesJson ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries).ToHashSet();
+      }
+      @foreach (var (code, label) in amenities)
+      {
+        <label class="admin-amenity-tile">
+          <input type="checkbox" name="amenityChecks" value="@code" @(currentAmenities.Contains(code) ? "checked" : "") />
+          @label
+        </label>
+      }
+    </div>
+    <input type="hidden" asp-for="Form.AmenitiesJson" id="amenitiesHidden" />
+  </div>
+
+  <!-- SEO Overrides -->
+  <div class="row">
+    <label asp-for="Form.SeoTitle">SEO title (optional override)</label>
+    <input asp-for="Form.SeoTitle" placeholder="Leave blank to auto-generate from listing title" />
+    <small class="muted">Shown in browser tab + Google — 50–60 chars ideal.</small>
+  </div>
+  <div class="row">
+    <label asp-for="Form.SeoDescription">SEO description (optional override)</label>
+    <textarea asp-for="Form.SeoDescription" rows="2" placeholder="Leave blank to use listing description — 150–160 chars ideal."></textarea>
+  </div>
+
+  <div class="row">
+    <label asp-for="Form.Label">Label / badge (optional)</label>
+    <select asp-for="Form.Label">
+      <option value="">— None —</option>
+      <option value="New">New</option>
+      <option value="Hot Deal">Hot Deal</option>
+      <option value="Price Reduced">Price Reduced</option>
+      <option value="Featured">Featured</option>
+      <option value="Off-Plan">Off-Plan</option>
+    </select>
+  </div>
+
+  <!-- Off-plan section -->
+  <div class="row chk">
+    <input asp-for="Form.IsOffPlan" id="isOffPlanCheck" onchange="toggleOffPlan()" />
+    <label asp-for="Form.IsOffPlan" class="admin-label-inline">Off-plan / New project</label>
+  </div>
+  <div id="offPlanFields" class="@(Model.Form.IsOffPlan ? "" : "d-none")">
+    <div class="row admin-form-row-3">
+      <div>
+        <label asp-for="Form.HandoverDate">Handover date</label>
+        <input asp-for="Form.HandoverDate" placeholder="e.g. Q4 2026" />
+      </div>
+      <div>
+        <label asp-for="Form.CompletionPercent">Completion %</label>
+        <input asp-for="Form.CompletionPercent" type="number" min="0" max="100" placeholder="0–100" />
+      </div>
+      <div>
+        <label asp-for="Form.PaymentPlan">Payment plan</label>
+        <input asp-for="Form.PaymentPlan" placeholder="e.g. 40/60 — 40% on booking" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Approval status -->
+  <div class="row">
+    <label>Approval status</label>
+    <div class="admin-flex-row">
+      <span class="badge @(Model.Form.ApprovalStatus == Avenue804.Web.Domain.ListingApprovalStatus.Approved ? "badge-closed" : Model.Form.ApprovalStatus == Avenue804.Web.Domain.ListingApprovalStatus.PendingReview ? "badge-progress" : Model.Form.ApprovalStatus == Avenue804.Web.Domain.ListingApprovalStatus.Rejected ? "badge-new" : "badge-closed")">
+        @Model.Form.ApprovalStatus
+      </span>
+      <select asp-for="Form.ApprovalStatus" asp-items="Html.GetEnumSelectList<Avenue804.Web.Domain.ListingApprovalStatus>()"></select>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(Model.Form.RejectionReason))
+    {
+      <small class="muted admin-text-danger">Rejection reason: @Model.Form.RejectionReason</small>
+    }
+  </div>
+
+  <div class="row chk">
+    <input asp-for="Form.IsVerified" />
+    <label asp-for="Form.IsVerified" class="admin-label-inline">
+      ✓ Verified listing — shows a "Verified" trust badge
+    </label>
   </div>
   <div class="row chk">
     <input asp-for="Form.IsPublished" />
-    <label asp-for="Form.IsPublished" style="margin:0;font-size:0.88rem;text-transform:none;letter-spacing:normal">Published</label>
+    <label asp-for="Form.IsPublished" class="admin-label-inline">Published</label>
   </div>
-  <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+  <div class="admin-flex-row admin-flex-row--lg">
     <button type="submit" class="btn-primary"><span>Save</span></button>
   </div>
 </form>
-<form method="post" asp-page-handler="Delete" style="margin-top:28px" onsubmit="return confirm('Delete this listing?');">
-  <button type="submit" class="btn-outline" style="border-color:var(--danger);color:var(--danger)">Delete listing</button>
+<form method="post" asp-page-handler="Delete" class="admin-form-delete" onsubmit="return confirm('Delete this listing?');">
+  <button type="submit" class="btn-outline btn-danger-outline">Delete listing</button>
 </form>
 @section Scripts {
   <partial name="_ValidationScriptsPartial" />
+  <script>
+  // Image uploader JS
+  var _galleryUrls = [];
+
+  // Init gallery from existing JSON
+  (function() {
+    var field = document.getElementById('galleryUrlsField');
+    try {
+      var existing = JSON.parse(field?.value || '[]');
+      if (Array.isArray(existing)) {
+        existing.forEach(function(url) { if (url) addGalleryItem(url); });
+      }
+    } catch(e) {}
+  })();
+
+  function uploadMain(input) {
+    var file = input.files[0];
+    if (!file) return;
+    setMainProgress(true);
+    var fd = new FormData();
+    fd.append('file', file);
+    fd.append('folder', 'listings');
+    fetch('/Api/UploadImage', { method: 'POST', body: fd,
+      headers: { 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || '' } })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        setMainProgress(false);
+        if (d.error) { alert('Upload failed: ' + d.error); return; }
+        setMainImage(d.url);
+      }).catch(function() { setMainProgress(false); alert('Upload failed. Check your connection.'); });
+  }
+
+  function setMainImage(url) {
+    document.getElementById('mainImageUrl').value = url;
+    var hint = document.getElementById('mainDropHint');
+    hint.classList.add('d-none');
+    var zone = document.getElementById('mainDropZone');
+    var wrap = zone.querySelector('.img-preview-wrap') || document.createElement('div');
+    wrap.className = 'img-preview-wrap';
+    wrap.innerHTML = '<img src="' + url + '" class="img-preview-thumb" alt="Main photo" /><button type="button" class="img-remove-btn" onclick="clearMainImage()">✕</button>';
+    if (!zone.querySelector('.img-preview-wrap')) zone.insertBefore(wrap, zone.firstChild);
+  }
+
+  function clearMainImage() {
+    document.getElementById('mainImageUrl').value = '';
+    var zone = document.getElementById('mainDropZone');
+    var wrap = zone.querySelector('.img-preview-wrap');
+    if (wrap) wrap.remove();
+    document.getElementById('mainDropHint').classList.remove('d-none');
+  }
+
+  function setMainProgress(show) {
+    var pr = document.getElementById('mainProgress');
+    if (show) pr.classList.remove('d-none'); else pr.classList.add('d-none');
+    if (show) { var b=document.getElementById('mainProgressBar'); b.style.width='0%'; setTimeout(function(){b.style.width='70%'},100); }
+  }
+
+  // Drag & drop on main zone
+  (function() {
+    var zone = document.getElementById('mainDropZone');
+    if (!zone) return;
+    zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', function() { zone.classList.remove('drag-over'); });
+    zone.addEventListener('drop', function(e) {
+      e.preventDefault(); zone.classList.remove('drag-over');
+      var file = e.dataTransfer?.files?.[0];
+      if (file) { var dt=new DataTransfer(); dt.items.add(file); var inp=document.getElementById('mainFileInput'); inp.files=dt.files; uploadMain(inp); }
+    });
+    zone.addEventListener('click', function(e) {
+      if (e.target.classList.contains('img-remove-btn') || e.target.tagName==='LABEL') return;
+      document.getElementById('mainFileInput').click();
+    });
+  })();
+
+  // Gallery upload
+  function uploadGallery(input) {
+    Array.from(input.files).forEach(function(file) {
+      var fd = new FormData();
+      fd.append('file', file);
+      fd.append('folder', 'gallery');
+      fetch('/Api/UploadImage', { method: 'POST', body: fd,
+        headers: { 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || '' } })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          if (d.error) { alert('Upload failed: ' + d.error); return; }
+          addGalleryItem(d.url);
+          syncGalleryField();
+        });
+    });
+    input.value = '';
+  }
+
+  function addGalleryItem(url) {
+    if (_galleryUrls.includes(url)) return;
+    _galleryUrls.push(url);
+    var grid = document.getElementById('galleryGrid');
+    var item = document.createElement('div');
+    item.className = 'img-gallery-item';
+    item.dataset.url = url;
+    item.innerHTML = '<img src="' + url + '" alt="" /><button type="button" class="img-remove-btn" onclick="removeGalleryItem(this, \'' + url.replace(/'/g,"\\'") + '\')">✕</button>';
+    grid.appendChild(item);
+  }
+
+  function removeGalleryItem(btn, url) {
+    _galleryUrls = _galleryUrls.filter(function(u) { return u !== url; });
+    btn.closest('.img-gallery-item').remove();
+    syncGalleryField();
+  }
+
+  function syncGalleryField() {
+    document.getElementById('galleryUrlsField').value = JSON.stringify(_galleryUrls);
+  }
+
+  function syncGalleryFromText(ta) {
+    var lines = ta.value.split('\n').map(function(l){return l.trim();}).filter(function(l){return l.startsWith('http');});
+    _galleryUrls = [];
+    document.getElementById('galleryGrid').innerHTML = '';
+    lines.forEach(addGalleryItem);
+    syncGalleryField();
+  }
+
+  // Sync gallery field before form submit
+  document.querySelector('form').addEventListener('submit', function() {
+    syncGalleryField();
+    // Map gallery hidden field into the GalleryImagesJson
+    document.querySelector('[name="Form.GalleryImagesJson"]').value = document.getElementById('galleryUrlsField').value;
+  });
+
+  function toggleOffPlan() {
+    var el = document.getElementById('offPlanFields');
+    el.classList.toggle('d-none', !document.getElementById('isOffPlanCheck').checked);
+  }
+  // Sync amenities checkboxes → hidden input before submit
+  document.querySelector('form').addEventListener('submit', function() {
+    var checked = Array.from(document.querySelectorAll('input[name=amenityChecks]:checked')).map(c => c.value);
+    document.getElementById('amenitiesHidden').value = checked.join(',');
+  });
+  </script>
 }

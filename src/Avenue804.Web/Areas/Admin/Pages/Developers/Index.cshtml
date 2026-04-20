@@ -1,0 +1,22 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Developers.IndexModel
+@{ ViewData["Title"] = "Developers"; ViewData["AdminSection"] = "developers"; }
+<p class="admin-back admin-back--tight"><a asp-page="Create">+ Add developer</a></p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead><tr><th>Name</th><th>HQ</th><th>Est.</th><th>Listings</th><th>Active</th></tr></thead>
+    <tbody>
+      @foreach (var d in Model.Items)
+      {
+        <tr>
+          <td><a asp-page="Edit" asp-route-id="@d.Id">@d.Name</a></td>
+          <td>@(d.Headquarters ?? "—")</td>
+          <td>@(d.EstablishedYear?.ToString() ?? "—")</td>
+          <td>@d.Listings.Count</td>
+          <td>@(d.IsActive ? "✓" : "—")</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (!Model.Items.Any()) { <p class="muted admin-empty">No developers yet.</p> }

@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using Avenue804.Web.Domain;
 
 namespace Avenue804.Web.Infrastructure;
@@ -22,4 +23,26 @@ public static class ListingFormat
 
     public static string ListingImageUrl(string? mainImageUrl) =>
         string.IsNullOrWhiteSpace(mainImageUrl) ? FallbackImage : mainImageUrl.Trim();
+
+    public static IReadOnlyList<string> GalleryUrls(PropertyListing listing)
+    {
+        var list = new List<string>();
+        var main = ListingImageUrl(listing.MainImageUrl);
+        list.Add(main);
+
+        if (!string.IsNullOrWhiteSpace(listing.GalleryImagesJson))
+        {
+            try
+            {
+                var extras = JsonSerializer.Deserialize<string[]>(listing.GalleryImagesJson);
+                if (extras != null)
+                    foreach (var url in extras)
+                        if (!string.IsNullOrWhiteSpace(url) && url.Trim() != main)
+                            list.Add(url.Trim());
+            }
+            catch { /* ignore malformed JSON */ }
+        }
+
+        return list;
+    }
 }

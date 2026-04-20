@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /Admin/
+Disallow: /Account/Logout
+Disallow: /Submit/
+Disallow: /Api/
+Disallow: /Error
 
-Sitemap: /sitemap.xml
+Sitemap: https://www.804avenue.ae/sitemap.xml

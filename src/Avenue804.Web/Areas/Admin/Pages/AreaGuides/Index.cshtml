@@ -1,0 +1,22 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.AreaGuides.IndexModel
+@{ ViewData["Title"] = "Area Guides"; ViewData["AdminSection"] = "areaguides"; }
+<p class="admin-back admin-back--tight"><a asp-page="Create">+ Add area guide</a></p>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead><tr><th>Name</th><th>Emirate</th><th>Avg sale/sqft</th><th>Avg rent/yr</th><th>Published</th></tr></thead>
+    <tbody>
+      @foreach (var g in Model.Items)
+      {
+        <tr>
+          <td><a asp-page="Edit" asp-route-id="@g.Id">@g.Name</a></td>
+          <td>@(g.Emirate ?? "—")</td>
+          <td>@(g.AvgPriceSaleSqft.HasValue ? "AED " + g.AvgPriceSaleSqft.Value.ToString("N0") : "—")</td>
+          <td>@(g.AvgRentYearly.HasValue ? "AED " + g.AvgRentYearly.Value.ToString("N0") : "—")</td>
+          <td>@(g.IsPublished ? "✓" : "—")</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (!Model.Items.Any()) { <p class="muted admin-empty">No area guides yet.</p> }

@@ -1,0 +1,17 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.ServiceReports.CreateModel
+@{ ViewData["Title"] = "Add Service Report"; }
+<p class="admin-back"><a asp-page="Index">← Service Reports</a></p>
+<form method="post" class="admin-form">
+  <div class="row admin-form-row-2">
+    <div><label asp-for="F.ClientName">Client name *</label><input asp-for="F.ClientName" /></div>
+    <div><label asp-for="F.ClientEmail">Client email *</label><input asp-for="F.ClientEmail" type="email" /></div>
+  </div>
+  <div class="row"><label asp-for="F.Title">Report title *</label><input asp-for="F.Title" placeholder="e.g. Q1 2026 MEP Maintenance Report — Al Reem Tower" /></div>
+  <div class="row admin-form-row-2">
+    <div><label asp-for="F.VisitDate">Visit date *</label><input asp-for="F.VisitDate" type="date" /></div>
+    <div><label asp-for="F.ReportFileUrl">Report PDF URL</label><input asp-for="F.ReportFileUrl" type="url" placeholder="https://… (paste Google Drive, Dropbox, or CDN link)" /></div>
+  </div>
+  <div class="row"><label asp-for="F.Description">Summary</label><textarea asp-for="F.Description" rows="3" placeholder="Brief description of works carried out…"></textarea></div>
+  <button type="submit" class="btn-primary"><span>Save Report</span></button>
+</form>

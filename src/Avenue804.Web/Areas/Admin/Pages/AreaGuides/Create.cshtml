@@ -1,0 +1,31 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.AreaGuides.CreateModel
+@{ ViewData["Title"] = "Add Area Guide"; }
+<p class="admin-back"><a asp-page="Index">← Area Guides</a></p>
+<form method="post" class="admin-form">
+  <div class="row admin-form-row-2">
+    <div><label asp-for="F.Name">Area name *</label><input asp-for="F.Name" placeholder="e.g. Al Reem Island" /></div>
+    <div><label asp-for="F.Emirate">Emirate *</label>
+      <select asp-for="F.Emirate">
+        <option value="Abu Dhabi">Abu Dhabi</option>
+        <option value="Dubai">Dubai</option>
+        <option value="Sharjah">Sharjah</option>
+        <option value="Ajman">Ajman</option>
+        <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+        <option value="Fujairah">Fujairah</option>
+      </select>
+    </div>
+  </div>
+  <div class="row"><label asp-for="F.HeroImageUrl">Hero image URL</label><input asp-for="F.HeroImageUrl" type="url" placeholder="https://…" /></div>
+  <div class="row"><label asp-for="F.Overview">Overview (HTML allowed)</label><textarea asp-for="F.Overview" rows="6" placeholder="Describe the area, lifestyle, what makes it popular…"></textarea></div>
+  <div class="row admin-form-row-2">
+    <div><label asp-for="F.AvgPriceSaleSqft">Avg sale price / sqft (AED)</label><input asp-for="F.AvgPriceSaleSqft" type="number" placeholder="e.g. 1200" /></div>
+    <div><label asp-for="F.AvgRentYearly">Avg 1BR rent / year (AED)</label><input asp-for="F.AvgRentYearly" type="number" placeholder="e.g. 75000" /></div>
+  </div>
+  <div class="row"><label asp-for="F.PopularWith">Popular with</label><input asp-for="F.PopularWith" placeholder="e.g. Families, Expats, Investors" /></div>
+  <div class="row"><label asp-for="F.NearbyLandmarks">Nearby landmarks</label><input asp-for="F.NearbyLandmarks" placeholder="Al Reem Mall, ADGM, Sorbonne University" /></div>
+  <div class="row"><label asp-for="F.SchoolsNearby">Schools nearby</label><input asp-for="F.SchoolsNearby" placeholder="GEMS, Raha International School" /></div>
+  <div class="row"><label asp-for="F.TransportLinks">Transport links</label><input asp-for="F.TransportLinks" placeholder="5 min to Corniche, 15 min to Abu Dhabi Mall" /></div>
+  <div class="row chk"><input asp-for="F.IsPublished" /><label asp-for="F.IsPublished" class="admin-label-inline">Published</label></div>
+  <button type="submit" class="btn-primary"><span>Save Area Guide</span></button>
+</form>

@@ -1,0 +1,16 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Developers.CreateModel
+@{ ViewData["Title"] = "Add Developer"; }
+<p class="admin-back"><a asp-page="Index">← Developers</a></p>
+<form method="post" class="admin-form">
+  <div class="row"><label asp-for="F.Name">Developer name *</label><input asp-for="F.Name" /></div>
+  <div class="row admin-form-row-2">
+    <div><label asp-for="F.Headquarters">Headquarters</label><input asp-for="F.Headquarters" placeholder="e.g. Abu Dhabi, UAE" /></div>
+    <div><label asp-for="F.EstablishedYear">Established year</label><input asp-for="F.EstablishedYear" type="number" placeholder="e.g. 2004" /></div>
+  </div>
+  <div class="row"><label asp-for="F.LogoUrl">Logo URL</label><input asp-for="F.LogoUrl" type="url" placeholder="https://…/logo.png" /></div>
+  <div class="row"><label asp-for="F.WebsiteUrl">Website URL</label><input asp-for="F.WebsiteUrl" type="url" placeholder="https://developer.com" /></div>
+  <div class="row"><label asp-for="F.Description">About (shown on public profile)</label><textarea asp-for="F.Description" rows="4"></textarea></div>
+  <div class="row chk"><input asp-for="F.IsActive" /><label asp-for="F.IsActive" class="admin-label-inline">Active</label></div>
+  <button type="submit" class="btn-primary"><span>Save Developer</span></button>
+</form>

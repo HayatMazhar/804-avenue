@@ -1,0 +1,33 @@
+@page "{id:int}"
+@model Avenue804.Web.Areas.Admin.Pages.Agents.EditModel
+@{
+    ViewData["Title"] = "Edit agent";
+}
+<p class="admin-back"><a asp-page="Index">← Agents</a></p>
+<form method="post" class="admin-form">
+  <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
+  <div class="row"><label asp-for="Form.Name"></label><input asp-for="Form.Name" /></div>
+  <div class="row"><label asp-for="Form.Title"></label><input asp-for="Form.Title" /></div>
+  <div class="row admin-form-row-2">
+    <div><label asp-for="Form.Phone"></label><input asp-for="Form.Phone" /></div>
+    <div><label asp-for="Form.Email"></label><input asp-for="Form.Email" type="email" /></div>
+  </div>
+  <div class="row"><label asp-for="Form.WhatsAppNumber">WhatsApp number</label><input asp-for="Form.WhatsAppNumber" /></div>
+  <div class="row"><label asp-for="Form.AvatarUrl">Photo URL</label><input asp-for="Form.AvatarUrl" type="url" /></div>
+  <div class="row"><label asp-for="Form.Bio">Bio</label><textarea asp-for="Form.Bio" rows="3"></textarea></div>
+  <div class="row admin-form-row-2">
+    <div><label asp-for="Form.ResponseTime">Response time</label><input asp-for="Form.ResponseTime" placeholder="Within 2 hours" /></div>
+    <div><label asp-for="Form.ResponseRatePct">Response rate (%)</label><input asp-for="Form.ResponseRatePct" type="number" min="0" max="100" /></div>
+  </div>
+  <div class="row">
+    <label asp-for="Form.UserId">Linked user account (user ID or email)</label>
+    <input asp-for="Form.UserId" placeholder="Paste the user's email or ID to give them Agent Portal access" />
+    <small class="muted">Once linked, user can access /AgentPortal to manage listings and leads.</small>
+  </div>
+  <div class="row chk">
+    <input asp-for="Form.IsActive" />
+    <label asp-for="Form.IsActive" class="admin-label-inline">Active</label>
+  </div>
+  <button type="submit" class="btn-primary"><span>Save</span></button>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

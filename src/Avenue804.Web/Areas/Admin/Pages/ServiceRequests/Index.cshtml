@@ -1,0 +1,129 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.ServiceRequests.IndexModel
+@using Avenue804.Web.Domain
+@{
+    ViewData["Title"] = "Service Requests";
+    ViewData["AdminSection"] = "service-requests";
+    string StatusBadge(ServiceRequestStatus s) => s switch {
+        ServiceRequestStatus.New => "badge badge-new",
+        ServiceRequestStatus.QuoteSent => "badge badge-progress",
+        ServiceRequestStatus.Accepted => "badge badge-closed",
+        _ => "badge badge-closed"
+    };
+}
+<div class="admin-toolbar admin-toolbar--tight">
+  <a asp-area="Admin" asp-page="/ServiceRequests/Index" asp-route-export="quotes" class="btn-outline admin-btn-sm"><i class="bi bi-download me-1" aria-hidden="true"></i>Export Quotes</a>
+  <a asp-area="Admin" asp-page="/ServiceRequests/Index" asp-route-export="amc" asp-route-tab="1" class="btn-outline admin-btn-sm"><i class="bi bi-download me-1" aria-hidden="true"></i>Export AMC</a>
+  <a asp-area="Admin" asp-page="/ServiceRequests/Index" asp-route-export="tickets" asp-route-tab="2" class="btn-outline admin-btn-sm"><i class="bi bi-download me-1" aria-hidden="true"></i>Export Tickets</a>
+</div>
+<div class="admin-tabs">
+  <a asp-page="Index" class="@(!Model.Tab.HasValue ? "btn-primary" : "btn-outline") admin-btn-sm"><span>Contracting Quotes (@Model.QuoteCount)</span></a>
+  <a asp-page="Index" asp-route-tab="1" class="@(Model.Tab == 1 ? "btn-primary" : "btn-outline") admin-btn-sm"><span>AMC Requests (@Model.AmcCount)</span></a>
+  <a asp-page="Index" asp-route-tab="2" class="@(Model.Tab == 2 ? "btn-primary" : "btn-outline") admin-btn-sm"><span><i class="bi bi-exclamation-triangle me-1" aria-hidden="true"></i>Maintenance Tickets (@Model.TicketCount)</span></a>
+</div>
+
+@if (!Model.Tab.HasValue)
+{
+  <!-- Contracting Quote Requests -->
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>Date</th><th>Contact</th><th>Service</th><th>Area</th><th>Estimate shown</th><th>Location</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        @foreach (var r in Model.QuoteRequests)
+        {
+          <tr>
+            <td>@r.CreatedAt.LocalDateTime.ToString("d MMM yy")</td>
+            <td>@r.Name<br /><span class="muted">@r.Email · @r.Phone</span></td>
+            <td>@r.ServiceType.ToString().Replace("AndRenovation","").Replace("Contracting","").Replace("Aluminum","Alu")</td>
+            <td>@(r.AreaSqm.HasValue ? r.AreaSqm + " sqm" : "—")</td>
+            <td><strong>@(r.EstimateRange ?? "—")</strong></td>
+            <td>@(r.Location ?? "—")</td>
+            <td><span class="@StatusBadge(r.Status)">@r.Status</span></td>
+            <td>
+              <form method="post">
+                <input type="hidden" name="id" value="@r.Id" />
+                <input type="hidden" name="type" value="quote" />
+                <select name="status" class="admin-select-inline" onchange="this.form.submit()">
+                  @Html.Raw(string.Join("", Enum.GetValues(typeof(ServiceRequestStatus)).Cast<ServiceRequestStatus>().Select(s => $"<option value=\"{s}\"{(r.Status == s ? " selected" : "")}>{s}</option>")))
+                </select>
+              </form>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  @if (Model.QuoteRequests.Count == 0) { <p class="muted admin-empty">No contracting quote requests yet.</p> }
+}
+else if (Model.Tab == 1)
+{
+  <!-- AMC Requests -->
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>Date</th><th>Contact</th><th>Building</th><th>Floors / Units</th><th>Area</th><th>Estimate</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        @foreach (var r in Model.AmcRequests)
+        {
+          <tr>
+            <td>@r.CreatedAt.LocalDateTime.ToString("d MMM yy")</td>
+            <td>@r.Name<br /><span class="muted">@r.Email · @r.Phone</span></td>
+            <td>@r.BuildingType @(r.Location != null ? $"— {r.Location}" : "")</td>
+            <td>@(r.NumberOfFloors?.ToString() ?? "—") floors / @(r.NumberOfUnits?.ToString() ?? "—") units</td>
+            <td>@(r.TotalAreaSqm.HasValue ? r.TotalAreaSqm + " sqm" : "—")</td>
+            <td><strong>@(r.EstimateRange ?? "—")</strong></td>
+            <td><span class="badge @(r.Status == AmcRequestStatus.New ? "badge-new" : r.Status == AmcRequestStatus.Accepted ? "badge-closed" : "badge-progress")">@r.Status</span></td>
+            <td>
+              <form method="post">
+                <input type="hidden" name="id" value="@r.Id" />
+                <input type="hidden" name="type" value="amc" />
+                <select name="amcStatus" class="admin-select-inline" onchange="this.form.submit()">
+                  @Html.Raw(string.Join("", Enum.GetValues(typeof(AmcRequestStatus)).Cast<AmcRequestStatus>().Select(s => $"<option value=\"{s}\"{(r.Status == s ? " selected" : "")}>{s}</option>")))
+                </select>
+              </form>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  @if (Model.AmcRequests.Count == 0) { <p class="muted admin-empty">No AMC requests yet.</p> }
+}
+else
+{
+  <!-- Maintenance Tickets -->
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>Date</th><th>Priority</th><th>Contact</th><th>Building / Location</th><th>Issue</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        @foreach (var t in Model.Tickets)
+        {
+          <tr class="@(t.Priority == TicketPriority.Emergency ? "admin-tr-emergency" : null)">
+            <td>@t.CreatedAt.LocalDateTime.ToString("d MMM yy HH:mm")</td>
+            <td>
+              @if (t.Priority == TicketPriority.Emergency)
+              { <span class="badge badge-emergency"><i class="bi bi-exclamation-octagon-fill me-1" aria-hidden="true"></i>Emergency</span> }
+              else if (t.Priority == TicketPriority.High)
+              { <span class="badge badge-progress">⚠ High</span> }
+              else
+              { <span class="badge badge-closed">Normal</span> }
+            </td>
+            <td>@t.Name<br /><span class="muted">@t.Phone</span></td>
+            <td>@t.BuildingOrLocation</td>
+            <td class="admin-td-ellipsis">@t.IssueDescription</td>
+            <td><span class="badge @(t.Status == TicketStatus.New ? "badge-new" : t.Status == TicketStatus.Resolved || t.Status == TicketStatus.Closed ? "badge-closed" : "badge-progress")">@t.Status</span></td>
+            <td>
+              <form method="post">
+                <input type="hidden" name="id" value="@t.Id" />
+                <input type="hidden" name="type" value="ticket" />
+                <select name="ticketStatus" class="admin-select-inline" onchange="this.form.submit()">
+                  @Html.Raw(string.Join("", Enum.GetValues(typeof(TicketStatus)).Cast<TicketStatus>().Select(s => $"<option value=\"{s}\"{(t.Status == s ? " selected" : "")}>{s}</option>")))
+                </select>
+              </form>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  @if (Model.Tickets.Count == 0) { <p class="muted admin-empty">No maintenance tickets yet.</p> }
+}

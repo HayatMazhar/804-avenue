@@ -3,7 +3,9 @@
 @{
     ViewData["Title"] = "Projects";
 }
-<p style="margin-bottom:20px"><a class="btn-primary" asp-page="Create" style="text-decoration:none;display:inline-flex"><span>New project</span></a></p>
+<div class="admin-toolbar">
+  <a class="btn-primary" asp-page="Create"><span>New project</span></a>
+</div>
 <div class="admin-table-wrap">
   <table class="admin-table">
     <thead>
@@ -27,5 +29,5 @@
 </div>
 @if (Model.Items.Count == 0)
 {
-  <p class="muted" style="margin-top:16px">No portfolio projects yet.</p>
+  <p class="muted admin-empty">No portfolio projects yet.</p>
 }

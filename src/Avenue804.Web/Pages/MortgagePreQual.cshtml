@@ -1,0 +1,161 @@
+@page "/MortgagePreQualification"
+@model Avenue804.Web.Pages.MortgagePreQualModel
+@{
+    ViewData["Title"] = "Mortgage Pre-Qualification — Abu Dhabi";
+    ViewData["MetaDescription"] = "Check your borrowing power in under 2 minutes — free mortgage pre-qualification with no credit check or commitment.";
+    ViewData["NavActive"] = "mortgage";
+}
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Mortgage Pre-Qualification</span></div>
+    <h1 class="page-hero-title fade-up">Mortgage <em>Pre-Qualification</em></h1>
+    <p class="page-hero-sub fade-up">Check your borrowing power in under 2 minutes — free, no credit check, no commitment.</p>
+  </div>
+</section>
+
+<section class="section-pad" style="background:var(--bg-surface)">
+  <div class="container">
+    <div class="quote-grid">
+      <div class="quote-card">
+        <div class="quote-card-head">
+          <h3>Pre-Qualification Calculator</h3>
+          <p>Enter your details to estimate your maximum loan amount and monthly payment.</p>
+        </div>
+        <div class="quote-form">
+          <div class="quote-grid-2">
+            <div class="quote-field"><label>Monthly income (AED) *</label><input type="number" id="mqIncome" min="0" oninput="calcMq()" placeholder="e.g. 25,000" /></div>
+            <div class="quote-field"><label>Monthly obligations (AED)</label><input type="number" id="mqOblig" min="0" value="0" oninput="calcMq()" placeholder="Car loan, credit card…" /></div>
+          </div>
+          <div class="quote-grid-2">
+            <div class="quote-field"><label>Down payment available (AED)</label><input type="number" id="mqDown" min="0" oninput="calcMq()" placeholder="e.g. 300,000" /></div>
+            <div class="quote-field"><label>Loan term</label>
+              <select id="mqTerm" onchange="calcMq()">
+                <option value="15">15 years</option>
+                <option value="20">20 years</option>
+                <option value="25" selected>25 years</option>
+              </select>
+            </div>
+          </div>
+          <div class="quote-field"><label>Employment type</label>
+            <select id="mqEmploy">
+              <option value="1.0">Salaried — UAE employer</option>
+              <option value="0.95">Salaried — Overseas</option>
+              <option value="0.85">Self-employed / Business owner</option>
+              <option value="0.75">Freelancer / Contract</option>
+            </select>
+          </div>
+
+          <!-- Pre-qual result -->
+          <div class="quote-estimate" id="mqResult">
+            <div class="quote-estimate-label">You may qualify for</div>
+            <div class="quote-estimate-range" id="mqMaxLoan">—</div>
+            <div id="mqDetails" style="font-size:.82rem;color:var(--text-secondary);margin-top:8px"></div>
+            <div class="quote-estimate-note">Indicative only. Actual approval depends on credit score, employment history, and bank criteria. Contact our team for formal bank introductions.</div>
+          </div>
+
+          <!-- Bank partner links -->
+          <div id="mqBanks" style="display:none;margin-top:16px">
+            <div style="font-family:var(--font-nav);font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:10px">Apply with our banking partners</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <a href="https://www.adcb.com/en/personal/loans/home-loans/" target="_blank" rel="noopener" class="bank-link">ADCB Home Loan</a>
+              <a href="https://www.fab.ae/en/personal/loans/home-loans" target="_blank" rel="noopener" class="bank-link">FAB Home Finance</a>
+              <a href="https://www.emiratesnbd.com/en/personal-banking/loans/home-loan" target="_blank" rel="noopener" class="bank-link">Emirates NBD</a>
+              <a href="https://www.mashreqbank.com/uae/en/personal/property/home-loans" target="_blank" rel="noopener" class="bank-link">Mashreq Home Loan</a>
+              <a href="https://www.dib.ae/personal/finance/home-finance" target="_blank" rel="noopener" class="bank-link">DIB Home Finance</a>
+            </div>
+          </div>
+
+          <!-- Request broker introduction -->
+          <div style="border-top:1px solid var(--border-subtle);padding-top:20px;margin-top:16px">
+            <div class="section-tag" style="margin-bottom:12px">Free Mortgage Broker Introduction</div>
+            <form method="post" asp-page="/Submit/ServiceQuote">
+              <input type="hidden" name="serviceType" value="@((int)Avenue804.Web.Domain.ServiceType.BundlePackage)" />
+              <input type="hidden" name="returnPage" value="/MortgagePreQualification" />
+              <input type="hidden" name="estimateRange" id="mqEstHidden" />
+              <div class="quote-grid-2">
+                <div class="quote-field"><label>Name *</label><input type="text" name="name" required autocomplete="name" placeholder="Ahmed Al Mansoori" maxlength="200" /></div>
+                <div class="quote-field"><label>Mobile *</label><input type="tel" name="phone" required inputmode="tel" placeholder="+971 50 000 0000" maxlength="50" /></div>
+              </div>
+              <div class="quote-field"><label>Email *</label><input type="email" name="email" required placeholder="you@example.com" maxlength="256" /></div>
+              <div class="quote-field"><label>Notes (optional)</label><textarea name="projectDescription" rows="2" placeholder="Property budget, nationality, preferred bank…" maxlength="2000"></textarea></div>
+              <button type="submit" class="btn-primary" style="width:100%;justify-content:center" onclick="syncMqEst()">
+                <span>Connect me with a Mortgage Broker</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="quote-info">
+        <div class="quote-info-card">
+          <div class="quote-info-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div>
+          <h4>UAE Mortgage basics</h4>
+          <ul style="font-size:.8rem;color:var(--text-secondary);line-height:1.8;margin:0;padding-left:16px">
+            <li>Maximum loan: 80% LTV for UAE nationals, 75% for expats (up to AED 5M)</li>
+            <li>Debt burden ratio: max 50% of gross monthly income</li>
+            <li>Minimum down payment: 20% for expats, 15% for UAE nationals</li>
+            <li>Standard terms: 5–25 years (max 70 years of age at maturity)</li>
+            <li>Avg rate: 3.5–5.5% p.a. (fixed or variable)</li>
+          </ul>
+        </div>
+        <div class="quote-info-card">
+          <div class="quote-info-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/></svg></div>
+          <h4>Documents typically needed</h4>
+          <ul style="font-size:.8rem;color:var(--text-secondary);line-height:1.8;margin:0;padding-left:16px">
+            <li>Valid passport + UAE Visa + Emirates ID</li>
+            <li>Last 3–6 months salary slips</li>
+            <li>Last 3–6 months bank statements</li>
+            <li>Employment letter (salary certificate)</li>
+            <li>Property SPA / booking form</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@section Styles {
+<style>
+.bank-link{display:inline-flex;padding:8px 14px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:.72rem;font-family:var(--font-nav);font-weight:600;color:var(--text-secondary);text-decoration:none;transition:var(--transition-fast)}
+.bank-link:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+</style>
+}
+
+@section Scripts {
+<script>
+function calcMq() {
+  var income = parseFloat(document.getElementById('mqIncome').value) || 0;
+  var oblig = parseFloat(document.getElementById('mqOblig').value) || 0;
+  var down = parseFloat(document.getElementById('mqDown').value) || 0;
+  var term = parseInt(document.getElementById('mqTerm').value) || 25;
+  var empMul = parseFloat(document.getElementById('mqEmploy').value) || 1.0;
+  var result = document.getElementById('mqResult');
+
+  if (income <= 0) { result.classList.remove('show'); return; }
+
+  // Max monthly payment = 50% of income - obligations (UAE DBR rule)
+  var maxMonthly = (income * 0.50 - oblig) * empMul;
+  if (maxMonthly <= 0) { document.getElementById('mqMaxLoan').textContent = 'Obligations too high'; result.classList.add('show'); return; }
+
+  // Back-calculate max loan amount from monthly payment at 4.5% p.a.
+  var r = 0.045 / 12;
+  var n = term * 12;
+  var maxLoan = maxMonthly * (1 - Math.pow(1 + r, -n)) / r;
+  var maxPurchase = maxLoan + down;
+  var lo = Math.round(maxLoan * 0.9 / 10000) * 10000;
+  var hi = Math.round(maxLoan * 1.05 / 10000) * 10000;
+
+  document.getElementById('mqMaxLoan').textContent = 'AED ' + lo.toLocaleString() + ' – ' + hi.toLocaleString();
+  document.getElementById('mqDetails').textContent =
+    'Max property price with your down payment: AED ' + (Math.round(maxPurchase/1000)*1000).toLocaleString() + ' · ' +
+    'Est. monthly payment: AED ' + Math.round(maxMonthly).toLocaleString();
+  document.getElementById('mqEstHidden').value = 'Loan AED ' + lo.toLocaleString() + '–' + hi.toLocaleString();
+  result.classList.add('show');
+  document.getElementById('mqBanks').style.display = '';
+}
+
+function syncMqEst() {
+  // already synced via mqEstHidden
+}
+</script>
+}

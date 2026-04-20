@@ -1,0 +1,31 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Notifications.IndexModel
+@using Avenue804.Web.Domain
+@{
+    ViewData["Title"] = "Notifications";
+    ViewData["AdminSection"] = "notifications";
+}
+<div class="admin-toolbar">
+  <p class="muted">@Model.UnreadCount unread</p>
+  @if (Model.UnreadCount > 0)
+  {
+    <form method="post" class="d-inline"><button type="submit" class="btn-outline admin-btn-sm">Mark all read</button></form>
+  }
+</div>
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead><tr><th>Time</th><th>Type</th><th>Message</th><th>Action</th></tr></thead>
+    <tbody>
+      @foreach (var n in Model.Items)
+      {
+        <tr class="@(!n.IsRead ? "admin-tr-unread" : null)">
+          <td>@n.CreatedAt.LocalDateTime.ToString("d MMM HH:mm")</td>
+          <td><span class="badge @(n.Type == NotificationType.NewEmergencyTicket ? "badge-new" : "badge-progress")">@n.Type.ToString().Replace("New","+").Replace("Alert","↓")</span></td>
+          <td>@n.Message</td>
+          <td>@if (!string.IsNullOrWhiteSpace(n.LinkUrl)) { <a href="@n.LinkUrl" class="link-accent small">View →</a> }</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (!Model.Items.Any()) { <p class="muted admin-empty">No notifications yet.</p> }

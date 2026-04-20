@@ -1,0 +1,323 @@
+@page "/OurServices"
+@model Avenue804.Web.Pages.OurServicesModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Avenue804.Web.Infrastructure
+@using Avenue804.Web.Domain
+@{
+    ViewData["Title"] = "All Services — 804 Avenue";
+    ViewData["MetaDescription"] = "Explore the complete property lifecycle — contracting, fit-out, maintenance, and facility management — all under one roof with 804 Avenue.";
+    ViewData["NavActive"] = "services";
+    var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
+    var waNum = site?.WhatsAppDigits ?? "971504399804";
+}
+
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Our Services</span></div>
+    <h1 class="page-hero-title fade-up">One Partner. <em>Every</em> Service.</h1>
+    <p class="page-hero-sub fade-up">From finding your perfect property to fitting it out, maintaining it, and managing it — 804 Avenue is with you at every stage.</p>
+  </div>
+</section>
+
+<!-- ═══ PROPERTY LIFECYCLE JOURNEY ═══ -->
+<section class="section-pad" style="background:var(--bg-surface)">
+  <div class="container section-head-center">
+    <div class="section-tag fade-up">Your Journey with 804 Avenue</div>
+    <h2 class="section-title fade-up">The <em>Complete</em> Property Lifecycle</h2>
+    <p class="section-sub fade-up" style="margin:0 auto 48px">No other company in Abu Dhabi covers all four stages under one roof — saving you time, money, and coordination effort.</p>
+
+    <div class="lifecycle-flow fade-up">
+      <div class="lifecycle-step lifecycle-step--1">
+        <div class="lifecycle-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+        </div>
+        <div class="lifecycle-num">01</div>
+        <h3>Find &amp; Acquire</h3>
+        <p>Buy, rent, or invest in the right property — with full market expertise and portfolio advisory.</p>
+        <div class="lifecycle-links">
+          <a asp-page="/Properties/Index">Browse listings</a>
+          <a asp-page="/AreaGuides/Index">Area guides</a>
+        </div>
+      </div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step lifecycle-step--2">
+        <div class="lifecycle-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="lifecycle-num">02</div>
+        <h3>Fit-Out &amp; Build</h3>
+        <p>Transform your space with civil construction, interiors, flooring, glass, and signage works.</p>
+        <div class="lifecycle-links">
+          <a asp-page="/Contracting">Contracting services</a>
+          <a asp-page="/Contracting">Get a quote</a>
+        </div>
+      </div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step lifecycle-step--3">
+        <div class="lifecycle-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </div>
+        <div class="lifecycle-num">03</div>
+        <h3>Maintain &amp; Care</h3>
+        <p>Protect your asset with preventive and corrective maintenance — general, civil, MEP, 24/7 emergency.</p>
+        <div class="lifecycle-links">
+          <a asp-page="/Maintenance">Maintenance services</a>
+          <a asp-page="/Maintenance">AMC packages</a>
+        </div>
+      </div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step lifecycle-step--4">
+        <div class="lifecycle-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+        </div>
+        <div class="lifecycle-num">04</div>
+        <h3>Manage &amp; Operate</h3>
+        <p>Hand over day-to-day facility management — helpdesk, soft services, compliance, and vendor control.</p>
+        <div class="lifecycle-links">
+          <a asp-page="/FacilityManagement">FM services</a>
+          <a href="#fm-scope">Build FM scope</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bundle offer -->
+    <div class="lifecycle-bundle fade-up">
+      <div class="lifecycle-bundle-badge">⭐ 804 Exclusive</div>
+      <h3>The All-Inclusive Property Package</h3>
+      <p>Combine any services above and get <strong>up to 15% discount</strong> on the combined scope. One point of contact, one invoice, one relationship.</p>
+      <a asp-page="/Contact" class="btn-primary"><span>Request Bundle Quote</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FM SCOPE BUILDER ═══ -->
+<section class="section-pad" id="fm-scope" style="background:var(--bg-deep)">
+  <div class="container">
+    <div class="section-tag fade-up" style="justify-content:center">FM Scope Builder</div>
+    <h2 class="section-title fade-up" style="text-align:center;max-width:640px;margin:0 auto 12px">Build Your <em>Facility Management</em> Scope</h2>
+    <p class="section-sub fade-up" style="text-align:center;margin:0 auto 36px">Select the services you need and we'll build a tailored FM proposal for your asset.</p>
+
+    <div class="quote-grid">
+      <div class="quote-card">
+        <div class="quote-card-head">
+          <h3>FM Scope Selector</h3>
+          <p>Check all services required — estimate updates live.</p>
+        </div>
+        <div class="quote-form">
+          <div class="quote-field">
+            <label>Building type</label>
+            <select id="fmBType" onchange="calcFm()">
+              <option value="office">Commercial / Office</option>
+              <option value="residential">Residential Tower</option>
+              <option value="retail">Retail / Mall</option>
+              <option value="mixed">Mixed-use</option>
+            </select>
+          </div>
+          <div class="quote-field">
+            <label>Total area (sqm)</label>
+            <input type="number" id="fmArea" value="5000" min="100" oninput="calcFm()" />
+          </div>
+
+          <div class="quote-field"><label>Select FM services</label></div>
+          <div class="amc-services-grid">
+            @{
+              var fmServices = new[] {
+                ("helpdesk", "Central helpdesk & ticketing"),
+                ("mep", "MEP maintenance"),
+                ("civil", "Civil maintenance"),
+                ("cleaning", "Cleaning & housekeeping"),
+                ("pest", "Pest control"),
+                ("landscape", "Landscaping & gardening"),
+                ("security", "Security coordination"),
+                ("lifts", "Lift & escalator care"),
+                ("fire", "Fire system compliance"),
+                ("hvac", "HVAC servicing"),
+                ("energy", "Energy management"),
+                ("vendor", "Vendor management"),
+              };
+            }
+            @foreach (var (code, label) in fmServices)
+            {
+              <label class="amc-service-check">
+                <input type="checkbox" id="fm_@code" value="@code" onchange="calcFm()" />
+                @label
+              </label>
+            }
+          </div>
+
+          <div class="amc-result" id="fmResult" style="margin-top:20px">
+            <div class="amc-result-header">FM Scope Estimate</div>
+            <div class="amc-result-grid">
+              <div class="amc-result-item"><label>Annual FM cost</label><strong id="fmAnnual">Select services above</strong></div>
+              <div class="amc-result-item"><label>Monthly</label><strong id="fmMonthly">—</strong></div>
+              <div class="amc-result-item"><label>Services included</label><strong id="fmCount">0</strong></div>
+              <div class="amc-result-item"><label>Site visits / yr</label><strong id="fmVisits">—</strong></div>
+            </div>
+          </div>
+
+          <!-- Request form -->
+          <form method="post" asp-page="/Submit/AmcRequest" id="fmForm" style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border-subtle)">
+            <input type="hidden" name="buildingType" value="Commercial" />
+            <input type="hidden" name="servicesNeeded" id="fmServicesHidden" />
+            <input type="hidden" name="estimateRange" id="fmEstimateHidden" />
+            <div class="quote-grid-2">
+              <div class="quote-field"><label>Name *</label><input type="text" name="name" required autocomplete="name" placeholder="Ahmed Al Mansoori" maxlength="200" /></div>
+              <div class="quote-field"><label>Mobile *</label><input type="tel" name="phone" required inputmode="tel" placeholder="+971 50 000 0000" maxlength="50" /></div>
+            </div>
+            <div class="quote-field"><label>Email *</label><input type="email" name="email" required placeholder="you@example.com" maxlength="256" /></div>
+            <div class="quote-field"><label>Company / building name</label><input type="text" name="company" placeholder="Building name or company" maxlength="200" /></div>
+            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;margin-top:4px" onclick="syncFmForm()">
+              <span>Request FM Proposal</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="quote-info">
+        <div class="quote-info-card">
+          <div class="quote-info-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <h4>Dedicated FM Lead</h4>
+          <p>Your building gets a dedicated FM manager as single point of contact — no more chasing multiple contractors.</p>
+        </div>
+        <div class="quote-info-card">
+          <div class="quote-info-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+          <h4>Compliance &amp; Reporting</h4>
+          <p>All statutory tests tracked, monthly KPI reports delivered, and compliance calendars managed proactively.</p>
+        </div>
+        <div class="quote-info-card">
+          <div class="quote-info-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h4>24/7 Emergency Response</h4>
+          <p>Emergency calls answered around the clock — rapid deployment with guaranteed response SLAs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICE COVERAGE MAP ═══ -->
+<section class="section-pad" style="background:var(--bg-surface)">
+  <div class="container" style="text-align:center">
+    <div class="section-tag fade-up" style="justify-content:center">Where We Operate</div>
+    <h2 class="section-title fade-up">Service <em>Coverage</em> Across the UAE</h2>
+    <p class="section-sub fade-up" style="margin:0 auto 36px">Based in Abu Dhabi — serving all seven emirates with the same quality standards.</p>
+
+    <div class="coverage-grid fade-up">
+      @{
+        var emirates = new[] {
+          ("Abu Dhabi", "🏢", "Headquarters", "Full services — contracting, maintenance, FM, properties"),
+          ("Dubai", "🌆", "Active", "Contracting &amp; fit-out, property listings, maintenance"),
+          ("Sharjah", "🏗", "Active", "Contracting, maintenance, and property services"),
+          ("Ajman", "🔧", "Available", "Maintenance and contracting on request"),
+          ("Ras Al Khaimah", "🏔", "Available", "Contracting and property services on request"),
+          ("Fujairah", "🌊", "Available", "Contracting on request"),
+          ("Umm Al Quwain", "📋", "Available", "Contracting on request"),
+        };
+      }
+      @foreach (var (name, icon, status, desc) in emirates)
+      {
+        <div class="coverage-card @(status == "Headquarters" ? "coverage-card--hq" : status == "Active" ? "coverage-card--active" : "")">
+          <div class="coverage-icon">@icon</div>
+          <div class="coverage-name">@name</div>
+          <div class="coverage-status">@status</div>
+          <div class="coverage-desc">@Html.Raw(desc)</div>
+        </div>
+      }
+    </div>
+
+    <div style="margin-top:36px">
+      <a asp-page="/Contact" class="btn-primary" style="display:inline-flex"><span>Check availability for your area</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SITE VISIT BOOKING ═══ -->
+<section class="section-pad" id="book-visit" style="background:var(--bg-deep)">
+  <div class="container" style="max-width:680px;text-align:center">
+    <div class="section-tag fade-up" style="justify-content:center">Site Visit</div>
+    <h2 class="section-title fade-up">Book a Free <em>Site Visit</em></h2>
+    <p class="section-sub fade-up" style="margin:0 auto 36px">Our team will visit your property, assess your requirements, and provide a detailed proposal — completely free, no obligation.</p>
+
+    <div class="quote-card fade-up">
+      <div class="quote-card-head">
+        <h3>Request a Site Visit</h3>
+        <p>Available within Abu Dhabi 24–48 hours, Dubai and Northern Emirates within 5 business days.</p>
+      </div>
+      <form class="quote-form" method="post" asp-page="/Submit/ServiceQuote">
+        <input type="hidden" name="serviceType" value="@((int)ServiceType.BundlePackage)" />
+        <input type="hidden" name="returnPage" value="/OurServices#book-visit" />
+
+        <div class="quote-grid-2">
+          <div class="quote-field"><label>Your name *</label><input type="text" name="name" required autocomplete="name" placeholder="Ahmed Al Mansoori" maxlength="200" /></div>
+          <div class="quote-field"><label>Mobile *</label><input type="tel" name="phone" required inputmode="tel" placeholder="+971 50 000 0000" maxlength="50" /></div>
+        </div>
+        <div class="quote-grid-2">
+          <div class="quote-field"><label>Email *</label><input type="email" name="email" required placeholder="you@example.com" maxlength="256" /></div>
+          <div class="quote-field"><label>Company / building</label><input type="text" name="company" placeholder="Building or company name" maxlength="200" /></div>
+        </div>
+        <div class="quote-field"><label>Property address / location *</label><input type="text" name="location" required placeholder="Building name, area, emirate" maxlength="400" /></div>
+        <div class="quote-field"><label>What service(s) are you interested in?</label>
+          <select name="timeline">
+            <option value="Contracting / Fit-Out">Contracting / Fit-Out</option>
+            <option value="Maintenance AMC">Annual Maintenance Contract</option>
+            <option value="Facility Management">Facility Management</option>
+            <option value="Multiple services">Multiple / Not sure yet</option>
+          </select>
+        </div>
+        <div class="quote-field"><label>Preferred visit time</label>
+          <select>
+            <option>Morning (9am – 12pm)</option>
+            <option>Afternoon (12pm – 5pm)</option>
+            <option>Flexible</option>
+          </select>
+        </div>
+        <div class="quote-field"><label>Notes (optional)</label><textarea name="projectDescription" rows="2" placeholder="Any specific requirements or information that would help us prepare…" maxlength="4000"></textarea></div>
+        <button type="submit" class="btn-primary w-100 justify-content-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Book Free Site Visit</span>
+        </button>
+        <p class="text-center small text-muted mt-2 mb-0">Our team will confirm your appointment within 2 hours during business hours.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+@section Styles {
+  <link rel="stylesheet" href="~/css/service-pages.css" asp-append-version="true" />
+}
+
+@section Scripts {
+<script>
+var _fmRates = { helpdesk:8000, mep:18000, civil:12000, cleaning:24000, pest:6000, landscape:10000, security:5000, lifts:8000, fire:7000, hvac:15000, energy:6000, vendor:5000 };
+
+function calcFm() {
+  var area = parseFloat(document.getElementById('fmArea').value) || 5000;
+  var areaFactor = Math.max(0.5, Math.min(3, area / 5000));
+  var total = 0, count = 0, visits = 0;
+  var selected = [];
+  Object.keys(_fmRates).forEach(function(k) {
+    var el = document.getElementById('fm_' + k);
+    if (el && el.checked) { total += _fmRates[k] * areaFactor; count++; visits += 12; selected.push(k); }
+  });
+  if (count === 0) { document.getElementById('fmAnnual').textContent = 'Select services above'; document.getElementById('fmMonthly').textContent = '—'; document.getElementById('fmVisits').textContent = '—'; return; }
+  var lo = Math.round(total * 0.85 / 1000) * 1000;
+  var hi = Math.round(total * 1.2 / 1000) * 1000;
+  var monthly = Math.round((lo + hi) / 2 / 12 / 100) * 100;
+  document.getElementById('fmAnnual').textContent = 'AED ' + lo.toLocaleString() + ' – ' + hi.toLocaleString();
+  document.getElementById('fmMonthly').textContent = 'AED ' + monthly.toLocaleString();
+  document.getElementById('fmCount').textContent = count;
+  document.getElementById('fmVisits').textContent = visits + '+';
+  document.getElementById('fmEstimateHidden').value = 'AED ' + lo.toLocaleString() + ' – ' + hi.toLocaleString();
+  document.getElementById('fmServicesHidden').value = selected.join(',');
+}
+
+function syncFmForm() {
+  var selected = [];
+  Object.keys(_fmRates).forEach(function(k) {
+    var el = document.getElementById('fm_' + k);
+    if (el && el.checked) selected.push(k);
+  });
+  document.getElementById('fmServicesHidden').value = selected.join(',');
+}
+</script>
+}
