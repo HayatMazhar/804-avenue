@@ -1,7 +1,6 @@
 // Home page hero behaviour:
-//   - 4-tab service quote widget (Maintenance / AMC / Contracting / Facility Mgmt)
-//     → routes the visitor to the deeper form anchor on the relevant
-//       service page, with a hash that scrolls to the form.
+//   - Real Estate quick-search (Buy/Rent + cascading property type → details)
+//     submits to /Properties with offer / type / location query params.
 //   - Stats counter animation (uses real DB-backed counts from
 //     IHomeStatsService — see Pages/Index.cshtml.cs).
 //   - Fade-up reveal animation.
@@ -9,72 +8,76 @@
 (function () {
   'use strict';
 
-  // ── 3-tab service quote widget ─────────────────────────────
-  var widget = document.getElementById('heroQuoteWidget');
-  if (widget) {
-    var tabs   = widget.querySelectorAll('[data-quote-tab]');
-    var panels = widget.querySelectorAll('[data-quote-panel]');
+  // ── Real Estate quick search ───────────────────────────────
+  // Cascading Property Details: the option lists live in
+  //   data-details-residential / data-details-commercial on #heroReDetails,
+  // so the markup is the single source of truth and the page works even
+  // without JS (defaults to Residential options at render time).
+  var reForm = document.getElementById('heroReSearch');
+  if (reForm) {
+    var category = document.getElementById('heroReCategory');
+    var details  = document.getElementById('heroReDetails');
+    var offer    = document.getElementById('heroReOffer');
+    var modeTabs = reForm.querySelectorAll('[data-re-mode]');
 
-    function showPanel(name) {
-      tabs.forEach(function (t) {
-        var on = t.dataset.quoteTab === name;
-        t.classList.toggle('active', on);
-        t.setAttribute('aria-selected', on ? 'true' : 'false');
-      });
-      panels.forEach(function (p) {
-        p.hidden = (p.dataset.quotePanel !== name);
-      });
+    function readDetailsList(cat) {
+      if (!details) return [];
+      var raw = details.getAttribute('data-details-' + String(cat || '').toLowerCase());
+      if (!raw) return [];
+      try { return JSON.parse(raw); } catch (e) { return []; }
     }
 
-    tabs.forEach(function (t) {
-      t.addEventListener('click', function () { showPanel(t.dataset.quoteTab); });
-    });
+    function repopulateDetails() {
+      if (!category || !details) return;
+      var list = readDetailsList(category.value);
+      if (!list.length) return;
 
-    // Each "Go" button routes the user to the appropriate deep-form anchor
-    // with a query-string prefill the form pages can read in a future enhancement.
-    var routes = {
-      maintenance: function () {
-        var issue   = (document.getElementById('heroMaintIssue') || {}).value || '';
-        var emirate = (document.getElementById('heroMaintEmirate') || {}).value || '';
-        var qs = [];
-        if (issue)   qs.push('issue='   + encodeURIComponent(issue));
-        if (emirate) qs.push('emirate=' + encodeURIComponent(emirate));
-        return '/Maintenance' + (qs.length ? ('?' + qs.join('&')) : '') + '#emergency';
-      },
-      amc: function () {
-        var bt   = (document.getElementById('heroAmcType') || {}).value || '';
-        var size = (document.getElementById('heroAmcSize') || {}).value || '';
-        var qs = [];
-        if (bt)   qs.push('buildingType=' + encodeURIComponent(bt));
-        if (size) qs.push('size='         + encodeURIComponent(size));
-        return '/Maintenance' + (qs.length ? ('?' + qs.join('&')) : '') + '#amc-quote';
-      },
-      contracting: function () {
-        var svc  = (document.getElementById('heroContrService') || {}).value || '';
-        var area = (document.getElementById('heroContrArea') || {}).value || '';
-        var qs = [];
-        if (svc)  qs.push('serviceType=' + encodeURIComponent(svc));
-        if (area) qs.push('areaSqm='     + encodeURIComponent(area));
-        return '/Contracting' + (qs.length ? ('?' + qs.join('&')) : '') + '#get-quote';
-      },
-      facility: function () {
-        var asset = (document.getElementById('heroFmAsset') || {}).value || '';
-        var hours = (document.getElementById('heroFmHours') || {}).value || '';
-        var qs = ['subject=facility-management'];
-        if (asset) qs.push('assetType=' + encodeURIComponent(asset));
-        if (hours) qs.push('serviceHours=' + encodeURIComponent(hours));
-        // FacilityManagement page exposes an #enquire anchor that scrolls to
-        // the CTA → Contact form. Pre-filled query params are kept for
-        // future server-side consumption on the Contact page.
-        return '/FacilityManagement?' + qs.join('&') + '#enquire';
+      // ── Native <select>: rebuild options directly ──────────
+      details.innerHTML = '';
+      list.forEach(function (label) {
+        var opt = document.createElement('option');
+        opt.value = label;
+        opt.textContent = label;
+        details.appendChild(opt);
+      });
+
+      // ── TomSelect: sync internal options if present ─────────
+      var ts = details.tomselect;
+      if (ts) {
+        try {
+          ts.clear(true);
+          ts.clearOptions();
+          list.forEach(function (label) {
+            ts.addOption({ value: label, text: label });
+          });
+          ts.refreshOptions(false);
+          ts.setValue(list[0], true);
+        } catch (e) {}
       }
-    };
+    }
 
-    widget.querySelectorAll('[data-quote-go]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var name = btn.dataset.quoteGo;
-        var url  = routes[name] && routes[name]();
-        if (url) window.location.assign(url);
+    if (category) {
+      // Native change event (works for plain selects and TomSelect both dispatch it)
+      category.addEventListener('change', repopulateDetails);
+    }
+
+    // Run once after TomSelect has had a chance to initialise (it boots on DOMContentLoaded)
+    // so the Property Details list reflects the default Property Type correctly.
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', repopulateDetails);
+    } else {
+      // Already interactive — defer one tick so TomSelect's own DOMContentLoaded
+      // handler runs first (tom-select-init.js also listens on DOMContentLoaded).
+      setTimeout(repopulateDetails, 0);
+    }
+
+    modeTabs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        modeTabs.forEach(function (o) {
+          o.classList.toggle('active', o === t);
+          o.setAttribute('aria-selected', o === t ? 'true' : 'false');
+        });
+        if (offer) offer.value = t.dataset.reMode || 'sale';
       });
     });
   }

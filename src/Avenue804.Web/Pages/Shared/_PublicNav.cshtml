@@ -58,11 +58,7 @@
         <div class="pf-nav__dd-panel pf-nav__dd-panel--sm" role="menu">
           <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/Maintenance">
             <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
-            <span><strong>Maintenance</strong><br><small>MEP, preventive &amp; emergency</small></span>
-          </a>
-          <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/Submit/AmcRequest">
-            <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></span>
-            <span><strong>AMC</strong><br><small>Annual maintenance contracts</small></span>
+            <span><strong>Maintenance</strong><br><small>MEP, AMC, preventive &amp; emergency</small></span>
           </a>
           <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/Contracting">
             <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></span>
@@ -78,18 +74,9 @@
         </div>
       </li>
 
-      <!-- Properties dropdown (secondary) -->
-      <li class="pf-nav__item pf-nav__item--dd" id="ddProperties">
-        <button class="pf-nav__link pf-nav__link--dd @(IsPropertiesNav() ? "active" : "")" type="button" aria-expanded="false" aria-haspopup="true">
-          Properties
-          <svg class="pf-nav__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="pf-nav__dd-panel pf-nav__dd-panel--sm" role="menu">
-          <a class="pf-nav__dd-link" asp-page="/Properties/Index" asp-route-offer="sale">Buy Property</a>
-          <a class="pf-nav__dd-link" asp-page="/Properties/Index" asp-route-offer="rent">Rent Property</a>
-          <div class="pf-nav__dd-divider"></div>
-          <a class="pf-nav__dd-link" asp-page="/AreaGuides/Index">Area Guides</a>
-        </div>
+      <!-- Properties (direct link → full listings page) -->
+      <li class="pf-nav__item">
+        <a class="pf-nav__link @(IsPropertiesNav() ? "active" : "")" asp-page="/Properties/Index">Properties</a>
       </li>
 
       <!-- About -->
@@ -173,8 +160,6 @@
         <a asp-page="/Account/Login" class="pf-nav__signin-btn">Sign In</a>
       }
 
-      <button type="button" id="langToggleBtn" class="pf-nav__lang-btn">AR</button>
-
       <!-- Mobile hamburger -->
       <button class="pf-nav__hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -189,16 +174,12 @@
         <div class="pf-nav__mobile-label">Services</div>
         <a class="pf-nav__mobile-link" asp-page="/Services/Index">All Services</a>
         <a class="pf-nav__mobile-link" asp-page="/Maintenance">Maintenance</a>
-        <a class="pf-nav__mobile-link" asp-page="/Submit/AmcRequest">AMC</a>
         <a class="pf-nav__mobile-link" asp-page="/Contracting">Contracting</a>
         <a class="pf-nav__mobile-link" asp-page="/FacilityManagement">Facility Management</a>
         <a class="pf-nav__mobile-link" asp-page="/Projects/Index">Our Projects</a>
       </div>
       <div class="pf-nav__mobile-group">
-        <div class="pf-nav__mobile-label">Properties</div>
-        <a class="pf-nav__mobile-link" asp-page="/Properties/Index" asp-route-offer="sale">Buy</a>
-        <a class="pf-nav__mobile-link" asp-page="/Properties/Index" asp-route-offer="rent">Rent</a>
-        <a class="pf-nav__mobile-link" asp-page="/AreaGuides/Index">Area Guides</a>
+        <a class="pf-nav__mobile-link" asp-page="/Properties/Index">Properties</a>
       </div>
       <div class="pf-nav__mobile-group">
         <div class="pf-nav__mobile-label">For Owners</div>

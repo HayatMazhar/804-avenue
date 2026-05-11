@@ -83,6 +83,9 @@ public class EditModel : PageModel
         entity.Currency = string.IsNullOrWhiteSpace(Form.Currency) ? "AED" : Form.Currency.Trim();
         entity.OfferType = Form.OfferType;
         entity.Location = string.IsNullOrWhiteSpace(Form.Location) ? null : Form.Location.Trim();
+        entity.PropertyCategory = string.IsNullOrWhiteSpace(Form.PropertyCategory) ? null : Form.PropertyCategory.Trim();
+        entity.PropertyType = string.IsNullOrWhiteSpace(Form.PropertyType) ? null : Form.PropertyType.Trim();
+        entity.Emirates = string.IsNullOrWhiteSpace(Form.Emirates) ? null : Form.Emirates.Trim();
         entity.Description = string.IsNullOrWhiteSpace(Form.Description) ? null : Form.Description.Trim();
         entity.Beds = Form.Beds;
         entity.Baths = Form.Baths;
@@ -172,6 +175,9 @@ public class EditModel : PageModel
         Currency = e.Currency,
         OfferType = e.OfferType,
         Location = e.Location,
+        PropertyCategory = e.PropertyCategory,
+        PropertyType = e.PropertyType,
+        Emirates = e.Emirates,
         Description = e.Description,
         Beds = e.Beds,
         Baths = e.Baths,

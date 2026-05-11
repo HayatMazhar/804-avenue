@@ -263,9 +263,9 @@ public static class SeedData
         var now = DateTimeOffset.UtcNow;
         var specs = new (string Slug, string? Title, string Body)[]
         {
-            (ContentBlockSlugs.HomeHeroEyebrow, null, "Abu Dhabi's Trusted Property &amp; Contracting Firm"),
+            (ContentBlockSlugs.HomeHeroEyebrow, null, "Abu Dhabi's Trusted Property, Construction &amp; Maintenance Partner"),
             (ContentBlockSlugs.HomeHeroSubtitle, null,
-                "From luxury property listings to complete construction, fit-out, and maintenance — 804 Avenue is your single trusted partner across the UAE."),
+                "From premium real estate services to complete construction, fit-out, and maintenance solutions in Abu Dhabi — 804 Avenue is your trusted all-in-one partner."),
             (ContentBlockSlugs.AboutStripLead, null,
                 "804 Avenue Properties and Contracting is a dynamic company offering professional services in the fields of real estate, construction, and property maintenance across the UAE. Headquartered in Abu Dhabi, we combine deep market knowledge with skilled craftsmanship to deliver exceptional results for every client."),
             (ContentBlockSlugs.PageAboutHeroTitle, null, "About <em>804 Avenue</em>"),

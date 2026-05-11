@@ -10,7 +10,10 @@
     bool compareEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.PropertyCompare);
     var hasFilters = !string.IsNullOrWhiteSpace(Model.SearchKeyword)
         || !string.IsNullOrWhiteSpace(Model.SearchLocation)
+        || !string.IsNullOrWhiteSpace(Model.SearchArea)
+        || !string.IsNullOrWhiteSpace(Model.SearchCategory)
         || !string.IsNullOrWhiteSpace(Model.SearchType)
+        || !string.IsNullOrWhiteSpace(Model.SearchSize)
         || !string.IsNullOrWhiteSpace(Model.SearchBudget)
         || !string.IsNullOrWhiteSpace(Model.Filter);
     var currentOffer = Model.Filter ?? "";
@@ -40,9 +43,9 @@
     </div>
     <!-- Offer tabs -->
     <div class="pl-offer-tabs">
-      <a class="pl-offer-tab @(currentOffer == "" ? "active" : "")" asp-page="/Properties/Index" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-type="@Model.SearchType" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">All</a>
-      <a class="pl-offer-tab @(currentOffer == "sale" ? "active" : "")" asp-page="/Properties/Index" asp-route-offer="sale" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-type="@Model.SearchType" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">Buy</a>
-      <a class="pl-offer-tab @(currentOffer == "rent" ? "active" : "")" asp-page="/Properties/Index" asp-route-offer="rent" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-type="@Model.SearchType" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">Rent</a>
+      <a class="pl-offer-tab @(currentOffer == "" ? "active" : "")" asp-page="/Properties/Index" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">All</a>
+      <a class="pl-offer-tab @(currentOffer == "sale" ? "active" : "")" asp-page="/Properties/Index" asp-route-offer="sale" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">Buy</a>
+      <a class="pl-offer-tab @(currentOffer == "rent" ? "active" : "")" asp-page="/Properties/Index" asp-route-offer="rent" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">Rent</a>
     </div>
   </div>
 </div>
@@ -52,9 +55,13 @@
   <div class="container-fluid px-3 px-xl-5">
     <form method="get" id="propSearchForm" class="pl-searchbar__form">
       <input type="hidden" name="offer" value="@currentOffer" id="sfOfferHidden" />
-      <div class="pl-searchbar__field pl-searchbar__field--wide">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" name="q" value="@Model.SearchKeyword" placeholder="Area, community, tower…" autocomplete="off" data-autocomplete="uae" data-ac-emirate-target="sfLocation" class="pl-searchbar__input" />
+      <input type="hidden" name="q" value="@Model.SearchKeyword" />
+      <div class="pl-searchbar__field">
+        <select name="category" id="sfCategory" class="pl-searchbar__select">
+          <option value="">All categories</option>
+          <option value="Residential" selected="@(Model.SearchCategory == "Residential")">Residential</option>
+          <option value="Commercial" selected="@(Model.SearchCategory == "Commercial")">Commercial</option>
+        </select>
       </div>
       <div class="pl-searchbar__sep"></div>
       <div class="pl-searchbar__field">
@@ -68,17 +75,43 @@
         </select>
       </div>
       <div class="pl-searchbar__sep"></div>
+      <div class="pl-searchbar__field pl-searchbar__field--wide">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <input type="text" name="area" value="@Model.SearchArea" placeholder="Area, community, tower…" autocomplete="off" data-autocomplete="uae" data-ac-emirate-target="sfLocation" class="pl-searchbar__input" />
+      </div>
+      <div class="pl-searchbar__sep"></div>
       <div class="pl-searchbar__field">
-        <select name="type" id="sfType" class="pl-searchbar__select">
+        <select name="type" id="sfType" class="pl-searchbar__select"
+                data-details-residential='["Apartment","Villa Apartment","Villa Compound","Villa","Building","Land"]'
+                data-details-commercial='["Shell &amp; Core Offices","Furnished Offices","Warehouse / Stores","Showroom","Shop","Villa","Labor Camp","Building","Land"]'>
           <option value="">All types</option>
-          <option value="Apartment" selected="@(Model.SearchType == "Apartment")">Apartment</option>
-          <option value="Villa" selected="@(Model.SearchType == "Villa")">Villa</option>
-          <option value="Townhouse" selected="@(Model.SearchType == "Townhouse")">Townhouse</option>
-          <option value="Penthouse" selected="@(Model.SearchType == "Penthouse")">Penthouse</option>
-          <option value="Office" selected="@(Model.SearchType == "Office")">Office</option>
-          <option value="Retail" selected="@(Model.SearchType == "Retail")">Retail</option>
-          <option value="Warehouse" selected="@(Model.SearchType == "Warehouse")">Warehouse</option>
-          <option value="Land" selected="@(Model.SearchType == "Land")">Land / Plot</option>
+          <optgroup label="Residential">
+            <option value="Apartment" selected="@(Model.SearchType == "Apartment")">Apartment</option>
+            <option value="Villa Apartment" selected="@(Model.SearchType == "Villa Apartment")">Villa Apartment</option>
+            <option value="Villa Compound" selected="@(Model.SearchType == "Villa Compound")">Villa Compound</option>
+            <option value="Villa" selected="@(Model.SearchType == "Villa")">Villa</option>
+            <option value="Building" selected="@(Model.SearchType == "Building")">Building</option>
+            <option value="Land" selected="@(Model.SearchType == "Land")">Land</option>
+          </optgroup>
+          <optgroup label="Commercial">
+            <option value="Shell &amp; Core Offices" selected="@(Model.SearchType == "Shell & Core Offices")">Shell &amp; Core Offices</option>
+            <option value="Furnished Offices" selected="@(Model.SearchType == "Furnished Offices")">Furnished Offices</option>
+            <option value="Warehouse / Stores" selected="@(Model.SearchType == "Warehouse / Stores")">Warehouse / Stores</option>
+            <option value="Showroom" selected="@(Model.SearchType == "Showroom")">Showroom</option>
+            <option value="Shop" selected="@(Model.SearchType == "Shop")">Shop</option>
+            <option value="Labor Camp" selected="@(Model.SearchType == "Labor Camp")">Labor Camp</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="pl-searchbar__sep"></div>
+      <div class="pl-searchbar__field">
+        <select name="size" id="sfSize" class="pl-searchbar__select">
+          <option value="">Any size</option>
+          <option value="u500" selected="@(Model.SearchSize == "u500")">&lt; 500 sqft</option>
+          <option value="500-1000" selected="@(Model.SearchSize == "500-1000")">500 – 1,000 sqft</option>
+          <option value="1000-2000" selected="@(Model.SearchSize == "1000-2000")">1,000 – 2,000 sqft</option>
+          <option value="2000-5000" selected="@(Model.SearchSize == "2000-5000")">2,000 – 5,000 sqft</option>
+          <option value="5000+" selected="@(Model.SearchSize == "5000+")">5,000+ sqft</option>
         </select>
       </div>
       <div class="pl-searchbar__sep"></div>
@@ -118,27 +151,26 @@
             }
           </div>
 
-          <form method="get" id="sidebarFilterForm">
+            <form method="get" id="sidebarFilterForm">
             <input type="hidden" name="offer" value="@currentOffer" />
             <input type="hidden" name="q" value="@Model.SearchKeyword" />
+            <input type="hidden" name="area" value="@Model.SearchArea" />
 
-            <!-- Property type -->
+            <!-- Category -->
             <div class="pl-filter-group">
               <div class="pl-filter-group__label">Property Type</div>
               <div class="pl-filter-checkboxes">
-                @{
-                  var types = new[] { "Apartment", "Villa", "Townhouse", "Penthouse", "Office", "Retail", "Warehouse", "Land" };
-                }
-                @foreach (var t in types)
-                {
-                  <label class="pl-filter-check @(Model.SearchType == t ? "is-checked" : "")">
-                    <input type="radio" name="type" value="@t" @(Model.SearchType == t ? "checked" : "") />
-                    @t
-                  </label>
-                }
-                <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchType) ? "is-checked" : "")">
-                  <input type="radio" name="type" value="" @(string.IsNullOrWhiteSpace(Model.SearchType) ? "checked" : "") />
-                  All types
+                <label class="pl-filter-check @(Model.SearchCategory == "Residential" ? "is-checked" : "")">
+                  <input type="radio" name="category" value="Residential" @(Model.SearchCategory == "Residential" ? "checked" : "") />
+                  Residential
+                </label>
+                <label class="pl-filter-check @(Model.SearchCategory == "Commercial" ? "is-checked" : "")">
+                  <input type="radio" name="category" value="Commercial" @(Model.SearchCategory == "Commercial" ? "checked" : "") />
+                  Commercial
+                </label>
+                <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchCategory) ? "is-checked" : "")">
+                  <input type="radio" name="category" value="" @(string.IsNullOrWhiteSpace(Model.SearchCategory) ? "checked" : "") />
+                  All categories
                 </label>
               </div>
             </div>
@@ -164,9 +196,65 @@
               </div>
             </div>
 
-            <!-- Budget -->
+            <!-- Property details -->
             <div class="pl-filter-group">
-              <div class="pl-filter-group__label">Budget (AED)</div>
+              <div class="pl-filter-group__label">Property Details</div>
+              <div class="pl-filter-checkboxes">
+                @{
+                  var residentialTypes = new[] { "Apartment", "Villa Apartment", "Villa Compound", "Villa", "Building", "Land" };
+                  var commercialTypes  = new[] { "Shell & Core Offices", "Furnished Offices", "Warehouse / Stores", "Showroom", "Shop", "Labor Camp", "Building", "Land" };
+                  var allTypes = string.IsNullOrWhiteSpace(Model.SearchCategory)
+                      ? residentialTypes.Union(commercialTypes).Distinct().ToArray()
+                      : Model.SearchCategory == "Commercial" ? commercialTypes : residentialTypes;
+                }
+                @foreach (var t in allTypes)
+                {
+                  <label class="pl-filter-check @(Model.SearchType == t ? "is-checked" : "")">
+                    <input type="radio" name="type" value="@t" @(Model.SearchType == t ? "checked" : "") />
+                    @t
+                  </label>
+                }
+                <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchType) ? "is-checked" : "")">
+                  <input type="radio" name="type" value="" @(string.IsNullOrWhiteSpace(Model.SearchType) ? "checked" : "") />
+                  All types
+                </label>
+              </div>
+            </div>
+
+            <!-- Size -->
+            <div class="pl-filter-group">
+              <div class="pl-filter-group__label">Size (sqft)</div>
+              <div class="pl-filter-checkboxes">
+                <label class="pl-filter-check @(Model.SearchSize == "u500" ? "is-checked" : "")">
+                  <input type="radio" name="size" value="u500" @(Model.SearchSize == "u500" ? "checked" : "") />
+                  Under 500
+                </label>
+                <label class="pl-filter-check @(Model.SearchSize == "500-1000" ? "is-checked" : "")">
+                  <input type="radio" name="size" value="500-1000" @(Model.SearchSize == "500-1000" ? "checked" : "") />
+                  500 – 1,000
+                </label>
+                <label class="pl-filter-check @(Model.SearchSize == "1000-2000" ? "is-checked" : "")">
+                  <input type="radio" name="size" value="1000-2000" @(Model.SearchSize == "1000-2000" ? "checked" : "") />
+                  1,000 – 2,000
+                </label>
+                <label class="pl-filter-check @(Model.SearchSize == "2000-5000" ? "is-checked" : "")">
+                  <input type="radio" name="size" value="2000-5000" @(Model.SearchSize == "2000-5000" ? "checked" : "") />
+                  2,000 – 5,000
+                </label>
+                <label class="pl-filter-check @(Model.SearchSize == "5000+" ? "is-checked" : "")">
+                  <input type="radio" name="size" value="5000+" @(Model.SearchSize == "5000+" ? "checked" : "") />
+                  5,000+
+                </label>
+                <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchSize) ? "is-checked" : "")">
+                  <input type="radio" name="size" value="" @(string.IsNullOrWhiteSpace(Model.SearchSize) ? "checked" : "") />
+                  Any size
+                </label>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="pl-filter-group">
+              <div class="pl-filter-group__label">Price (AED)</div>
               <div class="pl-filter-checkboxes">
                 <label class="pl-filter-check @(Model.SearchBudget == "u500" ? "is-checked" : "")">
                   <input type="radio" name="budget" value="u500" @(Model.SearchBudget == "u500" ? "checked" : "") />
@@ -295,28 +383,49 @@
             {
               <span class="pl-chip">
                 "@Model.SearchKeyword"
-                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-location="@Model.SearchLocation" asp-route-type="@Model.SearchType" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
               </span>
             }
             @if (!string.IsNullOrWhiteSpace(Model.SearchLocation))
             {
               <span class="pl-chip">
                 @Model.SearchLocation
-                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-type="@Model.SearchType" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-area="@Model.SearchArea" asp-route-category="@Model.SearchCategory" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+              </span>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.SearchCategory))
+            {
+              <span class="pl-chip">
+                @Model.SearchCategory
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+              </span>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.SearchArea))
+            {
+              <span class="pl-chip">
+                Area: @Model.SearchArea
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-category="@Model.SearchCategory" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
               </span>
             }
             @if (!string.IsNullOrWhiteSpace(Model.SearchType))
             {
               <span class="pl-chip">
                 @Model.SearchType
-                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-category="@Model.SearchCategory" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+              </span>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.SearchSize))
+            {
+              <span class="pl-chip">
+                @(Model.SearchSize switch { "u500"=>"< 500 sqft","500-1000"=>"500–1,000 sqft","1000-2000"=>"1,000–2,000 sqft","2000-5000"=>"2,000–5,000 sqft","5000+"=>"5,000+ sqft",_=>Model.SearchSize })
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
               </span>
             }
             @if (!string.IsNullOrWhiteSpace(Model.SearchBudget))
             {
               <span class="pl-chip">
                 @(Model.SearchBudget switch { "u500"=>"Under 500K","500-1m"=>"500K–1M","1m-5m"=>"1M–5M","5m+"=>"5M+",_=>Model.SearchBudget })
-                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-type="@Model.SearchType" class="pl-chip__x">×</a>
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" class="pl-chip__x">×</a>
               </span>
             }
           </div>
@@ -358,11 +467,39 @@
 (function() {
   // Sync URL params → selects
   var params = new URLSearchParams(window.location.search);
-  ['sfLocation','sfType','sfBudget','sfSort'].forEach(function(id) {
+  ['sfCategory','sfLocation','sfType','sfSize','sfBudget','sfSort'].forEach(function(id) {
     var el = document.getElementById(id);
-    var key = { sfLocation:'location', sfType:'type', sfBudget:'budget', sfSort:'sort' }[id];
+    var key = { sfCategory:'category', sfLocation:'location', sfType:'type', sfSize:'size', sfBudget:'budget', sfSort:'sort' }[id];
     if (el && params.has(key)) el.value = params.get(key);
   });
+
+  // When category changes in searchbar, cascade the type options
+  (function() {
+    var cat = document.getElementById('sfCategory');
+    var det = document.getElementById('sfType');
+    if (!cat || !det) return;
+
+    function readList(key) {
+      var raw = det.getAttribute('data-details-' + key.toLowerCase());
+      if (!raw) return null;
+      try { return JSON.parse(raw.replace(/&amp;/g, '&')); } catch(e) { return null; }
+    }
+
+    function filterGroups() {
+      var v = cat.value;
+      Array.from(det.querySelectorAll('optgroup')).forEach(function(g) {
+        if (!v) { g.hidden = false; return; }
+        g.hidden = g.label.toLowerCase() !== v.toLowerCase();
+      });
+      if (det.selectedOptions.length && det.value) {
+        var selGroup = det.selectedOptions[0].closest('optgroup');
+        if (selGroup && selGroup.hidden) det.value = '';
+      }
+    }
+
+    cat.addEventListener('change', filterGroups);
+    filterGroups();
+  })();
 
   // Grid / List toggle
   var grid = document.getElementById('plGrid');

@@ -291,20 +291,6 @@ body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__signin-btn {
 body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__signin-btn:hover {
   background: rgba(255,255,255,.15);
 }
-.pf-nav__lang-btn {
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: .72rem;
-  font-weight: 700;
-  background: transparent;
-  border: 1.5px solid #e5e7eb;
-  color: #374151;
-  cursor: pointer;
-  transition: border-color .18s ease, color .18s ease;
-}
-.pf-nav__lang-btn:hover { border-color: var(--accent); color: var(--accent); }
-body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__lang-btn { border-color: rgba(255,255,255,.3); color: rgba(255,255,255,.85); }
-
 /* Avatar */
 .pf-nav__avatar-wrap { position: relative; }
 .pf-nav__avatar-btn {

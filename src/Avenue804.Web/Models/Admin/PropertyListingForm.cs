@@ -22,6 +22,18 @@ public class PropertyListingForm
     [StringLength(400)]
     public string? Location { get; set; }
 
+    /// <summary>Residential or Commercial</summary>
+    [StringLength(20)]
+    public string? PropertyCategory { get; set; }
+
+    /// <summary>Subtype e.g. Apartment, Villa, Shell &amp; Core Offices</summary>
+    [StringLength(80)]
+    public string? PropertyType { get; set; }
+
+    /// <summary>Emirate e.g. Abu Dhabi</summary>
+    [StringLength(80)]
+    public string? Emirates { get; set; }
+
     [StringLength(16000)]
     public string? Description { get; set; }
 

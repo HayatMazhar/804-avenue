@@ -14,6 +14,10 @@ namespace Avenue804.Web.Data.Migrations
                 name: "IX_PropertyListings_Slug",
                 table: "PropertyListings");
 
+            migrationBuilder.DropIndex(
+                name: "IX_PortfolioProjects_Slug",
+                table: "PortfolioProjects");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PropertyListings_Slug",
                 table: "PropertyListings",

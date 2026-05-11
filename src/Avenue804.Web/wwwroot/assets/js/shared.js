@@ -442,22 +442,14 @@
   })();
 
   /* ── Arabic / RTL language switcher ── */
-  (function langSwitcher() {
-    var saved = localStorage.getItem('804-lang') || 'en';
-    if (saved === 'ar') {
-      document.documentElement.setAttribute('dir', 'rtl');
-      document.documentElement.setAttribute('lang', 'ar');
-      document.documentElement.classList.add('rtl');
-    }
-    var btn = document.getElementById('langToggleBtn');
-    if (btn) {
-      btn.textContent = saved === 'ar' ? 'English' : 'عربي';
-      btn.addEventListener('click', function() {
-        var next = localStorage.getItem('804-lang') === 'ar' ? 'en' : 'ar';
-        localStorage.setItem('804-lang', next);
-        window.location.reload();
-      });
-    }
+  // Language toggle removed — site is English-only for now. Force LTR for
+  // any visitor that previously toggled Arabic and clear the saved choice
+  // so a stale localStorage flag never re-applies RTL on this page load.
+  (function forceEnglishOnly() {
+    try { localStorage.removeItem('804-lang'); } catch (e) { /* ignore */ }
+    document.documentElement.setAttribute('dir', 'ltr');
+    document.documentElement.setAttribute('lang', 'en');
+    document.documentElement.classList.remove('rtl');
   })();
 
   /* ── WhatsApp mortgage share ── */

@@ -24,6 +24,15 @@ public class PropertyListing
     public int ViewCount { get; set; }
     public string? Label { get; set; }
 
+    /// <summary>Residential or Commercial</summary>
+    public string? PropertyCategory { get; set; }
+
+    /// <summary>Subtype e.g. Apartment, Villa, Shell &amp; Core Offices, Showroom…</summary>
+    public string? PropertyType { get; set; }
+
+    /// <summary>Emirate e.g. Abu Dhabi</summary>
+    public string? Emirates { get; set; }
+
     // ── Phase 2 additions ────────────────────────────────
     /// <summary>JSON array of amenity codes e.g. ["pool","gym","parking"]</summary>
     public string? AmenitiesJson { get; set; }

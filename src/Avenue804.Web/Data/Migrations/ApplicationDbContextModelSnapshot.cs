@@ -806,6 +806,18 @@ namespace Avenue804.Web.Data.Migrations
                     b.Property<int?>("DeveloperId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Emirates")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("PropertyCategory")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("PropertyType")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
                     b.Property<string>("FloorPlanUrl")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");

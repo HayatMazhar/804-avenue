@@ -1204,9 +1204,7 @@ body.home .navbar:not(.scrolled) .hamburger span {
   width: auto;
   max-width: 240px;
   object-fit: contain;
-  /* Footer is dark — invert the colour logo to a clean white silhouette */
-  filter: brightness(0) invert(1);
-  opacity: .95;
+  opacity: .9;
   transition: opacity .2s ease;
 }
 .footer-logo:hover .footer-logo-img { opacity: 1; }
