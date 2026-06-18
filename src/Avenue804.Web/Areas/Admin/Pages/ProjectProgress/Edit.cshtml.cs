@@ -8,7 +8,7 @@ using static Avenue804.Web.Areas.Admin.Pages.ProjectProgress.CreateModel;
 
 namespace Avenue804.Web.Areas.Admin.Pages.ProjectProgress;
 
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
 public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _db;
@@ -40,5 +40,13 @@ public class EditModel : PageModel
         await _db.SaveChangesAsync(ct);
         TempData["ToastOk"] = "Project updated.";
         return RedirectToPage(new { id = Id });
+    }
+
+    public async Task<IActionResult> OnPostDeleteAsync(CancellationToken ct = default)
+    {
+        var p = await _db.ProjectProgressItems.FirstOrDefaultAsync(x => x.Id == Id, ct);
+        if (p != null) { _db.ProjectProgressItems.Remove(p); await _db.SaveChangesAsync(ct); }
+        TempData["ToastOk"] = "Project removed.";
+        return RedirectToPage("./Index");
     }
 }

@@ -1,0 +1,890 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Manual.AdminModel
+@{
+    ViewData["Title"] = "Admin Console Manual";
+    ViewData["AdminSection"] = "manual";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/css/manual.css" asp-append-version="true" />
+}
+
+<div class="man-app">
+
+  <!-- ── Sidebar ─────────────────────────────────────── -->
+  <aside class="man-side">
+    <div class="man-side__head">
+      <a asp-area="Admin" asp-page="/Manual/Index" class="man-side__back">
+        <i class="bi bi-arrow-left"></i> All Manuals
+      </a>
+      <h2 class="man-side__title">Admin Manual</h2>
+      <p class="man-side__sub">Authorised staff only</p>
+    </div>
+
+    <div class="man-side__search">
+      <input type="search" id="manSearch" placeholder="Search modules…" />
+    </div>
+
+    <nav class="man-side__nav" id="manNav">
+
+      <p class="man-side__group-title">Getting Started</p>
+      <button class="man-side__item is-active" data-mod="login">
+        <i class="bi bi-door-open man-side__item-icon"></i> Login &amp; Access
+        <span class="man-side__item-num">01</span>
+      </button>
+      <button class="man-side__item" data-mod="roles">
+        <i class="bi bi-shield-lock man-side__item-icon"></i> Roles &amp; Credentials
+        <span class="man-side__item-num">02</span>
+      </button>
+      <button class="man-side__item" data-mod="staff">
+        <i class="bi bi-people man-side__item-icon"></i> Staff Accounts
+        <span class="man-side__item-num">03</span>
+      </button>
+      <button class="man-side__item" data-mod="dashboard">
+        <i class="bi bi-speedometer2 man-side__item-icon"></i> Dashboard
+        <span class="man-side__item-num">04</span>
+      </button>
+
+      <p class="man-side__group-title">Properties &amp; Inquiries</p>
+      <button class="man-side__item" data-mod="listings">
+        <i class="bi bi-building man-side__item-icon"></i> Property Listings
+        <span class="man-side__item-num">05</span>
+      </button>
+      <button class="man-side__item" data-mod="prop-inquiries">
+        <i class="bi bi-chat-square-dots man-side__item-icon"></i> Property Inquiries
+        <span class="man-side__item-num">06</span>
+      </button>
+      <button class="man-side__item" data-mod="gen-inquiries">
+        <i class="bi bi-envelope man-side__item-icon"></i> General Inquiries
+        <span class="man-side__item-num">07</span>
+      </button>
+      <button class="man-side__item" data-mod="owner-req">
+        <i class="bi bi-house-add man-side__item-icon"></i> Owner Requests
+        <span class="man-side__item-num">08</span>
+      </button>
+
+      <p class="man-side__group-title">Operations</p>
+      <button class="man-side__item" data-mod="service-req">
+        <i class="bi bi-tools man-side__item-icon"></i> Service Requests
+        <span class="man-side__item-num">09</span>
+      </button>
+      <button class="man-side__item" data-mod="projects">
+        <i class="bi bi-diagram-3 man-side__item-icon"></i> Projects &amp; Portfolio
+        <span class="man-side__item-num">10</span>
+      </button>
+      <button class="man-side__item" data-mod="progress">
+        <i class="bi bi-graph-up-arrow man-side__item-icon"></i> Project Progress
+        <span class="man-side__item-num">11</span>
+      </button>
+      <button class="man-side__item" data-mod="reports">
+        <i class="bi bi-clipboard-data man-side__item-icon"></i> Service Reports
+        <span class="man-side__item-num">12</span>
+      </button>
+
+      <p class="man-side__group-title">Catalogue</p>
+      <button class="man-side__item" data-mod="areas">
+        <i class="bi bi-geo-alt man-side__item-icon"></i> Area Guides
+        <span class="man-side__item-num">13</span>
+      </button>
+      <button class="man-side__item" data-mod="developers">
+        <i class="bi bi-bricks man-side__item-icon"></i> Developers
+        <span class="man-side__item-num">14</span>
+      </button>
+      <button class="man-side__item" data-mod="agents">
+        <i class="bi bi-person-badge man-side__item-icon"></i> Agents
+        <span class="man-side__item-num">15</span>
+      </button>
+      <button class="man-side__item" data-mod="testimonials">
+        <i class="bi bi-chat-quote man-side__item-icon"></i> Testimonials
+        <span class="man-side__item-num">16</span>
+      </button>
+      <button class="man-side__item" data-mod="ratings">
+        <i class="bi bi-star man-side__item-icon"></i> Ratings &amp; Reviews
+        <span class="man-side__item-num">17</span>
+      </button>
+
+      <p class="man-side__group-title">Content (CMS)</p>
+      <button class="man-side__item" data-mod="cms">
+        <i class="bi bi-layout-text-sidebar man-side__item-icon"></i> Website Content
+        <span class="man-side__item-num">18</span>
+      </button>
+      <button class="man-side__item" data-mod="blocks">
+        <i class="bi bi-grid-1x2 man-side__item-icon"></i> Content Blocks
+        <span class="man-side__item-num">19</span>
+      </button>
+
+      <p class="man-side__group-title">System</p>
+      <button class="man-side__item" data-mod="users">
+        <i class="bi bi-person-lines-fill man-side__item-icon"></i> Public Users
+        <span class="man-side__item-num">20</span>
+      </button>
+      <button class="man-side__item" data-mod="settings">
+        <i class="bi bi-sliders man-side__item-icon"></i> Site Settings
+        <span class="man-side__item-num">21</span>
+      </button>
+      <button class="man-side__item" data-mod="newsletter">
+        <i class="bi bi-newspaper man-side__item-icon"></i> Newsletter
+        <span class="man-side__item-num">22</span>
+      </button>
+      <button class="man-side__item" data-mod="lookups">
+        <i class="bi bi-list-ul man-side__item-icon"></i> Lookups
+        <span class="man-side__item-num">23</span>
+      </button>
+      <button class="man-side__item" data-mod="features">
+        <i class="bi bi-toggles man-side__item-icon"></i> Feature Flags
+        <span class="man-side__item-num">24</span>
+      </button>
+      <button class="man-side__item" data-mod="notifications">
+        <i class="bi bi-bell man-side__item-icon"></i> Notifications
+        <span class="man-side__item-num">25</span>
+      </button>
+
+    </nav>
+  </aside>
+
+  <!-- ── Main content ────────────────────────────────── -->
+  <main class="man-main">
+
+    <!-- ── 01 — Login & Access ──────────────────────────── -->
+    <article class="man-mod is-active" id="mod-login">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-door-open" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 01</p>
+          <h2 class="man-mod__hero-title">Login &amp; Access</h2>
+          <p class="man-mod__hero-sub">How to access the Admin Console.</p>
+        </div>
+      </div>
+
+      <p>The Admin Console is available at <span class="man-key">/Admin/Login</span>. Only users with a staff role can sign in.</p>
+
+      <h3><i class="bi bi-1-circle"></i> Login Steps</h3>
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Navigate to <span class="man-key">804avenue.ae/Admin/Login</span></span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Enter your <strong>Email</strong> &amp; <strong>Password</strong></span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Click <strong>Sign in to Admin</strong> — you'll land on the Dashboard</span></div>
+      </div>
+
+      <h3><i class="bi bi-layout-sidebar"></i> Console Layout</h3>
+      <table>
+        <thead><tr><th>Area</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Left Sidebar</td><td>Main navigation grouped by function</td></tr>
+          <tr><td>Top Bar</td><td>Breadcrumb, View Site button, notifications, log out</td></tr>
+          <tr><td>Main Area</td><td>Tables, forms, dashboards for the current page</td></tr>
+        </tbody>
+      </table>
+
+      <div class="man-callout man-callout--warn">
+        <i class="bi bi-shield-exclamation"></i>
+        <span>After <strong>5 failed attempts</strong> the account is locked for 15 minutes. Never share credentials.</span>
+      </div>
+    </article>
+
+    <!-- ── 02 — Roles & Credentials ─────────────────────── -->
+    <article class="man-mod" id="mod-roles">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-shield-lock" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 02</p>
+          <h2 class="man-mod__hero-title">Roles &amp; Credentials</h2>
+          <p class="man-mod__hero-sub">Default account and what each role can access.</p>
+        </div>
+      </div>
+
+      <h3><i class="bi bi-key"></i> Default Admin Credentials</h3>
+      <table>
+        <tbody>
+          <tr><td><strong>Email</strong></td><td><span class="man-key">admin&#64;804avenue.ae</span></td></tr>
+          <tr><td><strong>Password</strong></td><td><span class="man-key">Avenue804!Admin#2026</span></td></tr>
+          <tr><td><strong>Role</strong></td><td><span class="man-pill man-pill--red">Admin</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="man-callout man-callout--warn">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span>Change the default admin password immediately after first login — go to <strong>Staff Accounts → Reset PW</strong>.</span>
+      </div>
+
+      <h3><i class="bi bi-people-fill"></i> Available Roles</h3>
+      <table>
+        <thead><tr><th>Role</th><th>What they can access</th></tr></thead>
+        <tbody>
+          <tr><td><span class="man-pill man-pill--red">Admin</span></td><td>Full access — everything</td></tr>
+          <tr><td><span class="man-pill man-pill--green">ContentEditor</span></td><td>Dashboard, CMS, Content Blocks, Area Guides, Testimonials, Projects, Progress, Agents, Developers, Notifications</td></tr>
+          <tr><td><span class="man-pill man-pill--blue">PropertyManager</span></td><td>Dashboard, Listings, Agents, Developers, Property Inquiries, Owner Requests, Area Guides, Notifications</td></tr>
+          <tr><td><span class="man-pill man-pill--orange">SupportAgent</span></td><td>Dashboard, Property Inquiries, General Inquiries, Owner Requests, Service Requests, Service Reports, Ratings, Notifications</td></tr>
+        </tbody>
+      </table>
+
+      <h3><i class="bi bi-table"></i> Role Access Matrix</h3>
+      <table>
+        <thead><tr><th>Section</th><th>Admin</th><th>Editor</th><th>PropMgr</th><th>Support</th></tr></thead>
+        <tbody>
+          <tr><td>Dashboard / Notifications</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Website CMS / Content Blocks</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr>
+          <tr><td>Listings</td><td>✓</td><td>—</td><td>✓</td><td>—</td></tr>
+          <tr><td>Property Inquiries</td><td>✓</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>General Inquiries</td><td>✓</td><td>—</td><td>—</td><td>✓</td></tr>
+          <tr><td>Service Requests / Reports</td><td>✓</td><td>—</td><td>—</td><td>✓</td></tr>
+          <tr><td>Owner Requests</td><td>✓</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Projects / Progress</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr>
+          <tr><td>Area Guides / Testimonials</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+          <tr><td>Agents / Developers</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+          <tr><td>Ratings</td><td>✓</td><td>—</td><td>—</td><td>✓</td></tr>
+          <tr><td>Public Users / Staff</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Site Settings / Lookups / Features</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>Newsletter</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <!-- ── 03 — Staff Accounts ──────────────────────────── -->
+    <article class="man-mod" id="mod-staff">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-people" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 03</p>
+          <h2 class="man-mod__hero-title">Staff Accounts</h2>
+          <p class="man-mod__hero-sub">Create &amp; manage staff who can access the admin console.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/Staff</span> (Admin role only).</p>
+
+      <h3><i class="bi bi-person-plus"></i> Create a Staff Account</h3>
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Go to <strong>System → Staff Accounts</strong>.</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Scroll to the <strong>Create Staff Account</strong> form.</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Enter Name, Email, Password &amp; choose a <strong>Role</strong>.</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Click <strong>Create Account</strong> — share credentials with the staff member.</span></div>
+      </div>
+
+      <h3><i class="bi bi-arrow-repeat"></i> Change Role</h3>
+      <p>In the staff table, use the <strong>Change Role</strong> dropdown then click <strong>Set</strong>. Effective on next page load.</p>
+
+      <h3><i class="bi bi-key"></i> Reset Password</h3>
+      <p>In the <strong>Reset PW</strong> column, type the new password then click <strong>Reset</strong>.</p>
+
+      <h3><i class="bi bi-pause-circle"></i> Suspend / Delete</h3>
+      <p><strong>Suspend</strong> blocks login while preserving the account. <strong>Activate</strong> restores access. <strong>Delete</strong> permanently removes the account.</p>
+
+      <div class="man-callout man-callout--warn">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span>You cannot suspend or delete your own admin account. When a staff member leaves, prefer <strong>Suspend</strong> over Delete to preserve audit history.</span>
+      </div>
+    </article>
+
+    <!-- ── 04 — Dashboard ───────────────────────────────── -->
+    <article class="man-mod" id="mod-dashboard">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-speedometer2" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 04</p>
+          <h2 class="man-mod__hero-title">Dashboard</h2>
+          <p class="man-mod__hero-sub">Real-time snapshot of the entire platform.</p>
+        </div>
+      </div>
+
+      <p>The Dashboard at <span class="man-key">/Admin</span> is the first page after login.</p>
+
+      <h3><i class="bi bi-bar-chart"></i> KPI Cards</h3>
+      <table>
+        <tbody>
+          <tr><td>Property Inquiries</td><td>Total inquiries about listings</td></tr>
+          <tr><td>General Inquiries</td><td>Contact form submissions</td></tr>
+          <tr><td>Service Requests</td><td>Quote, maintenance &amp; AMC requests</td></tr>
+          <tr><td>Published Listings</td><td>Live property listings</td></tr>
+          <tr><td>Registered Users</td><td>Public user accounts</td></tr>
+          <tr><td>Listing Views</td><td>Total views across all detail pages</td></tr>
+          <tr><td>Pending Reviews</td><td>Ratings awaiting approval</td></tr>
+          <tr><td>Emergency Tickets</td><td>Urgent maintenance (alert if &gt; 0)</td></tr>
+        </tbody>
+      </table>
+
+      <h3><i class="bi bi-graph-up"></i> Other Sections</h3>
+      <ul>
+        <li><strong>7-Day Inquiry Chart</strong> — bar chart of inquiry volume</li>
+        <li><strong>Recent Activity Feed</strong> — latest 10 events across all modules</li>
+        <li><strong>CMS Quick Links</strong> — shortcuts to common content pages</li>
+      </ul>
+    </article>
+
+    <!-- ── 05 — Listings ────────────────────────────────── -->
+    <article class="man-mod" id="mod-listings">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-building" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 05</p>
+          <h2 class="man-mod__hero-title">Property Listings</h2>
+          <p class="man-mod__hero-sub">Create, edit &amp; publish properties.</p>
+        </div>
+      </div>
+
+      <p>Manage at <span class="man-key">/Admin/Listings</span>.</p>
+
+      <h3><i class="bi bi-plus-circle"></i> Create a Listing</h3>
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Click <strong>+ New Listing</strong></span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Enter <strong>title, slug, offer type, price, currency</strong></span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Set <strong>property type, beds, baths, area, floor, parking</strong></span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Enter <strong>location</strong> using UAE areas autocomplete</span></div>
+        <div class="man-step"><span class="man-step__num">5</span><span class="man-step__text">Write <strong>description</strong> &amp; upload main + gallery images</span></div>
+        <div class="man-step"><span class="man-step__num">6</span><span class="man-step__text">Assign an <strong>agent</strong> &amp; set status (Draft / Published)</span></div>
+        <div class="man-step"><span class="man-step__num">7</span><span class="man-step__text">Click <strong>Save Listing</strong></span></div>
+      </div>
+
+      <h3><i class="bi bi-upload"></i> Bulk Import &amp; Review</h3>
+      <ul>
+        <li><strong>Bulk Import</strong> (<span class="man-key">/Admin/Listings/BulkImport</span>) — upload a CSV file to create multiple listings</li>
+        <li><strong>Review Queue</strong> (<span class="man-key">/Admin/Listings/Review</span>) — approve/reject owner-submitted listings before they go live</li>
+      </ul>
+
+      <h3><i class="bi bi-card-checklist"></i> Key Fields</h3>
+      <table>
+        <thead><tr><th>Field</th><th>Required</th></tr></thead>
+        <tbody>
+          <tr><td>Title, Slug, Offer Type, Price, Location, Main Image</td><td><span class="man-pill man-pill--green">Yes</span></td></tr>
+          <tr><td>Description, Property Type, Beds/Baths/Area</td><td><span class="man-pill man-pill--blue">Recommended</span></td></tr>
+          <tr><td>Previous Price (shows discount badge)</td><td><span class="man-pill man-pill--orange">Optional</span></td></tr>
+          <tr><td>Is Featured (homepage strip)</td><td><span class="man-pill man-pill--orange">Optional</span></td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <!-- ── 06 — Property Inquiries ──────────────────────── -->
+    <article class="man-mod" id="mod-prop-inquiries">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-chat-square-dots" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 06</p>
+          <h2 class="man-mod__hero-title">Property Inquiries</h2>
+          <p class="man-mod__hero-sub">Inquiries submitted about specific listings.</p>
+        </div>
+      </div>
+
+      <p>Manage at <span class="man-key">/Admin/PropertyInquiries</span>.</p>
+
+      <h3><i class="bi bi-list-columns"></i> What's Shown</h3>
+      <ul>
+        <li>Date, name, email, phone, linked listing, intent (Buy/Rent/Sell), budget, status</li>
+      </ul>
+
+      <h3><i class="bi bi-arrow-right-circle"></i> Workflow</h3>
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Click <strong>View</strong> on any row</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Review details &amp; the linked property</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Update <strong>Status</strong>: New → In Progress → Resolved</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Add internal <strong>notes</strong> &amp; contact the inquirer</span></div>
+      </div>
+
+      <p>Click <strong>Export CSV</strong> on the index page to download all inquiries.</p>
+    </article>
+
+    <!-- ── 07 — General Inquiries ───────────────────────── -->
+    <article class="man-mod" id="mod-gen-inquiries">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-envelope" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 07</p>
+          <h2 class="man-mod__hero-title">General Inquiries</h2>
+          <p class="man-mod__hero-sub">Contact form submissions from the website.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/Inquiries</span>. Each entry shows date, name, email, phone, topic, and message. Click <strong>Detail</strong> to read the full message and update status.</p>
+
+      <div class="man-callout man-callout--note">
+        <i class="bi bi-info-circle"></i>
+        <span>New general inquiries also send an email notification to <strong>info&#64;804avenue.ae</strong>.</span>
+      </div>
+    </article>
+
+    <!-- ── 08 — Owner Requests ──────────────────────────── -->
+    <article class="man-mod" id="mod-owner-req">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-house-add" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 08</p>
+          <h2 class="man-mod__hero-title">Owner / Listing Requests</h2>
+          <p class="man-mod__hero-sub">Properties submitted by users for listing.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/OwnerRequests</span>.</p>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Open the request from the table</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Review property details &amp; photos</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text"><strong>Approve &amp; Create Listing</strong> — converts into editable listing</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Or <strong>Reject</strong> with an optional reason sent by email</span></div>
+      </div>
+    </article>
+
+    <!-- ── 09 — Service Requests ────────────────────────── -->
+    <article class="man-mod" id="mod-service-req">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-tools" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 09</p>
+          <h2 class="man-mod__hero-title">Service Requests</h2>
+          <p class="man-mod__hero-sub">Quotes, maintenance &amp; AMC requests in one place.</p>
+        </div>
+      </div>
+
+      <p>Consolidated at <span class="man-key">/Admin/ServiceRequests</span> with tabs per type.</p>
+
+      <table>
+        <thead><tr><th>Tab</th><th>Source</th><th>Key Fields</th></tr></thead>
+        <tbody>
+          <tr><td><span class="man-pill man-pill--blue">Service Quotes</span></td><td>/Submit/ServiceQuote</td><td>Service type, scope, location, budget</td></tr>
+          <tr><td><span class="man-pill man-pill--orange">Maintenance</span></td><td>/Submit/Maintenance</td><td>Issue type, priority, property address</td></tr>
+          <tr><td><span class="man-pill man-pill--green">AMC Requests</span></td><td>/Submit/Amc</td><td>Property size, services, start date</td></tr>
+        </tbody>
+      </table>
+
+      <div class="man-callout man-callout--warn">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span><strong>Emergency maintenance</strong> requests are highlighted in red and shown as a dashboard alert — assign immediately.</span>
+      </div>
+
+      <h3><i class="bi bi-arrow-right-circle"></i> Workflow</h3>
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Pick the tab for the request type</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Filter by <strong>Status</strong> to find new items</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Click a row to view full details</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Update status: New → Assigned → In Progress → Completed</span></div>
+      </div>
+    </article>
+
+    <!-- ── 10 — Projects ────────────────────────────────── -->
+    <article class="man-mod" id="mod-projects">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-diagram-3" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 10</p>
+          <h2 class="man-mod__hero-title">Projects &amp; Portfolio</h2>
+          <p class="man-mod__hero-sub">Showcase completed construction work.</p>
+        </div>
+      </div>
+
+      <p>Manage at <span class="man-key">/Admin/Projects</span>.</p>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Click <strong>+ New Project</strong></span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Enter <strong>title, slug, summary, description</strong></span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Upload <strong>cover image</strong> &amp; gallery</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Select <strong>category</strong> (Contracting / Maintenance / Fit-Out)</span></div>
+        <div class="man-step"><span class="man-step__num">5</span><span class="man-step__text">Set <strong>client name, location, completion date</strong></span></div>
+        <div class="man-step"><span class="man-step__num">6</span><span class="man-step__text">Toggle <strong>Is Published</strong> &amp; save</span></div>
+      </div>
+    </article>
+
+    <!-- ── 11 — Project Progress ────────────────────────── -->
+    <article class="man-mod" id="mod-progress">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-graph-up-arrow" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 11</p>
+          <h2 class="man-mod__hero-title">Project Progress</h2>
+          <p class="man-mod__hero-sub">Share live updates with clients via secure links.</p>
+        </div>
+      </div>
+
+      <p>Manage at <span class="man-key">/Admin/ProjectProgress</span>. Each entry links to a project and gets a unique client-facing URL.</p>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Click <strong>+ New Update</strong></span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Select the <strong>project</strong> from the dropdown</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Enter <strong>stage name</strong> &amp; completion % (0-100)</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Add description &amp; upload <strong>progress photos</strong></span></div>
+        <div class="man-step"><span class="man-step__num">5</span><span class="man-step__text">Set date &amp; save</span></div>
+      </div>
+
+      <div class="man-callout man-callout--tip">
+        <i class="bi bi-lightbulb"></i>
+        <span>Each project has a unique token. Share <span class="man-key">/Project/&#123;token&#125;</span> with the client — no login required for them to view progress.</span>
+      </div>
+    </article>
+
+    <!-- ── 12 — Service Reports ─────────────────────────── -->
+    <article class="man-mod" id="mod-reports">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-clipboard-data" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 12</p>
+          <h2 class="man-mod__hero-title">Service Reports</h2>
+          <p class="man-mod__hero-sub">Internal logs of completed service jobs.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/ServiceReports</span>. Used for warranty tracking and client reporting.</p>
+
+      <p>Fields include: <strong>technician name, date, job type, work performed, parts used, client sign-off status</strong>.</p>
+    </article>
+
+    <!-- ── 13 — Area Guides ─────────────────────────────── -->
+    <article class="man-mod" id="mod-areas">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-geo-alt" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 13</p>
+          <h2 class="man-mod__hero-title">Area Guides</h2>
+          <p class="man-mod__hero-sub">Neighbourhood market insight pages.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/AreaGuides</span>.</p>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Click <strong>+ New Guide</strong></span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Select <strong>UAE area</strong> from autocomplete</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Write the <strong>overview</strong> text</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Fill market data: avg sale price/sqft, annual rent, types available</span></div>
+        <div class="man-step"><span class="man-step__num">5</span><span class="man-step__text">Upload a <strong>cover image</strong>, toggle <strong>Is Published</strong> &amp; save</span></div>
+      </div>
+    </article>
+
+    <!-- ── 14 — Developers ──────────────────────────────── -->
+    <article class="man-mod" id="mod-developers">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-bricks" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 14</p>
+          <h2 class="man-mod__hero-title">Developers</h2>
+          <p class="man-mod__hero-sub">Property developer profiles shown on listings.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/Developers</span>. Linked to off-plan and new-build listings.</p>
+
+      <p>Fields: <strong>Name, Logo, Website URL, Description, Country</strong>. Delete is only allowed when not linked to active listings.</p>
+    </article>
+
+    <!-- ── 15 — Agents ──────────────────────────────────── -->
+    <article class="man-mod" id="mod-agents">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-person-badge" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 15</p>
+          <h2 class="man-mod__hero-title">Agents</h2>
+          <p class="man-mod__hero-sub">Real estate agents assigned to listings.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/Agents</span>.</p>
+
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Full Name</td><td>Shown on listing detail pages</td></tr>
+          <tr><td>Email</td><td>e.g. agent&#64;804avenue.ae</td></tr>
+          <tr><td>Phone</td><td>Direct contact number</td></tr>
+          <tr><td>WhatsApp</td><td>For WhatsApp button on listings</td></tr>
+          <tr><td>Photo URL</td><td>Headshot for the agent card</td></tr>
+          <tr><td>Title / Role</td><td>e.g. "Senior Property Consultant"</td></tr>
+          <tr><td>Bio</td><td>Short profile text</td></tr>
+          <tr><td>Is Active</td><td>Only active agents appear in the assignment dropdown</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <!-- ── 16 — Testimonials ────────────────────────────── -->
+    <article class="man-mod" id="mod-testimonials">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-chat-quote" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 16</p>
+          <h2 class="man-mod__hero-title">Testimonials</h2>
+          <p class="man-mod__hero-sub">Client quotes shown on the homepage.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/Testimonials</span>.</p>
+
+      <p>Fields: <strong>Client name, role/company, quote text, rating (1-5 stars), photo URL, sort order, is published</strong>. Only published testimonials appear publicly.</p>
+    </article>
+
+    <!-- ── 17 — Ratings ─────────────────────────────────── -->
+    <article class="man-mod" id="mod-ratings">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-star" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 17</p>
+          <h2 class="man-mod__hero-title">Ratings &amp; Reviews</h2>
+          <p class="man-mod__hero-sub">Moderate user-submitted listing reviews.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/Ratings</span>. All ratings require approval before appearing on listings.</p>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">New ratings show as <span class="man-pill man-pill--orange">Pending</span></span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Click <strong>Review</strong> to read the rating &amp; review text</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text"><strong>Approve</strong> to publish, or <strong>Reject</strong> to discard</span></div>
+      </div>
+
+      <div class="man-callout man-callout--note">
+        <i class="bi bi-info-circle"></i>
+        <span>Approved ratings contribute to the listing's average star rating on cards and detail pages.</span>
+      </div>
+    </article>
+
+    <!-- ── 18 — Website Content (CMS) ───────────────────── -->
+    <article class="man-mod" id="mod-cms">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-layout-text-sidebar" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 18</p>
+          <h2 class="man-mod__hero-title">Website Content (CMS)</h2>
+          <p class="man-mod__hero-sub">Edit all public page content without code.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/WebsiteContent</span>.</p>
+
+      <table>
+        <thead><tr><th>Page</th><th>Editable Sections</th></tr></thead>
+        <tbody>
+          <tr><td>Home</td><td>Hero, headline, subtitle, stats, services, CTA, about strip, testimonials, why-us</td></tr>
+          <tr><td>About</td><td>Story, vision, mission, values, expertise, team, why choose us</td></tr>
+          <tr><td>Contracting</td><td>Hero, service cards, process steps, CTA</td></tr>
+          <tr><td>Maintenance</td><td>Hero, service cards, AMC block, CTA</td></tr>
+          <tr><td>Facility</td><td>Hero, service cards, why-section, CTA</td></tr>
+        </tbody>
+      </table>
+
+      <div class="man-callout man-callout--note">
+        <i class="bi bi-info-circle"></i>
+        <span>Changes take effect immediately on the live site — no deployment needed.</span>
+      </div>
+    </article>
+
+    <!-- ── 19 — Content Blocks ──────────────────────────── -->
+    <article class="man-mod" id="mod-blocks">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-grid-1x2" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 19</p>
+          <h2 class="man-mod__hero-title">Content Blocks</h2>
+          <p class="man-mod__hero-sub">Fine-grained text blocks identified by unique slugs.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/ContentBlocks</span>. Each block has a slug key that maps to a specific location on the site.</p>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Find the block by slug (search or browse)</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Click <strong>Edit</strong></span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Update the <strong>Body</strong> (HTML supported)</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Toggle <strong>Is Published</strong> &amp; save</span></div>
+      </div>
+
+      <div class="man-callout man-callout--warn">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span>Content blocks accept raw HTML. Ensure your HTML is valid to avoid layout issues on the public site.</span>
+      </div>
+    </article>
+
+    <!-- ── 20 — Public Users ────────────────────────────── -->
+    <article class="man-mod" id="mod-users">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-person-lines-fill" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 20</p>
+          <h2 class="man-mod__hero-title">Public Users</h2>
+          <p class="man-mod__hero-sub">Registered website visitors.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/Users</span>.</p>
+
+      <table>
+        <thead><tr><th>Action</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>View user list</td><td>Email, name, registration date, role</td></tr>
+          <tr><td>Search users</td><td>By email or name</td></tr>
+          <tr><td>View profile</td><td>Inquiries, saved properties, status</td></tr>
+          <tr><td>Suspend / Activate</td><td>Lock or restore login</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <!-- ── 21 — Site Settings ───────────────────────────── -->
+    <article class="man-mod" id="mod-settings">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-sliders" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 21</p>
+          <h2 class="man-mod__hero-title">Site Settings</h2>
+          <p class="man-mod__hero-sub">Site-wide configuration values.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/SiteSettings</span>.</p>
+
+      <table>
+        <thead><tr><th>Setting Key</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>CompanyDisplayName</td><td>Brand name in header &amp; footer</td></tr>
+          <tr><td>NavTagline</td><td>Tagline below logo</td></tr>
+          <tr><td>PhoneDisplay</td><td>Phone shown in navigation</td></tr>
+          <tr><td>Email</td><td>Contact email</td></tr>
+          <tr><td>Address</td><td>Office address in footer</td></tr>
+          <tr><td>WebsiteUrl</td><td>Canonical public URL</td></tr>
+          <tr><td>DefaultListingCurrency</td><td>Default currency (AED)</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <!-- ── 22 — Newsletter ──────────────────────────────── -->
+    <article class="man-mod" id="mod-newsletter">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-newspaper" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 22</p>
+          <h2 class="man-mod__hero-title">Newsletter &amp; Weekly Digest</h2>
+          <p class="man-mod__hero-sub">Manage subscribers and email digests.</p>
+        </div>
+      </div>
+
+      <h3><i class="bi bi-people"></i> Subscribers <small style="font-weight:400;color:#9ca3af">— <span class="man-key">/Admin/Newsletter</span></small></h3>
+      <p>Lists all subscribers with email, signup date, status. <strong>Export CSV</strong> for use in external email tools.</p>
+
+      <h3><i class="bi bi-send"></i> Weekly Digest <small style="font-weight:400;color:#9ca3af">— <span class="man-key">/Admin/Newsletter/Digest</span></small></h3>
+      <p>Auto-sent on a scheduled day/time. Includes latest listings and company news.</p>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Go to <strong>Newsletter → Digest</strong></span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Preview the auto-populated content</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Click <strong>Send Now</strong> to dispatch immediately to all active subscribers</span></div>
+      </div>
+
+      <div class="man-callout man-callout--warn">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span>Sending is immediate and cannot be undone — review carefully before clicking Send.</span>
+      </div>
+    </article>
+
+    <!-- ── 23 — Lookups ─────────────────────────────────── -->
+    <article class="man-mod" id="mod-lookups">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-list-ul" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 23</p>
+          <h2 class="man-mod__hero-title">Lookups</h2>
+          <p class="man-mod__hero-sub">Reference data for dropdown menus.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/Lookups</span>. Grouped into <strong>Categories</strong>, each with a list of <strong>Values</strong>.</p>
+
+      <table>
+        <thead><tr><th>Category</th><th>Used In</th></tr></thead>
+        <tbody>
+          <tr><td>Inquiry Topic</td><td>Contact form topic dropdown</td></tr>
+          <tr><td>Property Inquiry — I Am</td><td>Buyer/Agent/Company</td></tr>
+          <tr><td>Property Inquiry — I Want To</td><td>Buy / Rent / Sell</td></tr>
+          <tr><td>Property Inquiry — Property Type</td><td>Residential / Commercial / Industrial</td></tr>
+          <tr><td>Property Inquiry — Property Details</td><td>Apartment, Villa, Office…</td></tr>
+          <tr><td>Property Inquiry — Budget</td><td>Budget range dropdown</td></tr>
+        </tbody>
+      </table>
+
+      <p>To add: open the category → click <strong>+ Add Value</strong> → enter Code, Display Name, Sort Order → save.</p>
+    </article>
+
+    <!-- ── 24 — Feature Flags ───────────────────────────── -->
+    <article class="man-mod" id="mod-features">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-toggles" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 24</p>
+          <h2 class="man-mod__hero-title">Feature Flags</h2>
+          <p class="man-mod__hero-sub">Enable/disable features without code changes.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/Features</span>.</p>
+
+      <table>
+        <thead><tr><th>Flag</th><th>Controls</th></tr></thead>
+        <tbody>
+          <tr><td>GoogleSignIn / FacebookSignIn / AppleSignIn</td><td>OAuth login buttons</td></tr>
+          <tr><td>PhoneOtp</td><td>Phone OTP login tab</td></tr>
+          <tr><td>WhatsAppFloat</td><td>Floating WhatsApp button</td></tr>
+          <tr><td>NewsletterSignup</td><td>Newsletter forms visibility</td></tr>
+          <tr><td>GoogleMaps</td><td>Property location map</td></tr>
+          <tr><td>LiveChat</td><td>Tawk.to chat widget</td></tr>
+          <tr><td>Analytics</td><td>Google Analytics 4 tracking</td></tr>
+        </tbody>
+      </table>
+
+      <div class="man-callout man-callout--tip">
+        <i class="bi bi-lightbulb"></i>
+        <span>Toggle a flag, then refresh the public site — changes take effect immediately.</span>
+      </div>
+    </article>
+
+    <!-- ── 25 — Notifications ───────────────────────────── -->
+    <article class="man-mod" id="mod-notifications">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-bell" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 25</p>
+          <h2 class="man-mod__hero-title">Notifications</h2>
+          <p class="man-mod__hero-sub">System events &amp; alerts.</p>
+        </div>
+      </div>
+
+      <p>Page: <span class="man-key">/Admin/Notifications</span>. The bell icon in the top bar shows unread count.</p>
+
+      <p>Lists all system events: new inquiries, user registrations, emergency requests, listing submissions. Click any notification to go directly to the related record.</p>
+    </article>
+
+  </main>
+</div>
+
+@section Scripts {
+  <script>
+  (function () {
+    var sideItems = document.querySelectorAll('.man-side__item');
+    var modules   = document.querySelectorAll('.man-mod');
+    var search    = document.getElementById('manSearch');
+    var mainPane  = document.querySelector('.man-main');
+
+    function activate(modId, push) {
+      var mod = document.getElementById('mod-' + modId);
+      if (!mod) return;
+      modules.forEach(function(m){ m.classList.remove('is-active'); });
+      mod.classList.add('is-active');
+      sideItems.forEach(function(b){
+        b.classList.toggle('is-active', b.dataset.mod === modId);
+      });
+      if (push) history.replaceState(null, '', '#' + modId);
+      if (mainPane) mainPane.scrollTop = 0;
+    }
+
+    sideItems.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        activate(btn.dataset.mod, true);
+      });
+    });
+
+    if (window.location.hash) {
+      var target = window.location.hash.replace('#','');
+      if (document.getElementById('mod-' + target)) activate(target, false);
+    }
+
+    if (search) {
+      search.addEventListener('input', function(){
+        var q = search.value.trim().toLowerCase();
+        sideItems.forEach(function(btn){
+          var match = !q || btn.textContent.toLowerCase().includes(q);
+          btn.classList.toggle('is-hidden', !match);
+        });
+      });
+    }
+  })();
+  </script>
+}

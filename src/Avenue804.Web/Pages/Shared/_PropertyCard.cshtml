@@ -1,6 +1,7 @@
 @model Avenue804.Web.Domain.PropertyListing
 @inject Avenue804.Web.Services.IFeatureFlagService FeatureFlagService
 @using Avenue804.Web.Services
+@using Avenue804.Web.Configuration
 @{
     bool compareEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.PropertyCompare);
     var labelCss = Model.Label switch {
@@ -17,11 +18,11 @@
     <!-- Offer badge -->
     @if (Model.OfferType == ListingOfferType.Sale)
     {
-      <span class="pcard__badge pcard__badge--sale">For Sale</span>
+      <span class="pcard__badge pcard__badge--sale">@Cms[ContentBlockSlugs.CardLabelForSale, "For Sale"]</span>
     }
     else
     {
-      <span class="pcard__badge pcard__badge--rent">For Rent</span>
+      <span class="pcard__badge pcard__badge--rent">@Cms[ContentBlockSlugs.CardLabelForRent, "For Rent"]</span>
     }
     <!-- Label -->
     @if (labelCss != null)
@@ -33,7 +34,7 @@
     {
       <span class="pcard__verified">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
-        Verified
+        @Cms[ContentBlockSlugs.CardLabelVerified, "Verified"]
       </span>
     }
     <!-- Views -->
@@ -58,28 +59,33 @@
     <div class="pcard__title">@Model.Title</div>
     <div class="pcard__loc">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      @(string.IsNullOrWhiteSpace(Model.Location) ? "Abu Dhabi, UAE" : Model.Location)
+      @(string.IsNullOrWhiteSpace(Model.Location) ? Cms[ContentBlockSlugs.CardFallbackLocation, "Abu Dhabi, UAE"] : Model.Location)
     </div>
     <div class="pcard__meta">
+      @{
+        var bedsLabel = Cms[ContentBlockSlugs.CardUnitBeds, "Bed(s)"];
+        var bathsLabel = Cms[ContentBlockSlugs.CardUnitBaths, "Bath(s)"];
+        var areaLabel = Cms[ContentBlockSlugs.CardUnitArea, "sqft"];
+      }
       @if (Model.Beds is int beds)
       {
         <span class="pcard__meta-item">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v11a1 1 0 001 1h16a1 1 0 001-1V7"/><path d="M2 7h20l-2-4H4z"/></svg>
-          @beds @(beds == 1 ? "Bed" : "Beds")
+          @beds @bedsLabel
         </span>
       }
       @if (Model.Baths is int baths)
       {
         <span class="pcard__meta-item">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16a1 1 0 011 1v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4a1 1 0 011-1z"/><path d="M6 12V5a2 2 0 012-2h3a2 2 0 012 2v7"/></svg>
-          @baths @(baths == 1 ? "Bath" : "Baths")
+          @baths @bathsLabel
         </span>
       }
       @if (Model.AreaSqft is int sq)
       {
         <span class="pcard__meta-item">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-          @sq.ToString("N0") sqft
+          @sq.ToString("N0") @areaLabel
         </span>
       }
     </div>
@@ -88,7 +94,7 @@
   {
     <div class="pcard__compare" onclick="event.preventDefault(); toggleCompare(@Model.Id, '@Model.Slug')">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20M12 3v18"/></svg>
-      Compare
+      @Cms[ContentBlockSlugs.CardLabelCompare, "Compare"]
     </div>
   }
 </a>

@@ -1,18 +1,18 @@
 @page "/AreaGuides"
 @model Avenue804.Web.Pages.AreaGuides.AreaGuidesIndexModel
 @{
-    ViewData["Title"] = "Area Guides — UAE Communities";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaAreaGuidesTitle, "Area Guides — UAE Communities"];
     ViewData["NavActive"] = "areaguides";
-    ViewData["MetaDescription"] = "Explore property communities across Abu Dhabi, Dubai and the UAE — average prices, lifestyle, transport and schools.";
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaAreaGuidesDescription, "Explore property communities across Abu Dhabi, Dubai and the UAE — average prices, lifestyle, transport and schools."];
 }
 
 <section class="page-hero">
   <div class="container">
     <div class="breadcrumb fade-up">
-      <a asp-page="/Index">Home</a><span class="sep">/</span><span>Area Guides</span>
+      <a asp-page="/Index">Home</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.FooterLinkAreaGuides, "Area Guides"]</span>
     </div>
-    <h1 class="page-hero-title fade-up">UAE <em>Area Guides</em></h1>
-    <p class="page-hero-sub fade-up">Explore communities across Abu Dhabi, Dubai, and beyond — property prices, schools, transport, and lifestyle at a glance.</p>
+    <h1 class="page-hero-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.AreaGuidesHeroH1, "UAE <em>Area Guides</em>"])</h1>
+    <p class="page-hero-sub fade-up">@Cms[ContentBlockSlugs.AreaGuidesHeroSub, "Explore communities across Abu Dhabi, Dubai, and beyond — property prices, schools, transport, and lifestyle at a glance."]</p>
   </div>
 </section>
 
@@ -22,7 +22,7 @@
     {
       <div class="pl-empty fade-up">
         <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <h3>No area guides yet</h3>
+        <h3>@Cms[ContentBlockSlugs.AreaGuidesEmptyText, "No area guides yet"]</h3>
         <p>Area guides are managed in <a asp-area="Admin" asp-page="/AreaGuides/Index">Admin → Area Guides</a>.</p>
       </div>
     }

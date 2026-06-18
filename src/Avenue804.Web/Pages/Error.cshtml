@@ -1,24 +1,24 @@
 @page
 @model ErrorModel
 @{
-    ViewData["Title"] = Model.HttpStatusCode == 404 ? "Not found" : "Error";
+    ViewData["Title"] = Model.HttpStatusCode == 404 ? Cms[ContentBlockSlugs.ErrorNotFoundTitle, "Not found"] : Cms[ContentBlockSlugs.ErrorGenericTitle, "Error"];
 }
 <section class="page-hero">
   <div class="container">
     @if (Model.HttpStatusCode == 404)
     {
-      <h1 class="page-hero-title">Page not <em>found</em></h1>
-      <p class="page-hero-sub">The page you requested does not exist or has been moved.</p>
+      <h1 class="page-hero-title">@Html.Raw(Cms[ContentBlockSlugs.ErrorNotFoundH1, "Page not <em>found</em>"])</h1>
+      <p class="page-hero-sub">@Cms[ContentBlockSlugs.ErrorNotFoundSub, "The page you requested does not exist or has been moved."]</p>
     }
     else
     {
-      <h1 class="page-hero-title">Something went <em>wrong</em></h1>
-      <p class="page-hero-sub">An error occurred while processing your request.</p>
+      <h1 class="page-hero-title">@Html.Raw(Cms[ContentBlockSlugs.ErrorGenericH1, "Something went <em>wrong</em>"])</h1>
+      <p class="page-hero-sub">@Cms[ContentBlockSlugs.ErrorGenericSub, "An error occurred while processing your request."]</p>
     }
     @if (Model.ShowRequestId)
     {
-      <p style="margin-top:16px;color:var(--text-tertiary);font-size:.9rem"><strong>Request ID:</strong> <code style="color:var(--accent)">@Model.RequestId</code></p>
+      <p style="margin-top:16px;color:var(--text-tertiary);font-size:.9rem"><strong>@Cms[ContentBlockSlugs.ErrorRequestIdLabel, "Request ID:"]</strong> <code style="color:var(--accent)">@Model.RequestId</code></p>
     }
-    <p style="margin-top:24px"><a asp-page="/Index" class="btn-primary"><span>Back to home</span></a></p>
+    <p style="margin-top:24px"><a asp-page="/Index" class="btn-primary"><span>@Cms[ContentBlockSlugs.AccountLogoutBackBtn, "Back to home"]</span></a></p>
   </div>
 </section>

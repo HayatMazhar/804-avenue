@@ -11,7 +11,19 @@ namespace Avenue804.Web.Data;
 
 public static class SeedData
 {
-    public const string AdminRole = "Admin";
+    public const string AdminRole          = "Admin";
+    public const string ContentEditorRole  = "ContentEditor";
+    public const string PropertyManagerRole = "PropertyManager";
+    public const string SupportAgentRole   = "SupportAgent";
+
+    /// <summary>All roles that can log in to the admin console.</summary>
+    public static readonly string[] AllAdminRoles =
+    [
+        AdminRole,
+        ContentEditorRole,
+        PropertyManagerRole,
+        SupportAgentRole
+    ];
 
     public static async Task EnsureSeededAsync(WebApplication app)
     {
@@ -39,8 +51,14 @@ public static class SeedData
 
         if (!await roleManager.RoleExistsAsync(AdminRole))
             await roleManager.CreateAsync(new IdentityRole(AdminRole));
+        if (!await roleManager.RoleExistsAsync(ContentEditorRole))
+            await roleManager.CreateAsync(new IdentityRole(ContentEditorRole));
+        if (!await roleManager.RoleExistsAsync(PropertyManagerRole))
+            await roleManager.CreateAsync(new IdentityRole(PropertyManagerRole));
+        if (!await roleManager.RoleExistsAsync(SupportAgentRole))
+            await roleManager.CreateAsync(new IdentityRole(SupportAgentRole));
 
-        var adminEmail = config["Seed:AdminEmail"] ?? "admin@804avenue.com";
+        var adminEmail = config["Seed:AdminEmail"] ?? "admin@804avenue.ae";
         var adminPassword = config["Seed:AdminPassword"];
 
         if (string.IsNullOrWhiteSpace(adminPassword))
@@ -51,8 +69,42 @@ public static class SeedData
         }
 
         var existing = await userManager.FindByEmailAsync(adminEmail);
+
+        // Migrate legacy .com admin to .ae if .ae doesn't exist yet
+        if (existing == null && adminEmail.EndsWith("@804avenue.ae", StringComparison.OrdinalIgnoreCase))
+        {
+            var legacyEmail = adminEmail.Replace("@804avenue.ae", "@804avenue.com", StringComparison.OrdinalIgnoreCase);
+            var legacy = await userManager.FindByEmailAsync(legacyEmail);
+            if (legacy != null)
+            {
+                legacy.Email = adminEmail;
+                legacy.NormalizedEmail = adminEmail.ToUpperInvariant();
+                legacy.UserName = adminEmail;
+                legacy.NormalizedUserName = adminEmail.ToUpperInvariant();
+                await userManager.UpdateAsync(legacy);
+                logger.LogInformation("Migrated legacy admin email {Old} → {New}.", legacyEmail, adminEmail);
+                existing = legacy;
+            }
+        }
+
         if (existing != null)
+        {
+            // Always ensure password matches what config says (self-heal in case anyone changed it)
+            var token = await userManager.GeneratePasswordResetTokenAsync(existing);
+            var pwReset = await userManager.ResetPasswordAsync(existing, token, adminPassword);
+            if (pwReset.Succeeded)
+                logger.LogInformation("Admin password reset to configured value for {Email}.", adminEmail);
+
+            // Ensure Admin role
+            if (!await userManager.IsInRoleAsync(existing, AdminRole))
+                await userManager.AddToRoleAsync(existing, AdminRole);
+
+            // Ensure account is not locked
+            if (existing.LockoutEnd.HasValue && existing.LockoutEnd > DateTimeOffset.UtcNow)
+                await userManager.SetLockoutEndDateAsync(existing, null);
+
             return;
+        }
 
         var user = new ApplicationUser
         {

@@ -2,9 +2,9 @@
 @model Avenue804.Web.Pages.Properties.OffPlanModel
 @using Avenue804.Web.Infrastructure
 @{
-    ViewData["Title"] = "Off-Plan & New Projects — Abu Dhabi UAE";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaOffPlanTitle, "Off-Plan & New Projects — Abu Dhabi UAE"];
     ViewData["NavActive"] = "offplan";
-    ViewData["MetaDescription"] = "Invest early in Abu Dhabi's most anticipated new developments — flexible payment plans, attractive pricing, and high appreciation potential.";
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaOffPlanDescription, "Invest early in Abu Dhabi's most anticipated new developments — flexible payment plans, attractive pricing, and high appreciation potential."];
 }
 @section Styles {
   <link rel="stylesheet" href="~/css/service-pages.css" asp-append-version="true" />
@@ -18,8 +18,8 @@
       <a asp-page="/Properties/Index">Properties</a><span class="sep">/</span>
       <span>Off-Plan</span>
     </div>
-    <h1 class="page-hero-title fade-up">Off-Plan &amp; <em>New Projects</em></h1>
-    <p class="page-hero-sub fade-up">Invest early in Abu Dhabi's most anticipated new developments — flexible payment plans, attractive pricing, and high appreciation potential.</p>
+    <h1 class="page-hero-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.OffPlanHeroH1, "Off-Plan &amp; <em>New Projects</em>"])</h1>
+    <p class="page-hero-sub fade-up">@Cms[ContentBlockSlugs.OffPlanHeroSub, "Invest early in Abu Dhabi's most anticipated new developments — flexible payment plans, attractive pricing, and high appreciation potential."]</p>
   </div>
 </section>
 
@@ -89,7 +89,7 @@
     {
       <div class="pl-empty fade-up">
         <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
-        <h3>No off-plan listings yet</h3>
+        <h3>@Cms[ContentBlockSlugs.OffPlanEmptyText, "No off-plan listings yet"]</h3>
         <p>Check back soon or browse our <a asp-page="/Properties/Index">ready properties</a>.</p>
       </div>
     }
@@ -123,8 +123,8 @@
               }
               <div class="offplan-card-meta">
                 @if (p.Price.HasValue) { <span class="offplan-price">AED @p.Price.Value.ToString("N0")</span> }
-                @if (!string.IsNullOrWhiteSpace(p.HandoverDate)) { <span class="offplan-handover">Handover: <strong>@p.HandoverDate</strong></span> }
-                @if (p.CompletionPercent.HasValue) { <span class="offplan-pct">@p.CompletionPercent% complete</span> }
+                @if (!string.IsNullOrWhiteSpace(p.HandoverDate)) { <span class="offplan-handover">@Cms[ContentBlockSlugs.OffPlanHandoverLabel, "Handover:"] <strong>@p.HandoverDate</strong></span> }
+                @if (p.CompletionPercent.HasValue) { <span class="offplan-pct">@p.CompletionPercent@Cms[ContentBlockSlugs.OffPlanPercentLabel, "% complete"]</span> }
               </div>
               @if (!string.IsNullOrWhiteSpace(p.PaymentPlan))
               {
@@ -138,7 +138,7 @@
                 @if (p.Baths.HasValue) { <span>@p.Baths Bath</span> }
                 @if (p.AreaSqft.HasValue) { <span>@p.AreaSqft.Value.ToString("N0") sqft</span> }
               </div>
-              <div class="offplan-cta">View project →</div>
+              <div class="offplan-cta">@Cms[ContentBlockSlugs.OffPlanViewLink, "View project →"]</div>
             </div>
           </a>
         }

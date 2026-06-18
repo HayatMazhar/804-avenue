@@ -9,7 +9,8 @@ namespace Avenue804.Web.Pages.Api;
 /// Accepts a file upload and returns the public URL.
 /// Called via AJAX from admin listing edit — supports multi-image upload.
 /// </summary>
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
+[IgnoreAntiforgeryToken]
 public class UploadImageModel : PageModel
 {
     private readonly IStorageService _storage;

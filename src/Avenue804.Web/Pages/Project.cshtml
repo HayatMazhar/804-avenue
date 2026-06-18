@@ -22,13 +22,13 @@
     <div class="tracker-card fade-up">
       <div class="tracker-header">
         <div>
-          <div class="tracker-label">Overall progress</div>
+          <div class="tracker-label">@Cms[ContentBlockSlugs.ProjectTrackerOverallProgress, "Overall progress"]</div>
           <div class="tracker-pct">@P.ProgressPercent%</div>
         </div>
         @if (P.EstimatedCompletion.HasValue)
         {
           <div style="text-align:right">
-            <div class="tracker-label">Estimated completion</div>
+            <div class="tracker-label">@Cms[ContentBlockSlugs.ProjectTrackerEstCompletion, "Estimated completion"]</div>
             <div class="tracker-pct" style="font-size:1.2rem">@P.EstimatedCompletion.Value.ToString("MMMM yyyy")</div>
           </div>
         }
@@ -68,10 +68,10 @@
 
     <!-- Contact strip -->
     <div class="tracker-contact fade-up">
-      <p>Questions about your project? Contact your dedicated project manager.</p>
+      <p>@Cms[ContentBlockSlugs.ProjectTrackerContactText, "Questions about your project? Contact your dedicated project manager."]</p>
       <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
-        <a asp-page="/Contact" class="btn-primary"><span>Contact team</span></a>
-        <a href="https://wa.me/971504399804?text=Hi, I'm checking on my project: @Uri.EscapeDataString(P.ProjectTitle ?? "my project")" target="_blank" rel="noopener" class="btn-outline">WhatsApp</a>
+        <a asp-page="/Contact" class="btn-primary"><span>@Cms[ContentBlockSlugs.ProjectTrackerContactBtn, "Contact team"]</span></a>
+        <a href="https://wa.me/971504399804?text=Hi, I'm checking on my project: @Uri.EscapeDataString(P.ProjectTitle ?? "my project")" target="_blank" rel="noopener" class="btn-outline">@Cms[ContentBlockSlugs.ProjectTrackerWhatsappBtn, "WhatsApp"]</a>
       </div>
     </div>
   </div>

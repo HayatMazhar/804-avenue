@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Avenue804.Web.Areas.Admin.Pages.ServiceRequests;
 
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
 public class IndexModel : PageModel
 {
     private readonly ApplicationDbContext _db;

@@ -52,41 +52,41 @@
       <!-- Services dropdown (core business — first) -->
       <li class="pf-nav__item pf-nav__item--dd" id="ddServices">
         <button class="pf-nav__link pf-nav__link--dd @(IsServicesNav() ? "active" : "")" type="button" aria-expanded="false" aria-haspopup="true">
-          Services
+          @Cms[ContentBlockSlugs.NavLabelServices, "Services"]
           <svg class="pf-nav__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
         </button>
         <div class="pf-nav__dd-panel pf-nav__dd-panel--sm" role="menu">
           <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/Maintenance">
             <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
-            <span><strong>Maintenance</strong><br><small>MEP, AMC, preventive &amp; emergency</small></span>
+            <span><strong>@Cms[ContentBlockSlugs.NavDdMaintTitle, "Maintenance"]</strong><br><small>@Cms[ContentBlockSlugs.NavDdMaintSub, "MEP, AMC, preventive & emergency"]</small></span>
           </a>
           <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/Contracting">
             <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></span>
-            <span><strong>Contracting</strong><br><small>Civil, fit-out, renovation</small></span>
+            <span><strong>@Cms[ContentBlockSlugs.NavDdContractingTitle, "Contracting"]</strong><br><small>@Cms[ContentBlockSlugs.NavDdContractingSub, "Civil, fit-out, renovation"]</small></span>
           </a>
           <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/FacilityManagement">
             <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></span>
-            <span><strong>Facility Management</strong><br><small>Building ops &amp; vendor control</small></span>
+            <span><strong>@Cms[ContentBlockSlugs.NavDdFacilityTitle, "Facility Management"]</strong><br><small>@Cms[ContentBlockSlugs.NavDdFacilitySub, "Building ops & vendor control"]</small></span>
           </a>
           <div class="pf-nav__dd-divider"></div>
-          <a class="pf-nav__dd-link" asp-page="/Services/Index"><strong>All Services →</strong></a>
-          <a class="pf-nav__dd-link" asp-page="/Projects/Index">Our Projects</a>
+          <a class="pf-nav__dd-link" asp-page="/Services/Index"><strong>@Cms[ContentBlockSlugs.NavDdAllServices, "All Services →"]</strong></a>
+          <a class="pf-nav__dd-link" asp-page="/Projects/Index">@Cms[ContentBlockSlugs.NavDdOurProjects, "Our Projects"]</a>
         </div>
       </li>
 
       <!-- Properties (direct link → full listings page) -->
       <li class="pf-nav__item">
-        <a class="pf-nav__link @(IsPropertiesNav() ? "active" : "")" asp-page="/Properties/Index">Properties</a>
+        <a class="pf-nav__link @(IsPropertiesNav() ? "active" : "")" asp-page="/Properties/Index">@Cms[ContentBlockSlugs.NavLabelProperties, "Properties"]</a>
       </li>
 
       <!-- About -->
       <li class="pf-nav__item">
-        <a class="pf-nav__link @Active("about")" asp-page="/About">About</a>
+        <a class="pf-nav__link @Active("about")" asp-page="/About">@Cms[ContentBlockSlugs.NavLabelAbout, "About"]</a>
       </li>
 
       <!-- Contact -->
       <li class="pf-nav__item">
-        <a class="pf-nav__link @Active("contact")" asp-page="/Contact">Contact</a>
+        <a class="pf-nav__link @Active("contact")" asp-page="/Contact">@Cms[ContentBlockSlugs.NavLabelContact, "Contact"]</a>
       </li>
 
     </ul>
@@ -105,14 +105,14 @@
       <!-- List Your Property — owner-listing CTA, sits with the right-side actions -->
       <a asp-page="/ListYourProperty" class="pf-nav__list-btn pf-nav__list-btn--ghost d-none d-lg-inline-flex @(Active("list-property") == "active" ? "is-active" : "")">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
-        List Your Property
+        @Cms[ContentBlockSlugs.NavLabelListProperty, "List Your Property"]
       </a>
 
       <!-- Inquiry — primary CTA. Routes to the property-requirement form on /Inquiry.
            (A "quote" is a price proposal; this form captures a buy/sell/rent inquiry.) -->
       <a asp-page="/Inquiry" class="pf-nav__list-btn d-none d-lg-inline-flex @(Active("inquiry") == "active" ? "is-active" : "")">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Inquiry
+        @Cms[ContentBlockSlugs.NavLabelInquiry, "Inquiry"]
       </a>
 
       @if (isAuth && currentUser != null)
@@ -144,21 +144,18 @@
             }
             @if (userAgent != null)
             {
-              <a class="pf-nav__dd-link" asp-page="/AgentPortal/Dashboard">Agent Portal</a>
+              <a class="pf-nav__dd-link" asp-page="/AgentPortal/Dashboard">@Cms[ContentBlockSlugs.NavUserAgentPortal, "Agent Portal"]</a>
             }
-            <a class="pf-nav__dd-link" asp-page="/Account/Dashboard">Dashboard</a>
-            <a class="pf-nav__dd-link" asp-page="/Account/Profile">My Profile</a>
+            <a class="pf-nav__dd-link" asp-page="/Account/Dashboard">@Cms[ContentBlockSlugs.NavUserDashboard, "Dashboard"]</a>
+            <a class="pf-nav__dd-link" asp-page="/Account/Profile">@Cms[ContentBlockSlugs.NavUserProfile, "My Profile"]</a>
             <div class="pf-nav__dd-divider"></div>
             <form method="post" asp-page="/Account/Logout" class="px-3 pb-2">
-              <button type="submit" class="pf-nav__signout-btn">Sign Out</button>
+              <button type="submit" class="pf-nav__signout-btn">@Cms[ContentBlockSlugs.NavUserSignOut, "Sign Out"]</button>
             </form>
           </div>
         </div>
       }
-      else
-      {
-        <a asp-page="/Account/Login" class="pf-nav__signin-btn">Sign In</a>
-      }
+      @* Public Sign In is temporarily hidden — admin staff use /Admin/Login *@
 
       <!-- Mobile hamburger -->
       <button class="pf-nav__hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
@@ -171,34 +168,31 @@
   <div class="pf-nav__mobile" id="navMobileDrawer" hidden>
     <div class="pf-nav__mobile-inner">
       <div class="pf-nav__mobile-group">
-        <div class="pf-nav__mobile-label">Services</div>
-        <a class="pf-nav__mobile-link" asp-page="/Services/Index">All Services</a>
-        <a class="pf-nav__mobile-link" asp-page="/Maintenance">Maintenance</a>
-        <a class="pf-nav__mobile-link" asp-page="/Contracting">Contracting</a>
-        <a class="pf-nav__mobile-link" asp-page="/FacilityManagement">Facility Management</a>
-        <a class="pf-nav__mobile-link" asp-page="/Projects/Index">Our Projects</a>
+        <div class="pf-nav__mobile-label">@Cms[ContentBlockSlugs.NavMobileServicesLabel, "Services"]</div>
+        <a class="pf-nav__mobile-link" asp-page="/Services/Index">@Cms[ContentBlockSlugs.NavMobileServicesAll, "All Services"]</a>
+        <a class="pf-nav__mobile-link" asp-page="/Maintenance">@Cms[ContentBlockSlugs.NavDdMaintTitle, "Maintenance"]</a>
+        <a class="pf-nav__mobile-link" asp-page="/Contracting">@Cms[ContentBlockSlugs.NavDdContractingTitle, "Contracting"]</a>
+        <a class="pf-nav__mobile-link" asp-page="/FacilityManagement">@Cms[ContentBlockSlugs.NavDdFacilityTitle, "Facility Management"]</a>
+        <a class="pf-nav__mobile-link" asp-page="/Projects/Index">@Cms[ContentBlockSlugs.NavDdOurProjects, "Our Projects"]</a>
       </div>
       <div class="pf-nav__mobile-group">
-        <a class="pf-nav__mobile-link" asp-page="/Properties/Index">Properties</a>
+        <a class="pf-nav__mobile-link" asp-page="/Properties/Index">@Cms[ContentBlockSlugs.NavLabelProperties, "Properties"]</a>
       </div>
       <div class="pf-nav__mobile-group">
-        <div class="pf-nav__mobile-label">For Owners</div>
-        <a class="pf-nav__mobile-link pf-nav__mobile-link--accent" asp-page="/ListYourProperty">List Your Property</a>
+        <div class="pf-nav__mobile-label">@Cms[ContentBlockSlugs.NavMobileForOwnersLabel, "For Owners"]</div>
+        <a class="pf-nav__mobile-link pf-nav__mobile-link--accent" asp-page="/ListYourProperty">@Cms[ContentBlockSlugs.NavLabelListProperty, "List Your Property"]</a>
       </div>
       <div class="pf-nav__mobile-group">
-        <a class="pf-nav__mobile-link" asp-page="/About">About</a>
-        <a class="pf-nav__mobile-link" asp-page="/Inquiry">Property Inquiry</a>
-        <a class="pf-nav__mobile-link" asp-page="/Contact">Contact</a>
+        <a class="pf-nav__mobile-link" asp-page="/About">@Cms[ContentBlockSlugs.NavLabelAbout, "About"]</a>
+        <a class="pf-nav__mobile-link" asp-page="/Inquiry">@Cms[ContentBlockSlugs.NavMobilePropertyInquiry, "Property Inquiry"]</a>
+        <a class="pf-nav__mobile-link" asp-page="/Contact">@Cms[ContentBlockSlugs.NavLabelContact, "Contact"]</a>
       </div>
       <div class="pf-nav__mobile-actions">
         <a asp-page="/Inquiry" class="pf-nav__list-btn w-100 justify-content-center">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          Inquiry
+          @Cms[ContentBlockSlugs.NavLabelInquiry, "Inquiry"]
         </a>
-        @if (!isAuth)
-        {
-          <a asp-page="/Account/Login" class="pf-nav__signin-btn w-100 text-center">Sign In</a>
-        }
+        @* Public Sign In is temporarily hidden *@
       </div>
     </div>
   </div>

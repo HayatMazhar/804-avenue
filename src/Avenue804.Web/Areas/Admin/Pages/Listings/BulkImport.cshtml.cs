@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Avenue804.Web.Areas.Admin.Pages.Listings;
 
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
 public class BulkImportModel : PageModel
 {
     private readonly ApplicationDbContext _db;

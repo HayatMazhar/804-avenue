@@ -1,5 +1,6 @@
 @model Avenue804.Web.Models.Public.ServicePageHeroModel
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject Avenue804.Web.Services.ICmsTextProvider Cms
 @using Avenue804.Web.Infrastructure
 @using Avenue804.Web.Configuration
 @{
@@ -7,7 +8,7 @@
 }
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Maintenance</span></div>
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.NavDdMaintTitle, "Maintenance"]</span></div>
     <h1 class="page-hero-title fade-up">
       @if (string.IsNullOrEmpty(Model.HeroTitleHtml)) { <text>Preserving <em>Value</em> Through Professional Care</text> }
       else { @Html.Raw(Model.HeroTitleHtml) }
@@ -23,7 +24,7 @@
   <div class="container"><div class="svc-grid">
     <div class="svc-img fade-up"><img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&q=80" alt="Building maintenance"></div>
     <div class="svc-content fade-up">
-      <span class="section-tag">Building Care</span>
+      <span class="section-tag">@Cms[ContentBlockSlugs.MaintenanceSvc1Tag, "Building Care"]</span>
       <h2>@Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceSvc1Title, "General <em>Building</em> Maintenance"))</h2>
       @Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceSvc1Body, @"<p>Comprehensive building maintenance services covering all common areas, building systems, and structural elements. We keep your property running smoothly and looking its best, year-round.</p>
 <ul class=""svc-list""><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Common area cleaning and upkeep</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Elevator and escalator maintenance</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Swimming pool and gym facility care</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Landscaping and external area maintenance</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Pest control and waste management</li></ul>"))
@@ -35,7 +36,7 @@
   <div class="container"><div class="svc-grid reverse">
     <div class="svc-img fade-up"><img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80" alt="Civil maintenance"></div>
     <div class="svc-content fade-up">
-      <span class="section-tag">Structural</span>
+      <span class="section-tag">@Cms[ContentBlockSlugs.MaintenanceSvc2Tag, "Structural"]</span>
       <h2>@Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceSvc2Title, "Civil <em>Maintenance</em>"))</h2>
       @Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceSvc2Body, @"<p>Our civil maintenance services address structural integrity and infrastructure upkeep — from crack repair and waterproofing to road works and retaining wall maintenance.</p>
 <ul class=""svc-list""><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Structural crack repair and grouting</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Waterproofing and damp-proofing</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Painting and plastering touch-ups</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Road and parking area repairs</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Tiling and flooring restoration</li></ul>"))
@@ -47,7 +48,7 @@
   <div class="container"><div class="svc-grid">
     <div class="svc-img fade-up"><img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&q=80" alt="MEP systems maintenance"></div>
     <div class="svc-content fade-up">
-      <span class="section-tag">MEP Systems</span>
+      <span class="section-tag">@Cms[ContentBlockSlugs.MaintenanceSvc3Tag, "MEP Systems"]</span>
       <h2>@Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceSvc3Title, "<em>MEP</em> Maintenance"))</h2>
       @Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceSvc3Body, @"<p>Mechanical, Electrical, and Plumbing systems are the backbone of any building. Our specialized technicians ensure these critical systems operate efficiently, safely, and reliably.</p>
 <ul class=""svc-list""><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>HVAC servicing and repair</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Electrical panel and wiring maintenance</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Plumbing and drainage systems</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Fire alarm and firefighting systems</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Generator and UPS servicing</li></ul>"))
@@ -59,7 +60,7 @@
   <div class="container"><div class="svc-grid reverse">
     <div class="svc-img fade-up"><img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&q=80" alt="Preventive maintenance inspection"></div>
     <div class="svc-content fade-up">
-      <span class="section-tag">Preventive</span>
+      <span class="section-tag">@Cms[ContentBlockSlugs.MaintenanceSvc4Tag, "Preventive"]</span>
       <h2>@Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceSvc4Title, "Preventive <em>Maintenance</em>"))</h2>
       @Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceSvc4Body, @"<p>Prevention is better than cure. Our scheduled preventive maintenance programs identify potential issues before they become costly problems, extending asset life and reducing downtime.</p>
 <ul class=""svc-list""><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Scheduled inspections and checklists</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Equipment condition monitoring</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Filter and component replacement schedules</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Predictive analytics and reporting</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Annual maintenance contract (AMC) programs</li></ul>"))
@@ -71,7 +72,7 @@
   <div class="container"><div class="svc-grid">
     <div class="svc-img fade-up"><img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80" alt="Corrective maintenance repair"></div>
     <div class="svc-content fade-up">
-      <span class="section-tag">Corrective</span>
+      <span class="section-tag">@Cms[ContentBlockSlugs.MaintenanceSvc5Tag, "Corrective"]</span>
       <h2>@Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceSvc5Title, "Corrective <em>Maintenance</em>"))</h2>
       @Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceSvc5Body, @"<p>When things break, speed matters. Our corrective maintenance teams respond rapidly to diagnose, repair, and restore — minimizing disruption and getting your operations back on track.</p>
 <ul class=""svc-list""><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Emergency breakdown response</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Root cause analysis and permanent fixes</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Equipment repair and replacement</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Water leak detection and repair</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Electrical fault finding and restoration</li></ul>"))
@@ -82,17 +83,17 @@
 <!-- ═══ WHY MAINTENANCE MATTERS ═══ -->
 <section class="why-maint section-pad">
   <div class="container" style="text-align:center">
-    <span class="section-tag fade-up" style="justify-content:center">Why It Matters</span>
-    <h2 class="section-title fade-up">Why <em>Maintenance</em> Matters</h2>
-    <p class="section-sub fade-up" style="margin:0 auto 16px">Regular maintenance isn't an expense — it's an investment that protects your property's value and your occupants' safety.</p>
+    <span class="section-tag fade-up" style="justify-content:center">@Cms[ContentBlockSlugs.MaintenanceWhyTag, "Why It Matters"]</span>
+    <h2 class="section-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.MaintenanceWhyTitle, "Why <em>Maintenance</em> Matters"])</h2>
+    <p class="section-sub fade-up" style="margin:0 auto 16px">@Cms[ContentBlockSlugs.MaintenanceWhyLead, "Regular maintenance isn't an expense — it's an investment that protects your property's value and your occupants' safety."]</p>
     <div class="why-grid">
       @if (Model.Get(ContentBlockSlugs.MaintenanceWhyItems) is string whyItems)
       { @Html.Raw(whyItems) }
       else
       {
-        <div class="why-card fade-up"><div class="why-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Protect Asset Value</h3><p>Well-maintained properties retain and grow their market value. Neglect leads to depreciation and costly major repairs.</p></div>
-        <div class="why-card fade-up"><div class="why-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div><h3>Reduce Costs</h3><p>Preventive maintenance reduces emergency repair costs by up to 40%. Catching issues early saves significant money over a building's lifecycle.</p></div>
-        <div class="why-card fade-up"><div class="why-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><h3>Ensure Safety</h3><p>Regular maintenance ensures compliance with safety codes and protects occupants from hazards such as electrical faults and structural failures.</p></div>
+        <div class="why-card fade-up"><div class="why-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>@Cms[ContentBlockSlugs.MaintenanceWhyCard1Title, "Protect Asset Value"]</h3><p>@Cms[ContentBlockSlugs.MaintenanceWhyCard1Body, "Well-maintained properties retain and grow their market value. Neglect leads to depreciation and costly major repairs."]</p></div>
+        <div class="why-card fade-up"><div class="why-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div><h3>@Cms[ContentBlockSlugs.MaintenanceWhyCard2Title, "Reduce Costs"]</h3><p>@Cms[ContentBlockSlugs.MaintenanceWhyCard2Body, "Preventive maintenance reduces emergency repair costs by up to 40%. Catching issues early saves significant money over a building's lifecycle."]</p></div>
+        <div class="why-card fade-up"><div class="why-card-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><h3>@Cms[ContentBlockSlugs.MaintenanceWhyCard3Title, "Ensure Safety"]</h3><p>@Cms[ContentBlockSlugs.MaintenanceWhyCard3Body, "Regular maintenance ensures compliance with safety codes and protects occupants from hazards such as electrical faults and structural failures."]</p></div>
       }
     </div>
   </div>
@@ -109,13 +110,13 @@
         { @Html.Raw(features) }
         else
         {
-          <span class="contract-feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Dedicated Account Manager</span>
-          <span class="contract-feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Priority Emergency Response</span>
-          <span class="contract-feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Monthly Reporting</span>
-          <span class="contract-feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Flexible Contract Terms</span>
+          <span class="contract-feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>@Cms[ContentBlockSlugs.MaintenanceContractFeat1, "Dedicated Account Manager"]</span>
+          <span class="contract-feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>@Cms[ContentBlockSlugs.MaintenanceContractFeat2, "Priority Emergency Response"]</span>
+          <span class="contract-feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>@Cms[ContentBlockSlugs.MaintenanceContractFeat3, "Monthly Reporting"]</span>
+          <span class="contract-feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>@Cms[ContentBlockSlugs.MaintenanceContractFeat4, "Flexible Contract Terms"]</span>
         }
       </div>
-      <div class="fade-up"><a asp-page="/Contact" class="btn-primary"><span>Request a Maintenance Quote</span></a></div>
+      <div class="fade-up"><a asp-page="/Contact" class="btn-primary"><span>@Cms[ContentBlockSlugs.MaintenanceCtaBtnPrimary, "Request a Maintenance Quote"]</span></a></div>
     </div>
   </div>
 </section>
@@ -124,7 +125,7 @@
 <section class="emergency-strip">
   <div class="container">
     <div class="emergency-inner fade-up">
-      <span class="emergency-label">24/7 Emergency?</span>
+      <span class="emergency-label">@Cms[ContentBlockSlugs.MaintenanceEmergencyLabel, "24/7 Emergency?"]</span>
       <a href="@(site?.TelHref ?? "tel:+971504399804")" class="emergency-phone">@(site?.PhoneDisplay ?? "+971 50 43 99 804")</a>
     </div>
   </div>
@@ -136,8 +137,8 @@
     <h2 class="cta-title fade-up">@Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceCtaTitle, "Keep Your Property in <em>Peak</em> Condition"))</h2>
     <p class="cta-sub fade-up">@Html.Raw(Model.GetOr(ContentBlockSlugs.MaintenanceCtaBody, "From scheduled inspections to emergency repairs, our maintenance team is here for you — 24/7, 365 days a year."))</p>
     <div class="cta-btns fade-up">
-      <a asp-page="/Contact" class="btn-primary"><span>Schedule Maintenance</span></a>
-      <a asp-page="/Contracting" class="btn-outline">View Contracting Services</a>
+      <a asp-page="/Contact" class="btn-primary"><span>@Cms[ContentBlockSlugs.MaintenanceCtaBtnPrimary, "Schedule Maintenance"]</span></a>
+      <a asp-page="/Contracting" class="btn-outline">@Cms[ContentBlockSlugs.MaintenanceCtaBtnSecondary, "View Contracting Services"]</a>
     </div>
   </div>
 </section>

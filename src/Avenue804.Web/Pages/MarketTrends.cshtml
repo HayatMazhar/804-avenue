@@ -1,15 +1,15 @@
 @page "/MarketTrends"
 @model Avenue804.Web.Pages.MarketTrendsModel
 @{
-    ViewData["Title"] = "Abu Dhabi Property Market Trends";
-    ViewData["MetaDescription"] = "Live market data — average prices, listing activity, and rental yields across Abu Dhabi and the UAE property market.";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaMarketTrendsTitle, "Abu Dhabi Property Market Trends"];
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaMarketTrendsDescription, "Live market data — average prices, listing activity, and rental yields across Abu Dhabi and the UAE property market."];
     ViewData["NavActive"] = "market";
 }
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Market Trends</span></div>
-    <h1 class="page-hero-title fade-up">UAE Property <em>Market Trends</em></h1>
-    <p class="page-hero-sub fade-up">Live data from our portfolio — average prices, listing activity, and rental yields across Abu Dhabi and the UAE.</p>
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.MarketTrendsCrumb, "Market Trends"]</span></div>
+    <h1 class="page-hero-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.MarketTrendsHeroH1, "UAE Property <em>Market Trends</em>"])</h1>
+    <p class="page-hero-sub fade-up">@Cms[ContentBlockSlugs.MarketTrendsHeroSub, "Live data from our portfolio — average prices, listing activity, and rental yields across Abu Dhabi and the UAE."]</p>
   </div>
 </section>
 

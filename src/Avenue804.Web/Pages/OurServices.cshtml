@@ -4,8 +4,8 @@
 @using Avenue804.Web.Infrastructure
 @using Avenue804.Web.Domain
 @{
-    ViewData["Title"] = "All Services — 804 Avenue";
-    ViewData["MetaDescription"] = "Explore the complete property lifecycle — contracting, fit-out, maintenance, and facility management — all under one roof with 804 Avenue.";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaOurServicesTitle, "All Services — 804 Avenue"];
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaOurServicesDescription, "Explore the complete property lifecycle — contracting, fit-out, maintenance, and facility management — all under one roof with 804 Avenue."];
     ViewData["NavActive"] = "services";
     var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
     var waNum = site?.WhatsAppDigits ?? "971504399804";
@@ -13,18 +13,18 @@
 
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Our Services</span></div>
-    <h1 class="page-hero-title fade-up">One Partner. <em>Every</em> Service.</h1>
-    <p class="page-hero-sub fade-up">From finding your perfect property to fitting it out, maintaining it, and managing it — 804 Avenue is with you at every stage.</p>
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.OurServicesCrumb, "Our Services"]</span></div>
+    <h1 class="page-hero-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.OurServicesHeroH1, "One Partner. <em>Every</em> Service."])</h1>
+    <p class="page-hero-sub fade-up">@Cms[ContentBlockSlugs.OurServicesHeroSub, "From finding your perfect property to fitting it out, maintaining it, and managing it — 804 Avenue is with you at every stage."]</p>
   </div>
 </section>
 
 <!-- ═══ PROPERTY LIFECYCLE JOURNEY ═══ -->
 <section class="section-pad" style="background:var(--bg-surface)">
   <div class="container section-head-center">
-    <div class="section-tag fade-up">Your Journey with 804 Avenue</div>
-    <h2 class="section-title fade-up">The <em>Complete</em> Property Lifecycle</h2>
-    <p class="section-sub fade-up" style="margin:0 auto 48px">No other company in Abu Dhabi covers all four stages under one roof — saving you time, money, and coordination effort.</p>
+    <div class="section-tag fade-up">@Cms[ContentBlockSlugs.OurServicesJourneyTag, "Your Journey with 804 Avenue"]</div>
+    <h2 class="section-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.OurServicesJourneyTitle, "The <em>Complete</em> Property Lifecycle"])</h2>
+    <p class="section-sub fade-up" style="margin:0 auto 48px">@Cms[ContentBlockSlugs.OurServicesJourneySub, "No other company in Abu Dhabi covers all four stages under one roof — saving you time, money, and coordination effort."]</p>
 
     <div class="lifecycle-flow fade-up">
       <div class="lifecycle-step lifecycle-step--1">
@@ -82,10 +82,10 @@
 
     <!-- Bundle offer -->
     <div class="lifecycle-bundle fade-up">
-      <div class="lifecycle-bundle-badge">⭐ 804 Exclusive</div>
-      <h3>The All-Inclusive Property Package</h3>
-      <p>Combine any services above and get <strong>up to 15% discount</strong> on the combined scope. One point of contact, one invoice, one relationship.</p>
-      <a asp-page="/Contact" class="btn-primary"><span>Request Bundle Quote</span></a>
+      <div class="lifecycle-bundle-badge">@Cms[ContentBlockSlugs.OurServicesBundleBadge, "⭐ 804 Exclusive"]</div>
+      <h3>@Cms[ContentBlockSlugs.OurServicesBundleTitle, "The All-Inclusive Property Package"]</h3>
+      <p>@Html.Raw(Cms[ContentBlockSlugs.OurServicesBundleBody, "Combine any services above and get <strong>up to 15% discount</strong> on the combined scope. One point of contact, one invoice, one relationship."])</p>
+      <a asp-page="/Contact" class="btn-primary"><span>@Cms[ContentBlockSlugs.OurServicesBundleBtn, "Request Bundle Quote"]</span></a>
     </div>
   </div>
 </section>
@@ -93,9 +93,9 @@
 <!-- ═══ FM SCOPE BUILDER ═══ -->
 <section class="section-pad" id="fm-scope" style="background:var(--bg-deep)">
   <div class="container">
-    <div class="section-tag fade-up" style="justify-content:center">FM Scope Builder</div>
-    <h2 class="section-title fade-up" style="text-align:center;max-width:640px;margin:0 auto 12px">Build Your <em>Facility Management</em> Scope</h2>
-    <p class="section-sub fade-up" style="text-align:center;margin:0 auto 36px">Select the services you need and we'll build a tailored FM proposal for your asset.</p>
+    <div class="section-tag fade-up" style="justify-content:center">@Cms[ContentBlockSlugs.OurServicesFmScopeTag, "FM Scope Builder"]</div>
+    <h2 class="section-title fade-up" style="text-align:center;max-width:640px;margin:0 auto 12px">@Html.Raw(Cms[ContentBlockSlugs.OurServicesFmScopeTitle, "Build Your <em>Facility Management</em> Scope"])</h2>
+    <p class="section-sub fade-up" style="text-align:center;margin:0 auto 36px">@Cms[ContentBlockSlugs.OurServicesFmScopeSub, "Select the services you need and we'll build a tailored FM proposal for your asset."]</p>
 
     <div class="quote-grid">
       <div class="quote-card">
@@ -198,9 +198,9 @@
 <!-- ═══ SERVICE COVERAGE MAP ═══ -->
 <section class="section-pad" style="background:var(--bg-surface)">
   <div class="container" style="text-align:center">
-    <div class="section-tag fade-up" style="justify-content:center">Where We Operate</div>
-    <h2 class="section-title fade-up">Service <em>Coverage</em> Across the UAE</h2>
-    <p class="section-sub fade-up" style="margin:0 auto 36px">Based in Abu Dhabi — serving all seven emirates with the same quality standards.</p>
+    <div class="section-tag fade-up" style="justify-content:center">@Cms[ContentBlockSlugs.OurServicesCoverageTag, "Where We Operate"]</div>
+    <h2 class="section-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.OurServicesCoverageTitle, "Service <em>Coverage</em> Across the UAE"])</h2>
+    <p class="section-sub fade-up" style="margin:0 auto 36px">@Cms[ContentBlockSlugs.OurServicesCoverageSub, "Based in Abu Dhabi — serving all seven emirates with the same quality standards."]</p>
 
     <div class="coverage-grid fade-up">
       @{
@@ -226,7 +226,7 @@
     </div>
 
     <div style="margin-top:36px">
-      <a asp-page="/Contact" class="btn-primary" style="display:inline-flex"><span>Check availability for your area</span></a>
+      <a asp-page="/Contact" class="btn-primary" style="display:inline-flex"><span>@Cms[ContentBlockSlugs.OurServicesCheckAvailBtn, "Check availability for your area"]</span></a>
     </div>
   </div>
 </section>
@@ -234,9 +234,9 @@
 <!-- ═══ SITE VISIT BOOKING ═══ -->
 <section class="section-pad" id="book-visit" style="background:var(--bg-deep)">
   <div class="container" style="max-width:680px;text-align:center">
-    <div class="section-tag fade-up" style="justify-content:center">Site Visit</div>
-    <h2 class="section-title fade-up">Book a Free <em>Site Visit</em></h2>
-    <p class="section-sub fade-up" style="margin:0 auto 36px">Our team will visit your property, assess your requirements, and provide a detailed proposal — completely free, no obligation.</p>
+    <div class="section-tag fade-up" style="justify-content:center">@Cms[ContentBlockSlugs.OurServicesSiteVisitTag, "Site Visit"]</div>
+    <h2 class="section-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.OurServicesSiteVisitTitle, "Book a Free <em>Site Visit</em>"])</h2>
+    <p class="section-sub fade-up" style="margin:0 auto 36px">@Cms[ContentBlockSlugs.OurServicesSiteVisitSub, "Our team will visit your property, assess your requirements, and provide a detailed proposal — completely free, no obligation."]</p>
 
     <div class="quote-card fade-up">
       <div class="quote-card-head">
@@ -274,9 +274,9 @@
         <div class="quote-field"><label>Notes (optional)</label><textarea name="projectDescription" rows="2" placeholder="Any specific requirements or information that would help us prepare…" maxlength="4000"></textarea></div>
         <button type="submit" class="btn-primary w-100 justify-content-center">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <span>Book Free Site Visit</span>
+          <span>@Cms[ContentBlockSlugs.OurServicesBookVisitBtn, "Book Free Site Visit"]</span>
         </button>
-        <p class="text-center small text-muted mt-2 mb-0">Our team will confirm your appointment within 2 hours during business hours.</p>
+        <p class="text-center small text-muted mt-2 mb-0">@Cms[ContentBlockSlugs.OurServicesBookVisitConfirm, "Our team will confirm your appointment within 2 hours during business hours."]</p>
       </form>
     </div>
   </div>

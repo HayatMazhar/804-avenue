@@ -51,8 +51,9 @@ public class LoginModel : PageModel
             return Page();
         }
 
-        // Verify the user is an admin (has the Admin role) before signing in
-        if (!await _userManager.IsInRoleAsync(user, SeedData.AdminRole))
+        // Allow any staff role to log in to admin console
+        var roles = await _userManager.GetRolesAsync(user);
+        if (!roles.Any(r => SeedData.AllAdminRoles.Contains(r, StringComparer.OrdinalIgnoreCase)))
         {
             ErrorMessage = "You do not have admin access.";
             return Page();

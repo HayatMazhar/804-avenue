@@ -70,7 +70,7 @@ public class MaintenanceRequestModel : PageModel
 
         if (await _flags.IsEnabledAsync(FeatureFlags.EmailNotifications, ct))
         {
-            var adminEmail = _cfg["Site:Email"] ?? "info@804avenue.com";
+            var adminEmail = _cfg["Site:Email"] ?? "info@804avenue.ae";
             var priorityLabel = priority == TicketPriority.Emergency ? "🚨 EMERGENCY" : priority == TicketPriority.High ? "⚠ HIGH" : "Normal";
             await _email.SendAsync(adminEmail,
                 $"[{priorityLabel}] Maintenance Request — {name} — {buildingOrLocation}",

@@ -1,18 +1,17 @@
 @page
 @model PrivacyModel
 @{
-    ViewData["Title"] = "Privacy Policy";
-    ViewData["MetaDescription"] = "804 Avenue privacy policy — how we collect, use, and protect your personal information.";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaPrivacyTitle, "Privacy Policy"];
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaPrivacyDescription, "804 Avenue privacy policy — how we collect, use, and protect your personal information."];
 }
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Privacy Policy</span></div>
-    <h1 class="page-hero-title fade-up">Privacy <em>Policy</em></h1>
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.PrivacyCrumb, "Privacy Policy"]</span></div>
+    <h1 class="page-hero-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.PrivacyHeroH1, "Privacy <em>Policy</em>"])</h1>
   </div>
 </section>
 <section class="section-pad section-bg-white">
   <div class="container" style="max-width:800px">
-    <p>This page details the privacy policy for 804 Avenue Properties and Contracting. We are committed to protecting your personal information and your right to privacy.</p>
-    <p>If you have any questions or concerns about this policy, please contact us at the details on our <a asp-page="/Contact">Contact</a> page.</p>
+    @Html.Raw(Cms[ContentBlockSlugs.PrivacyBody, "<p>This page details the privacy policy for 804 Avenue Properties and Contracting. We are committed to protecting your personal information and your right to privacy.</p><p>If you have any questions or concerns about this policy, please contact us at the details on our <a href=\"/Contact\">Contact</a> page.</p>"])
   </div>
 </section>

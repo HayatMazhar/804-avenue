@@ -1,0 +1,151 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Staff.IndexModel
+@{
+    ViewData["Title"] = "Staff Accounts";
+    ViewData["AdminSection"] = "staff";
+
+    string RoleBadgeClass(string role) => role switch {
+        "Admin"           => "badge-closed",
+        "ContentEditor"   => "badge-new",
+        "PropertyManager" => "badge-pending",
+        "SupportAgent"    => "badge-open",
+        _                 => "badge-new"
+    };
+}
+
+<p class="muted admin-lead-muted">
+  Manage staff accounts that can log in to the Admin Console.
+  <strong>@Model.Staff.Count</strong> account@(Model.Staff.Count != 1 ? "s" : "") found.
+</p>
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+
+<!-- ── Staff table ─────────────────────────────────────── -->
+<div class="admin-table-wrap mb-4">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Change Role</th>
+        <th>Reset PW</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var s in Model.Staff)
+      {
+        var roleLabel = s.Roles.FirstOrDefault() ?? "—";
+        <tr>
+          <td>@(s.DisplayName ?? "—")</td>
+          <td><a href="mailto:@s.Email">@s.Email</a></td>
+          <td><span class="badge @RoleBadgeClass(roleLabel)">@roleLabel</span></td>
+          <td>
+            @if (s.IsLockedOut)
+            { <span class="badge badge-new">Suspended</span> }
+            else
+            { <span class="badge badge-closed">Active</span> }
+          </td>
+
+          <!-- Change role -->
+          <td>
+            <form method="post" asp-page-handler="ChangeRole" style="display:flex;gap:4px;align-items:center">
+              <input type="hidden" name="userId" value="@s.Id" />
+              <select name="newRole" class="form-select form-select-sm" style="font-size:.75rem;padding:2px 6px;width:auto">
+                @foreach (var r in Avenue804.Web.Areas.Admin.Pages.Staff.IndexModel.AvailableRoles)
+                {
+                  if (r == roleLabel)
+                  { <option value="@r" selected>@r</option> }
+                  else
+                  { <option value="@r">@r</option> }
+                }
+              </select>
+              <button class="btn-primary admin-btn-xs" type="submit">Set</button>
+            </form>
+          </td>
+
+          <!-- Reset password -->
+          <td>
+            <form method="post" asp-page-handler="ResetPassword" style="display:flex;gap:4px;align-items:center">
+              <input type="hidden" name="userId" value="@s.Id" />
+              <input type="password" name="newPassword" placeholder="New pw" minlength="8"
+                     class="form-control form-control-sm" style="font-size:.75rem;width:110px" required />
+              <button class="btn-outline admin-btn-xs" type="submit">Reset</button>
+            </form>
+          </td>
+
+          <!-- Lock / delete -->
+          <td style="white-space:nowrap">
+            <form method="post" asp-page-handler="ToggleLock" style="display:inline">
+              <input type="hidden" name="userId" value="@s.Id" />
+              @if (s.IsLockedOut)
+              {
+                <button name="action" value="unlock" class="btn-primary admin-btn-xs">Activate</button>
+              }
+              else
+              {
+                <button name="action" value="lock" onclick="return confirm('Suspend @s.Email?')" class="btn-outline admin-btn-xs btn-suspend">Suspend</button>
+              }
+            </form>
+            &nbsp;
+            <form method="post" asp-page-handler="Delete" style="display:inline">
+              <input type="hidden" name="userId" value="@s.Id" />
+              <button onclick="return confirm('Permanently delete account @s.Email?')" class="btn-outline admin-btn-xs btn-delete">Delete</button>
+            </form>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  @if (Model.Staff.Count == 0) { <p class="muted admin-empty">No staff accounts found.</p> }
+</div>
+
+<!-- ── Create new staff account ────────────────────────── -->
+<div class="as-card" style="max-width:520px">
+  <h3 style="font-size:1rem;font-weight:700;margin-bottom:1.25rem">
+    <i class="bi bi-person-plus me-1"></i> Create Staff Account
+  </h3>
+  <form method="post" asp-page-handler="Create">
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+      <input asp-for="Create.DisplayName" class="form-control" placeholder="e.g. Sarah Al Hashimi" />
+      <span asp-validation-for="Create.DisplayName" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+      <input asp-for="Create.Email" class="form-control" placeholder="name@804avenue.ae" type="email" />
+      <span asp-validation-for="Create.Email" class="text-danger small"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+      <input asp-for="Create.Password" class="form-control" type="password" placeholder="Min 8 characters" />
+      <span asp-validation-for="Create.Password" class="text-danger small"></span>
+      <div class="form-text">Must be at least 8 characters and include a digit and uppercase letter.</div>
+    </div>
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Role <span class="text-danger">*</span></label>
+      <select asp-for="Create.Role" class="form-select">
+        @foreach (var r in Avenue804.Web.Areas.Admin.Pages.Staff.IndexModel.AvailableRoles)
+        {
+          <option value="@r">@r</option>
+        }
+      </select>
+      <span asp-validation-for="Create.Role" class="text-danger small"></span>
+      <div class="form-text mt-1">
+        <strong>Admin</strong> — Full access &nbsp;|&nbsp;
+        <strong>ContentEditor</strong> — CMS &amp; content &nbsp;|&nbsp;
+        <strong>PropertyManager</strong> — Listings &amp; agents &nbsp;|&nbsp;
+        <strong>SupportAgent</strong> — Inquiries &amp; service
+      </div>
+    </div>
+    <button type="submit" class="btn-primary">
+      <i class="bi bi-person-plus me-1"></i> Create Account
+    </button>
+  </form>
+</div>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

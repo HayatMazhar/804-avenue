@@ -46,7 +46,7 @@ public class DigestModel : PageModel
 
         if (testOnly)
         {
-            var adminEmail = _cfg["Site:Email"] ?? _cfg["Seed:AdminEmail"] ?? "info@804avenue.com";
+            var adminEmail = _cfg["Site:Email"] ?? _cfg["Seed:AdminEmail"] ?? "info@804avenue.ae";
             await _email.SendAsync(adminEmail, "[TEST] Weekly Digest — 804 Avenue", BuildDigestEmail("Admin (test)", newListings.Count, htmlListings, siteUrl), ct);
             Result = $"Test digest sent to {adminEmail} featuring {newListings.Count} listings.";
         }

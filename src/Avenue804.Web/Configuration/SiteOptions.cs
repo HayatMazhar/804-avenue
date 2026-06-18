@@ -17,7 +17,7 @@ public class SiteOptions
 
     public string PhoneDisplay { get; set; } = "+971 50 43 99 804";
 
-    public string Email { get; set; } = "info@804avenue.com";
+    public string Email { get; set; } = "info@804avenue.ae";
 
     public string Address { get; set; } =
         "Office #540, 5th Floor, Al Ghaith Tower, Abu Dhabi, UAE";

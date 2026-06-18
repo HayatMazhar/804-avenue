@@ -29,19 +29,19 @@
      HERO — service-first (Phase 1)
 ══════════════════════════════════════════════ -->
 <section class="ph-hero" id="hero">
-  <div class="ph-hero__bg">
-    <picture>
-      @if (hasWebp1x)
-      {
-        var url1x = Url.Content("~/assets/img/hero/home-hero.webp");
-        var url2x = Url.Content("~/assets/img/hero/home-hero@@2x.webp");
-        var srcset = hasWebp2x ? $"{url1x} 1x, {url2x} 2x" : $"{url1x} 1x";
-        <source type="image/webp" srcset="@srcset" />
-      }
-      <img src="@heroImgSrc"
-           alt="804 Avenue — Property, Construction & Maintenance Services"
-           width="1800" height="1000" loading="eager" decoding="async" fetchpriority="high" />
-    </picture>
+  <div class="ph-hero__bg ph-hero__bg--slides" id="heroSlider" aria-hidden="true">
+    <div class="ph-hero__slide ph-hero__slide--active">
+      <img src="~/assets/img/hero/hero-slide-1.jpg" alt="" width="1800" height="1000" loading="eager" decoding="async" fetchpriority="high" />
+    </div>
+    <div class="ph-hero__slide">
+      <img src="~/assets/img/hero/hero-slide-2.jpg" alt="" width="1800" height="1000" loading="lazy" decoding="async" />
+    </div>
+    <div class="ph-hero__slide">
+      <img src="~/assets/img/hero/hero-slide-3.jpg" alt="" width="1800" height="1000" loading="lazy" decoding="async" />
+    </div>
+    <div class="ph-hero__slide">
+      <img src="~/assets/img/hero/hero-slide-4.jpg" alt="" width="1800" height="1000" loading="lazy" decoding="async" />
+    </div>
   </div>
   <div class="ph-hero__overlay"></div>
   <div class="ph-hero__content">
@@ -64,11 +64,11 @@
         <span class="ph-search__re-title-ico" aria-hidden="true">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2h-4a2 2 0 01-2-2v-5h-2v5a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
         </span>
-        <span>Real Estate</span>
+        <span>@Cms[ContentBlockSlugs.HomeSearchSectionTitle, "Real Estate"]</span>
       </div>
       <div class="ph-search__re-toggle" role="tablist" aria-label="Buy or Rent">
-        <button type="button" class="ph-search__re-toggle-btn active" role="tab" aria-selected="true" data-re-mode="sale">Buy</button>
-        <button type="button" class="ph-search__re-toggle-btn" role="tab" aria-selected="false" data-re-mode="rent">Rent</button>
+        <button type="button" class="ph-search__re-toggle-btn active" role="tab" aria-selected="true" data-re-mode="sale">@Cms[ContentBlockSlugs.HomeSearchBuy, "Buy"]</button>
+        <button type="button" class="ph-search__re-toggle-btn" role="tab" aria-selected="false" data-re-mode="rent">@Cms[ContentBlockSlugs.HomeSearchRent, "Rent"]</button>
       </div>
     </div>
 
@@ -81,10 +81,10 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
           </span>
           <div class="ph-search__field-body">
-            <div class="ph-search__label">Property Type</div>
+            <div class="ph-search__label">@Cms[ContentBlockSlugs.HomeSearchPropertyType, "Property Type"]</div>
             <select class="ph-search__input" id="heroReCategory" aria-label="Property category">
-              <option value="Residential" selected>Residential</option>
-              <option value="Commercial">Commercial</option>
+              <option value="Residential" selected>@Cms[ContentBlockSlugs.HomeSearchOptionResidential, "Residential"]</option>
+              <option value="Commercial">@Cms[ContentBlockSlugs.HomeSearchOptionCommercial, "Commercial"]</option>
             </select>
           </div>
         </div>
@@ -95,7 +95,7 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
           </span>
           <div class="ph-search__field-body">
-            <div class="ph-search__label">Property Details</div>
+            <div class="ph-search__label">@Cms[ContentBlockSlugs.HomeSearchPropertyDetails, "Property Details"]</div>
             <select class="ph-search__input" name="type" id="heroReDetails" aria-label="Property details"
                     data-details-residential='["Apartment","Villa Apartment","Villa Compound","Villa","Building","Land"]'
                     data-details-commercial='["Shell &amp; Core Offices","Furnished Offices","Warehouse / Stores","Showroom","Shop","Villa","Labor Camp","Building","Land"]'>
@@ -118,15 +118,15 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
           </span>
           <div class="ph-search__field-body">
-            <div class="ph-search__label">Emirate</div>
+            <div class="ph-search__label">@Cms[ContentBlockSlugs.HomeSearchEmirate, "Emirate"]</div>
             <select class="ph-search__input" name="location" id="heroReEmirate" aria-label="Emirate">
-              <option value="Abu Dhabi" selected>Abu Dhabi</option>
+              <option value="Abu Dhabi" selected>@Cms[ContentBlockSlugs.HomeSearchEmirateDefault, "Abu Dhabi"]</option>
             </select>
           </div>
         </div>
 
         <button type="submit" class="ph-search__btn">
-          <span>Search</span>
+          <span>@Cms[ContentBlockSlugs.HomeSearchButton, "Search"]</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
       </div>
@@ -136,7 +136,7 @@
     <div class="ph-search__trust" style="justify-content:center">
       <a href="/Inquiry" class="ph-search__trust-item" style="text-decoration:none;color:var(--accent);font-weight:600">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Planning to move in future? Click Here.
+        @Cms[ContentBlockSlugs.HomeSearchPlanningLink, "Planning to move in future? Click Here."]
       </a>
     </div>
   </form>
@@ -160,19 +160,19 @@
     <div class="ph-stats__grid">
       <div class="ph-stats__item fade-up">
         <div class="ph-stats__num" data-count="@projectsCount" data-suffix="@Suffix(projectsCount)">0</div>
-        <div class="ph-stats__label">Projects Delivered</div>
+        <div class="ph-stats__label">@Cms[ContentBlockSlugs.HomeStatsLabelProjects, "Projects Delivered"]</div>
       </div>
       <div class="ph-stats__item fade-up">
         <div class="ph-stats__num" data-count="@yearsCount" data-suffix="+">0</div>
-        <div class="ph-stats__label">Years Experience</div>
+        <div class="ph-stats__label">@Cms[ContentBlockSlugs.HomeStatsLabelYears, "Years Experience"]</div>
       </div>
       <div class="ph-stats__item fade-up">
         <div class="ph-stats__num" data-count="@ticketsCount" data-suffix="@Suffix(ticketsCount)">0</div>
-        <div class="ph-stats__label">Maintenance Jobs Resolved</div>
+        <div class="ph-stats__label">@Cms[ContentBlockSlugs.HomeStatsLabelTickets, "Maintenance Jobs Resolved"]</div>
       </div>
       <div class="ph-stats__item fade-up">
         <div class="ph-stats__num" data-count="@listingsCount" data-suffix="@Suffix(listingsCount)">0</div>
-        <div class="ph-stats__label">Properties Listed</div>
+        <div class="ph-stats__label">@Cms[ContentBlockSlugs.HomeStatsLabelListings, "Properties Listed"]</div>
       </div>
     </div>
   </div>
@@ -181,10 +181,18 @@
 <!-- ══════════════════════════════════════════════
      OUR SERVICES — core business (first section)
 ══════════════════════════════════════════════ -->
+@{
+    var reBullets = Cms[ContentBlockSlugs.HomeCardReBullets, "Buy & sell residential properties\nCommercial leasing & sales\nOff-plan project sales\nProperty management & rental\nMarket valuation & advisory"];
+    var contrBullets = Cms[ContentBlockSlugs.HomeCardContrBullets, "Civil & general contracting\nInterior fit-out & renovation\nGypsum & ceiling works\nFlooring, painting & finishing\nGlass, aluminum & signage"];
+    var maintBullets = Cms[ContentBlockSlugs.HomeCardMaintBullets, "MEP (mechanical, electrical, plumbing)\nPreventive maintenance contracts\nCorrective & emergency repairs\nGeneral building maintenance\nCivil maintenance works"];
+    var fmBullets = Cms[ContentBlockSlugs.HomeCardFmBullets, "Building operations management\nShared services coordination\nVendor & contractor management\nHealth, safety & compliance\nAMC (annual maintenance contracts)"];
+    string[] SplitLines(string s) => s.Replace("\r\n", "\n").Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    var learnMore = Cms[ContentBlockSlugs.CommonLearnMore, "Learn more →"];
+}
 <section class="section-pad section-bg-white">
   <div class="container">
-    <p class="ph-tag ph-tag--center fade-up">What We Do</p>
-    <h2 class="ph-title ph-title--center fade-up mb-4">Real Estate. Contracting. Maintenance. <em>Facility Management.</em></h2>
+    <p class="ph-tag ph-tag--center fade-up">@Cms[ContentBlockSlugs.HomeServicesTag, "What We Do"]</p>
+    <h2 class="ph-title ph-title--center fade-up mb-4">@Html.Raw(Cms[ContentBlockSlugs.HomeServicesTitle, "Real Estate. Contracting. Maintenance. <em>Facility Management.</em>"])</h2>
     <div class="ph-services__grid">
 
       <!-- Real Estate -->
@@ -192,19 +200,17 @@
         <div class="ph-service-card__img" style="background-image:url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80')"></div>
         <div class="ph-service-card__overlay"></div>
         <div class="ph-service-card__body">
-          <div class="ph-service-card__icon">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2h-4a2 2 0 01-2-2v-5h-2v5a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          <div class="ph-service-card__header">
+            <div class="ph-service-card__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2h-4a2 2 0 01-2-2v-5h-2v5a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            </div>
+            <h3 class="ph-service-card__title">@Cms[ContentBlockSlugs.HomeCardReTitle, "Real Estate"]</h3>
           </div>
-          <h3 class="ph-service-card__title">Real Estate</h3>
-          <p class="ph-service-card__sub">Buy, sell or rent residential and commercial properties across Abu Dhabi and the UAE with our brokerage team.</p>
+          <p class="ph-service-card__sub">@Html.Raw(Cms[ContentBlockSlugs.HomeCardReSub, "Buy, sell or rent residential and commercial properties across Abu Dhabi and the UAE with our brokerage team."])</p>
           <ul class="ph-service-card__list">
-            <li>Buy &amp; sell residential properties</li>
-            <li>Commercial leasing &amp; sales</li>
-            <li>Off-plan project sales</li>
-            <li>Property management &amp; rental</li>
-            <li>Market valuation &amp; advisory</li>
+            @foreach (var line in SplitLines(reBullets)) { <li>@line</li> }
           </ul>
-          <span class="ph-service-card__cta">Learn more →</span>
+          <span class="ph-service-card__cta">@Cms[ContentBlockSlugs.HomeCardReCta, learnMore]</span>
         </div>
       </a>
 
@@ -213,19 +219,17 @@
         <div class="ph-service-card__img" style="background-image:url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80')"></div>
         <div class="ph-service-card__overlay"></div>
         <div class="ph-service-card__body">
-          <div class="ph-service-card__icon">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          <div class="ph-service-card__header">
+            <div class="ph-service-card__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <h3 class="ph-service-card__title">@Cms[ContentBlockSlugs.HomeCardContrTitle, "Contracting"]</h3>
           </div>
-          <h3 class="ph-service-card__title">Contracting</h3>
           <p class="ph-service-card__sub">@Html.Raw(Txt(ContentBlockSlugs.HomeServiceCardContrLead, "Civil works, interior fit-out, gypsum, flooring, glass &amp; aluminum, signage — end-to-end project delivery."))</p>
           <ul class="ph-service-card__list">
-            <li>Civil &amp; general contracting</li>
-            <li>Interior fit-out &amp; renovation</li>
-            <li>Gypsum &amp; ceiling works</li>
-            <li>Flooring, painting &amp; finishing</li>
-            <li>Glass, aluminum &amp; signage</li>
+            @foreach (var line in SplitLines(contrBullets)) { <li>@line</li> }
           </ul>
-          <span class="ph-service-card__cta">Learn more →</span>
+          <span class="ph-service-card__cta">@Cms[ContentBlockSlugs.HomeCardContrCta, learnMore]</span>
         </div>
       </a>
 
@@ -234,19 +238,17 @@
         <div class="ph-service-card__img" style="background-image:url('https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&q=80')"></div>
         <div class="ph-service-card__overlay"></div>
         <div class="ph-service-card__body">
-          <div class="ph-service-card__icon">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          <div class="ph-service-card__header">
+            <div class="ph-service-card__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            </div>
+            <h3 class="ph-service-card__title">@Cms[ContentBlockSlugs.HomeCardMaintTitle, "Maintenance"]</h3>
           </div>
-          <h3 class="ph-service-card__title">Maintenance</h3>
           <p class="ph-service-card__sub">@Html.Raw(Txt(ContentBlockSlugs.HomeServiceCardMaintLead, "Preventive, corrective and MEP maintenance — keeping your property in peak condition year-round."))</p>
           <ul class="ph-service-card__list">
-            <li>MEP (mechanical, electrical, plumbing)</li>
-            <li>Preventive maintenance contracts</li>
-            <li>Corrective &amp; emergency repairs</li>
-            <li>General building maintenance</li>
-            <li>Civil maintenance works</li>
+            @foreach (var line in SplitLines(maintBullets)) { <li>@line</li> }
           </ul>
-          <span class="ph-service-card__cta">Learn more →</span>
+          <span class="ph-service-card__cta">@Cms[ContentBlockSlugs.HomeCardMaintCta, learnMore]</span>
         </div>
       </a>
 
@@ -255,19 +257,17 @@
         <div class="ph-service-card__img" style="background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80')"></div>
         <div class="ph-service-card__overlay"></div>
         <div class="ph-service-card__body">
-          <div class="ph-service-card__icon">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M14 7h1M14 11h1M9 7h1M9 11h1"/></svg>
+          <div class="ph-service-card__header">
+            <div class="ph-service-card__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M14 7h1M14 11h1M9 7h1M9 11h1"/></svg>
+            </div>
+            <h3 class="ph-service-card__title">@Cms[ContentBlockSlugs.HomeCardFmTitle, "Facility Management"]</h3>
           </div>
-          <h3 class="ph-service-card__title">Facility Management</h3>
           <p class="ph-service-card__sub">@Html.Raw(Txt(ContentBlockSlugs.HomeServiceCardFmLead, "Complete facility management for buildings, compounds and commercial complexes across the UAE."))</p>
           <ul class="ph-service-card__list">
-            <li>Building operations management</li>
-            <li>Shared services coordination</li>
-            <li>Vendor &amp; contractor management</li>
-            <li>Health, safety &amp; compliance</li>
-            <li>AMC (annual maintenance contracts)</li>
+            @foreach (var line in SplitLines(fmBullets)) { <li>@line</li> }
           </ul>
-          <span class="ph-service-card__cta">Learn more →</span>
+          <span class="ph-service-card__cta">@Cms[ContentBlockSlugs.HomeCardFmCta, learnMore]</span>
         </div>
       </a>
 
@@ -284,37 +284,31 @@
       <div class="ph-about__img fade-up">
         <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=900&q=80" alt="804 Avenue office" />
         <div class="ph-about__img-card fade-up">
-          <div class="ph-about__img-num">15+</div>
-          <div class="ph-about__img-label">Years serving the UAE</div>
+          <div class="ph-about__img-num">@Cms[ContentBlockSlugs.HomeAboutImgYears, "15+"]</div>
+          <div class="ph-about__img-label">@Cms[ContentBlockSlugs.HomeAboutImgLabel, "Years serving the UAE"]</div>
         </div>
       </div>
       <div class="ph-about__content">
-        <p class="ph-tag fade-up">About 804 Avenue</p>
+        <p class="ph-tag fade-up">@Cms[ContentBlockSlugs.HomeAboutTag, "About 804 Avenue"]</p>
         <h2 class="ph-title fade-up">@Html.Raw(Txt(ContentBlockSlugs.HomeAboutTitle, "Your trusted partner in <em>property &amp; construction</em>"))</h2>
         <p class="ph-about__text fade-up">
           @Html.Raw(Txt(ContentBlockSlugs.AboutStripLead,
             "804 Avenue Properties and Contracting is a dynamic company offering professional services in real estate, construction and property maintenance across the UAE. Headquartered in Abu Dhabi, we combine deep market knowledge with skilled craftsmanship to deliver exceptional results for every client."))
         </p>
         <div class="ph-about__points fade-up">
-          <div class="ph-about__point">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Licensed &amp; certified engineers and technicians
-          </div>
-          <div class="ph-about__point">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Real estate, contracting &amp; maintenance under one roof
-          </div>
-          <div class="ph-about__point">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Transparent pricing — no hidden fees
-          </div>
-          <div class="ph-about__point">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            On-time delivery with structured project management
-          </div>
+          @{
+            var aboutBullets = Cms[ContentBlockSlugs.HomeAboutBullets, "Licensed & certified engineers and technicians\nReal estate, contracting & maintenance under one roof\nTransparent pricing — no hidden fees\nOn-time delivery with structured project management"];
+          }
+          @foreach (var line in SplitLines(aboutBullets))
+          {
+            <div class="ph-about__point">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              @line
+            </div>
+          }
         </div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:32px">
-          <a asp-page="/About" class="ph-btn ph-btn--primary">About Us</a>
+          <a asp-page="/About" class="ph-btn ph-btn--primary">@Cms[ContentBlockSlugs.HomeAboutCtaBtn, "About Us"]</a>
         </div>
       </div>
     </div>
@@ -327,11 +321,10 @@
 <section class="section-pad ph-partners" style="background:#fff">
   <div class="container">
     <div style="text-align:center;margin-bottom:36px">
-      <p class="ph-tag ph-tag--center fade-up">Trusted Network</p>
-      <h2 class="ph-title ph-title--center fade-up">Our <em>Channel Partners</em></h2>
+      <p class="ph-tag ph-tag--center fade-up">@Cms[ContentBlockSlugs.HomePartnersTag, "Trusted Network"]</p>
+      <h2 class="ph-title ph-title--center fade-up">@Html.Raw(Cms[ContentBlockSlugs.HomePartnersTitle, "Our <em>Channel Partners</em>"])</h2>
       <p class="ph-about__text fade-up" style="max-width:640px;margin:14px auto 0">
-        We work hand-in-hand with the UAE's leading developers and real-estate management
-        firms to bring you the widest selection of premium properties.
+        @Cms[ContentBlockSlugs.HomePartnersLead, "We work hand-in-hand with the UAE's leading developers and real-estate management firms to bring you the widest selection of premium properties."]
       </p>
     </div>
     <div class="ph-partners__grid fade-up">
@@ -361,10 +354,10 @@
     <div class="container">
       <div class="ph-projects__head">
         <div>
-          <p class="ph-tag fade-up">Real Estate</p>
-          <h2 class="ph-title fade-up">Featured <em>Properties</em></h2>
+          <p class="ph-tag fade-up">@Cms[ContentBlockSlugs.HomeFeaturedTag, "Real Estate"]</p>
+          <h2 class="ph-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.HomeFeaturedTitle, "Featured <em>Properties</em>"])</h2>
         </div>
-        <a class="ph-link-all" asp-page="/Properties/Index">Browse all →</a>
+        <a class="ph-link-all" asp-page="/Properties/Index">@Cms[ContentBlockSlugs.HomeFeaturedAll, "Browse all →"]</a>
       </div>
       <div class="ph-feat-grid">
         @foreach (var p in Model.FeaturedListings)
@@ -376,19 +369,17 @@
   </section>
 }
 
-<!-- ══════════════════════════════════════════════
-     TESTIMONIALS
-══════════════════════════════════════════════ -->
-<section class="section-pad" style="background:#f9fafb">
-  <div class="container">
-    <div style="text-align:center;margin-bottom:48px">
-      <p class="ph-tag ph-tag--center fade-up">@Html.Raw(Txt(ContentBlockSlugs.HomeTestiTag, "Client Stories"))</p>
-      <h2 class="ph-title ph-title--center fade-up">@Html.Raw(Txt(ContentBlockSlugs.HomeTestiTitle, "What our <em>clients</em> say"))</h2>
-    </div>
-    <div class="ph-testi__grid">
-      @if (Model.Testimonials.Count > 0)
-      {
-        foreach (var t in Model.Testimonials.Take(3))
+@* Testimonials section — only renders when real testimonials exist in the database (managed via Admin → Testimonials) *@
+@if (Model.Testimonials.Count > 0)
+{
+  <section class="section-pad" style="background:#f9fafb">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:48px">
+        <p class="ph-tag ph-tag--center fade-up">@Html.Raw(Txt(ContentBlockSlugs.HomeTestiTag, "Client Stories"))</p>
+        <h2 class="ph-title ph-title--center fade-up">@Html.Raw(Txt(ContentBlockSlugs.HomeTestiTitle, "What our <em>clients</em> say"))</h2>
+      </div>
+      <div class="ph-testi__grid">
+        @foreach (var t in Model.Testimonials.Take(3))
         {
           <div class="ph-testi-card fade-up">
             <div class="ph-testi-card__stars">
@@ -406,43 +397,10 @@
             </div>
           </div>
         }
-      }
-      else
-      {
-        <div class="ph-testi-card fade-up">
-          <div class="ph-testi-card__stars">
-            @for (int i = 0; i < 5; i++) { <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg> }
-          </div>
-          <p class="ph-testi-card__text">804 Avenue helped us find the perfect apartment in Al Reem Island and handled the complete interior fit-out. One company for everything — seamless.</p>
-          <div class="ph-testi-card__author">
-            <div class="ph-testi-card__avatar">F</div>
-            <div><div class="ph-testi-card__name">Fatima Al Mazrouei</div><div class="ph-testi-card__role">Homeowner — Al Reem Island</div></div>
-          </div>
-        </div>
-        <div class="ph-testi-card fade-up">
-          <div class="ph-testi-card__stars">
-            @for (int i = 0; i < 5; i++) { <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg> }
-          </div>
-          <p class="ph-testi-card__text">Their contracting team delivered our office renovation ahead of schedule. Exceptional quality in gypsum and finishing work. Highly recommended.</p>
-          <div class="ph-testi-card__author">
-            <div class="ph-testi-card__avatar">J</div>
-            <div><div class="ph-testi-card__name">James Mitchell</div><div class="ph-testi-card__role">CEO — Mitchell Group</div></div>
-          </div>
-        </div>
-        <div class="ph-testi-card fade-up">
-          <div class="ph-testi-card__stars">
-            @for (int i = 0; i < 5; i++) { <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg> }
-          </div>
-          <p class="ph-testi-card__text">We've used 804 Avenue for our annual maintenance contract for two years. Their preventive approach saved us from major issues. Professional and reliable.</p>
-          <div class="ph-testi-card__author">
-            <div class="ph-testi-card__avatar">A</div>
-            <div><div class="ph-testi-card__name">Ahmed Al Dhaheri</div><div class="ph-testi-card__role">Building Manager — Abu Dhabi</div></div>
-          </div>
-        </div>
-      }
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+}
 
 <!-- ══════════════════════════════════════════════
      FINAL CTA BANNER
@@ -452,14 +410,14 @@
     <div class="ph-cta__inner fade-up">
       <div class="ph-cta__text">
         <h2 class="ph-cta__title">@Html.Raw(Txt(ContentBlockSlugs.HomeCtaTitle, "Ready to build, renovate or maintain?"))</h2>
-        <p class="ph-cta__sub">Call us today — contracting, maintenance &amp; FM under one roof.</p>
+        <p class="ph-cta__sub">@Cms[ContentBlockSlugs.HomeCtaSub, "Call us today — contracting, maintenance & FM under one roof."]</p>
         <a href="@(site?.TelHref ?? "tel:+971504399804")" class="ph-cta__phone">
           @(site?.PhoneDisplay ?? "+971 50 43 99 804")
         </a>
       </div>
       <div class="ph-cta__btns">
-        <a asp-page="/Submit/ServiceQuote" class="ph-btn ph-btn--white">Get a Free Quote</a>
-        <a asp-page="/Services/Index" class="ph-btn ph-btn--outline-white">All Services</a>
+        <a asp-page="/Submit/ServiceQuote" class="ph-btn ph-btn--white">@Cms[ContentBlockSlugs.HomeCtaBtnQuote, "Get a Free Quote"]</a>
+        <a asp-page="/Services/Index" class="ph-btn ph-btn--outline-white">@Cms[ContentBlockSlugs.HomeCtaBtnAllSvc, "All Services"]</a>
       </div>
     </div>
   </div>

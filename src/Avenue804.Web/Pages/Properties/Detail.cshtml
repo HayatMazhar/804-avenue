@@ -70,6 +70,15 @@
   <meta name="twitter:description" content="@(ViewData["MetaDescription"] as string ?? "")" />
 }
 
+@if (Model.IsPreview)
+{
+  <div style="position:sticky;top:0;z-index:1100;background:linear-gradient(135deg,#0b1220,#1f2937);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:center;gap:14px;font-size:.78rem;font-weight:600;box-shadow:0 2px 12px rgba(0,0,0,.25);">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    <span>Preview mode &mdash; this listing is <strong>not published</strong> and is hidden from the public.</span>
+    <a asp-area="Admin" asp-page="/Listings/Edit" asp-route-id="@L.Id" style="color:#fbbf24;text-decoration:underline;">Back to edit</a>
+  </div>
+}
+
 <section class="page-hero">
   <div class="container">
     <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Properties/Index">Properties</a><span class="sep">/</span><span>@L.Title</span></div>
@@ -145,15 +154,14 @@
 
         <!-- Print / brochure button -->
         <div style="display:flex;gap:10px;margin-bottom:16px">
-          <button onclick="window.print()" class="share-btn" style="padding:8px 16px">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Print / Save PDF
+          <button onclick="window.print()" class="share-btn" style="padding:8px 16px">@{ /* svg below */ }<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            @Cms[ContentBlockSlugs.PropertyDetailPrintBtn, "Print / Save PDF"]
           </button>
         </div>
 
         <!-- Share bar -->
         <div class="share-bar">
-          <span class="share-label">Share</span>
+          <span class="share-label">@Cms[ContentBlockSlugs.PropertyDetailShareLabel, "Share"]</span>
           <a href="https://wa.me/?text=@shareTitle%20@shareUrlEnc" target="_blank" rel="noopener" class="share-btn share-btn--wa" title="Share on WhatsApp">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
             WhatsApp
@@ -170,9 +178,9 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             X
           </a>
-          <button class="share-btn share-btn--copy" onclick="copyLink('@shareUrl', this)" title="Copy link">
+          <button class="share-btn share-btn--copy" onclick="copyLink('@shareUrl', this)" title="@Cms[ContentBlockSlugs.PropertyDetailCopyLinkTitle, "Copy link"]">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-            Copy Link
+            @Cms[ContentBlockSlugs.PropertyDetailCopyLinkLabel, "Copy Link"]
           </button>
         </div>
 
@@ -185,7 +193,7 @@
         @if (!string.IsNullOrWhiteSpace(L.PriceHistoryJson) || L.PreviousPrice.HasValue)
         {
           <div class="price-history-section fade-up">
-            <h3 class="amenities-title">Price History</h3>
+            <h3 class="amenities-title">@Cms[ContentBlockSlugs.PropertyDetailPriceHistTitle, "Price History"]</h3>
             <canvas id="priceHistoryChart" height="80"></canvas>
           </div>
         }
@@ -207,7 +215,7 @@
           var amenityMap = new Dictionary<string,string>{{"pool","Swimming Pool"},{"gym","Gym"},{"parking","Covered Parking"},{"security","24/7 Security"},{"cctv","CCTV"},{"concierge","Concierge"},{"maid","Maid's Room"},{"balcony","Balcony"},{"pets","Pets Allowed"},{"view","Sea / City View"},{"furnished","Fully Furnished"},{"kitchen","Open Kitchen"},{"study","Study Room"},{"laundry","Laundry Room"},{"central_ac","Central A/C"},{"lift","Elevator"},{"bbq","BBQ Area"},{"kids","Kids Play Area"}};
           var codes = L.AmenitiesJson.Split(',', StringSplitOptions.RemoveEmptyEntries);
           <div class="amenities-section fade-up">
-            <h3 class="amenities-title">Amenities &amp; Features</h3>
+            <h3 class="amenities-title">@Cms[ContentBlockSlugs.PropertyDetailAmenitiesTitle, "Amenities & Features"]</h3>
             <div class="amenities-grid">
               @foreach (var code in codes)
               {
@@ -225,7 +233,7 @@
         @if (!string.IsNullOrWhiteSpace(L.FloorPlanUrl))
         {
           <div class="floorplan-section fade-up">
-            <h3 class="amenities-title">Floor Plan</h3>
+            <h3 class="amenities-title">@Cms[ContentBlockSlugs.PropertyDetailFloorplanTitle, "Floor Plan"]</h3>
             <div class="floorplan-wrap">
               <img src="@L.FloorPlanUrl" alt="@L.Title floor plan" class="floorplan-img" onclick="openFloorPlan()" style="cursor:zoom-in" />
               <button onclick="openFloorPlan()" class="floorplan-zoom">
@@ -240,7 +248,7 @@
         @if (!string.IsNullOrWhiteSpace(L.VirtualTourUrl))
         {
           <div class="tour-section fade-up">
-            <h3 class="amenities-title">Virtual Tour</h3>
+            <h3 class="amenities-title">@Cms[ContentBlockSlugs.PropertyDetailVtourTitle, "Virtual Tour"]</h3>
             <div class="tour-embed">
               @if (L.VirtualTourUrl.Contains("matterport.com"))
               {
@@ -256,7 +264,7 @@
               {
                 <a href="@L.VirtualTourUrl" target="_blank" rel="noopener" class="btn-outline" style="display:inline-flex">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
-                  Open Virtual Tour
+                  @Cms[ContentBlockSlugs.PropertyDetailVtourBtn, "Open Virtual Tour"]
                 </a>
               }
             </div>
@@ -267,18 +275,18 @@
         @if (mortgageEnabled && L.OfferType == ListingOfferType.Sale && L.Price.HasValue)
         {
           <div class="roi-section fade-up">
-            <h3 class="amenities-title">Rental Yield &amp; ROI Calculator</h3>
+            <h3 class="amenities-title">@Html.Raw(Cms[ContentBlockSlugs.PropertyDetailRoiTitle, "Rental Yield & ROI Calculator"])</h3>
             <div class="roi-grid">
               <div class="roi-input">
-                <label>Purchase price (AED)</label>
+                <label>@Cms[ContentBlockSlugs.PropertyDetailRoiPurchase, "Purchase price (AED)"]</label>
                 <input type="number" id="roiPrice" value="@((int)L.Price.Value)" oninput="calcRoi()" />
               </div>
               <div class="roi-input">
-                <label>Expected annual rent (AED)</label>
+                <label>@Cms[ContentBlockSlugs.PropertyDetailRoiRent, "Expected annual rent (AED)"]</label>
                 <input type="number" id="roiRent" placeholder="e.g. 80000" oninput="calcRoi()" />
               </div>
               <div class="roi-input">
-                <label>Service charge / yr (AED)</label>
+                <label>@Cms[ContentBlockSlugs.PropertyDetailRoiServiceCharge, "Service charge / yr (AED)"]</label>
                 <input type="number" id="roiCharge" value="0" oninput="calcRoi()" />
               </div>
             </div>
@@ -296,7 +304,7 @@
         @if (!string.IsNullOrWhiteSpace(L.Location))
         {
           <div class="commute-section fade-up">
-            <h3 class="amenities-title">Distances &amp; Nearby</h3>
+            <h3 class="amenities-title">@Cms[ContentBlockSlugs.PropertyDetailDistancesTitle, "Distances & Nearby"]</h3>
             <div class="commute-grid">
               @{
                 var landmarks = new[] {
@@ -325,7 +333,7 @@
         @if (ratingsEnabled)
         {
         <div class="ratings-section" style="margin-top:44px">
-          <h3 class="section-title">Reviews &amp; Ratings</h3>
+          <h3 class="section-title">@Html.Raw(Cms[ContentBlockSlugs.PropertyDetailReviewsTitle, "Reviews & Ratings"])</h3>
 
           @if (Model.RatingCount > 0)
           {
@@ -341,7 +349,7 @@
           @if (User.Identity?.IsAuthenticated == true)
           {
             <div class="review-form-wrap">
-              <h3 class="review-form-heading">@(Model.UserRating != null ? "Update Your Review" : "Leave a Review")</h3>
+              <h3 class="review-form-heading">@(Model.UserRating != null ? Cms[ContentBlockSlugs.PropertyDetailUpdateReviewHeading, "Update Your Review"] : Cms[ContentBlockSlugs.PropertyDetailLeaveReviewHeading, "Leave a Review"])</h3>
               <form method="post" asp-page="/Submit/Rating">
                 <input type="hidden" name="listingId" value="@L.Id" />
                 <input type="hidden" name="returnUrl" value="/Properties/@L.Slug" />
@@ -353,16 +361,16 @@
                   }
                 </div>
                 <div class="modal-field" style="margin-top:12px">
-                  <label>Your review (optional)</label>
-                  <textarea name="review" rows="3" maxlength="2000" placeholder="Share your experience with this property…">@Model.UserRating?.Review</textarea>
+                  <label>@Cms[ContentBlockSlugs.PropertyDetailReviewLabel, "Your review (optional)"]</label>
+                  <textarea name="review" rows="3" maxlength="2000" placeholder="@Cms[ContentBlockSlugs.PropertyDetailReviewPlaceholder, "Share your experience with this property…"]">@Model.UserRating?.Review</textarea>
                 </div>
-                <button type="submit" class="btn-primary" style="margin-top:4px"><span>@(Model.UserRating != null ? "Update Review" : "Submit Review")</span></button>
+                <button type="submit" class="btn-primary" style="margin-top:4px"><span>@(Model.UserRating != null ? Cms[ContentBlockSlugs.PropertyDetailUpdateReviewBtn, "Update Review"] : Cms[ContentBlockSlugs.PropertyDetailSubmitReviewBtn, "Submit Review"])</span></button>
               </form>
             </div>
           }
           else
           {
-            <p class="section-sub" style="margin-top:16px"><a asp-page="/Account/Login">Sign in</a> to leave a review.</p>
+            <p class="section-sub" style="margin-top:16px">@Html.Raw(Cms[ContentBlockSlugs.PropertyDetailReviewSignin, "<a href=\"/Account/Login\">Sign in</a> to leave a review."])</p>
           }
 
           @if (Model.ApprovedRatings.Any())
@@ -405,7 +413,7 @@
         @if (investScore > 0)
         {
           <div class="invest-score" title="Investment potential score out of 10">
-            <span class="invest-score-label">Investment Score</span>
+            <span class="invest-score-label">@Cms[ContentBlockSlugs.PropertyDetailInvestScore, "Investment Score"]</span>
             <span class="invest-score-num @(investScore >= 8 ? "invest-high" : investScore >= 5 ? "invest-mid" : "invest-low")">@investScore/10</span>
           </div>
         }
@@ -439,13 +447,34 @@
           </button>
         </form>
 
-        <button type="button" class="btn-primary nav-modal-link" style="width:100%;justify-content:center;margin-bottom:12px;border:none;cursor:pointer" data-modal-open="modal-inquiry" data-inquiry-subject="Property: @L.Title (@L.Slug)"><span>Inquire about this property</span></button>
-        <a asp-page="/Contact" class="btn-outline" style="display:flex;justify-content:center;text-decoration:none">Contact us</a>
+        <button type="button" class="btn-primary nav-modal-link" style="width:100%;justify-content:center;margin-bottom:8px;border:none;cursor:pointer" data-modal-open="modal-inquiry" data-inquiry-subject="Property: @L.Title (@L.Slug)"><span>@Cms[ContentBlockSlugs.PropertyDetailInquireBtn, "Inquire about this property"]</span></button>
+        <button type="button" class="btn-outline" style="display:flex;width:100%;justify-content:center;border:1px solid var(--border-accent);background:transparent;cursor:pointer;margin-bottom:12px" onclick="toggleQuickInquire()" id="quickInquireToggle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          @Cms[ContentBlockSlugs.PropertyDetailQuickInquireBtn, "Quick message"]
+        </button>
+        <a asp-page="/Contact" class="btn-outline" style="display:flex;justify-content:center;text-decoration:none">@Cms[ContentBlockSlugs.PropertyDetailContactUsBtn, "Or contact us directly"]</a>
+
+        <!-- Inline quick-inquire card (collapsed by default, expands inline with close button) -->
+        <div id="quickInquireCard" class="quick-inquire-card" style="display:none;margin-top:14px;padding:14px;border:1px solid var(--border-accent);background:var(--accent-05,rgba(245,158,11,.06));border-radius:var(--radius-sm,8px);position:relative">
+          <button type="button" onclick="toggleQuickInquire(false)" aria-label="Close" style="position:absolute;top:8px;right:8px;background:transparent;border:none;cursor:pointer;color:var(--text-tertiary);font-size:18px;line-height:1;padding:4px 6px;border-radius:4px">&times;</button>
+          <p style="margin:0 0 8px;font-size:.78rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em">@Cms[ContentBlockSlugs.PropertyDetailQuickInquireTitle, "Send a quick message"]</p>
+          <p style="margin:0 0 10px;font-size:.72rem;color:var(--text-tertiary);line-height:1.5">@Cms[ContentBlockSlugs.PropertyDetailQuickInquireSub, "We'll reply about this property within the next business day."]</p>
+          <form method="post" asp-page="/Submit/Inquiry" id="quickInquireForm" style="display:flex;flex-direction:column;gap:8px">
+            <input type="text" name="Name" required placeholder="Your name" maxlength="200" style="padding:8px 10px;border:1px solid var(--border-color);border-radius:6px;font-size:.78rem" />
+            <input type="email" name="Email" required placeholder="you@example.com" maxlength="256" style="padding:8px 10px;border:1px solid var(--border-color);border-radius:6px;font-size:.78rem" />
+            <input type="tel" name="Phone" placeholder="+971 50 000 0000 (optional)" maxlength="50" style="padding:8px 10px;border:1px solid var(--border-color);border-radius:6px;font-size:.78rem" />
+            <textarea name="Message" rows="3" required maxlength="2000" placeholder="When can you view it? Any questions?" style="padding:8px 10px;border:1px solid var(--border-color);border-radius:6px;font-size:.78rem;resize:vertical"></textarea>
+            <input type="hidden" name="Subject" value="Inquiry about: @L.Title" />
+            <button type="submit" class="btn-primary" style="border:none;cursor:pointer;justify-content:center">
+              <span>@Cms[ContentBlockSlugs.PropertyDetailQuickInquireSend, "Send message"]</span>
+            </button>
+          </form>
+        </div>
 
         @if (currencyEnabled && L.Price.HasValue)
         {
           <div class="currency-bar" style="margin-top:12px">
-            <label>Show price in</label>
+            <label>@Cms[ContentBlockSlugs.PropertyDetailShowPriceIn, "Show price in"]</label>
             <select id="currencySelect" onchange="convertCurrency()" style="min-width:90px">
               <option value="AED">AED</option>
               <option value="USD">USD</option>
@@ -512,9 +541,8 @@
 
         <!-- WhatsApp mortgage share button (shown once calc is used) -->
         <div id="waMortgageBtn" style="display:none;margin-bottom:12px">
-          <button onclick="shareWhatsAppMortgage(@((int?)L.Price ?? 0), parseInt(document.getElementById('calcMonthly')?.textContent?.replace(/[^0-9]/g,''))||0, '@L.Title')" class="emergency-btn emergency-btn--wa" style="width:100%;justify-content:center;border-radius:var(--radius-sm)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
-            Share mortgage summary on WhatsApp
+          <button onclick="shareWhatsAppMortgage(@((int?)L.Price ?? 0), parseInt(document.getElementById('calcMonthly')?.textContent?.replace(/[^0-9]/g,''))||0, '@L.Title')" class="emergency-btn emergency-btn--wa" style="width:100%;justify-content:center;border-radius:var(--radius-sm)">@{ /* icon below */ }<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+            @Cms[ContentBlockSlugs.PropertyDetailShareMortgageWa, "Share mortgage summary on WhatsApp"]
           </button>
         </div>
 
@@ -524,38 +552,38 @@
           <div class="calc-widget" id="mortgageCalc">
             <div class="calc-toggle" onclick="toggleCalc()">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></svg>
-              Mortgage Calculator
+              @Cms[ContentBlockSlugs.PropertyDetailMortgageTitle, "Mortgage Calculator"]
               <svg class="calc-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
             </div>
             <div class="calc-body" id="calcBody" style="display:none">
               <div class="modal-field" style="margin-bottom:12px">
-                <label>Property price (AED)</label>
+                <label>@Cms[ContentBlockSlugs.PropertyDetailMortgagePrice, "Property price (AED)"]</label>
                 <input type="number" id="calcPrice" value="@((int?)L.Price ?? 0)" min="0" oninput="calcMortgage()" />
               </div>
               <div class="modal-field" style="margin-bottom:12px">
-                <label>Down payment (%)</label>
+                <label>@Cms[ContentBlockSlugs.PropertyDetailMortgageDown, "Down payment (%)"]</label>
                 <input type="range" id="calcDown" min="20" max="80" value="25" oninput="calcMortgage(); document.getElementById('calcDownVal').textContent=this.value+'%'" style="width:100%;accent-color:var(--accent)" />
                 <span id="calcDownVal" style="font-size:.78rem;color:var(--accent);font-weight:700">25%</span>
               </div>
               <div class="modal-field" style="margin-bottom:12px">
-                <label>Interest rate (% p.a.)</label>
+                <label>@Cms[ContentBlockSlugs.PropertyDetailMortgageRate, "Interest rate (% p.a.)"]</label>
                 <input type="number" id="calcRate" value="4.5" min="0" max="30" step="0.1" oninput="calcMortgage()" />
               </div>
               <div class="modal-field" style="margin-bottom:12px">
-                <label>Loan term (years)</label>
+                <label>@Cms[ContentBlockSlugs.PropertyDetailMortgageTerm, "Loan term (years)"]</label>
                 <select id="calcTerm" onchange="calcMortgage()">
-                  <option value="10">10 years</option>
-                  <option value="15">15 years</option>
-                  <option value="20">20 years</option>
-                  <option value="25" selected>25 years</option>
+                  <option value="10">10 @Cms[ContentBlockSlugs.PropertyDetailMortgageYears, "years"]</option>
+                  <option value="15">15 @Cms[ContentBlockSlugs.PropertyDetailMortgageYears, "years"]</option>
+                  <option value="20">20 @Cms[ContentBlockSlugs.PropertyDetailMortgageYears, "years"]</option>
+                  <option value="25" selected>25 @Cms[ContentBlockSlugs.PropertyDetailMortgageYears, "years"]</option>
                 </select>
               </div>
               <div class="calc-result" id="calcResult">
-                <div class="calc-result-row"><span>Monthly payment</span><strong id="calcMonthly">—</strong></div>
-                <div class="calc-result-row"><span>Loan amount</span><strong id="calcLoan">—</strong></div>
-                <div class="calc-result-row"><span>Total interest</span><strong id="calcInterest">—</strong></div>
+                <div class="calc-result-row"><span>@Cms[ContentBlockSlugs.PropertyDetailMortgageMonthly, "Monthly payment"]</span><strong id="calcMonthly">—</strong></div>
+                <div class="calc-result-row"><span>@Cms[ContentBlockSlugs.PropertyDetailMortgageLoan, "Loan amount"]</span><strong id="calcLoan">—</strong></div>
+                <div class="calc-result-row"><span>@Cms[ContentBlockSlugs.PropertyDetailMortgageInterest, "Total interest"]</span><strong id="calcInterest">—</strong></div>
               </div>
-              <p style="font-size:.68rem;color:var(--text-tertiary);margin-top:8px;line-height:1.5">Indicative only. Rates and eligibility subject to bank approval.</p>
+              <p style="font-size:.68rem;color:var(--text-tertiary);margin-top:8px;line-height:1.5">@Cms[ContentBlockSlugs.PropertyDetailMortgageDisclaimer, "Indicative only. Rates and eligibility subject to bank approval."]</p>
             </div>
           </div>
         }
@@ -610,8 +638,8 @@
 {
   <section class="section-pad" style="background:var(--bg-deep)">
     <div class="container">
-      <div class="section-tag fade-up">Similar Properties</div>
-      <h2 class="section-title fade-up">You Might Also <em>Like</em></h2>
+      <div class="section-tag fade-up">@Cms[ContentBlockSlugs.PropertyDetailSimilarTag, "Similar Properties"]</div>
+      <h2 class="section-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.PropertyDetailSimilarTitle, "You Might Also <em>Like</em>"])</h2>
       <div class="feat-grid">
         @foreach (var p in Model.SimilarListings)
         {
@@ -784,6 +812,19 @@ function calcMortgage() {
 
 function signInToSave() {
   window.location.href = '/Account/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+}
+
+function toggleQuickInquire(forceState) {
+  var card = document.getElementById('quickInquireCard');
+  var btn  = document.getElementById('quickInquireToggle');
+  if (!card) return;
+  var willOpen = typeof forceState === 'boolean' ? forceState : (card.style.display === 'none');
+  card.style.display = willOpen ? 'block' : 'none';
+  if (btn) btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+  if (willOpen) {
+    var firstField = card.querySelector('input[name="Name"]');
+    if (firstField) setTimeout(function() { firstField.focus(); }, 50);
+  }
 }
 
 // Star picker

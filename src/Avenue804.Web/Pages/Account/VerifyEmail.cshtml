@@ -1,7 +1,7 @@
 @page "/Account/VerifyEmail"
 @model Avenue804.Web.Pages.Account.VerifyEmailModel
 @{
-    ViewData["Title"] = "Verify Email";
+    ViewData["Title"] = Cms[ContentBlockSlugs.AccountVerifyTitle, "Verify Email"];
 }
 <div class="auth-card" style="text-align:center">
   @if (Model.Success)
@@ -9,14 +9,14 @@
     <div class="auth-success-icon">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
     </div>
-    <h1 class="auth-heading">Email Verified!</h1>
-    <p class="auth-sub">Your email address has been confirmed. You can now access all features.</p>
-    <a asp-page="/Account/Dashboard" class="btn-primary" style="display:inline-flex;margin-top:20px"><span>Go to Dashboard</span></a>
+    <h1 class="auth-heading">@Cms[ContentBlockSlugs.AccountVerifySuccessHeading, "Email Verified!"]</h1>
+    <p class="auth-sub">@Cms[ContentBlockSlugs.AccountVerifySuccessSub, "Your email address has been confirmed. You can now access all features."]</p>
+    <a asp-page="/Account/Dashboard" class="btn-primary" style="display:inline-flex;margin-top:20px"><span>@Cms[ContentBlockSlugs.AccountVerifyGoDashboard, "Go to Dashboard"]</span></a>
   }
   else
   {
-    <h1 class="auth-heading">Verification Failed</h1>
+    <h1 class="auth-heading">@Cms[ContentBlockSlugs.AccountVerifyFailHeading, "Verification Failed"]</h1>
     <p class="auth-sub">@Model.Error</p>
-    <a asp-page="/Account/Login" class="btn-outline" style="display:inline-flex;margin-top:16px">Back to Sign In</a>
+    <a asp-page="/Account/Login" class="btn-outline" style="display:inline-flex;margin-top:16px">@Cms[ContentBlockSlugs.AccountForgotBackBtn, "Back to Sign In"]</a>
   }
 </div>

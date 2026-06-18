@@ -21,7 +21,7 @@ public class MailKitEmailSender : IEmailSender
         var port = int.TryParse(_cfg["Smtp:Port"], out var p) ? p : 587;
         var user = _cfg["Smtp:User"];
         var pass = _cfg["Smtp:Password"];
-        var from = _cfg["Smtp:FromAddress"] ?? user ?? "noreply@804avenue.com";
+        var from = _cfg["Smtp:FromAddress"] ?? user ?? "noreply@804avenue.ae";
         var fromName = _cfg["Smtp:FromName"] ?? "804 Avenue";
 
         if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(user))

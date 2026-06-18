@@ -1,9 +1,9 @@
 @page "/Contracting"
 @model ContractingModel
 @{
-    ViewData["Title"] = "Contracting";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaContractingTitle, "Contracting"];
     ViewData["NavActive"] = "contracting";
-    ViewData["MetaDescription"] = "804 Avenue contracting — civil construction, fit-out, gypsum, glass, painting, flooring, and signage in Abu Dhabi, UAE.";
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaContractingDescription, "804 Avenue contracting — civil construction, fit-out, gypsum, glass, painting, flooring, and signage in Abu Dhabi, UAE."];
 }
 @section Styles {
   <link rel="stylesheet" href="~/css/service-pages.css" asp-append-version="true" />

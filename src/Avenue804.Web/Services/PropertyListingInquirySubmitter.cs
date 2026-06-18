@@ -38,6 +38,17 @@ public class PropertyListingInquirySubmitter : IPropertyListingInquirySubmitter
         if (input.ExpectedMoveInDate is DateTime dt)
             moveIn = DateOnly.FromDateTime(dt.Date);
 
+        // Prepend the listing reference to the requirement details so the
+        // admin can see exactly which property the user inquired about.
+        var details = string.IsNullOrWhiteSpace(input.RequirementDetails) ? null : input.RequirementDetails.Trim();
+        var listingRef = string.IsNullOrWhiteSpace(input.ListingReference) ? null : input.ListingReference.Trim();
+        var combinedDetails = listingRef switch
+        {
+            null => details,
+            _ when details is null => $"[Listing reference] {listingRef}",
+            _ => $"[Listing reference] {listingRef}\n\n{details}"
+        };
+
         _db.PropertyListingInquiries.Add(new PropertyListingInquiry
         {
             Name = input.Name.Trim(),
@@ -46,7 +57,7 @@ public class PropertyListingInquirySubmitter : IPropertyListingInquirySubmitter
             WantToLookupValueId = want,
             PropertyTypeLookupValueId = pType,
             PropertyDetailLookupValueId = pDetail,
-            RequirementDetails = string.IsNullOrWhiteSpace(input.RequirementDetails) ? null : input.RequirementDetails.Trim(),
+            RequirementDetails = combinedDetails,
             BudgetLookupValueId = budget,
             Area = string.IsNullOrWhiteSpace(input.Area) ? null : input.Area.Trim(),
             ExpectedMoveInDate = moveIn,
@@ -77,7 +88,7 @@ public class PropertyListingInquirySubmitter : IPropertyListingInquirySubmitter
             return true;
 
         // Notify admin
-        var adminEmail = _cfg["Site:Email"] ?? _cfg["Seed:AdminEmail"] ?? "info@804avenue.com";
+        var adminEmail = _cfg["Site:Email"] ?? _cfg["Seed:AdminEmail"] ?? "info@804avenue.ae";
         await _email.SendAsync(adminEmail,
             $"New Property Inquiry from {input.Name}",
             $"""
@@ -86,8 +97,9 @@ public class PropertyListingInquirySubmitter : IPropertyListingInquirySubmitter
               <tr><td><strong>Name:</strong></td><td>{input.Name}</td></tr>
               <tr><td><strong>Email:</strong></td><td>{input.Email}</td></tr>
               <tr><td><strong>Phone:</strong></td><td>{input.Phone}</td></tr>
+              <tr><td><strong>Listing:</strong></td><td>{listingRef ?? "— (general inquiry)"}</td></tr>
               <tr><td><strong>Area:</strong></td><td>{input.Area ?? "—"}</td></tr>
-              <tr><td><strong>Requirements:</strong></td><td>{input.RequirementDetails ?? "—"}</td></tr>
+              <tr><td><strong>Requirements:</strong></td><td>{details ?? "—"}</td></tr>
             </table>
             <p><a href="/Admin/PropertyInquiries">View in admin</a></p>
             """,

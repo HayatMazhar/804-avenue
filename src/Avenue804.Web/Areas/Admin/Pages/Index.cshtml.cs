@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Avenue804.Web.Areas.Admin.Pages;
 
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
 public class IndexModel : PageModel
 {
     private readonly ApplicationDbContext _db;
@@ -47,7 +47,6 @@ public class IndexModel : PageModel
 
         var now = DateTimeOffset.UtcNow;
 
-        // KPIs (sequential — single DbContext)
         InquiryCount = await _db.Inquiries.CountAsync(cancellationToken);
         NewInquiryCount = await _db.Inquiries.CountAsync(i => i.Status == InquiryStatus.New, cancellationToken);
         PropertyListingInquiryCount = await _db.PropertyListingInquiries.CountAsync(cancellationToken);
@@ -69,7 +68,6 @@ public class IndexModel : PageModel
         NewsletterSubscribers = await _db.NewsletterSubscribers.CountAsync(s => s.IsActive, cancellationToken);
         ViewData["UnreadNotifs"] = UnreadNotifications;
 
-        // 7-day inquiry chart
         var sevenDaysAgo = now.AddDays(-6).Date;
         var inquiryByDay = await _db.PropertyListingInquiries
             .Where(i => i.CreatedAt >= sevenDaysAgo)
@@ -93,7 +91,6 @@ public class IndexModel : PageModel
             .Take(5)
             .ToListAsync(cancellationToken);
 
-        // Recent activity feed — combine latest items across surfaces
         var recentPropInq = await _db.PropertyListingInquiries
             .OrderByDescending(i => i.CreatedAt)
             .Take(4)

@@ -1,5 +1,6 @@
 using Avenue804.Web.Data;
 using Avenue804.Web.Domain;
+using Avenue804.Web.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,28 +21,41 @@ public class DetailModel : PageModel
 
     public PropertyListing? Listing { get; private set; }
     public bool IsSaved { get; private set; }
+    public bool IsPreview { get; private set; }
     public double AverageRating { get; private set; }
     public int RatingCount { get; private set; }
     public List<PropertyRating> ApprovedRatings { get; private set; } = [];
     public PropertyRating? UserRating { get; private set; }
     public List<PropertyListing> SimilarListings { get; private set; } = [];
 
-    public async Task<IActionResult> OnGetAsync(string slug, CancellationToken ct = default)
+    public async Task<IActionResult> OnGetAsync(string slug, [FromQuery] int? preview, CancellationToken ct = default)
     {
         ViewData["NavActive"] = "properties";
         if (string.IsNullOrWhiteSpace(slug)) return NotFound();
 
         var key = slug.Trim();
+
+        // Preview mode: any authenticated admin/staff role can view an unpublished
+        // draft listing by appending ?preview=1. Used by the "Preview draft" button
+        // on Admin > Edit. Drafts stay hidden from the public.
+        var isAuthenticatedAdmin = User?.Identity?.IsAuthenticated == true
+            && SeedData.AllAdminRoles.Any(role => User.IsInRole(role));
+        var allowPreview = preview == 1 && isAuthenticatedAdmin;
+
         Listing = await _db.PropertyListings.AsNoTracking()
             .Include(p => p.Agent)
             .Include(p => p.Developer)
-            .FirstOrDefaultAsync(p => p.IsPublished && p.Slug == key, ct);
+            .FirstOrDefaultAsync(p => (p.IsPublished || allowPreview) && p.Slug == key, ct);
         if (Listing == null) return NotFound();
+        IsPreview = allowPreview && !Listing.IsPublished;
 
-        // Increment view count atomically (ExecuteUpdate avoids concurrency issues)
-        await _db.PropertyListings
-            .Where(p => p.Id == Listing.Id)
-            .ExecuteUpdateAsync(s => s.SetProperty(p => p.ViewCount, p => p.ViewCount + 1), ct);
+        // Don't count admin previews toward the public view counter
+        if (!IsPreview)
+        {
+            await _db.PropertyListings
+                .Where(p => p.Id == Listing.Id)
+                .ExecuteUpdateAsync(s => s.SetProperty(p => p.ViewCount, p => p.ViewCount + 1), ct);
+        }
 
         // Use SEO overrides if set by admin, otherwise auto-generate
         ViewData["Title"] = !string.IsNullOrWhiteSpace(Listing.SeoTitle)

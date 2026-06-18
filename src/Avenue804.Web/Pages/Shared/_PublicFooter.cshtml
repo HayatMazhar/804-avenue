@@ -1,5 +1,6 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @using Avenue804.Web.Infrastructure
+@using Avenue804.Web.Configuration
 @{
     var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
 }
@@ -32,34 +33,34 @@
         </div>
       </div>
       <div class="footer-col">
-        <h4>Services</h4>
+        <h4>@Cms[ContentBlockSlugs.FooterColServicesTitle, "Services"]</h4>
         <ul>
-          <li><a asp-page="/Contracting">Contracting</a></li>
-          <li><a asp-page="/Maintenance">Maintenance</a></li>
-          <li><a asp-page="/FacilityManagement">Facility Management</a></li>
-          <li><a asp-page="/Projects/Index">Our Projects</a></li>
+          <li><a asp-page="/Contracting">@Cms[ContentBlockSlugs.FooterLinkContracting, "Contracting"]</a></li>
+          <li><a asp-page="/Maintenance">@Cms[ContentBlockSlugs.FooterLinkMaintenance, "Maintenance"]</a></li>
+          <li><a asp-page="/FacilityManagement">@Cms[ContentBlockSlugs.FooterLinkFacility, "Facility Management"]</a></li>
+          <li><a asp-page="/Projects/Index">@Cms[ContentBlockSlugs.NavDdOurProjects, "Our Projects"]</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Properties</h4>
+        <h4>@Cms[ContentBlockSlugs.FooterColPropertiesTitle, "Properties"]</h4>
         <ul>
-          <li><a asp-page="/Properties/Index" asp-route-offer="sale">Buy</a></li>
-          <li><a asp-page="/Properties/Index" asp-route-offer="rent">Rent</a></li>
-          <li><a asp-page="/AreaGuides/Index">Area Guides</a></li>
+          <li><a asp-page="/Properties/Index" asp-route-offer="sale">@Cms[ContentBlockSlugs.FooterLinkBuy, "Buy"]</a></li>
+          <li><a asp-page="/Properties/Index" asp-route-offer="rent">@Cms[ContentBlockSlugs.FooterLinkRent, "Rent"]</a></li>
+          <li><a asp-page="/AreaGuides/Index">@Cms[ContentBlockSlugs.FooterLinkAreaGuides, "Area Guides"]</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Company</h4>
+        <h4>@Cms[ContentBlockSlugs.FooterColCompanyTitle, "Company"]</h4>
         <ul>
-          <li><a asp-page="/About">About Us</a></li>
-          <li><a asp-page="/Contact">Contact</a></li>
+          <li><a asp-page="/About">@Cms[ContentBlockSlugs.FooterLinkAbout, "About Us"]</a></li>
+          <li><a asp-page="/Contact">@Cms[ContentBlockSlugs.FooterLinkContact, "Contact"]</a></li>
           @if (!string.IsNullOrWhiteSpace(site?.PhoneDisplay)) { <li><a href="@site.TelHref">@site.PhoneDisplay</a></li> }
           @if (!string.IsNullOrWhiteSpace(site?.Email)) { <li><a href="mailto:@site.Email">@site.Email</a></li> }
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <div class="footer-copy">&copy; @DateTime.UtcNow.Year @(site?.CopyrightOwner ?? "804 Avenue Properties and Contracting"). All Rights Reserved.</div>
+      <div class="footer-copy">&copy; @DateTime.UtcNow.Year @(site?.CopyrightOwner ?? "804 Avenue Properties and Contracting"). @Cms[ContentBlockSlugs.FooterRightsText, "All Rights Reserved."]</div>
     </div>
   </div>
 </footer>

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Avenue804.Web.Areas.Admin.Pages.ContentBlocks;
 
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
 public class CreateModel : PageModel
 {
     private readonly ApplicationDbContext _db;

@@ -86,7 +86,7 @@ public class ListingModel : PageModel
         if (await _flags.IsEnabledAsync(FeatureFlags.EmailNotifications, cancellationToken))
         {
         // Notify admin
-        var adminEmail = _cfg["Site:Email"] ?? _cfg["Seed:AdminEmail"] ?? "info@804avenue.com";
+        var adminEmail = _cfg["Site:Email"] ?? _cfg["Seed:AdminEmail"] ?? "info@804avenue.ae";
         var intentLabel = input.Intent switch { OwnerListingIntent.Sale => "Sell", OwnerListingIntent.Rent => "Rent", OwnerListingIntent.Both => "Sell & Rent", _ => "Unknown" };
         await _email.SendAsync(adminEmail,
             $"New Listing Request from {input.Name}",

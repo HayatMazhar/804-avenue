@@ -48,7 +48,7 @@ public class InquirySubmitter : IInquirySubmitter
             return;
 
         // Notify admin
-        var adminEmail = _cfg["Site:Email"] ?? _cfg["Seed:AdminEmail"] ?? "info@804avenue.com";
+        var adminEmail = _cfg["Site:Email"] ?? _cfg["Seed:AdminEmail"] ?? "info@804avenue.ae";
         await _email.SendAsync(adminEmail,
             $"New Contact Inquiry — {input.Subject}",
             $"""

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Avenue804.Web.Areas.Admin.Pages.ProjectProgress;
 
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
 public class CreateModel : PageModel
 {
     private readonly ApplicationDbContext _db;

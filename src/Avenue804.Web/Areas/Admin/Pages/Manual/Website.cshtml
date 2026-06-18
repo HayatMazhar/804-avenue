@@ -1,0 +1,624 @@
+@page
+@model Avenue804.Web.Areas.Admin.Pages.Manual.WebsiteModel
+@{
+    ViewData["Title"] = "Website User Manual";
+    ViewData["AdminSection"] = "manual";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/css/manual.css" asp-append-version="true" />
+}
+
+<div class="man-app">
+
+  <!-- ── Sidebar ─────────────────────────────────────── -->
+  <aside class="man-side">
+    <div class="man-side__head">
+      <a asp-area="Admin" asp-page="/Manual/Index" class="man-side__back">
+        <i class="bi bi-arrow-left"></i> All Manuals
+      </a>
+      <h2 class="man-side__title">Website Manual</h2>
+      <p class="man-side__sub">Public site — for visitors &amp; registered users</p>
+    </div>
+
+    <div class="man-side__search">
+      <input type="search" id="manSearch" placeholder="Search modules…" />
+    </div>
+
+    <nav class="man-side__nav" id="manNav">
+
+      <p class="man-side__group-title">Getting Started</p>
+      <button class="man-side__item is-active" data-mod="overview">
+        <i class="bi bi-globe2 man-side__item-icon"></i> Overview
+        <span class="man-side__item-num">01</span>
+      </button>
+      <button class="man-side__item" data-mod="navigation">
+        <i class="bi bi-compass man-side__item-icon"></i> Navigation
+        <span class="man-side__item-num">02</span>
+      </button>
+      <button class="man-side__item" data-mod="homepage">
+        <i class="bi bi-house-door man-side__item-icon"></i> Homepage
+        <span class="man-side__item-num">03</span>
+      </button>
+
+      <p class="man-side__group-title">Properties</p>
+      <button class="man-side__item" data-mod="search">
+        <i class="bi bi-search man-side__item-icon"></i> Search Properties
+        <span class="man-side__item-num">04</span>
+      </button>
+      <button class="man-side__item" data-mod="detail">
+        <i class="bi bi-building man-side__item-icon"></i> Property Details
+        <span class="man-side__item-num">05</span>
+      </button>
+      <button class="man-side__item" data-mod="inquiry">
+        <i class="bi bi-envelope-paper man-side__item-icon"></i> Submit Inquiry
+        <span class="man-side__item-num">06</span>
+      </button>
+      <button class="man-side__item" data-mod="list-property">
+        <i class="bi bi-plus-square man-side__item-icon"></i> List Your Property
+        <span class="man-side__item-num">07</span>
+      </button>
+
+      <p class="man-side__group-title">Services</p>
+      <button class="man-side__item" data-mod="services">
+        <i class="bi bi-grid man-side__item-icon"></i> Services Overview
+        <span class="man-side__item-num">08</span>
+      </button>
+      <button class="man-side__item" data-mod="quote">
+        <i class="bi bi-receipt man-side__item-icon"></i> Request a Quote
+        <span class="man-side__item-num">09</span>
+      </button>
+      <button class="man-side__item" data-mod="maintenance">
+        <i class="bi bi-tools man-side__item-icon"></i> Maintenance Request
+        <span class="man-side__item-num">10</span>
+      </button>
+      <button class="man-side__item" data-mod="amc">
+        <i class="bi bi-shield-check man-side__item-icon"></i> AMC Contract
+        <span class="man-side__item-num">11</span>
+      </button>
+
+      <p class="man-side__group-title">Account</p>
+      <button class="man-side__item" data-mod="register">
+        <i class="bi bi-person-plus man-side__item-icon"></i> Register / Login
+        <span class="man-side__item-num">12</span>
+      </button>
+      <button class="man-side__item" data-mod="dashboard">
+        <i class="bi bi-person-circle man-side__item-icon"></i> My Account
+        <span class="man-side__item-num">13</span>
+      </button>
+
+      <p class="man-side__group-title">Discover</p>
+      <button class="man-side__item" data-mod="about">
+        <i class="bi bi-info-circle man-side__item-icon"></i> About &amp; Portfolio
+        <span class="man-side__item-num">14</span>
+      </button>
+      <button class="man-side__item" data-mod="areas">
+        <i class="bi bi-geo-alt man-side__item-icon"></i> Area Guides
+        <span class="man-side__item-num">15</span>
+      </button>
+      <button class="man-side__item" data-mod="contact">
+        <i class="bi bi-telephone man-side__item-icon"></i> Contact Us
+        <span class="man-side__item-num">16</span>
+      </button>
+
+    </nav>
+  </aside>
+
+  <!-- ── Main content ────────────────────────────────── -->
+  <main class="man-main">
+
+    <!-- ── MODULE 01 — Overview ─────────────────────────── -->
+    <article class="man-mod is-active" id="mod-overview">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-globe2" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 01</p>
+          <h2 class="man-mod__hero-title">Welcome to 804 Avenue</h2>
+          <p class="man-mod__hero-sub">An overview of what the website does and who it's for.</p>
+        </div>
+      </div>
+
+      <p><strong>804 Avenue</strong> (<a href="https://804avenue.ae" target="_blank">804avenue.ae</a>) is the official digital platform for <strong>804 Avenue Properties &amp; Contracting</strong>, a full-service real estate, construction, and property maintenance company based in Abu Dhabi, UAE.</p>
+
+      <h3><i class="bi bi-stars"></i> What you can do</h3>
+      <table>
+        <thead><tr><th>Feature</th><th>Available to</th></tr></thead>
+        <tbody>
+          <tr><td>Browse &amp; search properties</td><td><span class="man-pill man-pill--green">Everyone</span></td></tr>
+          <tr><td>Inquire about a listing</td><td><span class="man-pill man-pill--green">Everyone</span></td></tr>
+          <tr><td>Request a service quote / maintenance</td><td><span class="man-pill man-pill--green">Everyone</span></td></tr>
+          <tr><td>Request an AMC (Annual Contract)</td><td><span class="man-pill man-pill--green">Everyone</span></td></tr>
+          <tr><td>Read area guides &amp; market insights</td><td><span class="man-pill man-pill--green">Everyone</span></td></tr>
+          <tr><td>Save properties &amp; track inquiries</td><td><span class="man-pill man-pill--blue">Registered users</span></td></tr>
+          <tr><td>List your own property</td><td><span class="man-pill man-pill--blue">Registered users</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="man-callout man-callout--tip">
+        <i class="bi bi-lightbulb"></i>
+        <span><strong>New here?</strong> Start with <strong>Module 02 — Navigation</strong> to learn how to move around, then jump to <strong>Module 04 — Search Properties</strong>.</span>
+      </div>
+    </article>
+
+    <!-- ── MODULE 02 — Navigation ────────────────────────── -->
+    <article class="man-mod" id="mod-navigation">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-compass" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 02</p>
+          <h2 class="man-mod__hero-title">Site Navigation</h2>
+          <p class="man-mod__hero-sub">How to find your way around 804avenue.ae.</p>
+        </div>
+      </div>
+
+      <h3><i class="bi bi-list"></i> Top Navigation</h3>
+      <table>
+        <thead><tr><th>Menu Item</th><th>What it shows</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Services ▾</strong></td><td>Dropdown with Maintenance, Contracting, Facility Management, All Services, Projects</td></tr>
+          <tr><td><strong>Properties</strong></td><td>Browse all property listings with filters</td></tr>
+          <tr><td><strong>About</strong></td><td>Company story, team, vision &amp; mission</td></tr>
+          <tr><td><strong>Contact</strong></td><td>Office address, phone, contact form</td></tr>
+          <tr><td><strong>List Your Property</strong></td><td>Submit your property for listing on 804 Avenue</td></tr>
+          <tr><td><strong>Inquiry</strong></td><td>Primary CTA — opens property requirement form</td></tr>
+        </tbody>
+      </table>
+
+      <h3><i class="bi bi-phone"></i> Mobile Navigation</h3>
+      <p>On phones &amp; tablets, tap the <strong>hamburger menu</strong> (☰) at the top-right to open the navigation drawer with all the same links.</p>
+
+      <h3><i class="bi bi-whatsapp"></i> Quick Contact</h3>
+      <p>A floating <strong>WhatsApp button</strong> appears in the bottom-right of every page — tap it to start a chat with our team instantly.</p>
+    </article>
+
+    <!-- ── MODULE 03 — Homepage ──────────────────────────── -->
+    <article class="man-mod" id="mod-homepage">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-house-door" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 03</p>
+          <h2 class="man-mod__hero-title">Homepage</h2>
+          <p class="man-mod__hero-sub">Sections you'll find on the landing page.</p>
+        </div>
+      </div>
+
+      <h3><i class="bi bi-image"></i> Hero &amp; Quick Search</h3>
+      <p>The homepage opens with a rotating slideshow of UAE properties and a <strong>Quick Search</strong> widget where you can:</p>
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Choose <strong>Buy</strong> or <strong>Rent</strong></span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Select <strong>Property Type</strong> (Residential / Commercial / Industrial)</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Pick <strong>Property Details</strong> (Apartment, Villa, Office…)</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Type a <strong>Location</strong> keyword</span></div>
+        <div class="man-step"><span class="man-step__num">5</span><span class="man-step__text">Tap <strong>Search</strong> to view results</span></div>
+      </div>
+
+      <h3><i class="bi bi-layout-text-window"></i> Other Sections</h3>
+      <table>
+        <thead><tr><th>Section</th><th>Content</th></tr></thead>
+        <tbody>
+          <tr><td>Featured Properties</td><td>Latest hand-picked listings</td></tr>
+          <tr><td>Services Hub</td><td>Cards for Contracting, Maintenance, Facility</td></tr>
+          <tr><td>About Strip</td><td>Company intro + key values</td></tr>
+          <tr><td>Stats Bar</td><td>Properties listed, projects delivered, years of experience</td></tr>
+          <tr><td>Why 804 Avenue</td><td>Five reasons to choose us</td></tr>
+          <tr><td>Testimonials</td><td>Real client reviews</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <!-- ── MODULE 04 — Search Properties ─────────────────── -->
+    <article class="man-mod" id="mod-search">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-search" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 04</p>
+          <h2 class="man-mod__hero-title">Search Properties</h2>
+          <p class="man-mod__hero-sub">Find the perfect property using advanced filters.</p>
+        </div>
+      </div>
+
+      <p>Visit <span class="man-key">/Properties</span> or click <strong>Properties</strong> in the top navigation.</p>
+
+      <h3><i class="bi bi-funnel"></i> Filters</h3>
+      <table>
+        <thead><tr><th>Filter</th><th>Options</th></tr></thead>
+        <tbody>
+          <tr><td>Offer Type</td><td>For Sale, For Rent</td></tr>
+          <tr><td>Property Category</td><td>Residential, Commercial, Industrial</td></tr>
+          <tr><td>Property Type</td><td>Apartment, Villa, Office, Retail, Warehouse, Land…</td></tr>
+          <tr><td>Location</td><td>UAE area autocomplete (300+ areas)</td></tr>
+          <tr><td>Price Range</td><td>Min and max in AED</td></tr>
+          <tr><td>Bedrooms</td><td>Studio, 1, 2, 3, 4, 5+</td></tr>
+          <tr><td>Bathrooms</td><td>1, 2, 3, 4+</td></tr>
+          <tr><td>Area (sq ft)</td><td>Min and max size</td></tr>
+          <tr><td>Sort</td><td>Newest, Price low→high, high→low, Most viewed</td></tr>
+        </tbody>
+      </table>
+
+      <div class="man-callout man-callout--note">
+        <i class="bi bi-info-circle"></i>
+        <span>Leave a filter empty to skip it. You can change filters at any time and the results update instantly.</span>
+      </div>
+    </article>
+
+    <!-- ── MODULE 05 — Property Detail ───────────────────── -->
+    <article class="man-mod" id="mod-detail">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-building" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 05</p>
+          <h2 class="man-mod__hero-title">Property Detail Page</h2>
+          <p class="man-mod__hero-sub">Everything about a single listing.</p>
+        </div>
+      </div>
+
+      <p>Click any listing card to open its full detail page.</p>
+
+      <h3><i class="bi bi-card-list"></i> Sections on the Detail Page</h3>
+      <table>
+        <thead><tr><th>Section</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Photo Gallery</td><td>Main image + thumbnail strip. Click any image for full-screen lightbox.</td></tr>
+          <tr><td>Price &amp; Offer Badge</td><td>Displayed prominently in AED with For Sale / For Rent badge</td></tr>
+          <tr><td>Key Facts</td><td>Bedrooms, bathrooms, area, type, floor, parking</td></tr>
+          <tr><td>Description</td><td>Full narrative text describing the property</td></tr>
+          <tr><td>Features</td><td>Amenities list (pool, gym, balcony, etc.)</td></tr>
+          <tr><td>Agent Card</td><td>Assigned agent's name, photo, phone &amp; WhatsApp button</td></tr>
+          <tr><td>Map</td><td>Google Maps location (when configured)</td></tr>
+          <tr><td>Inquiry Form</td><td>Send a question directly about this property</td></tr>
+          <tr><td>Similar Properties</td><td>4 related listings in the same area</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <!-- ── MODULE 06 — Submit Inquiry ────────────────────── -->
+    <article class="man-mod" id="mod-inquiry">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-envelope-paper" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 06</p>
+          <h2 class="man-mod__hero-title">Submit a Property Inquiry</h2>
+          <p class="man-mod__hero-sub">Reach out to our agent about a specific listing.</p>
+        </div>
+      </div>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">On any property detail page, scroll to the <strong>Inquiry</strong> section.</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Enter <strong>Name</strong>, <strong>Email</strong>, <strong>Phone</strong> and an optional <strong>Message</strong>.</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Choose <strong>I Am</strong> (Individual / Company / Agent) and <strong>I Want To</strong> (Buy / Rent / Sell).</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Select your <strong>Budget</strong> range (optional but helpful).</span></div>
+        <div class="man-step"><span class="man-step__num">5</span><span class="man-step__text">Click <strong>Send Inquiry</strong>. You'll get a confirmation email and the assigned agent will contact you.</span></div>
+      </div>
+
+      <div class="man-callout man-callout--tip">
+        <i class="bi bi-lightbulb"></i>
+        <span>The more details you provide, the faster and more accurate our response will be.</span>
+      </div>
+    </article>
+
+    <!-- ── MODULE 07 — List Your Property ────────────────── -->
+    <article class="man-mod" id="mod-list-property">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-plus-square" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 07</p>
+          <h2 class="man-mod__hero-title">List Your Property</h2>
+          <p class="man-mod__hero-sub">Submit your property for listing on 804 Avenue.</p>
+        </div>
+      </div>
+
+      <p>Click <strong>List Your Property</strong> in the top navigation. You'll need to be <strong>signed in</strong> to submit a listing.</p>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Enter the property <strong>title, type and offer</strong> (Sale or Rent).</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Add <strong>location, beds, baths, area</strong>, and any other details.</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Upload <strong>photos</strong> (at least 1 main image, more is better).</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Enter your <strong>asking price</strong> and any special features.</span></div>
+        <div class="man-step"><span class="man-step__num">5</span><span class="man-step__text">Submit. Our team will <strong>review</strong> and contact you within 1-2 business days.</span></div>
+      </div>
+
+      <div class="man-callout man-callout--note">
+        <i class="bi bi-shield-check"></i>
+        <span>All owner-submitted listings are reviewed by our team before going live to ensure quality and accuracy.</span>
+      </div>
+    </article>
+
+    <!-- ── MODULE 08 — Services Overview ─────────────────── -->
+    <article class="man-mod" id="mod-services">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-grid" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 08</p>
+          <h2 class="man-mod__hero-title">Services Overview</h2>
+          <p class="man-mod__hero-sub">Three service divisions to support your property.</p>
+        </div>
+      </div>
+
+      <h3><i class="bi bi-hammer"></i> Contracting <small style="font-weight:400;color:#9ca3af">— <span class="man-key">/Services/Contracting</span></small></h3>
+      <ul>
+        <li>Civil &amp; General Contracting</li>
+        <li>Gypsum &amp; Ceiling Works</li>
+        <li>Glass &amp; Aluminium Works</li>
+        <li>Painting &amp; Finishing</li>
+        <li>Premium Flooring Solutions</li>
+        <li>Interior Fit-Out &amp; Renovation</li>
+        <li>Internal &amp; External Signage</li>
+      </ul>
+
+      <h3><i class="bi bi-tools"></i> Maintenance <small style="font-weight:400;color:#9ca3af">— <span class="man-key">/Services/Maintenance</span></small></h3>
+      <ul>
+        <li>General Building Maintenance</li>
+        <li>Civil Maintenance</li>
+        <li>MEP (Mechanical, Electrical, Plumbing)</li>
+        <li>Preventive &amp; Corrective Maintenance</li>
+      </ul>
+
+      <h3><i class="bi bi-building-gear"></i> Facility Management <small style="font-weight:400;color:#9ca3af">— <span class="man-key">/Services/Facility</span></small></h3>
+      <ul>
+        <li>Building Operations &amp; Compliance</li>
+        <li>Soft Services &amp; Guest Experience</li>
+        <li>Vendor &amp; Security Coordination</li>
+      </ul>
+    </article>
+
+    <!-- ── MODULE 09 — Request a Quote ───────────────────── -->
+    <article class="man-mod" id="mod-quote">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-receipt" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 09</p>
+          <h2 class="man-mod__hero-title">Request a Service Quote</h2>
+          <p class="man-mod__hero-sub">For contracting and fit-out projects.</p>
+        </div>
+      </div>
+
+      <p>Form URL: <span class="man-key">/Submit/ServiceQuote</span>. Click <strong>Request a Quote</strong> on any Contracting service card.</p>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Fill in <strong>Name, Email, Phone</strong> &amp; optional <strong>Company</strong>.</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Select the <strong>Service Type</strong> you need.</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Describe the <strong>Project / Scope of Work</strong> in the message box.</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Enter <strong>Location</strong> &amp; optional <strong>Budget</strong>.</span></div>
+        <div class="man-step"><span class="man-step__num">5</span><span class="man-step__text">Submit. You'll receive an email confirmation, then a custom proposal from our team.</span></div>
+      </div>
+    </article>
+
+    <!-- ── MODULE 10 — Maintenance Request ───────────────── -->
+    <article class="man-mod" id="mod-maintenance">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-tools" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 10</p>
+          <h2 class="man-mod__hero-title">Maintenance Request</h2>
+          <p class="man-mod__hero-sub">Report a maintenance issue or schedule a visit.</p>
+        </div>
+      </div>
+
+      <p>Form URL: <span class="man-key">/Submit/Maintenance</span></p>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Enter <strong>Name, Email, Phone</strong> &amp; <strong>Property Address</strong>.</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Select <strong>Issue Type</strong> — Plumbing, Electrical, AC, Civil, etc.</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Choose <strong>Priority</strong>: Routine or Emergency.</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Describe the issue and preferred visit time.</span></div>
+        <div class="man-step"><span class="man-step__num">5</span><span class="man-step__text">Submit. Routine requests are handled within 24-48 hours; emergencies dispatched immediately.</span></div>
+      </div>
+
+      <div class="man-callout man-callout--warn">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span><strong>Emergency requests</strong> trigger an instant alert to our operations team and a technician will be assigned as soon as possible.</span>
+      </div>
+    </article>
+
+    <!-- ── MODULE 11 — AMC ───────────────────────────────── -->
+    <article class="man-mod" id="mod-amc">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-shield-check" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 11</p>
+          <h2 class="man-mod__hero-title">Annual Maintenance Contract (AMC)</h2>
+          <p class="man-mod__hero-sub">Year-round scheduled maintenance with priority response.</p>
+        </div>
+      </div>
+
+      <p>An AMC keeps your property in peak condition with planned preventive maintenance, priority emergency response, and a dedicated account manager.</p>
+
+      <p>Form URL: <span class="man-key">/Submit/Amc</span>. Click <strong>Get a Maintenance Contract</strong> on the Maintenance page.</p>
+
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Enter your <strong>contact details</strong>.</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Specify <strong>property details</strong> — type, location, area, number of units.</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Select the <strong>services required</strong> — MEP, Civil, Soft Services, etc.</span></div>
+        <div class="man-step"><span class="man-step__num">4</span><span class="man-step__text">Pick a preferred <strong>contract start date</strong>.</span></div>
+        <div class="man-step"><span class="man-step__num">5</span><span class="man-step__text">Submit. Our team prepares a tailored AMC proposal within 48 hours.</span></div>
+      </div>
+    </article>
+
+    <!-- ── MODULE 12 — Register / Login ──────────────────── -->
+    <article class="man-mod" id="mod-register">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-person-plus" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 12</p>
+          <h2 class="man-mod__hero-title">Register &amp; Sign In</h2>
+          <p class="man-mod__hero-sub">Create a free account to unlock more features.</p>
+        </div>
+      </div>
+
+      <h3><i class="bi bi-pencil-square"></i> Create an Account <small style="font-weight:400;color:#9ca3af">— <span class="man-key">/Account/Register</span></small></h3>
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Click <strong>Sign In</strong> in navigation, then <strong>Create account</strong>.</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Enter your <strong>Full Name</strong>, <strong>Email</strong> and a strong <strong>Password</strong> (8+ chars, digit, lowercase).</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Confirm password &amp; click <strong>Create Account</strong>. You're logged in immediately.</span></div>
+      </div>
+
+      <h3><i class="bi bi-key"></i> Sign In <small style="font-weight:400;color:#9ca3af">— <span class="man-key">/Account/Login</span></small></h3>
+      <div class="man-steps">
+        <div class="man-step"><span class="man-step__num">1</span><span class="man-step__text">Enter your <strong>Email</strong> and <strong>Password</strong>.</span></div>
+        <div class="man-step"><span class="man-step__num">2</span><span class="man-step__text">Optionally tick <strong>Remember me for 30 days</strong>.</span></div>
+        <div class="man-step"><span class="man-step__num">3</span><span class="man-step__text">Click <strong>Sign In</strong>.</span></div>
+      </div>
+
+      <h3><i class="bi bi-question-circle"></i> Forgot Password</h3>
+      <p>On the login page, click <strong>Forgot password?</strong>, enter your email — you'll receive a reset link valid for 24 hours.</p>
+
+      <div class="man-callout man-callout--warn">
+        <i class="bi bi-shield-lock"></i>
+        <span>After 5 failed login attempts, your account is locked for 15 minutes as a security measure.</span>
+      </div>
+    </article>
+
+    <!-- ── MODULE 13 — My Account ────────────────────────── -->
+    <article class="man-mod" id="mod-dashboard">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-person-circle" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 13</p>
+          <h2 class="man-mod__hero-title">My Account Dashboard</h2>
+          <p class="man-mod__hero-sub">Manage your saved properties, inquiries and profile.</p>
+        </div>
+      </div>
+
+      <p>Once logged in, click your name or <strong>My Account</strong> in the navigation to access <span class="man-key">/Account/Dashboard</span>.</p>
+
+      <table>
+        <thead><tr><th>Tab</th><th>What you can do</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Saved Properties</strong></td><td>View properties you've bookmarked for later</td></tr>
+          <tr><td><strong>My Inquiries</strong></td><td>Track all your property &amp; service inquiries with statuses</td></tr>
+          <tr><td><strong>My Listings</strong></td><td>Properties you submitted for listing</td></tr>
+          <tr><td><strong>Profile</strong></td><td>Update your display name, phone &amp; email</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <!-- ── MODULE 14 — About & Portfolio ─────────────────── -->
+    <article class="man-mod" id="mod-about">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-info-circle" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 14</p>
+          <h2 class="man-mod__hero-title">About &amp; Portfolio</h2>
+          <p class="man-mod__hero-sub">Learn about us and explore our completed projects.</p>
+        </div>
+      </div>
+
+      <h3><i class="bi bi-building"></i> About Page <small style="font-weight:400;color:#9ca3af">— <span class="man-key">/About</span></small></h3>
+      <p>Covers our company story, vision, mission, values, team members, areas of expertise, and reasons to choose us.</p>
+
+      <h3><i class="bi bi-images"></i> Portfolio <small style="font-weight:400;color:#9ca3af">— <span class="man-key">/Projects</span></small></h3>
+      <p>Shows completed construction and fit-out projects with photos, descriptions, and progress timelines. Click any project card for full details.</p>
+
+      <div class="man-callout man-callout--tip">
+        <i class="bi bi-lightbulb"></i>
+        <span>Clients with an active project receive a secure private link (<span class="man-key">/Project/&#123;token&#125;</span>) to track real-time progress shared by our operations team.</span>
+      </div>
+    </article>
+
+    <!-- ── MODULE 15 — Area Guides ───────────────────────── -->
+    <article class="man-mod" id="mod-areas">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-geo-alt" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 15</p>
+          <h2 class="man-mod__hero-title">Area Guides</h2>
+          <p class="man-mod__hero-sub">Market insight for UAE neighbourhoods.</p>
+        </div>
+      </div>
+
+      <p>Visit <span class="man-key">/AreaGuides</span> for neighbourhood-level insight across Abu Dhabi, Dubai, and other emirates.</p>
+
+      <table>
+        <thead><tr><th>What's covered</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Overview</td><td>Character of the area, who it suits</td></tr>
+          <tr><td>Avg. Sale Price</td><td>Per sq ft for residential sales</td></tr>
+          <tr><td>Avg. Annual Rent</td><td>Typical rental figures</td></tr>
+          <tr><td>Property Types</td><td>Apartments, villas, offices available</td></tr>
+          <tr><td>Nearby Listings</td><td>Active 804 Avenue listings in that area</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <!-- ── MODULE 16 — Contact ───────────────────────────── -->
+    <article class="man-mod" id="mod-contact">
+      <div class="man-mod__hero">
+        <div class="man-mod__hero-icon"><i class="bi bi-telephone" style="font-size:1.6rem"></i></div>
+        <div>
+          <p class="man-mod__hero-eyebrow">Module 16</p>
+          <h2 class="man-mod__hero-title">Contact Us</h2>
+          <p class="man-mod__hero-sub">All the ways to reach the 804 Avenue team.</p>
+        </div>
+      </div>
+
+      <h3><i class="bi bi-envelope"></i> Contact Form <small style="font-weight:400;color:#9ca3af">— <span class="man-key">/Contact</span></small></h3>
+      <table>
+        <thead><tr><th>Field</th><th>Required</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Full Name</td><td><span class="man-pill man-pill--green">Yes</span></td><td>Your first &amp; last name</td></tr>
+          <tr><td>Email</td><td><span class="man-pill man-pill--green">Yes</span></td><td>Confirmation sent here</td></tr>
+          <tr><td>Phone</td><td><span class="man-pill man-pill--orange">Optional</span></td><td>For callback requests</td></tr>
+          <tr><td>Topic</td><td><span class="man-pill man-pill--green">Yes</span></td><td>General / Properties / Contracting / Maintenance / Facility</td></tr>
+          <tr><td>Message</td><td><span class="man-pill man-pill--green">Yes</span></td><td>Min 10 characters</td></tr>
+        </tbody>
+      </table>
+
+      <h3><i class="bi bi-chat-dots"></i> Other Ways to Reach Us</h3>
+      <table>
+        <tbody>
+          <tr><td><strong>Phone</strong></td><td>+971 50 43 99 804</td></tr>
+          <tr><td><strong>WhatsApp</strong></td><td>Floating chat button on every page</td></tr>
+          <tr><td><strong>Email</strong></td><td>info&#64;804avenue.ae</td></tr>
+          <tr><td><strong>Office</strong></td><td>Office #540, 5th Floor, Al Ghaith Tower, Abu Dhabi, UAE</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+  </main>
+</div>
+
+@section Scripts {
+  <script>
+  (function () {
+    var sideItems = document.querySelectorAll('.man-side__item');
+    var modules   = document.querySelectorAll('.man-mod');
+    var search    = document.getElementById('manSearch');
+    var mainPane  = document.querySelector('.man-main');
+
+    function activate(modId, push) {
+      var mod = document.getElementById('mod-' + modId);
+      if (!mod) return;
+      modules.forEach(function(m){ m.classList.remove('is-active'); });
+      mod.classList.add('is-active');
+      sideItems.forEach(function(b){
+        b.classList.toggle('is-active', b.dataset.mod === modId);
+      });
+      if (push) history.replaceState(null, '', '#' + modId);
+      if (mainPane) mainPane.scrollTop = 0;
+    }
+
+    sideItems.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        activate(btn.dataset.mod, true);
+      });
+    });
+
+    // URL hash → open module
+    if (window.location.hash) {
+      var target = window.location.hash.replace('#','');
+      if (document.getElementById('mod-' + target)) activate(target, false);
+    }
+
+    // Search filter
+    if (search) {
+      search.addEventListener('input', function(){
+        var q = search.value.trim().toLowerCase();
+        sideItems.forEach(function(btn){
+          var match = !q || btn.textContent.toLowerCase().includes(q);
+          btn.classList.toggle('is-hidden', !match);
+        });
+      });
+    }
+  })();
+  </script>
+}

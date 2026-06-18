@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Avenue804.Web.Areas.Admin.Pages.Listings;
 
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
 public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _db;

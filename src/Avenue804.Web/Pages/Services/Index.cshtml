@@ -4,8 +4,8 @@
 @using Avenue804.Web.Configuration
 @using Avenue804.Web.Infrastructure
 @{
-    ViewData["Title"] = "Our Services — Maintenance, AMC, Contracting & Facility Management";
-    ViewData["MetaDescription"] = "Book maintenance, an annual maintenance contract (AMC), contracting works or full facility management with 804 Avenue across the UAE.";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaServicesTitle, "Our Services — Maintenance, AMC, Contracting & Facility Management"];
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaServicesDescription, "Book maintenance, an annual maintenance contract (AMC), contracting works or full facility management with 804 Avenue across the UAE."];
     ViewData["NavActive"] = "services";
     var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
     var phoneHref = site?.TelHref ?? "tel:+971504399804";
@@ -25,7 +25,7 @@
   <section class="svc-hub__hero">
     <div class="container">
       <nav class="svc-hub__breadcrumb svc-fade-up" aria-label="Breadcrumb">
-        <a asp-page="/Index">Home</a><span class="sep">/</span><span>Services</span>
+        <a asp-page="/Index">Home</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.ServicesCrumb, "Services"]</span>
       </nav>
       <span class="svc-hub__eyebrow svc-fade-up">@Block(ContentBlockSlugs.PageServicesHubEyebrow, "What we do")</span>
       <h1 class="svc-hub__hero-title svc-fade-up">
@@ -101,8 +101,8 @@
   <section class="svc-hub__section" style="padding-top:24px">
     <div class="container">
       <div class="svc-hub__section-head">
-        <span class="svc-hub__tag svc-fade-up">Our services</span>
-        <h2 class="svc-hub__h2 svc-fade-up">Pick what you <em>need today.</em></h2>
+        <span class="svc-hub__tag svc-fade-up">@Cms[ContentBlockSlugs.ServicesCardsTag, "Our services"]</span>
+        <h2 class="svc-hub__h2 svc-fade-up">@Html.Raw(Cms[ContentBlockSlugs.ServicesCardsTitle, "Pick what you <em>need today.</em>"])</h2>
         <p class="svc-hub__lead svc-fade-up">
           @Html.Raw(Block(ContentBlockSlugs.PageServicesHubLead,
             "Every request lands directly with our operations team — no call-centre handoffs, no third-party dispatch."))
@@ -213,8 +213,8 @@
   <section class="svc-hub__section svc-hub__section--white">
     <div class="container">
       <div class="svc-hub__section-head">
-        <span class="svc-hub__tag svc-fade-up">How it works</span>
-        <h2 class="svc-hub__h2 svc-fade-up">From request to <em>resolution</em>, on one timeline.</h2>
+        <span class="svc-hub__tag svc-fade-up">@Cms[ContentBlockSlugs.ServicesHiwTag, "How it works"]</span>
+        <h2 class="svc-hub__h2 svc-fade-up">@Html.Raw(Cms[ContentBlockSlugs.ServicesHiwTitle, "From request to <em>resolution</em>, on one timeline."])</h2>
         <p class="svc-hub__lead svc-fade-up">No call-centre runaround. Every request goes straight to a coordinator who owns it end-to-end.</p>
       </div>
 
@@ -249,8 +249,8 @@
   <section class="svc-hub__section">
     <div class="container">
       <div class="svc-hub__section-head">
-        <span class="svc-hub__tag svc-fade-up">Why 804 Avenue</span>
-        <h2 class="svc-hub__h2 svc-fade-up">One accountable team. <em>Zero handoffs.</em></h2>
+        <span class="svc-hub__tag svc-fade-up">@Cms[ContentBlockSlugs.ServicesWhyTag, "Why 804 Avenue"]</span>
+        <h2 class="svc-hub__h2 svc-fade-up">@Html.Raw(Cms[ContentBlockSlugs.ServicesWhyTitle, "One accountable team. <em>Zero handoffs.</em>"])</h2>
         <p class="svc-hub__lead svc-fade-up">We employ our crews and engineers directly — so when something is wrong, there's one number to call and one team that fixes it.</p>
       </div>
 
@@ -293,8 +293,8 @@
   <section class="svc-hub__section svc-hub__section--white">
     <div class="container">
       <div class="svc-hub__section-head">
-        <span class="svc-hub__tag svc-fade-up">FAQ</span>
-        <h2 class="svc-hub__h2 svc-fade-up">Common <em>questions</em>.</h2>
+        <span class="svc-hub__tag svc-fade-up">@Cms[ContentBlockSlugs.ServicesFaqTag, "FAQ"]</span>
+        <h2 class="svc-hub__h2 svc-fade-up">@Html.Raw(Cms[ContentBlockSlugs.ServicesFaqTitle, "Common <em>questions</em>."])</h2>
       </div>
 
       <div class="svc-hub__faq">
@@ -339,13 +339,13 @@
     <div class="container">
       <div class="svc-hub__cta-inner svc-fade-up">
         <div>
-          <h2 class="svc-hub__cta-title">Need an answer in the next hour?</h2>
-          <p class="svc-hub__cta-sub">Skip the form — call our operations team directly. Our line is staffed 24/7 for emergencies.</p>
+          <h2 class="svc-hub__cta-title">@Cms[ContentBlockSlugs.ServicesCtaTitle, "Need an answer in the next hour?"]</h2>
+          <p class="svc-hub__cta-sub">@Cms[ContentBlockSlugs.ServicesCtaSub, "Skip the form — call our operations team directly. Our line is staffed 24/7 for emergencies."]</p>
           <a href="@phoneHref" class="svc-hub__cta-phone">@phoneText</a>
         </div>
         <div class="svc-hub__cta-actions">
-          <a asp-page="/Submit/ServiceQuote" class="svc-hub__btn svc-hub__btn--white">Request a Quote</a>
-          <a asp-page="/Contact" class="svc-hub__btn svc-hub__btn--outline-white">Contact Us</a>
+          <a asp-page="/Submit/ServiceQuote" class="svc-hub__btn svc-hub__btn--white">@Cms[ContentBlockSlugs.ServicesCtaBtnPrimary, "Request a Quote"]</a>
+          <a asp-page="/Contact" class="svc-hub__btn svc-hub__btn--outline-white">@Cms[ContentBlockSlugs.ServicesCtaBtnSecondary, "Contact Us"]</a>
         </div>
       </div>
     </div>

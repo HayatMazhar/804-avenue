@@ -1,9 +1,9 @@
 @page "/Account/ExternalCallback"
 @model Avenue804.Web.Pages.Account.ExternalCallbackModel
 @{
-    ViewData["Title"] = "Signing in…";
+    ViewData["Title"] = Cms[ContentBlockSlugs.AccountExternalCallbackTitle, "Signing in…"];
 }
 <div class="auth-card" style="text-align:center;padding:48px 24px">
   <div class="auth-spinner"></div>
-  <p style="margin-top:20px;color:var(--text-secondary)">Completing sign-in…</p>
+  <p style="margin-top:20px;color:var(--text-secondary)">@Cms[ContentBlockSlugs.AccountExternalCallbackMessage, "Completing sign-in…"]</p>
 </div>

@@ -8,7 +8,7 @@
 }
 <section class="page-hero" @(string.IsNullOrWhiteSpace(G.HeroImageUrl) ? "" : $"style=\"background-image:linear-gradient(165deg,rgba(15,23,42,.55),rgba(15,23,42,.75)),url('{G.HeroImageUrl}');background-size:cover;background-position:center\"")>
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/AreaGuides/Index">Area Guides</a><span class="sep">/</span><span>@G.Name</span></div>
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/AreaGuides/Index">@Cms[ContentBlockSlugs.FooterLinkAreaGuides, "Area Guides"]</a><span class="sep">/</span><span>@G.Name</span></div>
     <h1 class="page-hero-title fade-up">@G.Name</h1>
     @if (!string.IsNullOrWhiteSpace(G.Emirate))
     {
@@ -22,36 +22,36 @@
     <div class="area-detail-layout">
       <!-- Stats sidebar -->
       <aside class="area-stats-card fade-up">
-        <div class="area-stat-head">Market Snapshot</div>
+        <div class="area-stat-head">@Cms[ContentBlockSlugs.AreaGuideMarketTitle, "Market Snapshot"]</div>
         @if (G.AvgPriceSaleSqft.HasValue)
         {
-          <div class="area-stat-row"><span>Avg sale price</span><strong>AED @G.AvgPriceSaleSqft.Value.ToString("N0") / sqft</strong></div>
+          <div class="area-stat-row"><span>@Cms[ContentBlockSlugs.AreaGuideAvgSale, "Avg sale price"]</span><strong>AED @G.AvgPriceSaleSqft.Value.ToString("N0") / sqft</strong></div>
         }
         @if (G.AvgRentYearly.HasValue)
         {
-          <div class="area-stat-row"><span>Avg 1BR rent</span><strong>AED @G.AvgRentYearly.Value.ToString("N0") / yr</strong></div>
-          <div class="area-stat-row"><span>Monthly equiv.</span><strong>AED @((G.AvgRentYearly.Value / 12).ToString("N0"))</strong></div>
+          <div class="area-stat-row"><span>@Cms[ContentBlockSlugs.AreaGuideAvgRent, "Avg 1BR rent"]</span><strong>AED @G.AvgRentYearly.Value.ToString("N0") / yr</strong></div>
+          <div class="area-stat-row"><span>@Cms[ContentBlockSlugs.AreaGuideMonthly, "Monthly equiv."]</span><strong>AED @((G.AvgRentYearly.Value / 12).ToString("N0"))</strong></div>
         }
         @if (!string.IsNullOrWhiteSpace(G.PopularWith))
         {
-          <div class="area-stat-row"><span>Popular with</span><strong>@G.PopularWith</strong></div>
+          <div class="area-stat-row"><span>@Cms[ContentBlockSlugs.AreaGuidePopular, "Popular with"]</span><strong>@G.PopularWith</strong></div>
         }
         <div class="area-stat-divider"></div>
         @if (!string.IsNullOrWhiteSpace(G.NearbyLandmarks))
         {
-          <div class="area-stat-section"><div class="area-stat-label">Nearby landmarks</div><p>@G.NearbyLandmarks</p></div>
+          <div class="area-stat-section"><div class="area-stat-label">@Cms[ContentBlockSlugs.AreaGuideLandmarks, "Nearby landmarks"]</div><p>@G.NearbyLandmarks</p></div>
         }
         @if (!string.IsNullOrWhiteSpace(G.SchoolsNearby))
         {
-          <div class="area-stat-section"><div class="area-stat-label">Schools</div><p>@G.SchoolsNearby</p></div>
+          <div class="area-stat-section"><div class="area-stat-label">@Cms[ContentBlockSlugs.AreaGuideSchools, "Schools"]</div><p>@G.SchoolsNearby</p></div>
         }
         @if (!string.IsNullOrWhiteSpace(G.TransportLinks))
         {
-          <div class="area-stat-section"><div class="area-stat-label">Transport</div><p>@G.TransportLinks</p></div>
+          <div class="area-stat-section"><div class="area-stat-label">@Cms[ContentBlockSlugs.AreaGuideTransport, "Transport"]</div><p>@G.TransportLinks</p></div>
         }
         <div class="area-stat-divider"></div>
-        <a asp-page="/Properties/Index" asp-route-location="@G.Name" class="btn-primary" style="display:flex;justify-content:center;margin-top:4px"><span>Browse properties in @G.Name</span></a>
-        <a asp-page="/Contact" class="btn-outline" style="display:flex;justify-content:center;margin-top:10px">Talk to an agent</a>
+        <a asp-page="/Properties/Index" asp-route-location="@G.Name" class="btn-primary" style="display:flex;justify-content:center;margin-top:4px"><span>@Cms[ContentBlockSlugs.AreaGuideBrowseBtn, "Browse properties in"] @G.Name</span></a>
+        <a asp-page="/Contact" class="btn-outline" style="display:flex;justify-content:center;margin-top:10px">@Cms[ContentBlockSlugs.AreaGuideTalkBtn, "Talk to an agent"]</a>
       </aside>
 
       <!-- Main content -->
@@ -64,7 +64,7 @@
         <!-- Listings in this area -->
         @if (Model.AreaListings.Count > 0)
         {
-          <h3 class="section-title fade-up mt-5 mb-4">Properties in <em>@G.Name</em></h3>
+          <h3 class="section-title fade-up mt-5 mb-4">@Cms[ContentBlockSlugs.AreaGuidePropertiesHeading, "Properties in"] <em>@G.Name</em></h3>
           <div class="feat-grid">
             @foreach (var p in Model.AreaListings)
             {
@@ -72,7 +72,7 @@
             }
           </div>
           <div style="text-align:center;margin-top:24px">
-            <a asp-page="/Properties/Index" asp-route-location="@G.Name" class="btn-outline fade-up">View all @G.Name properties →</a>
+            <a asp-page="/Properties/Index" asp-route-location="@G.Name" class="btn-outline fade-up">@Cms[ContentBlockSlugs.AreaGuideViewAllPrefix, "View all"] @G.Name @Cms[ContentBlockSlugs.AreaGuideViewAllSuffix, "properties →"]</a>
           </div>
         }
       </div>

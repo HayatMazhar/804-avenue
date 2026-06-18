@@ -3,8 +3,8 @@
 @inject Avenue804.Web.Services.IFeatureFlagService FeatureFlagService
 @using Avenue804.Web.Services
 @{
-    ViewData["Title"] = "Properties for Sale & Rent — Abu Dhabi UAE";
-    ViewData["MetaDescription"] = "Browse apartments, villas, townhouses, and commercial properties for sale and rent across Abu Dhabi and the UAE with 804 Avenue.";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaPropertiesTitle, "Properties for Sale & Rent — Abu Dhabi UAE"];
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaPropertiesDescription, "Browse apartments, villas, townhouses, and commercial properties for sale and rent across Abu Dhabi and the UAE with 804 Avenue."];
     ViewData["NavActive"] = "properties";
     bool mapsEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.GoogleMaps);
     bool compareEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.PropertyCompare);
@@ -37,15 +37,15 @@
         }
         else
         {
-          <text>Browse <em>Properties</em></text>
+          @Html.Raw(Cms[ContentBlockSlugs.PropertiesHeader, "Browse <em>Properties</em>"])
         }
       </h1>
     </div>
     <!-- Offer tabs -->
     <div class="pl-offer-tabs">
-      <a class="pl-offer-tab @(currentOffer == "" ? "active" : "")" asp-page="/Properties/Index" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">All</a>
-      <a class="pl-offer-tab @(currentOffer == "sale" ? "active" : "")" asp-page="/Properties/Index" asp-route-offer="sale" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">Buy</a>
-      <a class="pl-offer-tab @(currentOffer == "rent" ? "active" : "")" asp-page="/Properties/Index" asp-route-offer="rent" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">Rent</a>
+      <a class="pl-offer-tab @(currentOffer == "" ? "active" : "")" asp-page="/Properties/Index" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">@Cms[ContentBlockSlugs.PropertiesTabAll, "All"]</a>
+      <a class="pl-offer-tab @(currentOffer == "sale" ? "active" : "")" asp-page="/Properties/Index" asp-route-offer="sale" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">@Cms[ContentBlockSlugs.PropertiesTabBuy, "Buy"]</a>
+      <a class="pl-offer-tab @(currentOffer == "rent" ? "active" : "")" asp-page="/Properties/Index" asp-route-offer="rent" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">@Cms[ContentBlockSlugs.PropertiesTabRent, "Rent"]</a>
     </div>
   </div>
 </div>
@@ -124,7 +124,7 @@
           <option value="5m+" selected="@(Model.SearchBudget == "5m+")">5M+</option>
         </select>
       </div>
-      <button type="submit" class="pl-searchbar__btn">Search</button>
+      <button type="submit" class="pl-searchbar__btn">@Cms[ContentBlockSlugs.HomeSearchButton, "Search"]</button>
       @if (hasFilters)
       {
         <a asp-page="/Properties/Index" class="pl-searchbar__clear" title="Clear all filters">
@@ -158,26 +158,26 @@
 
             <!-- Category -->
             <div class="pl-filter-group">
-              <div class="pl-filter-group__label">Property Type</div>
+              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.HomeSearchPropertyType, "Property Type"]</div>
               <div class="pl-filter-checkboxes">
                 <label class="pl-filter-check @(Model.SearchCategory == "Residential" ? "is-checked" : "")">
                   <input type="radio" name="category" value="Residential" @(Model.SearchCategory == "Residential" ? "checked" : "") />
-                  Residential
+                  @Cms[ContentBlockSlugs.HomeSearchOptionResidential, "Residential"]
                 </label>
                 <label class="pl-filter-check @(Model.SearchCategory == "Commercial" ? "is-checked" : "")">
                   <input type="radio" name="category" value="Commercial" @(Model.SearchCategory == "Commercial" ? "checked" : "") />
-                  Commercial
+                  @Cms[ContentBlockSlugs.HomeSearchOptionCommercial, "Commercial"]
                 </label>
                 <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchCategory) ? "is-checked" : "")">
                   <input type="radio" name="category" value="" @(string.IsNullOrWhiteSpace(Model.SearchCategory) ? "checked" : "") />
-                  All categories
+                  @Cms[ContentBlockSlugs.PropertiesFilterAllCategories, "All categories"]
                 </label>
               </div>
             </div>
 
             <!-- Emirate -->
             <div class="pl-filter-group">
-              <div class="pl-filter-group__label">Emirate</div>
+              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.HomeSearchEmirate, "Emirate"]</div>
               <div class="pl-filter-checkboxes">
                 @{
                   var emirates = new[] { "Abu Dhabi", "Dubai", "Sharjah", "Ajman", "Ras Al Khaimah" };
@@ -191,14 +191,14 @@
                 }
                 <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchLocation) ? "is-checked" : "")">
                   <input type="radio" name="location" value="" @(string.IsNullOrWhiteSpace(Model.SearchLocation) ? "checked" : "") />
-                  Any emirate
+                  @Cms[ContentBlockSlugs.PropertiesFilterAnyEmirate, "Any emirate"]
                 </label>
               </div>
             </div>
 
             <!-- Property details -->
             <div class="pl-filter-group">
-              <div class="pl-filter-group__label">Property Details</div>
+              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.HomeSearchPropertyDetails, "Property Details"]</div>
               <div class="pl-filter-checkboxes">
                 @{
                   var residentialTypes = new[] { "Apartment", "Villa Apartment", "Villa Compound", "Villa", "Building", "Land" };
@@ -216,14 +216,14 @@
                 }
                 <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchType) ? "is-checked" : "")">
                   <input type="radio" name="type" value="" @(string.IsNullOrWhiteSpace(Model.SearchType) ? "checked" : "") />
-                  All types
+                  @Cms[ContentBlockSlugs.PropertiesFilterAllTypes, "All types"]
                 </label>
               </div>
             </div>
 
             <!-- Size -->
             <div class="pl-filter-group">
-              <div class="pl-filter-group__label">Size (sqft)</div>
+              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.PropertiesFilterSize, "Size (sqft)"]</div>
               <div class="pl-filter-checkboxes">
                 <label class="pl-filter-check @(Model.SearchSize == "u500" ? "is-checked" : "")">
                   <input type="radio" name="size" value="u500" @(Model.SearchSize == "u500" ? "checked" : "") />
@@ -247,14 +247,14 @@
                 </label>
                 <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchSize) ? "is-checked" : "")">
                   <input type="radio" name="size" value="" @(string.IsNullOrWhiteSpace(Model.SearchSize) ? "checked" : "") />
-                  Any size
+                  @Cms[ContentBlockSlugs.PropertiesFilterAnySize, "Any size"]
                 </label>
               </div>
             </div>
 
             <!-- Price -->
             <div class="pl-filter-group">
-              <div class="pl-filter-group__label">Price (AED)</div>
+              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.PropertiesFilterPrice, "Price (AED)"]</div>
               <div class="pl-filter-checkboxes">
                 <label class="pl-filter-check @(Model.SearchBudget == "u500" ? "is-checked" : "")">
                   <input type="radio" name="budget" value="u500" @(Model.SearchBudget == "u500" ? "checked" : "") />
@@ -274,27 +274,27 @@
                 </label>
                 <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchBudget) ? "is-checked" : "")">
                   <input type="radio" name="budget" value="" @(string.IsNullOrWhiteSpace(Model.SearchBudget) ? "checked" : "") />
-                  Any price
+                  @Cms[ContentBlockSlugs.PropertiesFilterAnyPrice, "Any price"]
                 </label>
               </div>
             </div>
 
             <!-- Features (Verified) -->
             <div class="pl-filter-group">
-              <div class="pl-filter-group__label">Features</div>
+              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.PropertiesFilterFeatures, "Features"]</div>
               <div class="pl-filter-checkboxes">
                 <label class="pl-filter-check @(currentSort == "verified" ? "is-checked" : "")">
                   <input type="radio" name="sort" value="verified" @(currentSort == "verified" ? "checked" : "") />
-                  Verified only
+                  @Cms[ContentBlockSlugs.PropertiesFilterVerifiedOnly, "Verified only"]
                 </label>
                 <label class="pl-filter-check @(currentSort == "reduced" ? "is-checked" : "")">
                   <input type="radio" name="sort" value="reduced" @(currentSort == "reduced" ? "checked" : "") />
-                  Price reduced
+                  @Cms[ContentBlockSlugs.PropertiesFilterPriceReduced, "Price reduced"]
                 </label>
               </div>
             </div>
 
-            <button type="submit" class="pl-filter-apply">Apply Filters</button>
+            <button type="submit" class="pl-filter-apply">@Cms[ContentBlockSlugs.PropertiesFilterApply, "Apply Filters"]</button>
           </form>
         </div>
       </aside>
@@ -307,11 +307,11 @@
           <div class="pl-sortbar__count">
             @if (hasFilters)
             {
-              <strong>@Model.TotalCount</strong> @(Model.TotalCount != 1 ? "properties" : "property") 
+              <strong>@Model.TotalCount</strong> @(Model.TotalCount != 1 ? Cms[ContentBlockSlugs.PropertiesCountPlural, "properties"] : Cms[ContentBlockSlugs.PropertiesCountSingular, "property"]) 
             }
             else
             {
-              <strong>@Model.TotalCount</strong> @(Model.TotalCount != 1 ? "properties" : "property")
+              <strong>@Model.TotalCount</strong> @(Model.TotalCount != 1 ? Cms[ContentBlockSlugs.PropertiesCountPlural, "properties"] : Cms[ContentBlockSlugs.PropertiesCountSingular, "property"])
             }
           </div>
           <div class="pl-sortbar__right">
@@ -324,29 +324,29 @@
                   <input type="hidden" name="@kv.Key" value="@kv.Value" />
                 }
                 <button type="submit" class="pl-sortbar__save">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-                  Save search
+                  @{ /* Icon below */ }<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                  @Cms[ContentBlockSlugs.PropertiesSaveSearch, "Save search"]
                 </button>
               </form>
             }
             <!-- Sort -->
             <div class="pl-sortbar__sort-wrap">
-              <label class="pl-sortbar__sort-label">Sort:</label>
+              <label class="pl-sortbar__sort-label">@Cms[ContentBlockSlugs.PropertiesSortLabel, "Sort:"]</label>
               <select id="sfSort" name="sort" class="pl-sortbar__sort-select" onchange="document.getElementById('propSearchForm').submit()">
-                <option value="newest" selected="@(currentSort == "newest")">Newest first</option>
-                <option value="price-asc" selected="@(currentSort == "price-asc")">Price: Low → High</option>
-                <option value="price-desc" selected="@(currentSort == "price-desc")">Price: High → Low</option>
-                <option value="views" selected="@(currentSort == "views")">Most viewed</option>
-                <option value="verified" selected="@(currentSort == "verified")">Verified first</option>
-                <option value="reduced" selected="@(currentSort == "reduced")">Price reduced</option>
+                <option value="newest" selected="@(currentSort == "newest")">@Cms[ContentBlockSlugs.PropertiesSortNewest, "Newest first"]</option>
+                <option value="price-asc" selected="@(currentSort == "price-asc")">@Cms[ContentBlockSlugs.PropertiesSortPriceAsc, "Price: Low → High"]</option>
+                <option value="price-desc" selected="@(currentSort == "price-desc")">@Cms[ContentBlockSlugs.PropertiesSortPriceDesc, "Price: High → Low"]</option>
+                <option value="views" selected="@(currentSort == "views")">@Cms[ContentBlockSlugs.PropertiesSortMostViewed, "Most viewed"]</option>
+                <option value="verified" selected="@(currentSort == "verified")">@Cms[ContentBlockSlugs.PropertiesSortVerifiedFirst, "Verified first"]</option>
+                <option value="reduced" selected="@(currentSort == "reduced")">@Cms[ContentBlockSlugs.PropertiesFilterPriceReduced, "Price reduced"]</option>
               </select>
             </div>
             <!-- View toggle -->
             <div class="pl-view-toggle" id="viewToggle">
-              <button class="pl-view-btn active" id="btnGrid" title="Grid view">
+              <button class="pl-view-btn active" id="btnGrid" title="@Cms[ContentBlockSlugs.PropertiesViewGrid, "Grid view"]">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
               </button>
-              <button class="pl-view-btn" id="btnList" title="List view">
+              <button class="pl-view-btn" id="btnList" title="@Cms[ContentBlockSlugs.PropertiesViewList, "List view"]">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
               </button>
             </div>
@@ -355,13 +355,13 @@
             {
               <button class="pl-map-toggle" id="btnMapToggle">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-                Map view
+                @Cms[ContentBlockSlugs.PropertiesMapView, "Map view"]
               </button>
             }
             <!-- Mobile filter toggle -->
             <button class="pl-mobile-filter-btn" id="btnMobileFilter">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
-              Filters
+              @Cms[ContentBlockSlugs.PropertiesFiltersLabel, "Filters"]
               @if (hasFilters) { <span class="pl-mobile-filter-badge">!</span> }
             </button>
           </div>
@@ -436,9 +436,9 @@
         {
           <div class="pl-empty">
             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <h3>No properties found</h3>
-            <p>Try adjusting your filters — or <a asp-page="/Contact">contact us</a> and we'll find it for you.</p>
-            <a asp-page="/Properties/Index" class="ph-btn ph-btn--primary" style="margin-top:20px">Clear all filters</a>
+            <h3>@Cms[ContentBlockSlugs.PropertiesEmptyTitle, "No properties found"]</h3>
+            <p>@Html.Raw(Cms[ContentBlockSlugs.PropertiesEmptyBody, "Try adjusting your filters — or <a href=\"/Contact\">contact us</a> and we'll find it for you."])</p>
+            <a asp-page="/Properties/Index" class="ph-btn ph-btn--primary" style="margin-top:20px">@Cms[ContentBlockSlugs.PropertiesClearFilters, "Clear all filters"]</a>
           </div>
         }
         else
@@ -453,7 +453,7 @@
 
         <!-- Recently viewed -->
         <div id="recentlyViewedSection" style="display:none;margin-top:48px;padding-top:32px;border-top:1px solid #e5e7eb">
-          <p class="ph-tag" style="margin-bottom:16px">Your Recent Views</p>
+          <p class="ph-tag" style="margin-bottom:16px">@Cms[ContentBlockSlugs.PropertiesRecentTitle, "Your Recent Views"]</p>
           <div id="recentlyViewedGrid" class="pl-grid"></div>
         </div>
 

@@ -1,15 +1,15 @@
 @page "/MortgagePreQualification"
 @model Avenue804.Web.Pages.MortgagePreQualModel
 @{
-    ViewData["Title"] = "Mortgage Pre-Qualification — Abu Dhabi";
-    ViewData["MetaDescription"] = "Check your borrowing power in under 2 minutes — free mortgage pre-qualification with no credit check or commitment.";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaMortgageTitle, "Mortgage Pre-Qualification — Abu Dhabi"];
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaMortgageDescription, "Check your borrowing power in under 2 minutes — free mortgage pre-qualification with no credit check or commitment."];
     ViewData["NavActive"] = "mortgage";
 }
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Mortgage Pre-Qualification</span></div>
-    <h1 class="page-hero-title fade-up">Mortgage <em>Pre-Qualification</em></h1>
-    <p class="page-hero-sub fade-up">Check your borrowing power in under 2 minutes — free, no credit check, no commitment.</p>
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.MortgageCrumb, "Mortgage Pre-Qualification"]</span></div>
+    <h1 class="page-hero-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.MortgageHeroH1, "Mortgage <em>Pre-Qualification</em>"])</h1>
+    <p class="page-hero-sub fade-up">@Cms[ContentBlockSlugs.MortgageHeroSub, "Check your borrowing power in under 2 minutes — free, no credit check, no commitment."]</p>
   </div>
 </section>
 
@@ -18,8 +18,8 @@
     <div class="quote-grid">
       <div class="quote-card">
         <div class="quote-card-head">
-          <h3>Pre-Qualification Calculator</h3>
-          <p>Enter your details to estimate your maximum loan amount and monthly payment.</p>
+          <h3>@Cms[ContentBlockSlugs.MortgageCalcTitle, "Pre-Qualification Calculator"]</h3>
+          <p>@Cms[ContentBlockSlugs.MortgageCalcSub, "Enter your details to estimate your maximum loan amount and monthly payment."]</p>
         </div>
         <div class="quote-form">
           <div class="quote-grid-2">
@@ -79,7 +79,7 @@
               <div class="quote-field"><label>Email *</label><input type="email" name="email" required placeholder="you@example.com" maxlength="256" /></div>
               <div class="quote-field"><label>Notes (optional)</label><textarea name="projectDescription" rows="2" placeholder="Property budget, nationality, preferred bank…" maxlength="2000"></textarea></div>
               <button type="submit" class="btn-primary" style="width:100%;justify-content:center" onclick="syncMqEst()">
-                <span>Connect me with a Mortgage Broker</span>
+                <span>@Cms[ContentBlockSlugs.MortgageConnectBtn, "Connect me with a Mortgage Broker"]</span>
               </button>
             </form>
           </div>

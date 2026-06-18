@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Avenue804.Web.Areas.Admin.Pages;
 
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
 public class LogoutModel : PageModel
 {
     public IActionResult OnGet() => RedirectToPage("/Index", new { area = "Admin" });

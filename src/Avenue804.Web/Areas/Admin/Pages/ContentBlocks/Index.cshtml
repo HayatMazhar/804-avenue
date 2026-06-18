@@ -4,14 +4,37 @@
 @{
     ViewData["Title"] = "Content blocks";
 }
-<p class="muted admin-lead-muted">Published HTML/text by slug. Wired slugs (edit these to change public copy):</p>
-<ul class="muted admin-wired-list">
-  @foreach (var s in ContentBlockSlugs.AllWiredSlugs)
+
+<form method="get" class="admin-toolbar" style="gap:10px;align-items:flex-end;flex-wrap:wrap;">
+  <div style="flex:1;min-width:240px;">
+    <label class="muted small d-block" style="font-weight:600;margin-bottom:4px;">Search</label>
+    <input type="search" name="q" value="@Model.Query" placeholder="Search by slug or title…"
+           class="admin-input" style="width:100%;padding:8px 12px;border:1px solid var(--as-border,#d1d5db);border-radius:6px;font-size:.85rem;" />
+  </div>
+  <div style="min-width:200px;">
+    <label class="muted small d-block" style="font-weight:600;margin-bottom:4px;">Page / section</label>
+    <select name="group" class="admin-input" style="width:100%;padding:8px 12px;border:1px solid var(--as-border,#d1d5db);border-radius:6px;font-size:.85rem;">
+      <option value="">All groups (@Model.TotalCount blocks)</option>
+      @foreach (var g in Model.AvailableGroups)
+      {
+        <option value="@g" selected="@(string.Equals(Model.Group, g, StringComparison.OrdinalIgnoreCase))">@g.*</option>
+      }
+    </select>
+  </div>
+  <button type="submit" class="btn-primary admin-btn-sm"><span>Filter</span></button>
+  @if (!string.IsNullOrWhiteSpace(Model.Query) || !string.IsNullOrWhiteSpace(Model.Group))
   {
-    <li><code>@s</code></li>
+    <a asp-page="Index" class="btn-outline admin-btn-sm">Clear</a>
   }
-</ul>
-<p class="admin-back admin-back--tight"><a asp-page="Create">+ New block</a></p>
+  <a asp-page="Create" class="btn-outline admin-btn-sm" style="margin-left:auto;">+ New block</a>
+</form>
+
+<p class="muted admin-lead-muted" style="margin-top:14px;">
+  Showing <strong>@Model.Rows.Count</strong> of @Model.TotalCount block@(Model.TotalCount == 1 ? "" : "s")
+  @if (!string.IsNullOrWhiteSpace(Model.Query)) { <text> matching "@Model.Query"</text> }
+  @if (!string.IsNullOrWhiteSpace(Model.Group)) { <text> in <code>@Model.Group.*</code></text> }.
+</p>
+
 <div class="admin-table-wrap">
   <table class="admin-table">
     <thead><tr><th>Slug</th><th>Title</th><th>Published</th><th>Updated</th><th></th></tr></thead>
@@ -31,5 +54,16 @@
 </div>
 @if (Model.Rows.Count == 0)
 {
-  <p class="muted">No content blocks yet.</p>
+  <p class="muted admin-empty">No content blocks match your search.</p>
 }
+
+<details class="admin-wired-list-details" style="margin-top:32px;">
+  <summary class="muted small" style="cursor:pointer;font-weight:600;">Wired slugs reference (@ContentBlockSlugs.AllWiredSlugs.Count() known)</summary>
+  <p class="muted small" style="margin-top:8px;">These slugs are referenced from Razor views. Editing the matching content block changes the public copy.</p>
+  <ul class="muted admin-wired-list" style="font-size:.78rem;column-count:2;column-gap:24px;">
+    @foreach (var s in ContentBlockSlugs.AllWiredSlugs)
+    {
+      <li><code>@s</code></li>
+    }
+  </ul>
+</details>

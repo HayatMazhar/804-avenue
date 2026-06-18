@@ -2,15 +2,15 @@
 @model Avenue804.Web.Pages.Account.DashboardModel
 @using Avenue804.Web.Infrastructure
 @{
-    ViewData["Title"] = "My Dashboard";
+    ViewData["Title"] = Cms[ContentBlockSlugs.AccountDashboardTitle, "My Dashboard"];
     Layout = "~/Pages/Shared/_Layout.cshtml";
     ViewData["NavActive"] = "dashboard";
 }
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Dashboard</span></div>
-    <h1 class="page-hero-title fade-up">My <em>Dashboard</em></h1>
-    <p class="page-hero-sub fade-up">Manage your saved properties, reviews, and inquiries.</p>
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.NavUserDashboard, "Dashboard"]</span></div>
+    <h1 class="page-hero-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.AccountDashboardHeroH1, "My <em>Dashboard</em>"])</h1>
+    <p class="page-hero-sub fade-up">@Cms[ContentBlockSlugs.AccountDashboardHeroSub, "Manage your saved properties, reviews, and inquiries."]</p>
   </div>
 </section>
 
@@ -34,9 +34,9 @@
         <div class="account-user-meta">@Model.Email</div>
       </div>
       <div class="account-profile-actions">
-        <a asp-page="/Account/Profile" class="btn-outline" style="padding:10px 22px;font-size:.72rem">Edit Profile</a>
+        <a asp-page="/Account/Profile" class="btn-outline" style="padding:10px 22px;font-size:.72rem">@Cms[ContentBlockSlugs.AccountDashboardEditProfile, "Edit Profile"]</a>
         <form method="post" asp-page="/Account/Logout" style="display:inline">
-          <button type="submit" class="btn-outline" style="padding:10px 22px;font-size:.72rem;color:var(--danger);border-color:rgba(220,38,38,.35)">Sign Out</button>
+          <button type="submit" class="btn-outline" style="padding:10px 22px;font-size:.72rem;color:var(--danger);border-color:rgba(220,38,38,.35)">@Cms[ContentBlockSlugs.NavUserSignOut, "Sign Out"]</button>
         </form>
       </div>
     </div>
@@ -45,23 +45,23 @@
     <div class="dash-tabs fade-up">
       <button class="dash-tab active" data-tab="saved">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-        Saved Properties <span class="dash-badge">@Model.SavedProperties.Count</span>
+        @Cms[ContentBlockSlugs.AccountDashboardTabSaved, "Saved Properties"] <span class="dash-badge">@Model.SavedProperties.Count</span>
       </button>
       <button class="dash-tab" data-tab="reviews">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        My Reviews <span class="dash-badge">@Model.Ratings.Count</span>
+        @Cms[ContentBlockSlugs.AccountDashboardTabReviews, "My Reviews"] <span class="dash-badge">@Model.Ratings.Count</span>
       </button>
       <button class="dash-tab" data-tab="services">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
-        My Service Requests <span class="dash-badge">@(Model.ServiceQuotes.Count + Model.AmcReqs.Count + Model.MaintTickets.Count)</span>
+        @Cms[ContentBlockSlugs.AccountDashboardTabServices, "My Service Requests"] <span class="dash-badge">@(Model.ServiceQuotes.Count + Model.AmcReqs.Count + Model.MaintTickets.Count)</span>
       </button>
       <button class="dash-tab" data-tab="searches">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Saved Searches <span class="dash-badge">@Model.SavedSearches.Count</span>
+        @Cms[ContentBlockSlugs.AccountDashboardTabSearches, "Saved Searches"] <span class="dash-badge">@Model.SavedSearches.Count</span>
       </button>
       <button class="dash-tab" data-tab="inquiries">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Inquiries <span class="dash-badge">@Model.Inquiries.Count</span>
+        @Cms[ContentBlockSlugs.AccountDashboardTabInquiries, "Inquiries"] <span class="dash-badge">@Model.Inquiries.Count</span>
       </button>
     </div>
 
@@ -71,8 +71,8 @@
       {
         <div class="dash-empty">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-          <p>No saved properties yet.</p>
-          <a asp-page="/Properties/Index" class="btn-primary" style="display:inline-flex"><span>Browse Properties</span></a>
+          <p>@Cms[ContentBlockSlugs.AccountDashboardNoSaved, "No saved properties yet."]</p>
+          <a asp-page="/Properties/Index" class="btn-primary" style="display:inline-flex"><span>@Cms[ContentBlockSlugs.AccountDashboardBrowseBtn, "Browse Properties"]</span></a>
         </div>
       }
       else
@@ -101,7 +101,7 @@
       {
         <div class="dash-empty">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <p>You haven't left any reviews yet.</p>
+          <p>@Cms[ContentBlockSlugs.AccountDashboardNoReviews, "You haven't left any reviews yet."]</p>
         </div>
       }
       else
@@ -132,7 +132,7 @@
       {
         <div class="dash-empty">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <p>No saved searches yet. Use the search on the <a asp-page="/Properties/Index">Properties page</a> and click "Save search".</p>
+          <p>@Html.Raw(Cms[ContentBlockSlugs.AccountDashboardNoSearches, "No saved searches yet. Use the search on the <a href=\"/Properties\">Properties page</a> and click \"Save search\"."])</p>
         </div>
       }
       else
@@ -165,7 +165,7 @@
       {
         <div class="dash-empty">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          <p>No property inquiries yet.</p>
+          <p>@Cms[ContentBlockSlugs.AccountDashboardNoInquiries, "No property inquiries yet."]</p>
         </div>
       }
       else

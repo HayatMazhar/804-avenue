@@ -1,0 +1,24 @@
+-rw-rw-rw- 1 ftp ftp         4913 May  7 14:34 stdout_20260507192935_33204.log
+-rw-rw-rw- 1 ftp ftp         4226 May  7 15:53 stdout_20260507211302_11020.log
+-rw-rw-rw- 1 ftp ftp         4226 May  7 23:37 stdout_20260508050617_22224.log
+-rw-rw-rw- 1 ftp ftp         4395 May  8 00:29 stdout_20260508055847_2588.log
+-rw-rw-rw- 1 ftp ftp         4226 May  8 01:42 stdout_20260508070244_24820.log
+-rw-rw-rw- 1 ftp ftp         5394 May  8 03:02 stdout_20260508082835_27508.log
+-rw-rw-rw- 1 ftp ftp         5394 May  8 05:34 stdout_20260508095959_33976.log
+-rw-rw-rw- 1 ftp ftp         5394 May  8 06:30 stdout_20260508115943_25348.log
+-rw-rw-rw- 1 ftp ftp         5394 May  8 08:20 stdout_20260508130225_21548.log
+-rw-rw-rw- 1 ftp ftp         4565 May 11 06:44 stdout_20260511121334_29020.log
+-rw-rw-rw- 1 ftp ftp         4227 May 12 11:52 stdout_20260512173409_44392.log
+-rw-rw-rw- 1 ftp ftp         9100 May 20 14:04 stdout_20260520200355_100992.log
+-rw-rw-rw- 1 ftp ftp         3390 May 20 14:13 stdout_20260520201043_48024.log
+-rw-rw-rw- 1 ftp ftp         3390 May 20 14:15 stdout_20260520201332_136656.log
+-rw-rw-rw- 1 ftp ftp         3390 May 20 14:17 stdout_20260520201543_48512.log
+-rw-rw-rw- 1 ftp ftp         9214 May 20 14:18 stdout_20260520201725_53900.log
+-rw-rw-rw- 1 ftp ftp         3390 May 20 14:20 stdout_20260520201851_137536.log
+-rw-rw-rw- 1 ftp ftp         3390 May 20 14:20 stdout_20260520202002_49080.log
+-rw-rw-rw- 1 ftp ftp         3390 May 20 14:21 stdout_20260520202039_153428.log
+-rw-rw-rw- 1 ftp ftp         3390 May 20 14:23 stdout_20260520202127_110332.log
+-rw-rw-rw- 1 ftp ftp         3390 May 20 14:25 stdout_20260520202344_4740.log
+-rw-rw-rw- 1 ftp ftp         3390 May 20 14:27 stdout_20260520202520_60796.log
+-rw-rw-rw- 1 ftp ftp            0 May 20 14:27 stdout_20260520202715_70948.log
+

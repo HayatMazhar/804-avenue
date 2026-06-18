@@ -3,8 +3,8 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @using Avenue804.Web.Infrastructure
 @{
-    ViewData["Title"] = "Contact Us";
-    ViewData["MetaDescription"] = "Get in touch with 804 Avenue — Abu Dhabi office address, phone, email, and WhatsApp. Send us a message and our team will respond shortly.";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaContactTitle, "Contact Us"];
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaContactDescription, "Get in touch with 804 Avenue — Abu Dhabi office address, phone, email, and WhatsApp. Send us a message and our team will respond shortly."];
     ViewData["NavActive"] = "contact";
     var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
 }
@@ -514,20 +514,17 @@
         <div class="lyp2-content__crumbs lyp2-fade">
           <a asp-page="/Index">Home</a>
           <span class="sep">/</span>
-          <span>Contact</span>
+          <span>@Cms[ContentBlockSlugs.ContactCrumb, "Contact"]</span>
         </div>
 
-        <span class="lyp2-content__eyebrow lyp2-fade">Get in touch</span>
+        <span class="lyp2-content__eyebrow lyp2-fade">@Cms[ContentBlockSlugs.ContactEyebrow, "Get in touch"]</span>
 
         <h1 class="lyp2-content__title lyp2-fade d2">
-          We'd love to<br />
-          <em>hear from you</em>
+          @Html.Raw(Cms[ContentBlockSlugs.ContactH1, "We'd love to<br /><em>hear from you</em>"])
         </h1>
 
         <p class="lyp2-content__lead lyp2-fade d2">
-          Got a question, feedback, or just want to say hello? Send us a message — we
-          typically respond within a few hours during business days. Or reach us
-          directly through any of the channels below.
+          @Cms[ContentBlockSlugs.ContactLead, "Got a question, feedback, or just want to say hello? Send us a message — we typically respond within a few hours during business days. Or reach us directly through any of the channels below."]
         </p>
 
         <ul class="lyp2-contacts lyp2-fade d3">
@@ -537,7 +534,7 @@
               <span class="lyp2-contact-row" style="cursor: default">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <span>
-                  <span class="label">Office address</span>
+                  <span class="label">@Cms[ContentBlockSlugs.ContactRowAddressLabel, "Office address"]</span>
                   <span class="value">@site.Address</span>
                 </span>
               </span>
@@ -549,7 +546,7 @@
               <a class="lyp2-contact-row" href="@site.TelHref">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
                 <span>
-                  <span class="label">Call us</span>
+                  <span class="label">@Cms[ContentBlockSlugs.ContactRowPhoneLabel, "Call us"]</span>
                   <span class="value">@site.PhoneDisplay</span>
                 </span>
               </a>
@@ -561,7 +558,7 @@
               <a class="lyp2-contact-row" href="mailto:@site.Email">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 <span>
-                  <span class="label">Email us</span>
+                  <span class="label">@Cms[ContentBlockSlugs.ContactRowEmailLabel, "Email us"]</span>
                   <span class="value">@site.Email</span>
                 </span>
               </a>
@@ -573,8 +570,8 @@
               <a class="lyp2-contact-row" href="@site.WhatsAppHref" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884"/></svg>
                 <span>
-                  <span class="label">WhatsApp</span>
-                  <span class="value">Chat with our team</span>
+                  <span class="label">@Cms[ContentBlockSlugs.ContactRowWhatsappLabel, "WhatsApp"]</span>
+                  <span class="value">@Cms[ContentBlockSlugs.ContactRowWhatsappSub, "Chat with our team"]</span>
                 </span>
               </a>
             </li>
@@ -584,8 +581,8 @@
         <div class="lyp2-hours-card lyp2-fade d4">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
           <div>
-            <div class="h-title">Business hours</div>
-            <div class="h-body"><em>Mon – Fri</em> 9 AM – 6 PM &nbsp;·&nbsp; <em>Sat</em> 10 AM – 2 PM &nbsp;·&nbsp; <em>Sun</em> Closed</div>
+            <div class="h-title">@Cms[ContentBlockSlugs.ContactHoursTitle, "Business hours"]</div>
+            <div class="h-body">@Html.Raw(Cms[ContentBlockSlugs.ContactHoursBody, "<em>Mon – Fri</em> 9 AM – 6 PM &nbsp;·&nbsp; <em>Sat</em> 10 AM – 2 PM &nbsp;·&nbsp; <em>Sun</em> Closed"])</div>
           </div>
         </div>
       </div>
@@ -593,16 +590,15 @@
       <!-- ─── RIGHT: form card ───────────────────────────────── -->
       <div class="lyp2-card lyp2-fade d2">
         <div class="lyp2-card__head">
-          <h2>Send us a message</h2>
-          <p>We typically respond within a few hours on business days.</p>
+          <h2>@Cms[ContentBlockSlugs.ContactFormTitle, "Send us a message"]</h2>
+          <p>@Cms[ContentBlockSlugs.ContactFormSub, "We typically respond within a few hours on business days."]</p>
         </div>
 
         <div class="lyp2-card__body">
           <div class="lyp2-callout">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
             <p>
-              <strong>Looking to buy, sell or rent?</strong>
-              Use our <a asp-page="/Inquiry">property inquiry form</a> instead — it captures the right details so we can match you faster.
+              @Html.Raw(Cms[ContentBlockSlugs.ContactFormCallout, "<strong>Looking to buy, sell or rent?</strong> Use our <a href=\"/Inquiry\">property inquiry form</a> instead — it captures the right details so we can match you faster."])
             </p>
           </div>
 
@@ -611,7 +607,7 @@
           <form method="post" id="contactForm" novalidate>
 
             <!-- Section 1: Your details -->
-            <div class="lyp2-sec"><span class="lyp2-sec__num">1</span>Your details</div>
+            <div class="lyp2-sec"><span class="lyp2-sec__num">1</span>@Cms[ContentBlockSlugs.ContactFormSecDetails, "Your details"]</div>
 
             <div class="lyp2-row">
               <div class="float">
@@ -627,7 +623,7 @@
             <span asp-validation-for="Email" class="lyp2-error"></span>
 
             <!-- Section 2: Your message -->
-            <div class="lyp2-sec"><span class="lyp2-sec__num">2</span>Your message</div>
+            <div class="lyp2-sec"><span class="lyp2-sec__num">2</span>@Cms[ContentBlockSlugs.ContactFormSecMessage, "Your message"]</div>
 
             <div class="lyp2-row">
               <div class="float">
@@ -652,12 +648,12 @@
 
         <div class="lyp2-card__foot">
           <button type="submit" form="contactForm" class="lyp2-submit">
-            <span>Send message</span>
+            <span>@Cms[ContentBlockSlugs.ContactFormBtn, "Send message"]</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
           <p class="lyp2-foot-note">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-            Secure submission — by submitting you agree to our <a href="/Privacy">Privacy Policy</a>.
+            @Html.Raw(Cms[ContentBlockSlugs.ContactFormPrivacy, "Secure submission — by submitting you agree to our <a href=\"/Privacy\">Privacy Policy</a>."])
           </p>
         </div>
       </div>
@@ -669,8 +665,8 @@
 <!-- ─── Channel triage strip — pick the right form ─────────────── -->
 <section class="lyp2 lyp2-how">
   <div class="container">
-    <h2 class="lyp2-how__title">Pick the <em>right channel</em></h2>
-    <p class="lyp2-how__sub">For faster service, jump straight to the form that matches your need.</p>
+    <h2 class="lyp2-how__title">@Html.Raw(Cms[ContentBlockSlugs.ContactChannelsTitle, "Pick the <em>right channel</em>"])</h2>
+    <p class="lyp2-how__sub">@Cms[ContentBlockSlugs.ContactChannelsSub, "For faster service, jump straight to the form that matches your need."]</p>
 
     <div class="lyp2-how__grid">
       <a class="lyp2-channel" asp-page="/Inquiry">

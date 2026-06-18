@@ -6,6 +6,7 @@
 @using Avenue804.Web.Middleware
 @using Avenue804.Web.Services
 @{
+    await Cms.PreloadAsync();
     var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
     var meta = ViewData["MetaDescription"] as string ?? site?.DefaultMetaDescription ?? "804 Avenue Properties and Contracting — Abu Dhabi's trusted partner for real estate, construction, and maintenance across the UAE.";
     var brand = site?.CompanyDisplayName ?? "804 Avenue";
@@ -41,8 +42,11 @@
     <meta name="twitter:title" content="@pageTitle" />
     <meta name="twitter:description" content="@meta" />
     <meta name="twitter:image" content="@ogImage" />
-    <link rel="icon" type="image/png" href="~/assets/img/brand/logo-804avenue-transparent.png" />
-    <link rel="apple-touch-icon" href="~/assets/img/brand/logo-804avenue-transparent.png" />
+    <link rel="icon" href="~/favicon.ico" asp-append-version="true" />
+    <link rel="icon" type="image/png" sizes="32x32" href="~/assets/img/brand/favicon-32.png" asp-append-version="true" />
+    <link rel="icon" type="image/png" sizes="16x16" href="~/assets/img/brand/favicon-16.png" asp-append-version="true" />
+    <link rel="icon" type="image/png" sizes="192x192" href="~/assets/img/brand/favicon-192.png" asp-append-version="true" />
+    <link rel="apple-touch-icon" sizes="180x180" href="~/assets/img/brand/favicon-180.png" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet" />

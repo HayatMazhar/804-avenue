@@ -7,13 +7,13 @@
 <p class="admin-back admin-back--tight"><a asp-page="Create">+ Add report</a></p>
 <div class="admin-table-wrap">
   <table class="admin-table">
-    <thead><tr><th>Date</th><th>Title</th><th>Client</th><th>Report file</th></tr></thead>
+    <thead><tr><th>Date</th><th>Title</th><th>Client</th><th>Report file</th><th></th></tr></thead>
     <tbody>
       @foreach (var r in Model.Items)
       {
         <tr>
           <td>@r.VisitDate.ToString("d MMM yyyy")</td>
-          <td>@r.Title</td>
+          <td><a asp-page="Edit" asp-route-id="@r.Id">@r.Title</a></td>
           <td>@r.ClientName<br /><span class="muted small">@r.ClientEmail</span></td>
           <td>
             @if (!string.IsNullOrWhiteSpace(r.ReportFileUrl))
@@ -22,6 +22,7 @@
             }
             else { <span class="muted">No file</span> }
           </td>
+          <td><a asp-page="Edit" asp-route-id="@r.Id">Edit</a></td>
         </tr>
       }
     </tbody>

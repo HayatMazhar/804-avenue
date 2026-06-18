@@ -1,8 +1,9 @@
 @model Avenue804.Web.Models.Public.ServicePageHeroModel
 @using Avenue804.Web.Configuration
+@inject Avenue804.Web.Services.ICmsTextProvider Cms
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Facility Management</span></div>
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.NavDdFacilityTitle, "Facility Management"]</span></div>
     <h1 class="page-hero-title fade-up">
       @if (string.IsNullOrEmpty(Model.HeroTitleHtml)) { <text>Integrated <em>Facility</em> Management</text> }
       else { @Html.Raw(Model.HeroTitleHtml) }
@@ -18,7 +19,7 @@
   <div class="container"><div class="svc-grid">
     <div class="svc-img fade-up"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Modern office facility"></div>
     <div class="svc-content fade-up">
-      <span class="section-tag">Operations</span>
+      <span class="section-tag">@Cms[ContentBlockSlugs.FacilitySvc1Tag, "Operations"]</span>
       <h2>@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilitySvc1Title, "Building <em>Operations</em> &amp; Compliance"))</h2>
       @Html.Raw(Model.GetOr(ContentBlockSlugs.FacilitySvc1Body, @"<p>We align day-to-day building performance with landlord and tenant expectations — from helpdesk and work orders to statutory inspections, documentation, and lifecycle planning.</p>
 <ul class=""svc-list""><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Central helpdesk and SLA-based ticketing</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Vendor onboarding, contracts, and performance reviews</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Statutory testing coordination (fire, lift, electrical)</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Monthly KPI reporting and asset registers</li></ul>"))
@@ -30,7 +31,7 @@
   <div class="container"><div class="svc-grid reverse">
     <div class="svc-img fade-up"><img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=800&q=80" alt="Facility services team"></div>
     <div class="svc-content fade-up">
-      <span class="section-tag">Soft Services</span>
+      <span class="section-tag">@Cms[ContentBlockSlugs.FacilitySvc2Tag, "Soft Services"]</span>
       <h2>@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilitySvc2Title, "Soft <em>Services</em> &amp; Guest Experience"))</h2>
       @Html.Raw(Model.GetOr(ContentBlockSlugs.FacilitySvc2Body, @"<p>Reception, housekeeping, landscaping, waste, and parking operations — delivered with consistent standards, trained supervisors, and clear escalation paths.</p>
 <ul class=""svc-list""><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Reception, concierge, and visitor management</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Cleaning, pest control, and waste programs</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Landscaping and façade cleaning schedules</li><li><svg width=""16"" height=""16"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2.5""><path d=""M20 6L9 17l-5-5""/></svg>Security liaison and access control coordination</li></ul>"))
@@ -47,9 +48,9 @@
       { @Html.Raw(whyItems) }
       else
       {
-        <div class="why-card fade-up"><div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>Single point of contact</h4><p>One FM lead coordinates maintenance, soft services, and contractors — fewer handoffs, faster resolution.</p></div>
-        <div class="why-card fade-up"><div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div><h4>Cost transparency</h4><p>Clear scopes, budgets, and variance reporting so owners always know where spend is going.</p></div>
-        <div class="why-card fade-up"><div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><h4>24/7 readiness</h4><p>After-hours escalation paths aligned with your building's critical systems and tenant mix.</p></div>
+        <div class="why-card fade-up"><div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>@Cms[ContentBlockSlugs.FacilityWhyCard1Title, "Single point of contact"]</h4><p>@Cms[ContentBlockSlugs.FacilityWhyCard1Body, "One FM lead coordinates maintenance, soft services, and contractors — fewer handoffs, faster resolution."]</p></div>
+        <div class="why-card fade-up"><div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div><h4>@Cms[ContentBlockSlugs.FacilityWhyCard2Title, "Cost transparency"]</h4><p>@Cms[ContentBlockSlugs.FacilityWhyCard2Body, "Clear scopes, budgets, and variance reporting so owners always know where spend is going."]</p></div>
+        <div class="why-card fade-up"><div class="why-card-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><h4>@Cms[ContentBlockSlugs.FacilityWhyCard3Title, "24/7 readiness"]</h4><p>@Cms[ContentBlockSlugs.FacilityWhyCard3Body, "After-hours escalation paths aligned with your building's critical systems and tenant mix."]</p></div>
       }
     </div>
   </div>
@@ -58,7 +59,7 @@
 <!-- ═══ FM ENQUIRY FORM ═══ -->
 <section class="quote-section" id="enquire">
   <div class="container">
-    <div class="section-tag fade-up" style="justify-content:center">Facility Management Enquiry</div>
+    <div class="section-tag fade-up" style="justify-content:center">@Cms[ContentBlockSlugs.FacilityFormTitle, "Facility Management Enquiry"]</div>
     <h2 class="section-title fade-up" style="text-align:center;max-width:700px;margin:0 auto 12px">@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilityCtaTitle, "Discuss your <em>facility</em> scope"))</h2>
     <p class="section-sub fade-up" style="text-align:center;margin:0 auto 36px;max-width:640px">@Html.Raw(Model.GetOr(ContentBlockSlugs.FacilityCtaBody, "Share asset details, required services and contact info — we will propose a tailored FM model and indicative pricing within 48 hours."))</p>
 
@@ -67,11 +68,11 @@
         <input type="hidden" name="Subject" id="fmSubject" value="Facility Management Enquiry" />
         <input type="hidden" name="Message" id="fmMessage" value="" />
 
-        <div class="section-tag" style="margin-bottom:16px">Asset &amp; scope</div>
+        <div class="section-tag" style="margin-bottom:16px">@Cms[ContentBlockSlugs.FacilityFormAssetSection, "Asset & scope"]</div>
 
         <div class="quote-grid-2">
           <div class="quote-field">
-            <label>Asset type <span style="color:var(--accent)">*</span></label>
+            <label>@Cms[ContentBlockSlugs.FacilityFormAssetType, "Asset type"] <span style="color:var(--accent)">*</span></label>
             <select id="fmAsset" required>
               <option value="">Choose your asset…</option>
               <option value="Residential tower">Residential tower</option>
@@ -84,7 +85,7 @@
             </select>
           </div>
           <div class="quote-field">
-            <label>Service hours</label>
+            <label>@Cms[ContentBlockSlugs.FacilityFormServiceHours, "Service hours"]</label>
             <select id="fmHours">
               <option value="Business hours (8–6)">Business hours (8–6)</option>
               <option value="Extended (12 hrs)">Extended (12 hrs)</option>
@@ -96,21 +97,21 @@
 
         <div class="quote-grid-2">
           <div class="quote-field">
-            <label>Approx. units / floors</label>
+            <label>@Cms[ContentBlockSlugs.FacilityFormUnits, "Approx. units / floors"]</label>
             <input type="number" id="fmSize" min="1" max="5000" placeholder="e.g. 120" />
           </div>
           <div class="quote-field">
-            <label>Total area (sqm)</label>
+            <label>@Cms[ContentBlockSlugs.FacilityFormArea, "Total area (sqm)"]</label>
             <input type="number" id="fmArea" min="100" max="500000" placeholder="e.g. 18000" />
           </div>
         </div>
 
         <div class="quote-field">
-          <label>Asset location</label>
+          <label>@Cms[ContentBlockSlugs.FacilityFormLocation, "Asset location"]</label>
           <input type="text" id="fmLocation" placeholder="e.g. Al Reem Island, Abu Dhabi" maxlength="400" />
         </div>
 
-        <div class="quote-field"><label>Required services</label></div>
+        <div class="quote-field"><label>@Cms[ContentBlockSlugs.FacilityFormServicesLabel, "Required services"]</label></div>
         <div class="amc-services-grid">
           <label class="amc-service-check"><input type="checkbox" value="Building operations" checked /> Building operations</label>
           <label class="amc-service-check"><input type="checkbox" value="MEP / HVAC" /> MEP / HVAC</label>
@@ -123,43 +124,41 @@
         </div>
 
         <div class="quote-field" style="margin-top:16px">
-          <label>Additional notes</label>
+          <label>@Cms[ContentBlockSlugs.FacilityFormNotes, "Additional notes"]</label>
           <textarea id="fmNotes" rows="3" maxlength="4000" placeholder="Anything else we should know — current FM partner, transition date, special requirements…"></textarea>
         </div>
 
         <div style="margin:24px 0 16px;border-top:1px solid var(--border-subtle)"></div>
-        <div class="section-tag" style="margin-bottom:16px">Your contact details</div>
+        <div class="section-tag" style="margin-bottom:16px">@Cms[ContentBlockSlugs.FacilityFormContactSection, "Your contact details"]</div>
 
         <div class="quote-grid-2">
           <div class="quote-field">
-            <label>Your name <span style="color:var(--accent)">*</span></label>
+            <label>@Cms[ContentBlockSlugs.FacilityFormYourName, "Your name"] <span style="color:var(--accent)">*</span></label>
             <input type="text" name="Name" required maxlength="200" placeholder="Ahmed Al Mansoori" autocomplete="name" />
           </div>
           <div class="quote-field">
-            <label>Company / role (optional)</label>
+            <label>@Cms[ContentBlockSlugs.FacilityFormCompany, "Company / role (optional)"]</label>
             <input type="text" id="fmCompany" maxlength="200" placeholder="Owners' association, asset manager…" />
           </div>
         </div>
         <div class="quote-grid-2">
           <div class="quote-field">
-            <label>Mobile <span style="color:var(--accent)">*</span></label>
+            <label>@Cms[ContentBlockSlugs.FacilityFormMobile, "Mobile"] <span style="color:var(--accent)">*</span></label>
             <input type="tel" name="Phone" required inputmode="tel" placeholder="+971 50 000 0000" maxlength="50" />
           </div>
           <div class="quote-field">
-            <label>Email <span style="color:var(--accent)">*</span></label>
+            <label>@Cms[ContentBlockSlugs.FacilityFormEmail, "Email"] <span style="color:var(--accent)">*</span></label>
             <input type="email" name="Email" required placeholder="you@example.com" maxlength="256" />
           </div>
         </div>
 
         <button type="submit" class="btn-primary" style="width:100%;justify-content:center;margin-top:8px" onclick="return syncFmEnquire()">
-          <span>Request FM Proposal</span>
+          <span>@Cms[ContentBlockSlugs.FacilityFormBtn, "Request FM Proposal"]</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
 
         <p style="font-size:.72rem;color:var(--text-secondary);margin-top:14px;text-align:center">
-          Prefer to talk first? <a asp-page="/Contact" style="color:var(--accent);font-weight:600">Reach our FM team directly</a>
-          &nbsp;·&nbsp;
-          Looking for AMC only? <a asp-page="/Maintenance" style="color:var(--accent);font-weight:600">See maintenance packages</a>
+          @Html.Raw(Cms[ContentBlockSlugs.FacilityFormFootnote, "Prefer to talk first? <a href=\"/Contact\" style=\"color:var(--accent);font-weight:600\">Reach our FM team directly</a> &nbsp;·&nbsp; Looking for AMC only? <a href=\"/Maintenance\" style=\"color:var(--accent);font-weight:600\">See maintenance packages</a>"])
         </p>
       </form>
     </div>

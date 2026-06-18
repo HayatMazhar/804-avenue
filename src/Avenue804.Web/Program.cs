@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text;
 using System.Threading.RateLimiting;
 using Avenue804.Web.Configuration;
@@ -13,13 +13,14 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ── Services ─────────────────────────────────────────────────
+// â”€â”€ Services â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection(SiteOptions.SectionName));
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<ISiteBrandingService, SiteBrandingService>();
 builder.Services.AddScoped<ILookupService, LookupService>();
 builder.Services.AddScoped<IContentBlockService, ContentBlockService>();
+builder.Services.AddScoped<ICmsTextProvider, CmsTextProvider>();
 builder.Services.AddScoped<IInquirySubmitter, InquirySubmitter>();
 builder.Services.AddScoped<IPropertyListingInquirySubmitter, PropertyListingInquirySubmitter>();
 builder.Services.AddScoped<IEmailSender, MailKitEmailSender>();
@@ -32,21 +33,21 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<IRecaptchaVerifier, RecaptchaVerifier>();
 builder.Services.AddHostedService<WeeklyDigestJob>();
 
-// Storage service — local disk by default, Azure Blob when Provider = "azure"
+// Storage service â€” local disk by default, Azure Blob when Provider = "azure"
 var storageProvider = builder.Configuration["Storage:Provider"] ?? "local";
 if (storageProvider.Equals("azure", StringComparison.OrdinalIgnoreCase))
     builder.Services.AddScoped<IStorageService, AzureBlobStorageService>();
 else
     builder.Services.AddScoped<IStorageService, LocalStorageService>();
 
-// ── Database ──────────────────────────────────────────────────
+// â”€â”€ Database â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// ── Identity ──────────────────────────────────────────────────
+// â”€â”€ Identity â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // RequireConfirmedEmail is config-flagged so the dev seeded admin can still log in
 // without an SMTP round-trip. Production enables it via Identity__RequireConfirmedEmail=true.
 var requireConfirmedEmail = string.Equals(builder.Configuration["Identity:RequireConfirmedEmail"], "true", StringComparison.OrdinalIgnoreCase);
@@ -68,7 +69,7 @@ builder.Services
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// ── External OAuth — ONLY registered when credentials are non-empty ─────
+// â”€â”€ External OAuth â€” ONLY registered when credentials are non-empty â”€â”€â”€â”€â”€
 // AddIdentity already called AddAuthentication internally. We get a builder
 // to chain extra schemes. Providers with empty keys are silently skipped.
 var authBuilder = new Microsoft.AspNetCore.Authentication.AuthenticationBuilder(builder.Services);
@@ -99,7 +100,7 @@ if (!string.IsNullOrEmpty(fbAppId) && !string.IsNullOrEmpty(fbAppSecret))
     });
 }
 
-// Apple Sign-In requires credentials from developer.apple.com — skipped when not configured
+// Apple Sign-In requires credentials from developer.apple.com â€” skipped when not configured
 // To enable: set Auth:Apple:ClientId, KeyId, TeamId, PrivateKey in appsettings
 var appleClientId = builder.Configuration["Auth:Apple:ClientId"]?.Trim();
 var appleKeyId    = builder.Configuration["Auth:Apple:KeyId"]?.Trim();
@@ -122,7 +123,7 @@ if (!string.IsNullOrEmpty(appleClientId)
     });
 }
 
-// ── Cookie configuration (public users) ──────────────────────
+// â”€â”€ Cookie configuration (public users) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath      = "/Account/Login";
@@ -135,20 +136,21 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SameSite  = SameSiteMode.Lax;
 });
 
-// ── Authorization policies ───────────────────────────────────
+// â”€â”€ Authorization policies â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly",  p => p.RequireRole(SeedData.AdminRole));
-    options.AddPolicy("PublicUser", p => p.RequireAuthenticatedUser());
+    options.AddPolicy("AdminOnly",   p => p.RequireRole(SeedData.AdminRole));
+    options.AddPolicy("AdminAccess", p => p.RequireRole(SeedData.AllAdminRoles));
+    options.AddPolicy("PublicUser",  p => p.RequireAuthenticatedUser());
 });
 
-// ── Razor Pages ───────────────────────────────────────────────
+// â”€â”€ Razor Pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // AutoValidateAntiforgeryToken: every non-GET handler (POST/PUT/PATCH/DELETE)
 // must include a valid antiforgery token. Razor Pages already does this for
 // page handlers; the global filter enforces it for any plain controllers too.
 builder.Services.AddRazorPages(options =>
 {
-    options.Conventions.AuthorizeAreaFolder("Admin", "/", "AdminOnly");
+    options.Conventions.AuthorizeAreaFolder("Admin", "/", "AdminAccess");
     options.Conventions.AllowAnonymousToAreaPage("Admin", "/Login");
     options.Conventions.AuthorizePage("/Account/Dashboard", "PublicUser");
     options.Conventions.AuthorizePage("/Account/Profile",   "PublicUser");
@@ -160,7 +162,7 @@ builder.Services.AddRazorPages(options =>
     o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
 });
 
-// ── Rate limiting (built-in .NET 8) ──────────────────────────
+// â”€â”€ Rate limiting (built-in .NET 8) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = (int)HttpStatusCode.TooManyRequests;
@@ -212,7 +214,7 @@ builder.Services.AddRateLimiter(options =>
         }));
 });
 
-// ── Build & pipeline ─────────────────────────────────────────
+// â”€â”€ Build & pipeline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -246,6 +248,15 @@ app.MapGet("/sitemap.xml", async (ApplicationDbContext db, HttpContext ctx, Canc
     return Results.Text(xml, "application/xml; charset=utf-8", Encoding.UTF8);
 });
 
-await SeedData.EnsureSeededAsync(app);
-
+// Best-effort seed/migrate: if DB is temporarily unavailable, log and continue so the
+// app can still start. Individual requests will fail gracefully rather than 500.30.
+try
+{
+    await SeedData.EnsureSeededAsync(app);
+}
+catch (Exception _seedEx)
+{
+    var _startupLog = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
+    _startupLog.LogError(_seedEx, "Seed/migrate failed at startup. App will run without seeding until next restart succeeds.");
+}
 app.Run();

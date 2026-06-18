@@ -119,4 +119,16 @@
       </div>
     </footer>
   </form>
+
+  <!-- Danger zone -->
+  <form method="post" asp-page-handler="Delete" class="as-danger-zone" onsubmit="return confirm('Delete this project progress entry? The client link will stop working immediately. This cannot be undone.');">
+    <div class="as-danger-zone__text">
+      <p class="as-danger-zone__title">Delete this project</p>
+      <p class="as-danger-zone__sub">Permanently removes the progress entry. The client's <code>/Project/&lt;token&gt;</code> link will return Not Found.</p>
+    </div>
+    <button type="submit" class="as-btn as-btn--danger">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg>
+      Delete project
+    </button>
+  </form>
 </div>

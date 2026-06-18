@@ -1,14 +1,14 @@
 @page "/Account/Profile"
 @model Avenue804.Web.Pages.Account.ProfileModel
 @{
-    ViewData["Title"] = "My Profile";
+    ViewData["Title"] = Cms[ContentBlockSlugs.AccountProfileTitle, "My Profile"];
     ViewData["NavActive"] = "dashboard";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Account/Dashboard">Dashboard</a><span class="sep">/</span><span>Profile</span></div>
-    <h1 class="page-hero-title fade-up">My <em>Profile</em></h1>
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Account/Dashboard">@Cms[ContentBlockSlugs.NavUserDashboard, "Dashboard"]</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.NavUserProfile, "Profile"]</span></div>
+    <h1 class="page-hero-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.AccountProfileHeroH1, "My <em>Profile</em>"])</h1>
   </div>
 </section>
 
@@ -21,27 +21,27 @@
     }
 
     <div class="detail-block fade-up">
-      <h3>Personal Information</h3>
+      <h3>@Cms[ContentBlockSlugs.AccountProfilePersonalHeading, "Personal Information"]</h3>
       <form method="post" asp-page-handler="Profile">
         <div asp-validation-summary="All" class="auth-error"></div>
         <div class="modal-grid-2" style="gap:0 16px">
-          <div class="modal-field"><label asp-for="DisplayName">Display name</label><input asp-for="DisplayName" autocomplete="name" placeholder="Your name" /></div>
-          <div class="modal-field"><label asp-for="AvatarUrl">Avatar URL</label><input asp-for="AvatarUrl" type="url" placeholder="https://…" /></div>
+          <div class="modal-field"><label asp-for="DisplayName">@Cms[ContentBlockSlugs.AccountProfileDisplayName, "Display name"]</label><input asp-for="DisplayName" autocomplete="name" placeholder="Your name" /></div>
+          <div class="modal-field"><label asp-for="AvatarUrl">@Cms[ContentBlockSlugs.AccountProfileAvatarUrl, "Avatar URL"]</label><input asp-for="AvatarUrl" type="url" placeholder="https://…" /></div>
         </div>
-        <div class="modal-field"><label asp-for="Bio">Bio (optional)</label><textarea asp-for="Bio" rows="3" placeholder="A short description about yourself…" maxlength="500"></textarea></div>
-        <button type="submit" class="btn-primary"><span>Save Changes</span></button>
+        <div class="modal-field"><label asp-for="Bio">@Cms[ContentBlockSlugs.AccountProfileBio, "Bio (optional)"]</label><textarea asp-for="Bio" rows="3" placeholder="A short description about yourself…" maxlength="500"></textarea></div>
+        <button type="submit" class="btn-primary"><span>@Cms[ContentBlockSlugs.AccountProfileSave, "Save Changes"]</span></button>
       </form>
     </div>
 
     <div class="detail-block fade-up" style="margin-top:24px">
-      <h3>Change Password</h3>
+      <h3>@Cms[ContentBlockSlugs.AccountProfileChangePwdHeading, "Change Password"]</h3>
       <form method="post" asp-page-handler="Password">
-        <div class="modal-field"><label asp-for="CurrentPassword">Current password</label><input asp-for="CurrentPassword" type="password" autocomplete="current-password" /></div>
+        <div class="modal-field"><label asp-for="CurrentPassword">@Cms[ContentBlockSlugs.AccountProfileCurrentPassword, "Current password"]</label><input asp-for="CurrentPassword" type="password" autocomplete="current-password" /></div>
         <div class="modal-grid-2" style="gap:0 16px">
-          <div class="modal-field"><label asp-for="NewPassword">New password</label><input asp-for="NewPassword" type="password" autocomplete="new-password" /></div>
-          <div class="modal-field"><label asp-for="ConfirmNewPassword">Confirm new</label><input asp-for="ConfirmNewPassword" type="password" autocomplete="new-password" /></div>
+          <div class="modal-field"><label asp-for="NewPassword">@Cms[ContentBlockSlugs.AccountProfileNewPassword, "New password"]</label><input asp-for="NewPassword" type="password" autocomplete="new-password" /></div>
+          <div class="modal-field"><label asp-for="ConfirmNewPassword">@Cms[ContentBlockSlugs.AccountProfileConfirmNew, "Confirm new"]</label><input asp-for="ConfirmNewPassword" type="password" autocomplete="new-password" /></div>
         </div>
-        <button type="submit" class="btn-primary"><span>Update Password</span></button>
+        <button type="submit" class="btn-primary"><span>@Cms[ContentBlockSlugs.AccountProfileUpdatePwd, "Update Password"]</span></button>
       </form>
     </div>
 

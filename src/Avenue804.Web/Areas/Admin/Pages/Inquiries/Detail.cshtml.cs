@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Avenue804.Web.Areas.Admin.Pages.Inquiries;
 
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
 public class DetailModel : PageModel
 {
     private readonly ApplicationDbContext _db;

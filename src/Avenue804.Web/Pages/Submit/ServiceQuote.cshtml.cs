@@ -76,7 +76,7 @@ public class ServiceQuoteModel : PageModel
 
         if (await _flags.IsEnabledAsync(FeatureFlags.EmailNotifications, ct))
         {
-            var adminEmail = _cfg["Site:Email"] ?? "info@804avenue.com";
+            var adminEmail = _cfg["Site:Email"] ?? "info@804avenue.ae";
             await _email.SendAsync(adminEmail,
                 $"New Service Quote Request — {serviceType} from {name}",
                 $"""

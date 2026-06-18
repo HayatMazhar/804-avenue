@@ -1,9 +1,17 @@
 @using Avenue804.Web.Infrastructure
 @using Avenue804.Web.Models.Public
+@using Avenue804.Web.Configuration
+@inject Avenue804.Web.Services.ICmsTextProvider Cms
 @model PropertyListingInquiryFormViewModel
 <form method="post" asp-page="/Submit/PropertyListingInquiry" id="propertyListingInquiryForm" asp-antiforgery="true">
 
-  <p class="modal-section-title">Your contact details</p>
+  <!-- Listing reference (populated automatically when opened from a property page) -->
+  <div id="pliListingRefBlock" class="pli-listing-ref" hidden>
+    <span class="pli-listing-ref__label">Inquiring about</span>
+    <span class="pli-listing-ref__value" id="pliListingRefText"></span>
+  </div>
+
+  <p class="modal-section-title">@Cms[ContentBlockSlugs.ModalInquiryContactSection, "Your contact details"]</p>
   <div class="fields-2">
     <div class="field">
       <label class="label">Full name <span style="color:var(--accent)">*</span></label>
@@ -44,7 +52,7 @@
     </div>
   </div>
 
-  <p class="modal-section-title">Property requirements</p>
+  <p class="modal-section-title">@Cms[ContentBlockSlugs.ModalInquiryReqSection, "Property requirements"]</p>
   <div class="fields-2">
     <div class="field">
       <label class="label">Property type <span style="color:var(--accent)">*</span></label>
@@ -107,7 +115,7 @@
     </div>
   </div>
 
-  <p class="modal-section-title">Additional details</p>
+  <p class="modal-section-title">@Cms[ContentBlockSlugs.ModalInquiryAddlSection, "Additional details"]</p>
   <div class="field">
     <label class="label">Describe your requirements</label>
     <div class="control">
@@ -115,11 +123,14 @@
     </div>
   </div>
 
+  <!-- Auto-filled when the inquiry is opened from a property page (so admins know which listing it's about) -->
+  <input type="hidden" name="ListingReference" id="pliListingReference" value="" />
+
   <div class="field" style="margin-top:1.25rem">
     <div class="control">
       <button type="submit" class="button is-primary is-fullwidth is-medium">
         <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></span>
-        <span>Send Inquiry</span>
+        <span>@Cms[ContentBlockSlugs.ModalInquirySend, "Send Inquiry"]</span>
       </button>
     </div>
     <p class="help" style="text-align:center;margin-top:.5rem">We will contact you shortly for further details. <a href="/Privacy">Privacy Policy</a>.</p>

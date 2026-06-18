@@ -3,8 +3,8 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @using Avenue804.Web.Infrastructure
 @{
-    ViewData["Title"] = "Property Inquiry";
-    ViewData["MetaDescription"] = "Submit a property requirement to 804 Avenue — tell us what you want to buy, sell or rent across Abu Dhabi, Dubai and Al Ain. Our team will respond within 24 hours.";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaInquiryTitle, "Property Inquiry"];
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaInquiryDescription, "Submit a property requirement to 804 Avenue — tell us what you want to buy, sell or rent across Abu Dhabi, Dubai and Al Ain. Our team will respond within 24 hours."];
     ViewData["NavActive"] = "inquiry";
     var site = HttpContextAccessor.HttpContext?.GetSiteBranding();
 }
@@ -600,17 +600,14 @@
           <span>Inquiry</span>
         </div>
 
-        <span class="lyp2-content__eyebrow lyp2-fade">Property requirement</span>
+        <span class="lyp2-content__eyebrow lyp2-fade">@Cms[ContentBlockSlugs.InquiryEyebrow, "Property requirement"]</span>
 
         <h1 class="lyp2-content__title lyp2-fade d2">
-          Find the right<br />
-          <em>property for you</em>
+          @Html.Raw(Cms[ContentBlockSlugs.InquiryHeroH1, "Find the right<br /><em>property for you</em>"])
         </h1>
 
         <p class="lyp2-content__lead lyp2-fade d2">
-          Tell us what you're looking to buy, sell or rent — apartment, villa, office or
-          warehouse — and a dedicated specialist will reach out within 24 hours with
-          matched listings, honest pricing and clear next steps.
+          @Cms[ContentBlockSlugs.InquiryHeroLead, "Tell us what you're looking to buy, sell or rent — apartment, villa, office or warehouse — and a dedicated specialist will reach out within 24 hours with matched listings, honest pricing and clear next steps."]
         </p>
 
         <ul class="lyp2-bullets lyp2-fade d3">
@@ -784,12 +781,12 @@
 
         <div class="lyp2-card__foot">
           <button type="submit" form="iqForm" class="lyp2-submit">
-            <span>Submit inquiry</span>
+            <span>@Cms[ContentBlockSlugs.InquirySubmitLabel, "Submit inquiry"]</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
           <p class="lyp2-foot-note">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-            Secure submission — by submitting you agree to our <a href="/Privacy">Privacy Policy</a>.
+            @Html.Raw(Cms[ContentBlockSlugs.InquirySecureNote, "Secure submission — by submitting you agree to our <a href=\"/Privacy\">Privacy Policy</a>."])
           </p>
         </div>
       </div>

@@ -1,9 +1,10 @@
 @model Avenue804.Web.Models.Public.ServicePageHeroModel
 @using Avenue804.Web.Configuration
+@inject Avenue804.Web.Services.ICmsTextProvider Cms
 <!-- ═══ HERO ═══ -->
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>About</span></div>
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.AboutCrumb, "About"]</span></div>
     <h1 class="page-hero-title fade-up">
       @if (string.IsNullOrEmpty(Model.HeroTitleHtml)) { <text>About <em>804 Avenue</em></text> }
       else { @Html.Raw(Model.HeroTitleHtml) }
@@ -45,16 +46,16 @@
 <section class="vm-section section-pad">
   <div class="container" style="text-align:center">
     <span class="section-tag fade-up" style="justify-content:center">@Html.Raw(Model.GetOr(ContentBlockSlugs.AboutVmTag, "Our Purpose"))</span>
-    <h2 class="section-title fade-up">Vision &amp; <em>Mission</em></h2>
+    <h2 class="section-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.AboutVmTitle, "Vision &amp; <em>Mission</em>"])</h2>
     <div class="vm-grid">
       <div class="vm-card fade-up">
         <div class="vm-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <h3>Our Vision</h3>
+        <h3>@Cms[ContentBlockSlugs.AboutVisionH3, "Our Vision"]</h3>
         <p>@Html.Raw(Model.GetOr(ContentBlockSlugs.AboutVisionBody, "To be the most trusted and innovative real estate and contracting company in the UAE — recognized for excellence in every property transaction, construction project, and maintenance service we deliver."))</p>
       </div>
       <div class="vm-card fade-up">
         <div class="vm-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20 14.5 14.5 0 000-20"/><path d="M2 12h20"/></svg></div>
-        <h3>Our Mission</h3>
+        <h3>@Cms[ContentBlockSlugs.AboutMissionH3, "Our Mission"]</h3>
         <p>@Html.Raw(Model.GetOr(ContentBlockSlugs.AboutMissionBody, "To deliver exceptional quality in every property transaction, construction project, and maintenance service — by combining deep expertise, premium materials, and an unwavering commitment to client satisfaction."))</p>
       </div>
     </div>
@@ -65,7 +66,7 @@
 <section class="values-section section-pad">
   <div class="container">
     <span class="section-tag fade-up">@Html.Raw(Model.GetOr(ContentBlockSlugs.AboutValuesTag, "Our Principles"))</span>
-    <h2 class="section-title fade-up">Core <em>Values</em></h2>
+    <h2 class="section-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.AboutValuesTitle, "Core <em>Values</em>"])</h2>
     <div class="values-list">
       @if (Model.Get(ContentBlockSlugs.AboutValuesItems) is string valItems)
       { @Html.Raw(valItems) }
@@ -85,7 +86,7 @@
 <section class="expertise-section section-pad">
   <div class="container">
     <span class="section-tag fade-up">@Html.Raw(Model.GetOr(ContentBlockSlugs.AboutExpertiseTag, "Capabilities"))</span>
-    <h2 class="section-title fade-up">Our <em>Expertise</em></h2>
+    <h2 class="section-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.AboutExpertiseTitle, "Our <em>Expertise</em>"])</h2>
     <p class="section-sub fade-up">@Html.Raw(Model.GetOr(ContentBlockSlugs.AboutExpertiseLead, "Across three integrated divisions, we bring deep domain knowledge and hands-on experience to every engagement."))</p>
     <div class="expertise-list">
       @if (Model.Get(ContentBlockSlugs.AboutExpertiseItems) is string expertItems)
@@ -106,10 +107,15 @@
 <section class="stats-bar" id="statsSection">
   <div class="container">
     <div class="stats-grid">
-      <div class="fade-up"><div class="stat-num" data-count="500" data-suffix="+">0</div><div class="stat-label">Properties Listed</div></div>
-      <div class="fade-up"><div class="stat-num" data-count="120" data-suffix="+">0</div><div class="stat-label">Projects Delivered</div></div>
-      <div class="fade-up"><div class="stat-num" data-count="15" data-suffix="+">0</div><div class="stat-label">Years Experience</div></div>
-      <div class="fade-up"><div class="stat-num" data-count="98" data-suffix="%">0</div><div class="stat-label">Client Satisfaction</div></div>
+      @if (Model.Get(ContentBlockSlugs.AboutStatsItems) is string aboutStatsItems)
+      { @Html.Raw(aboutStatsItems) }
+      else
+      {
+        <div class="fade-up"><div class="stat-num" data-count="500" data-suffix="+">0</div><div class="stat-label">@Cms[ContentBlockSlugs.HomeStatsLabelListings, "Properties Listed"]</div></div>
+        <div class="fade-up"><div class="stat-num" data-count="120" data-suffix="+">0</div><div class="stat-label">@Cms[ContentBlockSlugs.HomeStatsLabelProjects, "Projects Delivered"]</div></div>
+        <div class="fade-up"><div class="stat-num" data-count="15" data-suffix="+">0</div><div class="stat-label">@Cms[ContentBlockSlugs.HomeStatsLabelYears, "Years Experience"]</div></div>
+        <div class="fade-up"><div class="stat-num" data-count="98" data-suffix="%">0</div><div class="stat-label">Client Satisfaction</div></div>
+      }
     </div>
   </div>
 </section>
@@ -117,8 +123,8 @@
 <!-- ═══ TEAM ═══ -->
 <section class="team-section section-pad">
   <div class="container" style="text-align:center">
-    <span class="section-tag fade-up" style="justify-content:center">Our People</span>
-    <h2 class="section-title fade-up">Meet the <em>Team</em></h2>
+    <span class="section-tag fade-up" style="justify-content:center">@Cms[ContentBlockSlugs.AboutTeamTag, "Our People"]</span>
+    <h2 class="section-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.AboutTeamTitle, "Meet the <em>Team</em>"])</h2>
     <p class="section-sub fade-up" style="margin:0 auto 16px">@Html.Raw(Model.GetOr(ContentBlockSlugs.AboutTeamLead, "The people behind every successful project, transaction, and client relationship at 804 Avenue."))</p>
     <div class="team-grid">
       @if (Model.Get(ContentBlockSlugs.AboutTeamItems) is string teamItems)
@@ -138,7 +144,7 @@
 <section class="wcu-section section-pad">
   <div class="container" style="text-align:center">
     <span class="section-tag fade-up" style="justify-content:center">@Html.Raw(Model.GetOr(ContentBlockSlugs.AboutWcuTag, "Why 804 Avenue"))</span>
-    <h2 class="section-title fade-up">Why <em>Choose</em> Us</h2>
+    <h2 class="section-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.AboutWcuTitle, "Why <em>Choose</em> Us"])</h2>
     <div class="wcu-grid">
       @if (Model.Get(ContentBlockSlugs.AboutWcuItems) is string wcuItems)
       { @Html.Raw(wcuItems) }

@@ -13,7 +13,7 @@
   <div class="container">
     <div class="breadcrumb fade-up">
       <a asp-page="/Index">Home</a><span class="sep">/</span>
-      <a asp-page="/Projects/Index">Projects</a><span class="sep">/</span>
+      <a asp-page="/Projects/Index">@Cms[ContentBlockSlugs.NavDdOurProjects, "Projects"]</a><span class="sep">/</span>
       <span>@P.Title</span>
     </div>
     <h1 class="page-hero-title fade-up">@P.Title</h1>
@@ -37,12 +37,12 @@
         }
       </div>
       <aside class="proj-detail-sidebar">
-        <p class="proj-detail-sidebar__heading">Interested in similar work?</p>
+        <p class="proj-detail-sidebar__heading">@Cms[ContentBlockSlugs.ProjectDetailSidebarTitle, "Interested in similar work?"]</p>
         <button type="button" class="proj-detail-sidebar__btn btn-primary nav-modal-link" data-modal-open="modal-inquiry" data-inquiry-subject="Project: @P.Title (@P.Slug)">
-          <span>Send an inquiry</span>
+          <span>@Cms[ContentBlockSlugs.ProjectDetailBtnInquiry, "Send an inquiry"]</span>
         </button>
-        <a asp-page="/Contracting" class="proj-detail-sidebar__btn btn-outline">Contracting services</a>
-        <a asp-page="/Contact" class="proj-detail-sidebar__btn btn-outline">Contact us</a>
+        <a asp-page="/Contracting" class="proj-detail-sidebar__btn btn-outline">@Cms[ContentBlockSlugs.ProjectDetailBtnContracting, "Contracting services"]</a>
+        <a asp-page="/Contact" class="proj-detail-sidebar__btn btn-outline">@Cms[ContentBlockSlugs.ProjectDetailBtnContact, "Contact us"]</a>
       </aside>
     </div>
   </div>

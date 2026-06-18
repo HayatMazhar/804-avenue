@@ -75,7 +75,7 @@ public class AmcRequestModel : PageModel
 
         if (await _flags.IsEnabledAsync(FeatureFlags.EmailNotifications, ct))
         {
-            var adminEmail = _cfg["Site:Email"] ?? "info@804avenue.com";
+            var adminEmail = _cfg["Site:Email"] ?? "info@804avenue.ae";
             await _email.SendAsync(adminEmail,
                 $"New AMC Request — {buildingType} building — {name}",
                 $"""

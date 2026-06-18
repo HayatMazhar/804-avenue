@@ -1,5 +1,8 @@
 @using Avenue804.Web
 @using Avenue804.Web.Domain
 @using Avenue804.Web.Infrastructure
+@using Avenue804.Web.Configuration
 @namespace Avenue804.Web.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Avenue804.Web
+@inject Avenue804.Web.Services.ICmsTextProvider Cms

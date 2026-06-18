@@ -39,4 +39,14 @@ public class PropertyListingInquiryFormModel
     [DataType(DataType.Date)]
     [Display(Name = "Expected move-in date")]
     public DateTime? ExpectedMoveInDate { get; set; }
+
+    /// <summary>
+    /// Free-text reference to a specific property, populated automatically
+    /// when the inquiry modal is opened from a property card / detail page
+    /// (e.g. "Property: 3-bedroom apartment with sea view (3br-apt-sea)").
+    /// Helps admins reply with context.
+    /// </summary>
+    [StringLength(500)]
+    [Display(Name = "Listing reference")]
+    public string? ListingReference { get; set; }
 }

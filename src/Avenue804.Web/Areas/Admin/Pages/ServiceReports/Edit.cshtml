@@ -1,0 +1,103 @@
+@page "{id:int}"
+@model Avenue804.Web.Areas.Admin.Pages.ServiceReports.EditModel
+@{
+    ViewData["Title"] = "Edit service report";
+    ViewData["AdminSection"] = "service-reports";
+}
+
+<div class="admin-back"><a asp-page="Index">← Service reports</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">@(string.IsNullOrWhiteSpace(Model.F.Title) ? "Edit service report" : Model.F.Title)</h1>
+      <p class="as-form-page__sub">Update the service report — client receives any changes via their existing link.</p>
+    </div>
+  </header>
+
+  <form method="post">
+    <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Client</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.ClientName">Client name <span class="req">*</span></label>
+            <input asp-for="F.ClientName" />
+            <span asp-validation-for="F.ClientName" class="field-validation-error"></span>
+          </div>
+          <div class="as-field">
+            <label asp-for="F.ClientEmail">Client email <span class="req">*</span></label>
+            <input asp-for="F.ClientEmail" type="email" />
+            <span asp-validation-for="F.ClientEmail" class="field-validation-error"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Report details</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="F.Title">Report title <span class="req">*</span></label>
+          <input asp-for="F.Title" />
+          <span asp-validation-for="F.Title" class="field-validation-error"></span>
+        </div>
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.VisitDate">Visit date <span class="req">*</span></label>
+            <input asp-for="F.VisitDate" type="date" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.ReportFileUrl">Report PDF URL</label>
+            <input asp-for="F.ReportFileUrl" type="url" placeholder="https://… (Drive / Dropbox / CDN link)" />
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.Description">Summary</label>
+          <textarea asp-for="F.Description" rows="3" placeholder="Brief description of works carried out…"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info"><span class="dot" style="background:var(--as-success);"></span>Changes are saved instantly</div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Save changes
+        </button>
+      </div>
+    </footer>
+  </form>
+
+  <!-- Danger zone -->
+  <form method="post" asp-page-handler="Delete" class="as-danger-zone" onsubmit="return confirm('Delete this service report? The client will lose access immediately. This cannot be undone.');">
+    <div class="as-danger-zone__text">
+      <p class="as-danger-zone__title">Delete this report</p>
+      <p class="as-danger-zone__sub">Permanently removes the service report and its public client link.</p>
+    </div>
+    <button type="submit" class="as-btn as-btn--danger">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6"/></svg>
+      Delete report
+    </button>
+  </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -4,16 +4,17 @@
 @inject Avenue804.Web.Services.IFeatureFlagService FeatureFlagService
 @using Avenue804.Web.Services
 @{
-    ViewData["Title"] = "Compare Properties";
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaCompareTitle, "Compare Properties"];
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaCompareDescription, "Side-by-side comparison of up to 3 listings — price, type, location, bedrooms, area and more."];
     ViewData["NavActive"] = "compare";
     bool canCompare = await FeatureFlagService.IsEnabledAsync(FeatureFlags.PropertyCompare);
-    if (!canCompare) { <p class="section-sub">Property comparison is currently unavailable.</p> return; }
+    if (!canCompare) { <p class="section-sub">@Cms[ContentBlockSlugs.CompareUnavailable, "Property comparison is currently unavailable."]</p> return; }
 }
 <section class="page-hero">
   <div class="container">
     <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Properties/Index">Properties</a><span class="sep">/</span><span>Compare</span></div>
-    <h1 class="page-hero-title fade-up">Compare <em>Properties</em></h1>
-    <p class="page-hero-sub fade-up">Side-by-side comparison of up to 3 listings.</p>
+    <h1 class="page-hero-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.CompareHeroH1, "Compare <em>Properties</em>"])</h1>
+    <p class="page-hero-sub fade-up">@Cms[ContentBlockSlugs.CompareHeroSub, "Side-by-side comparison of up to 3 listings."]</p>
     @if (Model.Listings.Count > 0)
     {
       <div class="fade-up" style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -35,7 +36,7 @@
     {
       <div class="prop-empty fade-up">
         <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20M12 3v18"/></svg>
-        <h3>No properties selected</h3>
+        <h3>@Cms[ContentBlockSlugs.CompareEmptyText, "No properties selected"]</h3>
         <p>Browse properties and click <strong>"Compare"</strong> on any listing to add it here (up to 3).</p>
         <a asp-page="/Properties/Index" class="btn-primary" style="display:inline-flex;margin-top:16px"><span>Browse Properties</span></a>
       </div>
@@ -46,14 +47,14 @@
         <table class="compare-table">
           <thead>
             <tr>
-              <th class="compare-attr-col">Feature</th>
+              <th class="compare-attr-col">@Cms[ContentBlockSlugs.CompareTableFeature, "Feature"]</th>
               @foreach (var p in Model.Listings)
               {
                 <th>
                   <div class="compare-prop-head">
                     <img src="@ListingFormat.ListingImageUrl(p.MainImageUrl)" alt="@p.Title" class="compare-thumb" />
                     <a asp-page="/Properties/Detail" asp-route-slug="@p.Slug" class="compare-prop-name">@p.Title</a>
-                    <a href="/Properties/Compare?ids=@string.Join(",", Model.Listings.Where(x => x.Id != p.Id).Select(x => x.Id))" class="compare-remove">Remove ×</a>
+                    <a href="/Properties/Compare?ids=@string.Join(",", Model.Listings.Where(x => x.Id != p.Id).Select(x => x.Id))" class="compare-remove">@Cms[ContentBlockSlugs.CompareRemoveLabel, "Remove ×"]</a>
                   </div>
                 </th>
               }
@@ -61,12 +62,12 @@
           </thead>
           <tbody>
             <tr class="compare-row">
-              <td class="compare-label">Price</td>
+              <td class="compare-label">@Cms[ContentBlockSlugs.CompareRowPrice, "Price"]</td>
               @foreach (var p in Model.Listings) { <td><strong>@ListingFormat.PricePrimary(p.Price, p.Currency, p.OfferType)@(ListingFormat.ShowRentSuffix(p.OfferType) ? "/yr" : "")</strong></td> }
             </tr>
             <tr class="compare-row compare-row--alt">
-              <td class="compare-label">Type</td>
-              @foreach (var p in Model.Listings) { <td>@(p.OfferType == ListingOfferType.Sale ? "For Sale" : "For Rent")</td> }
+              <td class="compare-label">@Cms[ContentBlockSlugs.CompareRowType, "Type"]</td>
+              @foreach (var p in Model.Listings) { <td>@(p.OfferType == ListingOfferType.Sale ? Cms[ContentBlockSlugs.CardLabelForSale, "For Sale"] : Cms[ContentBlockSlugs.CardLabelForRent, "For Rent"])</td> }
             </tr>
             <tr class="compare-row">
               <td class="compare-label">Location</td>
@@ -93,10 +94,10 @@
               @foreach (var p in Model.Listings) { <td>@(p.Label ?? "—")</td> }
             </tr>
             <tr class="compare-row">
-              <td class="compare-label">Inquire</td>
+              <td class="compare-label">@Cms[ContentBlockSlugs.CompareInquireLabel, "Inquire"]</td>
               @foreach (var p in Model.Listings)
               {
-                <td><button type="button" class="btn-primary nav-modal-link" style="font-size:.65rem;padding:8px 14px;border:none;cursor:pointer" data-modal-open="modal-inquiry" data-inquiry-subject="Property: @p.Title (@p.Slug)"><span>Inquire</span></button></td>
+                <td><button type="button" class="btn-primary nav-modal-link" style="font-size:.65rem;padding:8px 14px;border:none;cursor:pointer" data-modal-open="modal-inquiry" data-inquiry-subject="Property: @p.Title (@p.Slug)"><span>@Cms[ContentBlockSlugs.CompareInquireLabel, "Inquire"]</span></button></td>
               }
             </tr>
           </tbody>

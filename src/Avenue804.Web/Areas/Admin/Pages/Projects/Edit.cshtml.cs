@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Avenue804.Web.Areas.Admin.Pages.Projects;
 
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
 public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _db;

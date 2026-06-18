@@ -7,7 +7,7 @@ using static Avenue804.Web.Areas.Admin.Pages.Developers.CreateModel;
 
 namespace Avenue804.Web.Areas.Admin.Pages.Developers;
 
-[Authorize(Policy = "AdminOnly")]
+[Authorize(Policy = "AdminAccess")]
 public class EditModel : PageModel
 {
     private readonly ApplicationDbContext _db;
