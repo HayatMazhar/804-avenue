@@ -955,6 +955,9 @@ function openLightbox(idx) {
   var lb = document.getElementById('lightbox');
   var img = document.getElementById('lightboxImg');
   if (!lb || !img) return;
+  // Move the lightbox to <body> so its position:fixed isn't trapped by any
+  // ancestor with a CSS transform (e.g. the .fade-up animation wrappers).
+  if (lb.parentElement !== document.body) document.body.appendChild(lb);
   img.src = _galleryImages[idx];
   document.getElementById('lightboxCounter').textContent = (idx+1) + ' / ' + _galleryImages.length;
   lb.style.display = 'flex';
