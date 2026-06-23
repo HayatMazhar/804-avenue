@@ -380,6 +380,11 @@
   color: var(--as-success);
   border-color: rgba(16, 185, 129, .35);
 }
+.as-toast--err {
+  background: rgba(220, 38, 38, .08);
+  color: #dc2626;
+  border-color: rgba(220, 38, 38, .35);
+}
 .as-toast::before {
   content: '✓';
   width: 20px; height: 20px;
@@ -390,6 +395,10 @@
   font-size: .7rem;
   font-weight: 700;
   flex-shrink: 0;
+}
+.as-toast--err::before {
+  content: '!';
+  background: #dc2626;
 }
 
 /* ═══════════════════════════════════════════════════════

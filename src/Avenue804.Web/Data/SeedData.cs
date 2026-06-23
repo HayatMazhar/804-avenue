@@ -442,6 +442,18 @@ public static class SeedData
 <div class="team-card fade-up"><div class="team-avatar"><span class="team-initials">SH</span></div><h4>Sara Al Hashimi</h4><p>Real Estate Director</p><span class="team-desc">Manages the property division with deep knowledge of Abu Dhabi and Dubai's residential and commercial markets.</span></div>
 <div class="team-card fade-up"><div class="team-avatar"><span class="team-initials">KN</span></div><h4>Khalid Al Nuaimi</h4><p>Maintenance Manager</p><span class="team-desc">Leads the maintenance team with a focus on preventive care, rapid response, and long-term asset protection.</span></div>
 """),
+            // ── CEO message (test content) ───────────────────────────────────────
+            (ContentBlockSlugs.AboutCeoTag, "Message from the CEO"),
+            (ContentBlockSlugs.AboutCeoTitle, "A word from our <em>leadership</em>"),
+            (ContentBlockSlugs.AboutCeoName, "Mohammed Al Suwaidi"),
+            (ContentBlockSlugs.AboutCeoRole, "Chief Executive Officer, 804 Avenue"),
+            (ContentBlockSlugs.AboutCeoPhoto, "/assets/img/team/ceo-placeholder.svg"),
+            (ContentBlockSlugs.AboutCeoMessage, """
+<p><em>[TEST MESSAGE]</em> At 804 Avenue, we built this company on a simple belief: that real estate, construction, and property maintenance should be delivered with honesty, craftsmanship, and genuine care for every client.</p>
+<p>From a single office in Abu Dhabi to a trusted partner across the UAE, our growth has been driven by the relationships we have earned — one project, one home, and one satisfied client at a time.</p>
+<p>As we look ahead, our commitment remains unchanged: to set the standard for quality and integrity in everything we do, and to be the partner you can rely on for a lifetime.</p>
+"""),
+
             (ContentBlockSlugs.AboutWcuTag, "Why 804 Avenue"),
             (ContentBlockSlugs.AboutWcuItems, """
 <div class="wcu-item fade-up"><div class="wcu-num">01</div><h4>All-in-One Provider</h4><p>Real estate, contracting, and maintenance — all under one roof for seamless service.</p></div>
@@ -495,6 +507,16 @@ public static class SeedData
                 IsPublished = true,
                 UpdatedAt = now
             });
+        }
+
+        // One-off correction: replace the earlier realistic test CEO photo with the
+        // neutral placeholder avatar if it is still pointing at the removed image.
+        var ceoPhoto = await db.ContentBlocks.FirstOrDefaultAsync(
+            b => b.Slug == ContentBlockSlugs.AboutCeoPhoto, cancellationToken);
+        if (ceoPhoto is not null && ceoPhoto.Body == "/assets/img/team/ceo-test.png")
+        {
+            ceoPhoto.Body = "/assets/img/team/ceo-placeholder.svg";
+            ceoPhoto.UpdatedAt = now;
         }
 
         if (db.ChangeTracker.HasChanges())

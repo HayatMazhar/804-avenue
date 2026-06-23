@@ -5,6 +5,15 @@
     ViewData["AdminSub"] = "Edit every public-facing page in one place.";
 }
 
+<style>
+  .as-wc__img{display:flex;gap:14px;align-items:flex-start}
+  .as-wc__img-preview{width:84px;height:84px;border-radius:12px;object-fit:cover;border:1px solid var(--as-border,#e5e7eb);background:#f1f5f9;flex:none}
+  .as-wc__img-controls{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+  .as-wc__file{font-size:.82rem;color:var(--as-mute,#64748b)}
+  .as-wc__file::file-selector-button{margin-right:10px;padding:7px 12px;border-radius:8px;border:1px solid var(--as-border,#e5e7eb);background:#fff;font-weight:600;font-size:.8rem;cursor:pointer;color:var(--as-ink,#0f172a)}
+  .as-wc__file::file-selector-button:hover{background:#f8fafc}
+</style>
+
 <div class="as-wc">
 
   <!-- ─── Sidebar tabs (one entry per public page) ─── -->
@@ -148,7 +157,7 @@
             </a>
           }
         </div>
-        <form method="post" asp-page-handler="Content" class="as-wc__form">
+        <form method="post" asp-page-handler="Content" class="as-wc__form" enctype="multipart/form-data">
           <input type="hidden" name="__page" value="@pg.Id" />
           <div class="as-wc__fields">
             @foreach (var field in pg.Fields)
@@ -157,7 +166,18 @@
               var body = Model.BlockBodies.TryGetValue(field.Slug, out var b) ? b : "";
               <div class="as-wc__field">
                 <label class="as-wc__label">@field.Label</label>
-                @if (field.IsTextarea)
+                @if (field.IsImage)
+                {
+                  var fileKey = "file_" + field.Slug.Replace('.', '_');
+                  <div class="as-wc__img">
+                    <img class="as-wc__img-preview" src="@(string.IsNullOrWhiteSpace(body) ? "/assets/img/team/ceo-placeholder.svg" : body)" alt="Preview" />
+                    <div class="as-wc__img-controls">
+                      <input type="file" name="@fileKey" accept="image/*" class="as-wc__file" />
+                      <input type="text" name="@formKey" value="@body" class="as-wc__input" placeholder="…or paste an image URL / path" />
+                    </div>
+                  </div>
+                }
+                else if (field.IsTextarea)
                 {
                   <textarea name="@formKey" class="as-wc__textarea" rows="4" placeholder="@field.Label">@body</textarea>
                 }

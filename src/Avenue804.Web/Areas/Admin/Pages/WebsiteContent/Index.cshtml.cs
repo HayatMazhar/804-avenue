@@ -21,11 +21,13 @@ public class IndexModel : PageModel
 {
     private readonly ApplicationDbContext _db;
     private readonly IMemoryCache _cache;
+    private readonly IStorageService _storage;
 
-    public IndexModel(ApplicationDbContext db, IMemoryCache cache)
+    public IndexModel(ApplicationDbContext db, IMemoryCache cache, IStorageService storage)
     {
         _db = db;
         _cache = cache;
+        _storage = storage;
     }
 
     public Dictionary<string, string> BlockBodies { get; set; } = new(StringComparer.OrdinalIgnoreCase);
@@ -40,7 +42,7 @@ public class IndexModel : PageModel
     /// </summary>
     public List<ContentField> OrphanFields { get; set; } = [];
 
-    public record ContentField(string Slug, string Label, bool IsTextarea = false, string? Hint = null);
+    public record ContentField(string Slug, string Label, bool IsTextarea = false, string? Hint = null, bool IsImage = false);
 
     /// <summary>A logical "page" tab containing one or more editable fields.</summary>
     public record ContentPage(
@@ -114,6 +116,12 @@ public class IndexModel : PageModel
                 new(ContentBlockSlugs.AboutStoryTag,    "Story section — tag"),
                 new(ContentBlockSlugs.AboutStoryTitle,  "Story section — title"),
                 new(ContentBlockSlugs.AboutStoryBody,   "Story section — body", true),
+                new(ContentBlockSlugs.AboutCeoTag,      "CEO message — tag"),
+                new(ContentBlockSlugs.AboutCeoTitle,    "CEO message — title (HTML allowed)", true, "Use <em>…</em> for the orange accent."),
+                new(ContentBlockSlugs.AboutCeoName,     "CEO message — name"),
+                new(ContentBlockSlugs.AboutCeoRole,     "CEO message — role"),
+                new(ContentBlockSlugs.AboutCeoPhoto,    "CEO message — photo", false, "Upload a photo (JPG/PNG, portrait works best) or paste an image URL.", true),
+                new(ContentBlockSlugs.AboutCeoMessage,  "CEO message — body (HTML allowed)", true, "Wrap each paragraph in <p>…</p>."),
                 new(ContentBlockSlugs.AboutVmTag,       "Vision/mission — tag"),
                 new(ContentBlockSlugs.AboutVisionBody,  "Vision statement", true),
                 new(ContentBlockSlugs.AboutMissionBody, "Mission statement", true),
@@ -627,9 +635,33 @@ public class IndexModel : PageModel
         foreach (var field in fieldsToUpdate)
         {
             var formKey = "cb_" + field.Slug.Replace('.', '_');
-            if (!form.ContainsKey(formKey)) continue;
 
-            var newBody = form[formKey].ToString().Trim();
+            // Image fields may carry an uploaded file (takes precedence over the
+            // pasted URL/text value). Fall back to the text input when no file.
+            string? newBody = null;
+            if (field.IsImage)
+            {
+                var fileKey = "file_" + field.Slug.Replace('.', '_');
+                var upload = form.Files[fileKey];
+                if (upload is { Length: > 0 })
+                {
+                    try
+                    {
+                        newBody = await _storage.UploadAsync(upload, "content", ct);
+                    }
+                    catch (Exception ex)
+                    {
+                        TempData["ToastErr"] = $"Photo upload failed: {ex.Message}";
+                        return RedirectToPage(null, null, pageId);
+                    }
+                }
+            }
+
+            if (newBody is null)
+            {
+                if (!form.ContainsKey(formKey)) continue;
+                newBody = form[formKey].ToString().Trim();
+            }
             if (bySlug.TryGetValue(field.Slug, out var existing))
             {
                 if (existing.Body != newBody)

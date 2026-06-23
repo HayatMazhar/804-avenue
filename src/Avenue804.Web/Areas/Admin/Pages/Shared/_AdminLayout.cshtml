@@ -96,6 +96,10 @@
         {
           <div class="as-toast as-toast--ok" role="status">@admOk</div>
         }
+        @if (TempData["ToastErr"] is string admErr && !string.IsNullOrWhiteSpace(admErr))
+        {
+          <div class="as-toast as-toast--err" role="alert">@admErr</div>
+        }
         @RenderBody()
       </main>
     </div>

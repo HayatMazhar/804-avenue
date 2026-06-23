@@ -1943,8 +1943,8 @@ body > .ts-dropdown .option.selected { font-weight: 600; color: var(--accent); b
   transition: border-color .15s ease, box-shadow .15s ease;
 }
 .re2__bar:focus-within {
-  border-color: var(--accent, #f59e0b);
-  box-shadow: 0 0 0 3px var(--accent-10, rgba(245, 158, 11, .12));
+  border-color: #d1d5db;
+  box-shadow: none;
 }
 .re2__bar-ico {
   display: flex;
@@ -2010,10 +2010,12 @@ body > .ts-dropdown .option.selected { font-weight: 600; color: var(--accent); b
   background: var(--bg-card, #fff);
   transition: border-color .12s ease, box-shadow .12s ease;
 }
-.re2__pill:hover,
+.re2__pill:hover {
+  border-color: #d1d5db;
+}
 .re2__pill:focus-within {
-  border-color: var(--accent, #f59e0b);
-  box-shadow: 0 0 0 2px var(--accent-10, rgba(245, 158, 11, .12));
+  border-color: #d1d5db;
+  box-shadow: none;
 }
 /* Single chevron — pure CSS background SVG so no double arrows. */
 .re2__pill select {

@@ -19,17 +19,22 @@ public class IndexModel : PageModel
     public string? SearchSize { get; private set; }
     public string? SearchBudget { get; private set; }
     public string? SearchKeyword { get; private set; }
+    public string? SearchBeds { get; private set; }
+    public string? SearchBaths { get; private set; }
+    public bool SearchVerified { get; private set; }
     public string? SortBy { get; private set; }
     public int TotalCount { get; private set; }
 
     public async Task OnGetAsync(
         string? offer, string? location, string? area, string? category, string? type, string? size, string? budget, string? q,
+        string? beds, string? baths, bool? verified,
         string? sort,
         CancellationToken cancellationToken = default)
     {
         ViewData["NavActive"] = "properties";
         Filter = offer; SearchLocation = location; SearchArea = area; SearchCategory = category;
         SearchType = type; SearchSize = size; SearchBudget = budget; SearchKeyword = q; SortBy = sort ?? "newest";
+        SearchBeds = beds; SearchBaths = baths; SearchVerified = verified ?? false;
 
         var query = _db.PropertyListings.AsNoTracking()
             .Where(p => p.IsPublished && p.Slug != null && p.Slug != "");
@@ -88,6 +93,22 @@ public class IndexModel : PageModel
                 _ => query
             };
         }
+
+        // Bedrooms — "studio" (0), exact number, or "5" used as 5+
+        if (!string.IsNullOrWhiteSpace(beds) && beds != "any")
+        {
+            if (string.Equals(beds, "studio", StringComparison.OrdinalIgnoreCase))
+                query = query.Where(p => p.Beds == 0);
+            else if (int.TryParse(beds.TrimEnd('+'), out var b))
+                query = beds.EndsWith('+') ? query.Where(p => p.Beds >= b) : query.Where(p => p.Beds == b);
+        }
+
+        // Bathrooms — treated as a minimum (e.g. "2" → 2 or more)
+        if (!string.IsNullOrWhiteSpace(baths) && baths != "any" && int.TryParse(baths.TrimEnd('+'), out var ba))
+            query = query.Where(p => p.Baths != null && p.Baths >= ba);
+
+        if (verified == true)
+            query = query.Where(p => p.IsVerified);
 
         TotalCount = await query.CountAsync(cancellationToken);
 

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="700" viewBox="0 0 700 700" role="img" aria-label="CEO placeholder avatar">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EEF2F8"/>
+      <stop offset="1" stop-color="#DDE5F0"/>
+    </linearGradient>
+  </defs>
+  <rect width="700" height="700" fill="url(#bg)"/>
+  <g fill="#A9B6CC">
+    <circle cx="350" cy="280" r="120"/>
+    <path d="M350 430c-126 0-228 86-228 192v18a8 8 0 0 0 8 8h440a8 8 0 0 0 8-8v-18c0-106-102-192-228-192z"/>
+  </g>
+</svg>
