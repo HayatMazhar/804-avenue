@@ -20,7 +20,22 @@ public class EditModel : PageModel
         ViewData["AdminSection"] = "areaguides";
         var g = await _db.AreaGuides.AsNoTracking().FirstOrDefaultAsync(x => x.Id == Id, ct);
         if (g == null) return NotFound();
-        F = new() { Name = g.Name, Emirate = g.Emirate, HeroImageUrl = g.HeroImageUrl, Overview = g.Overview, AvgPriceSaleSqft = g.AvgPriceSaleSqft, AvgRentYearly = g.AvgRentYearly, PopularWith = g.PopularWith, NearbyLandmarks = g.NearbyLandmarks, SchoolsNearby = g.SchoolsNearby, TransportLinks = g.TransportLinks, IsPublished = g.IsPublished };
+        F = new()
+        {
+            Name = g.Name, Emirate = g.Emirate, City = g.City,
+            HeroImageUrl = g.HeroImageUrl,
+            ShortDescription = g.ShortDescription, Overview = g.Overview,
+            AvgPriceSaleSqft = g.AvgPriceSaleSqft, AvgRentYearly = g.AvgRentYearly,
+            PopularWith = g.PopularWith, NearbyLandmarks = g.NearbyLandmarks,
+            SchoolsNearby = g.SchoolsNearby, TransportLinks = g.TransportLinks,
+            Amenities = g.Amenities, Attractions = g.Attractions,
+            LifestyleServices = g.LifestyleServices, Shopping = g.Shopping,
+            Education = g.Education, Dining = g.Dining,
+            Healthcare = g.Healthcare, Transportation = g.Transportation,
+            AverageRoiPercent = g.AverageRoiPercent, RentalYieldPercent = g.RentalYieldPercent,
+            InvestmentInsights = g.InvestmentInsights,
+            IsPublished = g.IsPublished
+        };
         return Page();
     }
 
@@ -29,10 +44,19 @@ public class EditModel : PageModel
         if (!ModelState.IsValid) return Page();
         var g = await _db.AreaGuides.FirstOrDefaultAsync(x => x.Id == Id, ct);
         if (g == null) return NotFound();
-        g.Name = F.Name.Trim(); g.Emirate = F.Emirate; g.HeroImageUrl = F.HeroImageUrl?.Trim();
-        g.Overview = F.Overview?.Trim(); g.AvgPriceSaleSqft = F.AvgPriceSaleSqft; g.AvgRentYearly = F.AvgRentYearly;
+        g.Name = F.Name.Trim(); g.Emirate = F.Emirate; g.City = F.City?.Trim();
+        g.HeroImageUrl = F.HeroImageUrl?.Trim();
+        g.ShortDescription = F.ShortDescription?.Trim(); g.Overview = F.Overview?.Trim();
+        g.AvgPriceSaleSqft = F.AvgPriceSaleSqft; g.AvgRentYearly = F.AvgRentYearly;
         g.PopularWith = F.PopularWith?.Trim(); g.NearbyLandmarks = F.NearbyLandmarks?.Trim();
-        g.SchoolsNearby = F.SchoolsNearby?.Trim(); g.TransportLinks = F.TransportLinks?.Trim(); g.IsPublished = F.IsPublished;
+        g.SchoolsNearby = F.SchoolsNearby?.Trim(); g.TransportLinks = F.TransportLinks?.Trim();
+        g.Amenities = F.Amenities?.Trim(); g.Attractions = F.Attractions?.Trim();
+        g.LifestyleServices = F.LifestyleServices?.Trim(); g.Shopping = F.Shopping?.Trim();
+        g.Education = F.Education?.Trim(); g.Dining = F.Dining?.Trim();
+        g.Healthcare = F.Healthcare?.Trim(); g.Transportation = F.Transportation?.Trim();
+        g.AverageRoiPercent = F.AverageRoiPercent; g.RentalYieldPercent = F.RentalYieldPercent;
+        g.InvestmentInsights = F.InvestmentInsights?.Trim();
+        g.IsPublished = F.IsPublished;
         g.UpdatedAt = DateTimeOffset.UtcNow;
         await _db.SaveChangesAsync(ct);
         TempData["ToastOk"] = "Area guide updated.";

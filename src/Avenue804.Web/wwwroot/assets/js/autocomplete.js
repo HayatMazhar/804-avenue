@@ -160,7 +160,10 @@
       if (currentXhr) currentXhr.abort && currentXhr.abort();
       setLoading();
       var url = apiUrl + '&q=' + encodeURIComponent(q) + '&limit=' + maxResults;
-      if (opts.emirate) url += '&emirate=' + encodeURIComponent(opts.emirate);
+      // Read emirate filter live from the element attribute so emirate-select
+      // changes take effect on the next keystroke without re-initialising.
+      var liveEmirate = input.getAttribute('data-ac-emirate') || opts.emirate || '';
+      if (liveEmirate) url += '&emirate=' + encodeURIComponent(liveEmirate);
       var controller = new AbortController();
       currentXhr = controller;
       fetch(url, { signal: controller.signal, credentials: 'same-origin', headers: { Accept: 'application/json' } })

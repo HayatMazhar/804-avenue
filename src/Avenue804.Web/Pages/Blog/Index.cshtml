@@ -1,0 +1,92 @@
+@page "/Blog"
+@using Avenue804.Web.Domain
+@model Avenue804.Web.Pages.Blog.BlogIndexModel
+@{
+    ViewData["Title"] = "Blog — Real Estate Insights & News";
+    ViewData["MetaDescription"] = "Articles on UAE real estate, investment, community guides and 804 Avenue announcements.";
+    ViewData["NavActive"] = "blog";
+}
+
+@section Styles {
+<style>
+  .blog-filters{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 32px}
+  .blog-filter{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;background:var(--bg-card);border:1px solid var(--border-subtle);font-size:.8rem;color:var(--text-secondary);text-decoration:none;transition:all .15s}
+  .blog-filter:hover{border-color:var(--accent-50,rgba(245,158,11,.4));color:var(--accent)}
+  .blog-filter.is-active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .blog-filter__count{font-size:.7rem;opacity:.7;padding:1px 6px;border-radius:999px;background:rgba(0,0,0,.06)}
+  .blog-filter.is-active .blog-filter__count{background:rgba(255,255,255,.18);opacity:1}
+  .blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+  .blog-card{display:flex;flex-direction:column;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease;box-shadow:0 4px 20px rgba(15,23,42,.04)}
+  .blog-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(15,23,42,.1)}
+  .blog-card__img{aspect-ratio:16/10;background:linear-gradient(135deg,var(--accent),var(--cyan,#0ea5e9));background-size:cover;background-position:center;position:relative}
+  .blog-card__cat{position:absolute;top:14px;left:14px;background:rgba(15,23,42,.85);color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
+  .blog-card__body{flex:1;display:flex;flex-direction:column;padding:20px 22px;gap:8px}
+  .blog-card__date{font-size:.7rem;color:var(--text-tertiary);letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+  .blog-card__title{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--text-primary);line-height:1.4;margin:0}
+  .blog-card__excerpt{font-size:.85rem;color:var(--text-secondary);line-height:1.6;flex:1;margin:0}
+  .blog-card__cta{margin-top:4px;font-size:.78rem;font-weight:700;color:var(--accent);display:inline-flex;align-items:center;gap:6px}
+  .blog-empty{text-align:center;padding:60px 20px;color:var(--text-tertiary)}
+  .blog-empty svg{margin-bottom:16px;color:var(--text-tertiary)}
+</style>
+}
+
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><span>Blog</span></div>
+    <h1 class="page-hero-title fade-up">Blog &amp; <em>Insights</em></h1>
+    <p class="page-hero-sub fade-up">News, investment ideas, community spotlights and contracting know-how from the 804 Avenue team.</p>
+  </div>
+</section>
+
+<section class="section-pad" style="background:var(--bg-surface)">
+  <div class="container">
+
+    <div class="blog-filters fade-up">
+      <a asp-page="/Blog/Index" class="blog-filter @(!Model.Category.HasValue ? "is-active" : "")">
+        All <span class="blog-filter__count">@Model.TotalCount</span>
+      </a>
+      @foreach (var c in BlogCategoryExtensions.All)
+      {
+        var count = Model.CategoryCounts.TryGetValue(c, out var n) ? n : 0;
+        <a asp-page="/Blog/Index" asp-route-category="@((int)c)" class="blog-filter @(Model.Category == c ? "is-active" : "")">
+          @c.ToDisplayString() <span class="blog-filter__count">@count</span>
+        </a>
+      }
+    </div>
+
+    @if (Model.Posts.Count == 0)
+    {
+      <div class="blog-empty fade-up">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <h3>No posts in this category yet</h3>
+        <p>Check back soon — articles are added regularly.</p>
+      </div>
+    }
+    else
+    {
+      <div class="blog-grid">
+        @foreach (var p in Model.Posts)
+        {
+          var date = (p.PublishedAt ?? p.CreatedAt).ToString("MMM d, yyyy");
+          var imgStyle = string.IsNullOrWhiteSpace(p.CoverImageUrl) ? "" : $"background-image:url('{p.CoverImageUrl}')";
+          <a asp-page="/Blog/Detail" asp-route-slug="@p.Slug" class="blog-card fade-up">
+            <div class="blog-card__img" style="@imgStyle">
+              <span class="blog-card__cat">@p.Category.ToDisplayString()</span>
+            </div>
+            <div class="blog-card__body">
+              <div class="blog-card__date">@date@(string.IsNullOrWhiteSpace(p.AuthorName) ? "" : " · " + p.AuthorName)</div>
+              <h3 class="blog-card__title">@p.Title</h3>
+              @if (!string.IsNullOrWhiteSpace(p.Excerpt))
+              {
+                <p class="blog-card__excerpt">@p.Excerpt</p>
+              }
+              <span class="blog-card__cta">Read more
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </span>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  </div>
+</section>

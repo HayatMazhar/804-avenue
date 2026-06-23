@@ -19,302 +19,632 @@
     var currentOffer = Model.Filter ?? "";
     var currentSort = Model.SortBy ?? "newest";
 }
-@* properties.css now loaded globally from _Layout.cshtml *@
 
-<!-- ── Compact page header ── -->
-<div class="pl-header">
-  <div class="container-fluid px-3 px-xl-5">
-    <div class="pl-header__inner">
-      <nav class="pl-breadcrumb" aria-label="Breadcrumb">
-        <a asp-page="/Index">Home</a>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-        <span>Properties</span>
-      </nav>
-      <h1 class="pl-header__title">
-        @if (hasFilters)
-        {
-          <span>@Model.TotalCount result@(Model.TotalCount != 1 ? "s" : "")</span><em> found</em>
-        }
-        else
-        {
-          @Html.Raw(Cms[ContentBlockSlugs.PropertiesHeader, "Browse <em>Properties</em>"])
-        }
-      </h1>
-    </div>
-    <!-- Offer tabs -->
-    <div class="pl-offer-tabs">
-      <a class="pl-offer-tab @(currentOffer == "" ? "active" : "")" asp-page="/Properties/Index" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">@Cms[ContentBlockSlugs.PropertiesTabAll, "All"]</a>
-      <a class="pl-offer-tab @(currentOffer == "sale" ? "active" : "")" asp-page="/Properties/Index" asp-route-offer="sale" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">@Cms[ContentBlockSlugs.PropertiesTabBuy, "Buy"]</a>
-      <a class="pl-offer-tab @(currentOffer == "rent" ? "active" : "")" asp-page="/Properties/Index" asp-route-offer="rent" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">@Cms[ContentBlockSlugs.PropertiesTabRent, "Rent"]</a>
-    </div>
-  </div>
-</div>
+@*
+   ═════════════════════════════════════════════════════════════════════
+   PROPERTIES INDEX — MODERN REDESIGN (plx-* namespace, inline styles)
+   Styles are embedded inline so a stale cached properties.css cannot
+   override or down-rank the new look. Every layout class lives in the
+   plx-* namespace; the property card itself still uses .pcard so all
+   listing partials remain unchanged.
+   ═════════════════════════════════════════════════════════════════════
+*@
+<style>
+:root{
+  --plx-bg:#F4F6FA;
+  --plx-surface:#fff;
+  --plx-border:#E5E9F0;
+  --plx-border-soft:#EEF1F6;
+  --plx-ink:#0B1224;
+  --plx-ink-2:#475569;
+  --plx-mute:#94A3B8;
+  --plx-accent:#F59E0B;
+  --plx-accent-soft:rgba(245,158,11,.10);
+  --plx-shadow-sm:0 1px 2px rgba(15,23,42,.05);
+  --plx-shadow:0 10px 30px -12px rgba(15,23,42,.18);
+  --plx-shadow-lg:0 28px 60px -20px rgba(15,23,42,.30);
+}
 
-<!-- ── Main search bar ── -->
-<div class="pl-searchbar">
-  <div class="container-fluid px-3 px-xl-5">
-    <form method="get" id="propSearchForm" class="pl-searchbar__form">
-      <input type="hidden" name="offer" value="@currentOffer" id="sfOfferHidden" />
-      <input type="hidden" name="q" value="@Model.SearchKeyword" />
-      <div class="pl-searchbar__field">
-        <select name="category" id="sfCategory" class="pl-searchbar__select">
-          <option value="">All categories</option>
-          <option value="Residential" selected="@(Model.SearchCategory == "Residential")">Residential</option>
-          <option value="Commercial" selected="@(Model.SearchCategory == "Commercial")">Commercial</option>
-        </select>
-      </div>
-      <div class="pl-searchbar__sep"></div>
-      <div class="pl-searchbar__field">
-        <select name="location" id="sfLocation" class="pl-searchbar__select">
-          <option value="">Any emirate</option>
-          <option value="Abu Dhabi" selected="@(Model.SearchLocation == "Abu Dhabi")">Abu Dhabi</option>
-          <option value="Dubai" selected="@(Model.SearchLocation == "Dubai")">Dubai</option>
-          <option value="Sharjah" selected="@(Model.SearchLocation == "Sharjah")">Sharjah</option>
-          <option value="Ajman" selected="@(Model.SearchLocation == "Ajman")">Ajman</option>
-          <option value="Ras Al Khaimah" selected="@(Model.SearchLocation == "Ras Al Khaimah")">Ras Al Khaimah</option>
-        </select>
-      </div>
-      <div class="pl-searchbar__sep"></div>
-      <div class="pl-searchbar__field pl-searchbar__field--wide">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <input type="text" name="area" value="@Model.SearchArea" placeholder="Area, community, tower…" autocomplete="off" data-autocomplete="uae" data-ac-emirate-target="sfLocation" class="pl-searchbar__input" />
-      </div>
-      <div class="pl-searchbar__sep"></div>
-      <div class="pl-searchbar__field">
-        <select name="type" id="sfType" class="pl-searchbar__select"
-                data-details-residential='["Apartment","Villa Apartment","Villa Compound","Villa","Building","Land"]'
-                data-details-commercial='["Shell &amp; Core Offices","Furnished Offices","Warehouse / Stores","Showroom","Shop","Villa","Labor Camp","Building","Land"]'>
-          <option value="">All types</option>
-          <optgroup label="Residential">
-            <option value="Apartment" selected="@(Model.SearchType == "Apartment")">Apartment</option>
-            <option value="Villa Apartment" selected="@(Model.SearchType == "Villa Apartment")">Villa Apartment</option>
-            <option value="Villa Compound" selected="@(Model.SearchType == "Villa Compound")">Villa Compound</option>
-            <option value="Villa" selected="@(Model.SearchType == "Villa")">Villa</option>
-            <option value="Building" selected="@(Model.SearchType == "Building")">Building</option>
-            <option value="Land" selected="@(Model.SearchType == "Land")">Land</option>
-          </optgroup>
-          <optgroup label="Commercial">
-            <option value="Shell &amp; Core Offices" selected="@(Model.SearchType == "Shell & Core Offices")">Shell &amp; Core Offices</option>
-            <option value="Furnished Offices" selected="@(Model.SearchType == "Furnished Offices")">Furnished Offices</option>
-            <option value="Warehouse / Stores" selected="@(Model.SearchType == "Warehouse / Stores")">Warehouse / Stores</option>
-            <option value="Showroom" selected="@(Model.SearchType == "Showroom")">Showroom</option>
-            <option value="Shop" selected="@(Model.SearchType == "Shop")">Shop</option>
-            <option value="Labor Camp" selected="@(Model.SearchType == "Labor Camp")">Labor Camp</option>
-          </optgroup>
-        </select>
-      </div>
-      <div class="pl-searchbar__sep"></div>
-      <div class="pl-searchbar__field">
-        <select name="size" id="sfSize" class="pl-searchbar__select">
-          <option value="">Any size</option>
-          <option value="u500" selected="@(Model.SearchSize == "u500")">&lt; 500 sqft</option>
-          <option value="500-1000" selected="@(Model.SearchSize == "500-1000")">500 – 1,000 sqft</option>
-          <option value="1000-2000" selected="@(Model.SearchSize == "1000-2000")">1,000 – 2,000 sqft</option>
-          <option value="2000-5000" selected="@(Model.SearchSize == "2000-5000")">2,000 – 5,000 sqft</option>
-          <option value="5000+" selected="@(Model.SearchSize == "5000+")">5,000+ sqft</option>
-        </select>
-      </div>
-      <div class="pl-searchbar__sep"></div>
-      <div class="pl-searchbar__field">
-        <select name="budget" id="sfBudget" class="pl-searchbar__select">
-          <option value="">Any price</option>
-          <option value="u500" selected="@(Model.SearchBudget == "u500")">Under 500K</option>
-          <option value="500-1m" selected="@(Model.SearchBudget == "500-1m")">500K – 1M</option>
-          <option value="1m-5m" selected="@(Model.SearchBudget == "1m-5m")">1M – 5M</option>
-          <option value="5m+" selected="@(Model.SearchBudget == "5m+")">5M+</option>
-        </select>
-      </div>
-      <button type="submit" class="pl-searchbar__btn">@Cms[ContentBlockSlugs.HomeSearchButton, "Search"]</button>
+/* ─── Hero band ─────────────────────────────────────────────────── */
+.plx-hero{
+  position:relative;
+  padding:64px 0 110px;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(245,158,11,.20), transparent 60%),
+    radial-gradient(1000px 500px at 0% 0%, rgba(59,130,246,.10), transparent 55%),
+    linear-gradient(180deg,#0B1224 0%, #111B33 100%);
+  color:#fff;
+  overflow:hidden;
+}
+.plx-hero::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(180deg,#000 30%,transparent 100%);
+  pointer-events:none;
+}
+.plx-hero__inner{position:relative;z-index:2}
+.plx-crumb{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  font-size:.78rem;color:rgba(255,255,255,.55);margin-bottom:18px
+}
+.plx-crumb a{color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s}
+.plx-crumb a:hover{color:#fff}
+.plx-crumb__sep{opacity:.4}
+.plx-tagrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.plx-pill-tag{
+  display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;
+  background:rgba(245,158,11,.14);color:#FCD34D;
+  font-size:.66rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase
+}
+.plx-pill-tag__dot{width:6px;height:6px;border-radius:999px;background:#FCD34D;box-shadow:0 0 0 4px rgba(245,158,11,.18)}
+.plx-hero h1{
+  font-family:var(--font-display,inherit);
+  font-size:clamp(1.9rem,4vw,2.85rem);
+  font-weight:800;letter-spacing:-.018em;line-height:1.1;
+  margin:0 0 12px;color:#fff
+}
+.plx-hero h1 em{font-style:normal;background:linear-gradient(135deg,#FCD34D 0%,#F59E0B 65%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.plx-hero__sub{color:rgba(255,255,255,.72);font-size:.95rem;max-width:620px;margin:0 0 26px;line-height:1.6}
+
+/* ─── Offer segmented tabs ─────────────────────────────────────── */
+.plx-segs{
+  display:inline-flex;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;padding:4px;gap:2px;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
+}
+.plx-seg{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 18px;border-radius:10px;font-size:.85rem;font-weight:600;
+  color:rgba(255,255,255,.7);text-decoration:none;
+  transition:all .2s ease;white-space:nowrap
+}
+.plx-seg:hover{color:#fff;background:rgba(255,255,255,.06)}
+.plx-seg.is-active{
+  background:#fff;color:var(--plx-ink);
+  box-shadow:0 4px 14px rgba(0,0,0,.18)
+}
+.plx-seg__dot{width:5px;height:5px;border-radius:999px;background:currentColor;opacity:.5}
+.plx-seg.is-active .plx-seg__dot{background:var(--plx-accent);opacity:1}
+
+/* ─── Floating command (search) bar ─────────────────────────────── */
+.plx-cmd-wrap{position:relative;margin-top:-78px;z-index:10;padding:0 0 28px}
+.plx-cmd{
+  background:#fff;border:1px solid var(--plx-border);
+  border-radius:18px;box-shadow:var(--plx-shadow-lg);
+  padding:10px;display:flex;align-items:stretch;gap:0;flex-wrap:nowrap
+}
+.plx-cmd__field{
+  display:flex;align-items:center;gap:8px;
+  flex:1 1 0;min-width:0;padding:10px 14px;border-radius:10px;
+  transition:background .15s
+}
+.plx-cmd__field:hover{background:#F8FAFC}
+.plx-cmd__field--key{flex:2 1 0}
+.plx-cmd__field svg{flex:none;color:var(--plx-mute)}
+.plx-cmd__label{
+  display:block;font-size:.66rem;font-weight:700;color:var(--plx-mute);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:2px
+}
+.plx-cmd__input,
+.plx-cmd__select{
+  width:100%;border:0;background:transparent;outline:none;font-size:.92rem;
+  color:var(--plx-ink);font-weight:600;padding:0;line-height:1.2
+}
+.plx-cmd__select{
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat:no-repeat;background-position:right .15rem center;background-size:10px;
+  padding-right:1.1rem;cursor:pointer
+}
+.plx-cmd__input::placeholder{color:var(--plx-mute);font-weight:500}
+.plx-cmd__sep{width:1px;background:var(--plx-border);margin:6px 0;flex:none}
+.plx-cmd__btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:0 22px;border-radius:12px;border:0;cursor:pointer;
+  background:linear-gradient(135deg,#F59E0B 0%,#D97706 100%);
+  color:#fff;font-weight:700;font-size:.9rem;letter-spacing:.01em;
+  box-shadow:0 6px 18px -6px rgba(217,119,6,.55);
+  transition:transform .15s, box-shadow .15s;flex:none;min-width:120px
+}
+.plx-cmd__btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px -6px rgba(217,119,6,.7)}
+.plx-cmd__more{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:0 16px;border-radius:12px;border:1px solid var(--plx-border);
+  background:#fff;color:var(--plx-ink);font-weight:600;font-size:.85rem;
+  cursor:pointer;flex:none;text-decoration:none;
+  transition:border-color .15s, background .15s
+}
+.plx-cmd__more:hover{border-color:var(--plx-ink);background:#F8FAFC}
+
+/* ─── Body two-column ──────────────────────────────────────────── */
+.plx-body{background:var(--plx-bg);padding:8px 0 64px;min-height:60vh}
+.plx-layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px;align-items:start}
+@@media(max-width:1100px){.plx-layout{grid-template-columns:1fr}}
+
+/* ─── Sidebar (filters) ───────────────────────────────────────── */
+.plx-side{
+  background:var(--plx-surface);border:1px solid var(--plx-border);
+  border-radius:16px;padding:6px 6px 14px;box-shadow:var(--plx-shadow-sm);
+  position:sticky;top:90px;max-height:calc(100vh - 110px);overflow-y:auto
+}
+.plx-side__head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 14px 10px;border-bottom:1px solid var(--plx-border-soft);
+  margin:0 4px
+}
+.plx-side__title{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--plx-ink)}
+.plx-side__reset{font-size:.74rem;color:var(--plx-accent);font-weight:600;text-decoration:none}
+.plx-side__reset:hover{text-decoration:underline}
+.plx-fgroup{padding:14px 14px 4px;border-bottom:1px solid var(--plx-border-soft);margin:0 4px}
+.plx-fgroup:last-of-type{border-bottom:0}
+.plx-fgroup__label{
+  font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--plx-ink-2);margin-bottom:10px
+}
+.plx-pills{display:flex;flex-wrap:wrap;gap:6px}
+.plx-pill{position:relative;cursor:pointer}
+.plx-pill input{position:absolute;opacity:0;pointer-events:none}
+.plx-pill__lbl{
+  display:inline-flex;align-items:center;padding:7px 12px;border-radius:999px;
+  background:#F4F6FA;border:1px solid transparent;color:var(--plx-ink-2);
+  font-size:.78rem;font-weight:600;line-height:1;transition:all .15s
+}
+.plx-pill:hover .plx-pill__lbl{background:#EAEEF5;color:var(--plx-ink)}
+.plx-pill input:checked + .plx-pill__lbl{
+  background:rgba(245,158,11,.12);
+  border-color:rgba(245,158,11,.45);
+  color:#9A6300
+}
+.plx-apply{
+  width:calc(100% - 28px);margin:14px;padding:11px 14px;border-radius:11px;border:0;cursor:pointer;
+  background:var(--plx-ink);color:#fff;font-weight:700;font-size:.85rem;
+  transition:background .15s
+}
+.plx-apply:hover{background:#1E293B}
+
+/* ─── Toolbar above grid ──────────────────────────────────────── */
+.plx-toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  background:var(--plx-surface);border:1px solid var(--plx-border);
+  border-radius:14px;padding:10px 14px;margin-bottom:18px;flex-wrap:wrap;
+  box-shadow:var(--plx-shadow-sm)
+}
+.plx-count{font-size:.88rem;color:var(--plx-ink-2)}
+.plx-count strong{color:var(--plx-ink);font-weight:800;font-size:1rem}
+.plx-tools{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.plx-sort{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#F4F6FA;border:1px solid transparent;border-radius:10px;padding:4px 6px 4px 12px
+}
+.plx-sort label{font-size:.74rem;color:var(--plx-mute);font-weight:600}
+.plx-sort select{
+  border:0;background:transparent;outline:none;font-size:.82rem;
+  font-weight:600;color:var(--plx-ink);padding:5px 6px;cursor:pointer;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat:no-repeat;background-position:right .25rem center;background-size:10px;padding-right:1.1rem
+}
+.plx-view{
+  display:inline-flex;background:#F4F6FA;border-radius:10px;padding:3px;gap:1px
+}
+.plx-view__btn{
+  display:inline-flex;align-items:center;justify-content:center;width:32px;height:30px;
+  border:0;background:transparent;color:var(--plx-mute);border-radius:7px;cursor:pointer;
+  transition:all .15s
+}
+.plx-view__btn:hover{color:var(--plx-ink)}
+.plx-view__btn.active{background:#fff;color:var(--plx-ink);box-shadow:0 1px 3px rgba(15,23,42,.08)}
+.plx-iconbtn{
+  display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:10px;
+  background:#F4F6FA;border:1px solid transparent;color:var(--plx-ink);
+  font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s
+}
+.plx-iconbtn:hover{background:#EAEEF5}
+.plx-iconbtn.active{background:var(--plx-accent-soft);color:#9A6300;border-color:rgba(245,158,11,.4)}
+.plx-iconbtn--ghost{background:transparent;border-color:var(--plx-border)}
+.plx-iconbtn--ghost:hover{border-color:var(--plx-ink);background:#fff}
+.plx-mfilter-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:18px;height:18px;border-radius:999px;background:var(--plx-accent);
+  color:#fff;font-size:.66rem;font-weight:800;padding:0 5px
+}
+.plx-mfilter{display:none}
+@@media(max-width:1100px){.plx-mfilter{display:inline-flex}}
+
+/* ─── Chips ───────────────────────────────────────────────────── */
+.plx-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.plx-chip{
+  display:inline-flex;align-items:center;gap:7px;padding:5px 10px 5px 12px;
+  border-radius:999px;background:#fff;border:1px solid var(--plx-border);
+  font-size:.78rem;color:var(--plx-ink);font-weight:600
+}
+.plx-chip__x{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:999px;background:#F1F5F9;
+  color:var(--plx-ink-2);font-size:.78rem;text-decoration:none;transition:all .15s
+}
+.plx-chip__x:hover{background:#FEE2E2;color:#DC2626}
+
+/* ─── Grid ─────────────────────────────────────────────────────── */
+.plx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.plx-grid.plx-grid--list{grid-template-columns:1fr}
+.plx-grid.plx-grid--list .pcard{display:grid;grid-template-columns:300px 1fr}
+@@media(max-width:700px){
+  .plx-grid.plx-grid--list .pcard{grid-template-columns:1fr}
+  .plx-grid{grid-template-columns:1fr}
+}
+
+/* ─── Map panel ───────────────────────────────────────────────── */
+.plx-map{
+  height:480px;width:100%;border-radius:14px;overflow:hidden;
+  border:1px solid var(--plx-border);margin-bottom:18px;box-shadow:var(--plx-shadow-sm)
+}
+
+/* ─── Empty state ─────────────────────────────────────────────── */
+.plx-empty{
+  background:var(--plx-surface);border:1px solid var(--plx-border);border-radius:18px;
+  padding:64px 24px;text-align:center;color:var(--plx-ink-2);box-shadow:var(--plx-shadow-sm)
+}
+.plx-empty svg{color:var(--plx-mute);margin-bottom:14px}
+.plx-empty h3{font-size:1.15rem;color:var(--plx-ink);margin:0 0 8px}
+.plx-empty p{font-size:.9rem;margin:0 0 18px;line-height:1.6}
+.plx-empty .plx-cmd__btn{display:inline-flex;padding:10px 22px}
+
+/* ─── Recently viewed ─────────────────────────────────────────── */
+.plx-recent{margin-top:48px;padding-top:32px;border-top:1px solid var(--plx-border)}
+.plx-recent__head{font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--plx-mute);margin-bottom:14px}
+
+/* ─── Mobile sidebar drawer ───────────────────────────────────── */
+@@media(max-width:1100px){
+  .plx-side{
+    position:fixed;top:0;left:-340px;bottom:0;width:320px;max-height:100vh;
+    border-radius:0 18px 18px 0;z-index:1100;transition:left .25s ease;
+    box-shadow:var(--plx-shadow-lg)
+  }
+  .plx-side.is-open{left:0}
+  .plx-side__scrim{
+    position:fixed;inset:0;background:rgba(8,15,35,.55);
+    z-index:1099;opacity:0;pointer-events:none;transition:opacity .25s ease
+  }
+  .plx-side.is-open + .plx-side__scrim{opacity:1;pointer-events:auto}
+}
+
+/* ─── Responsive command bar ───────────────────────────────────── */
+@@media(max-width:980px){
+  .plx-cmd{flex-wrap:wrap;padding:8px;gap:4px}
+  .plx-cmd__field{flex:1 1 calc(50% - 4px);min-width:0;padding:10px 12px}
+  .plx-cmd__field--key{flex-basis:100%}
+  .plx-cmd__sep{display:none}
+  .plx-cmd__more, .plx-cmd__btn{flex:1 1 calc(50% - 4px);padding:12px 16px;min-width:0}
+}
+@@media(max-width:560px){
+  .plx-cmd__field{flex-basis:100%}
+  .plx-cmd__more, .plx-cmd__btn{flex-basis:100%}
+  .plx-hero{padding:48px 0 100px}
+  .plx-segs{display:flex;width:100%;overflow-x:auto;flex-wrap:nowrap}
+  .plx-seg{flex:1 1 auto;justify-content:center;padding:9px 12px;font-size:.8rem}
+}
+</style>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="plx-hero">
+  <div class="container-fluid px-3 px-xl-5 plx-hero__inner">
+    <nav class="plx-crumb" aria-label="Breadcrumb">
+      <a asp-page="/Index">Home</a>
+      <span class="plx-crumb__sep">/</span>
+      <span>Properties</span>
+    </nav>
+    <div class="plx-tagrow">
+      <span class="plx-pill-tag"><span class="plx-pill-tag__dot"></span>UAE Real Estate</span>
+    </div>
+    <h1>
       @if (hasFilters)
       {
-        <a asp-page="/Properties/Index" class="pl-searchbar__clear" title="Clear all filters">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </a>
+        <span>@Model.TotalCount result@(Model.TotalCount != 1 ? "s" : "")</span><em> found</em>
       }
+      else
+      {
+        @Html.Raw(Cms[ContentBlockSlugs.PropertiesHeader, "Browse <em>Properties</em>"])
+      }
+    </h1>
+    <p class="plx-hero__sub">Apartments, villas, off-plan launches and commercial space across every emirate — filter by location, budget and size to find your match in seconds.</p>
+
+    <!-- Offer segmented tabs -->
+    <div class="plx-segs" role="tablist">
+      <a class="plx-seg @(currentOffer == "" ? "is-active" : "")" asp-page="/Properties/Index" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">
+        <span class="plx-seg__dot"></span>@Cms[ContentBlockSlugs.PropertiesTabAll, "All"]
+      </a>
+      <a class="plx-seg @(currentOffer == "sale" ? "is-active" : "")" asp-page="/Properties/Index" asp-route-offer="sale" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">
+        <span class="plx-seg__dot"></span>@Cms[ContentBlockSlugs.PropertiesTabBuy, "Buy"]
+      </a>
+      <a class="plx-seg @(currentOffer == "rent" ? "is-active" : "")" asp-page="/Properties/Index" asp-route-offer="rent" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" asp-route-sort="@currentSort">
+        <span class="plx-seg__dot"></span>@Cms[ContentBlockSlugs.PropertiesTabRent, "Rent"]
+      </a>
+      <a class="plx-seg" asp-page="/Properties/OffPlan">
+        <span class="plx-seg__dot"></span>Off-Plan
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FLOATING COMMAND BAR ═══════════════════ -->
+<div class="plx-cmd-wrap">
+  <div class="container-fluid px-3 px-xl-5">
+    <form method="get" id="propSearchForm" class="plx-cmd" autocomplete="off">
+      <input type="hidden" name="offer" value="@currentOffer" id="sfOfferHidden" />
+
+      <!-- Keyword / area search -->
+      <label class="plx-cmd__field plx-cmd__field--key">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span style="flex:1;min-width:0">
+          <span class="plx-cmd__label">Search</span>
+          <input type="text" name="area" value="@Model.SearchArea" placeholder="Community, tower or area…" autocomplete="off" data-autocomplete="uae" data-ac-emirate-target="sfLocation" class="plx-cmd__input" />
+        </span>
+      </label>
+      <div class="plx-cmd__sep"></div>
+
+      <!-- Emirate -->
+      <label class="plx-cmd__field">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span style="flex:1;min-width:0">
+          <span class="plx-cmd__label">Emirate</span>
+          <select name="location" id="sfLocation" class="plx-cmd__select">
+            <option value="">Any emirate</option>
+            <option value="Abu Dhabi" selected="@(Model.SearchLocation == "Abu Dhabi")">Abu Dhabi</option>
+            <option value="Dubai" selected="@(Model.SearchLocation == "Dubai")">Dubai</option>
+            <option value="Sharjah" selected="@(Model.SearchLocation == "Sharjah")">Sharjah</option>
+            <option value="Ajman" selected="@(Model.SearchLocation == "Ajman")">Ajman</option>
+            <option value="Ras Al Khaimah" selected="@(Model.SearchLocation == "Ras Al Khaimah")">Ras Al Khaimah</option>
+            <option value="Fujairah" selected="@(Model.SearchLocation == "Fujairah")">Fujairah</option>
+            <option value="Umm Al Quwain" selected="@(Model.SearchLocation == "Umm Al Quwain")">Umm Al Quwain</option>
+          </select>
+        </span>
+      </label>
+      <div class="plx-cmd__sep"></div>
+
+      <!-- Property type (cascades from category) -->
+      <label class="plx-cmd__field">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+        <span style="flex:1;min-width:0">
+          <span class="plx-cmd__label">Property type</span>
+          <select name="type" id="sfType" class="plx-cmd__select"
+                  data-details-residential='["Apartment","Villa Apartment","Villa Compound","Villa","Building","Land"]'
+                  data-details-commercial='["Shell &amp; Core Offices","Furnished Offices","Warehouse / Stores","Showroom","Shop","Villa","Labor Camp","Building","Land"]'>
+            <option value="">All types</option>
+            <optgroup label="Residential">
+              <option value="Apartment" selected="@(Model.SearchType == "Apartment")">Apartment</option>
+              <option value="Villa Apartment" selected="@(Model.SearchType == "Villa Apartment")">Villa Apartment</option>
+              <option value="Villa Compound" selected="@(Model.SearchType == "Villa Compound")">Villa Compound</option>
+              <option value="Villa" selected="@(Model.SearchType == "Villa")">Villa</option>
+              <option value="Building" selected="@(Model.SearchType == "Building")">Building</option>
+              <option value="Land" selected="@(Model.SearchType == "Land")">Land</option>
+            </optgroup>
+            <optgroup label="Commercial">
+              <option value="Shell &amp; Core Offices" selected="@(Model.SearchType == "Shell & Core Offices")">Shell &amp; Core Offices</option>
+              <option value="Furnished Offices" selected="@(Model.SearchType == "Furnished Offices")">Furnished Offices</option>
+              <option value="Warehouse / Stores" selected="@(Model.SearchType == "Warehouse / Stores")">Warehouse / Stores</option>
+              <option value="Showroom" selected="@(Model.SearchType == "Showroom")">Showroom</option>
+              <option value="Shop" selected="@(Model.SearchType == "Shop")">Shop</option>
+              <option value="Labor Camp" selected="@(Model.SearchType == "Labor Camp")">Labor Camp</option>
+            </optgroup>
+          </select>
+        </span>
+      </label>
+      <div class="plx-cmd__sep"></div>
+
+      <!-- Budget -->
+      <label class="plx-cmd__field">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        <span style="flex:1;min-width:0">
+          <span class="plx-cmd__label">Budget</span>
+          <select name="budget" id="sfBudget" class="plx-cmd__select">
+            <option value="">Any price</option>
+            <option value="u500" selected="@(Model.SearchBudget == "u500")">Under 500K</option>
+            <option value="500-1m" selected="@(Model.SearchBudget == "500-1m")">500K – 1M</option>
+            <option value="1m-5m" selected="@(Model.SearchBudget == "1m-5m")">1M – 5M</option>
+            <option value="5m+" selected="@(Model.SearchBudget == "5m+")">5M+</option>
+          </select>
+        </span>
+      </label>
+
+      <!-- Hidden category (controlled via sidebar pills + sfType cascade) -->
+      <input type="hidden" name="category" id="sfCategory" value="@Model.SearchCategory" />
+      <input type="hidden" name="size" value="@Model.SearchSize" />
+      <input type="hidden" name="sort" value="@currentSort" />
+      <input type="hidden" name="q" value="@Model.SearchKeyword" />
+
+      <button type="button" class="plx-cmd__more" id="btnMoreFilters">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Filters
+      </button>
+      <button type="submit" class="plx-cmd__btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        @Cms[ContentBlockSlugs.HomeSearchButton, "Search"]
+      </button>
     </form>
   </div>
 </div>
 
-<!-- ── Body: sidebar + grid ── -->
-<div class="pl-body">
+<!-- ═══════════════════ BODY: SIDEBAR + GRID ═══════════════════ -->
+<div class="plx-body">
   <div class="container-fluid px-3 px-xl-5">
-    <div class="pl-layout">
+    <div class="plx-layout">
 
-      <!-- ── Sidebar filters ── -->
-      <aside class="pl-sidebar" id="plSidebar">
-        <div class="pl-sidebar__inner">
-          <div class="pl-sidebar__head">
-            <span class="pl-sidebar__title">Filters</span>
-            @if (hasFilters)
-            {
-              <a asp-page="/Properties/Index" class="pl-sidebar__reset">Reset all</a>
-            }
-          </div>
-
-            <form method="get" id="sidebarFilterForm">
-            <input type="hidden" name="offer" value="@currentOffer" />
-            <input type="hidden" name="q" value="@Model.SearchKeyword" />
-            <input type="hidden" name="area" value="@Model.SearchArea" />
-
-            <!-- Category -->
-            <div class="pl-filter-group">
-              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.HomeSearchPropertyType, "Property Type"]</div>
-              <div class="pl-filter-checkboxes">
-                <label class="pl-filter-check @(Model.SearchCategory == "Residential" ? "is-checked" : "")">
-                  <input type="radio" name="category" value="Residential" @(Model.SearchCategory == "Residential" ? "checked" : "") />
-                  @Cms[ContentBlockSlugs.HomeSearchOptionResidential, "Residential"]
-                </label>
-                <label class="pl-filter-check @(Model.SearchCategory == "Commercial" ? "is-checked" : "")">
-                  <input type="radio" name="category" value="Commercial" @(Model.SearchCategory == "Commercial" ? "checked" : "") />
-                  @Cms[ContentBlockSlugs.HomeSearchOptionCommercial, "Commercial"]
-                </label>
-                <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchCategory) ? "is-checked" : "")">
-                  <input type="radio" name="category" value="" @(string.IsNullOrWhiteSpace(Model.SearchCategory) ? "checked" : "") />
-                  @Cms[ContentBlockSlugs.PropertiesFilterAllCategories, "All categories"]
-                </label>
-              </div>
-            </div>
-
-            <!-- Emirate -->
-            <div class="pl-filter-group">
-              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.HomeSearchEmirate, "Emirate"]</div>
-              <div class="pl-filter-checkboxes">
-                @{
-                  var emirates = new[] { "Abu Dhabi", "Dubai", "Sharjah", "Ajman", "Ras Al Khaimah" };
-                }
-                @foreach (var em in emirates)
-                {
-                  <label class="pl-filter-check @(Model.SearchLocation == em ? "is-checked" : "")">
-                    <input type="radio" name="location" value="@em" @(Model.SearchLocation == em ? "checked" : "") />
-                    @em
-                  </label>
-                }
-                <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchLocation) ? "is-checked" : "")">
-                  <input type="radio" name="location" value="" @(string.IsNullOrWhiteSpace(Model.SearchLocation) ? "checked" : "") />
-                  @Cms[ContentBlockSlugs.PropertiesFilterAnyEmirate, "Any emirate"]
-                </label>
-              </div>
-            </div>
-
-            <!-- Property details -->
-            <div class="pl-filter-group">
-              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.HomeSearchPropertyDetails, "Property Details"]</div>
-              <div class="pl-filter-checkboxes">
-                @{
-                  var residentialTypes = new[] { "Apartment", "Villa Apartment", "Villa Compound", "Villa", "Building", "Land" };
-                  var commercialTypes  = new[] { "Shell & Core Offices", "Furnished Offices", "Warehouse / Stores", "Showroom", "Shop", "Labor Camp", "Building", "Land" };
-                  var allTypes = string.IsNullOrWhiteSpace(Model.SearchCategory)
-                      ? residentialTypes.Union(commercialTypes).Distinct().ToArray()
-                      : Model.SearchCategory == "Commercial" ? commercialTypes : residentialTypes;
-                }
-                @foreach (var t in allTypes)
-                {
-                  <label class="pl-filter-check @(Model.SearchType == t ? "is-checked" : "")">
-                    <input type="radio" name="type" value="@t" @(Model.SearchType == t ? "checked" : "") />
-                    @t
-                  </label>
-                }
-                <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchType) ? "is-checked" : "")">
-                  <input type="radio" name="type" value="" @(string.IsNullOrWhiteSpace(Model.SearchType) ? "checked" : "") />
-                  @Cms[ContentBlockSlugs.PropertiesFilterAllTypes, "All types"]
-                </label>
-              </div>
-            </div>
-
-            <!-- Size -->
-            <div class="pl-filter-group">
-              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.PropertiesFilterSize, "Size (sqft)"]</div>
-              <div class="pl-filter-checkboxes">
-                <label class="pl-filter-check @(Model.SearchSize == "u500" ? "is-checked" : "")">
-                  <input type="radio" name="size" value="u500" @(Model.SearchSize == "u500" ? "checked" : "") />
-                  Under 500
-                </label>
-                <label class="pl-filter-check @(Model.SearchSize == "500-1000" ? "is-checked" : "")">
-                  <input type="radio" name="size" value="500-1000" @(Model.SearchSize == "500-1000" ? "checked" : "") />
-                  500 – 1,000
-                </label>
-                <label class="pl-filter-check @(Model.SearchSize == "1000-2000" ? "is-checked" : "")">
-                  <input type="radio" name="size" value="1000-2000" @(Model.SearchSize == "1000-2000" ? "checked" : "") />
-                  1,000 – 2,000
-                </label>
-                <label class="pl-filter-check @(Model.SearchSize == "2000-5000" ? "is-checked" : "")">
-                  <input type="radio" name="size" value="2000-5000" @(Model.SearchSize == "2000-5000" ? "checked" : "") />
-                  2,000 – 5,000
-                </label>
-                <label class="pl-filter-check @(Model.SearchSize == "5000+" ? "is-checked" : "")">
-                  <input type="radio" name="size" value="5000+" @(Model.SearchSize == "5000+" ? "checked" : "") />
-                  5,000+
-                </label>
-                <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchSize) ? "is-checked" : "")">
-                  <input type="radio" name="size" value="" @(string.IsNullOrWhiteSpace(Model.SearchSize) ? "checked" : "") />
-                  @Cms[ContentBlockSlugs.PropertiesFilterAnySize, "Any size"]
-                </label>
-              </div>
-            </div>
-
-            <!-- Price -->
-            <div class="pl-filter-group">
-              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.PropertiesFilterPrice, "Price (AED)"]</div>
-              <div class="pl-filter-checkboxes">
-                <label class="pl-filter-check @(Model.SearchBudget == "u500" ? "is-checked" : "")">
-                  <input type="radio" name="budget" value="u500" @(Model.SearchBudget == "u500" ? "checked" : "") />
-                  Under 500K
-                </label>
-                <label class="pl-filter-check @(Model.SearchBudget == "500-1m" ? "is-checked" : "")">
-                  <input type="radio" name="budget" value="500-1m" @(Model.SearchBudget == "500-1m" ? "checked" : "") />
-                  500K – 1M
-                </label>
-                <label class="pl-filter-check @(Model.SearchBudget == "1m-5m" ? "is-checked" : "")">
-                  <input type="radio" name="budget" value="1m-5m" @(Model.SearchBudget == "1m-5m" ? "checked" : "") />
-                  1M – 5M
-                </label>
-                <label class="pl-filter-check @(Model.SearchBudget == "5m+" ? "is-checked" : "")">
-                  <input type="radio" name="budget" value="5m+" @(Model.SearchBudget == "5m+" ? "checked" : "") />
-                  5M+
-                </label>
-                <label class="pl-filter-check @(string.IsNullOrWhiteSpace(Model.SearchBudget) ? "is-checked" : "")">
-                  <input type="radio" name="budget" value="" @(string.IsNullOrWhiteSpace(Model.SearchBudget) ? "checked" : "") />
-                  @Cms[ContentBlockSlugs.PropertiesFilterAnyPrice, "Any price"]
-                </label>
-              </div>
-            </div>
-
-            <!-- Features (Verified) -->
-            <div class="pl-filter-group">
-              <div class="pl-filter-group__label">@Cms[ContentBlockSlugs.PropertiesFilterFeatures, "Features"]</div>
-              <div class="pl-filter-checkboxes">
-                <label class="pl-filter-check @(currentSort == "verified" ? "is-checked" : "")">
-                  <input type="radio" name="sort" value="verified" @(currentSort == "verified" ? "checked" : "") />
-                  @Cms[ContentBlockSlugs.PropertiesFilterVerifiedOnly, "Verified only"]
-                </label>
-                <label class="pl-filter-check @(currentSort == "reduced" ? "is-checked" : "")">
-                  <input type="radio" name="sort" value="reduced" @(currentSort == "reduced" ? "checked" : "") />
-                  @Cms[ContentBlockSlugs.PropertiesFilterPriceReduced, "Price reduced"]
-                </label>
-              </div>
-            </div>
-
-            <button type="submit" class="pl-filter-apply">@Cms[ContentBlockSlugs.PropertiesFilterApply, "Apply Filters"]</button>
-          </form>
+      <!-- ── Sidebar / advanced filters ── -->
+      <aside class="plx-side" id="plSidebar">
+        <div class="plx-side__head">
+          <span class="plx-side__title">Filters</span>
+          @if (hasFilters)
+          {
+            <a asp-page="/Properties/Index" class="plx-side__reset">Reset all</a>
+          }
         </div>
-      </aside>
 
-      <!-- ── Grid content ── -->
-      <main class="pl-main">
+        <form method="get" id="sidebarFilterForm">
+          <input type="hidden" name="offer" value="@currentOffer" />
+          <input type="hidden" name="q" value="@Model.SearchKeyword" />
+          <input type="hidden" name="area" value="@Model.SearchArea" />
 
-        <!-- Sort bar -->
-        <div class="pl-sortbar">
-          <div class="pl-sortbar__count">
-            @if (hasFilters)
-            {
-              <strong>@Model.TotalCount</strong> @(Model.TotalCount != 1 ? Cms[ContentBlockSlugs.PropertiesCountPlural, "properties"] : Cms[ContentBlockSlugs.PropertiesCountSingular, "property"]) 
-            }
-            else
-            {
-              <strong>@Model.TotalCount</strong> @(Model.TotalCount != 1 ? Cms[ContentBlockSlugs.PropertiesCountPlural, "properties"] : Cms[ContentBlockSlugs.PropertiesCountSingular, "property"])
-            }
+          <!-- Category -->
+          <div class="plx-fgroup">
+            <div class="plx-fgroup__label">@Cms[ContentBlockSlugs.HomeSearchPropertyType, "Property Type"]</div>
+            <div class="plx-pills">
+              <label class="plx-pill">
+                <input type="radio" name="category" value="" @(string.IsNullOrWhiteSpace(Model.SearchCategory) ? "checked" : "") />
+                <span class="plx-pill__lbl">@Cms[ContentBlockSlugs.PropertiesFilterAllCategories, "All"]</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="category" value="Residential" @(Model.SearchCategory == "Residential" ? "checked" : "") />
+                <span class="plx-pill__lbl">@Cms[ContentBlockSlugs.HomeSearchOptionResidential, "Residential"]</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="category" value="Commercial" @(Model.SearchCategory == "Commercial" ? "checked" : "") />
+                <span class="plx-pill__lbl">@Cms[ContentBlockSlugs.HomeSearchOptionCommercial, "Commercial"]</span>
+              </label>
+            </div>
           </div>
-          <div class="pl-sortbar__right">
+
+          <!-- Emirate -->
+          <div class="plx-fgroup">
+            <div class="plx-fgroup__label">@Cms[ContentBlockSlugs.HomeSearchEmirate, "Emirate"]</div>
+            <div class="plx-pills">
+              <label class="plx-pill">
+                <input type="radio" name="location" value="" @(string.IsNullOrWhiteSpace(Model.SearchLocation) ? "checked" : "") />
+                <span class="plx-pill__lbl">@Cms[ContentBlockSlugs.PropertiesFilterAnyEmirate, "Any"]</span>
+              </label>
+              @{
+                var emirates = new[] { "Abu Dhabi", "Dubai", "Sharjah", "Ajman", "Ras Al Khaimah", "Fujairah", "Umm Al Quwain" };
+              }
+              @foreach (var em in emirates)
+              {
+                <label class="plx-pill">
+                  <input type="radio" name="location" value="@em" @(Model.SearchLocation == em ? "checked" : "") />
+                  <span class="plx-pill__lbl">@em</span>
+                </label>
+              }
+            </div>
+          </div>
+
+          <!-- Property details -->
+          <div class="plx-fgroup">
+            <div class="plx-fgroup__label">@Cms[ContentBlockSlugs.HomeSearchPropertyDetails, "Property Details"]</div>
+            <div class="plx-pills">
+              @{
+                var residentialTypes = new[] { "Apartment", "Villa Apartment", "Villa Compound", "Villa", "Building", "Land" };
+                var commercialTypes  = new[] { "Shell & Core Offices", "Furnished Offices", "Warehouse / Stores", "Showroom", "Shop", "Labor Camp", "Building", "Land" };
+                var allTypes = string.IsNullOrWhiteSpace(Model.SearchCategory)
+                    ? residentialTypes.Union(commercialTypes).Distinct().ToArray()
+                    : Model.SearchCategory == "Commercial" ? commercialTypes : residentialTypes;
+              }
+              <label class="plx-pill">
+                <input type="radio" name="type" value="" @(string.IsNullOrWhiteSpace(Model.SearchType) ? "checked" : "") />
+                <span class="plx-pill__lbl">@Cms[ContentBlockSlugs.PropertiesFilterAllTypes, "All"]</span>
+              </label>
+              @foreach (var t in allTypes)
+              {
+                <label class="plx-pill">
+                  <input type="radio" name="type" value="@t" @(Model.SearchType == t ? "checked" : "") />
+                  <span class="plx-pill__lbl">@t</span>
+                </label>
+              }
+            </div>
+          </div>
+
+          <!-- Size -->
+          <div class="plx-fgroup">
+            <div class="plx-fgroup__label">@Cms[ContentBlockSlugs.PropertiesFilterSize, "Size (sqft)"]</div>
+            <div class="plx-pills">
+              <label class="plx-pill">
+                <input type="radio" name="size" value="" @(string.IsNullOrWhiteSpace(Model.SearchSize) ? "checked" : "") />
+                <span class="plx-pill__lbl">Any</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="size" value="u500" @(Model.SearchSize == "u500" ? "checked" : "") />
+                <span class="plx-pill__lbl">&lt; 500</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="size" value="500-1000" @(Model.SearchSize == "500-1000" ? "checked" : "") />
+                <span class="plx-pill__lbl">500 – 1K</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="size" value="1000-2000" @(Model.SearchSize == "1000-2000" ? "checked" : "") />
+                <span class="plx-pill__lbl">1K – 2K</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="size" value="2000-5000" @(Model.SearchSize == "2000-5000" ? "checked" : "") />
+                <span class="plx-pill__lbl">2K – 5K</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="size" value="5000+" @(Model.SearchSize == "5000+" ? "checked" : "") />
+                <span class="plx-pill__lbl">5K+</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Price -->
+          <div class="plx-fgroup">
+            <div class="plx-fgroup__label">@Cms[ContentBlockSlugs.PropertiesFilterPrice, "Price (AED)"]</div>
+            <div class="plx-pills">
+              <label class="plx-pill">
+                <input type="radio" name="budget" value="" @(string.IsNullOrWhiteSpace(Model.SearchBudget) ? "checked" : "") />
+                <span class="plx-pill__lbl">Any</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="budget" value="u500" @(Model.SearchBudget == "u500" ? "checked" : "") />
+                <span class="plx-pill__lbl">&lt; 500K</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="budget" value="500-1m" @(Model.SearchBudget == "500-1m" ? "checked" : "") />
+                <span class="plx-pill__lbl">500K – 1M</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="budget" value="1m-5m" @(Model.SearchBudget == "1m-5m" ? "checked" : "") />
+                <span class="plx-pill__lbl">1M – 5M</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="budget" value="5m+" @(Model.SearchBudget == "5m+" ? "checked" : "") />
+                <span class="plx-pill__lbl">5M+</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Features -->
+          <div class="plx-fgroup">
+            <div class="plx-fgroup__label">@Cms[ContentBlockSlugs.PropertiesFilterFeatures, "Features"]</div>
+            <div class="plx-pills">
+              <label class="plx-pill">
+                <input type="radio" name="sort" value="newest" @(currentSort == "newest" ? "checked" : "") />
+                <span class="plx-pill__lbl">Newest</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="sort" value="verified" @(currentSort == "verified" ? "checked" : "") />
+                <span class="plx-pill__lbl">✓ Verified</span>
+              </label>
+              <label class="plx-pill">
+                <input type="radio" name="sort" value="reduced" @(currentSort == "reduced" ? "checked" : "") />
+                <span class="plx-pill__lbl">↓ Reduced</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="plx-apply">@Cms[ContentBlockSlugs.PropertiesFilterApply, "Apply Filters"]</button>
+        </form>
+      </aside>
+      <div class="plx-side__scrim" id="plSidebarScrim"></div>
+
+      <!-- ── Grid main ── -->
+      <main>
+        <!-- Toolbar -->
+        <div class="plx-toolbar">
+          <div class="plx-count">
+            <strong>@Model.TotalCount</strong> @(Model.TotalCount != 1 ? Cms[ContentBlockSlugs.PropertiesCountPlural, "properties"] : Cms[ContentBlockSlugs.PropertiesCountSingular, "property"])
+            @if (hasFilters) { <span style="color:var(--plx-mute)">· filtered</span> }
+          </div>
+          <div class="plx-tools">
             <!-- Save search -->
             @if (hasFilters)
             {
@@ -323,46 +653,46 @@
                 {
                   <input type="hidden" name="@kv.Key" value="@kv.Value" />
                 }
-                <button type="submit" class="pl-sortbar__save">
-                  @{ /* Icon below */ }<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-                  @Cms[ContentBlockSlugs.PropertiesSaveSearch, "Save search"]
+                <button type="submit" class="plx-iconbtn plx-iconbtn--ghost" title="Save this search">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                  @Cms[ContentBlockSlugs.PropertiesSaveSearch, "Save"]
                 </button>
               </form>
             }
             <!-- Sort -->
-            <div class="pl-sortbar__sort-wrap">
-              <label class="pl-sortbar__sort-label">@Cms[ContentBlockSlugs.PropertiesSortLabel, "Sort:"]</label>
-              <select id="sfSort" name="sort" class="pl-sortbar__sort-select" onchange="document.getElementById('propSearchForm').submit()">
-                <option value="newest" selected="@(currentSort == "newest")">@Cms[ContentBlockSlugs.PropertiesSortNewest, "Newest first"]</option>
-                <option value="price-asc" selected="@(currentSort == "price-asc")">@Cms[ContentBlockSlugs.PropertiesSortPriceAsc, "Price: Low → High"]</option>
-                <option value="price-desc" selected="@(currentSort == "price-desc")">@Cms[ContentBlockSlugs.PropertiesSortPriceDesc, "Price: High → Low"]</option>
+            <div class="plx-sort">
+              <label>@Cms[ContentBlockSlugs.PropertiesSortLabel, "Sort:"]</label>
+              <select id="sfSort" name="sort" onchange="document.getElementById('propSearchForm').querySelector('input[name=sort]').value=this.value; document.getElementById('propSearchForm').submit()">
+                <option value="newest" selected="@(currentSort == "newest")">@Cms[ContentBlockSlugs.PropertiesSortNewest, "Newest"]</option>
+                <option value="price-asc" selected="@(currentSort == "price-asc")">@Cms[ContentBlockSlugs.PropertiesSortPriceAsc, "Price ↑"]</option>
+                <option value="price-desc" selected="@(currentSort == "price-desc")">@Cms[ContentBlockSlugs.PropertiesSortPriceDesc, "Price ↓"]</option>
                 <option value="views" selected="@(currentSort == "views")">@Cms[ContentBlockSlugs.PropertiesSortMostViewed, "Most viewed"]</option>
                 <option value="verified" selected="@(currentSort == "verified")">@Cms[ContentBlockSlugs.PropertiesSortVerifiedFirst, "Verified first"]</option>
                 <option value="reduced" selected="@(currentSort == "reduced")">@Cms[ContentBlockSlugs.PropertiesFilterPriceReduced, "Price reduced"]</option>
               </select>
             </div>
             <!-- View toggle -->
-            <div class="pl-view-toggle" id="viewToggle">
-              <button class="pl-view-btn active" id="btnGrid" title="@Cms[ContentBlockSlugs.PropertiesViewGrid, "Grid view"]">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            <div class="plx-view" id="viewToggle">
+              <button class="plx-view__btn active" id="btnGrid" title="@Cms[ContentBlockSlugs.PropertiesViewGrid, "Grid view"]">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
               </button>
-              <button class="pl-view-btn" id="btnList" title="@Cms[ContentBlockSlugs.PropertiesViewList, "List view"]">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              <button class="plx-view__btn" id="btnList" title="@Cms[ContentBlockSlugs.PropertiesViewList, "List view"]">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
               </button>
             </div>
             <!-- Map toggle -->
             @if (mapsEnabled)
             {
-              <button class="pl-map-toggle" id="btnMapToggle">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-                @Cms[ContentBlockSlugs.PropertiesMapView, "Map view"]
+              <button class="plx-iconbtn" id="btnMapToggle">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                @Cms[ContentBlockSlugs.PropertiesMapView, "Map"]
               </button>
             }
             <!-- Mobile filter toggle -->
-            <button class="pl-mobile-filter-btn" id="btnMobileFilter">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            <button class="plx-iconbtn plx-mfilter" id="btnMobileFilter">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
               @Cms[ContentBlockSlugs.PropertiesFiltersLabel, "Filters"]
-              @if (hasFilters) { <span class="pl-mobile-filter-badge">!</span> }
+              @if (hasFilters) { <span class="plx-mfilter-badge">!</span> }
             </button>
           </div>
         </div>
@@ -370,7 +700,7 @@
         <!-- Map panel (hidden by default) -->
         @if (mapsEnabled)
         {
-          <div id="plMapPanel" class="pl-map-panel" style="display:none">
+          <div id="plMapPanel" class="plx-map" style="display:none">
             <div id="propMap" style="width:100%;height:100%"></div>
           </div>
         }
@@ -378,54 +708,54 @@
         <!-- Active filter chips -->
         @if (hasFilters)
         {
-          <div class="pl-chips">
+          <div class="plx-chips">
             @if (!string.IsNullOrWhiteSpace(Model.SearchKeyword))
             {
-              <span class="pl-chip">
+              <span class="plx-chip">
                 "@Model.SearchKeyword"
-                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="plx-chip__x" aria-label="Remove">×</a>
               </span>
             }
             @if (!string.IsNullOrWhiteSpace(Model.SearchLocation))
             {
-              <span class="pl-chip">
+              <span class="plx-chip">
                 @Model.SearchLocation
-                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-area="@Model.SearchArea" asp-route-category="@Model.SearchCategory" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-area="@Model.SearchArea" asp-route-category="@Model.SearchCategory" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="plx-chip__x" aria-label="Remove">×</a>
               </span>
             }
             @if (!string.IsNullOrWhiteSpace(Model.SearchCategory))
             {
-              <span class="pl-chip">
+              <span class="plx-chip">
                 @Model.SearchCategory
-                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="plx-chip__x" aria-label="Remove">×</a>
               </span>
             }
             @if (!string.IsNullOrWhiteSpace(Model.SearchArea))
             {
-              <span class="pl-chip">
-                Area: @Model.SearchArea
-                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-category="@Model.SearchCategory" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+              <span class="plx-chip">
+                @Model.SearchArea
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-category="@Model.SearchCategory" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="plx-chip__x" aria-label="Remove">×</a>
               </span>
             }
             @if (!string.IsNullOrWhiteSpace(Model.SearchType))
             {
-              <span class="pl-chip">
+              <span class="plx-chip">
                 @Model.SearchType
-                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-category="@Model.SearchCategory" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-category="@Model.SearchCategory" asp-route-size="@Model.SearchSize" asp-route-budget="@Model.SearchBudget" class="plx-chip__x" aria-label="Remove">×</a>
               </span>
             }
             @if (!string.IsNullOrWhiteSpace(Model.SearchSize))
             {
-              <span class="pl-chip">
+              <span class="plx-chip">
                 @(Model.SearchSize switch { "u500"=>"< 500 sqft","500-1000"=>"500–1,000 sqft","1000-2000"=>"1,000–2,000 sqft","2000-5000"=>"2,000–5,000 sqft","5000+"=>"5,000+ sqft",_=>Model.SearchSize })
-                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-budget="@Model.SearchBudget" class="pl-chip__x">×</a>
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-budget="@Model.SearchBudget" class="plx-chip__x" aria-label="Remove">×</a>
               </span>
             }
             @if (!string.IsNullOrWhiteSpace(Model.SearchBudget))
             {
-              <span class="pl-chip">
+              <span class="plx-chip">
                 @(Model.SearchBudget switch { "u500"=>"Under 500K","500-1m"=>"500K–1M","1m-5m"=>"1M–5M","5m+"=>"5M+",_=>Model.SearchBudget })
-                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" class="pl-chip__x">×</a>
+                <a asp-page="/Properties/Index" asp-route-offer="@currentOffer" asp-route-q="@Model.SearchKeyword" asp-route-location="@Model.SearchLocation" asp-route-area="@Model.SearchArea" asp-route-type="@Model.SearchType" asp-route-size="@Model.SearchSize" class="plx-chip__x" aria-label="Remove">×</a>
               </span>
             }
           </div>
@@ -434,16 +764,16 @@
         <!-- Property grid -->
         @if (Model.Listings.Count == 0)
         {
-          <div class="pl-empty">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div class="plx-empty">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <h3>@Cms[ContentBlockSlugs.PropertiesEmptyTitle, "No properties found"]</h3>
             <p>@Html.Raw(Cms[ContentBlockSlugs.PropertiesEmptyBody, "Try adjusting your filters — or <a href=\"/Contact\">contact us</a> and we'll find it for you."])</p>
-            <a asp-page="/Properties/Index" class="ph-btn ph-btn--primary" style="margin-top:20px">@Cms[ContentBlockSlugs.PropertiesClearFilters, "Clear all filters"]</a>
+            <a asp-page="/Properties/Index" class="plx-cmd__btn">@Cms[ContentBlockSlugs.PropertiesClearFilters, "Clear all filters"]</a>
           </div>
         }
         else
         {
-          <div class="pl-grid" id="plGrid">
+          <div class="plx-grid" id="plGrid">
             @foreach (var p in Model.Listings)
             {
               <partial name="Shared/_PropertyCard" model="p" />
@@ -452,39 +782,32 @@
         }
 
         <!-- Recently viewed -->
-        <div id="recentlyViewedSection" style="display:none;margin-top:48px;padding-top:32px;border-top:1px solid #e5e7eb">
-          <p class="ph-tag" style="margin-bottom:16px">@Cms[ContentBlockSlugs.PropertiesRecentTitle, "Your Recent Views"]</p>
-          <div id="recentlyViewedGrid" class="pl-grid"></div>
+        <div id="recentlyViewedSection" class="plx-recent" style="display:none">
+          <div class="plx-recent__head">@Cms[ContentBlockSlugs.PropertiesRecentTitle, "Your Recent Views"]</div>
+          <div id="recentlyViewedGrid" class="plx-grid"></div>
         </div>
 
       </main>
-    </div><!-- .pl-layout -->
+    </div>
   </div>
 </div>
 
 @section Scripts {
 <script>
 (function() {
-  // Sync URL params → selects
+  // Sync URL params → selects on the floating command bar
   var params = new URLSearchParams(window.location.search);
-  ['sfCategory','sfLocation','sfType','sfSize','sfBudget','sfSort'].forEach(function(id) {
+  ['sfCategory','sfLocation','sfType','sfBudget','sfSort'].forEach(function(id) {
     var el = document.getElementById(id);
-    var key = { sfCategory:'category', sfLocation:'location', sfType:'type', sfSize:'size', sfBudget:'budget', sfSort:'sort' }[id];
+    var key = { sfCategory:'category', sfLocation:'location', sfType:'type', sfBudget:'budget', sfSort:'sort' }[id];
     if (el && params.has(key)) el.value = params.get(key);
   });
 
-  // When category changes in searchbar, cascade the type options
+  // Cascade Residential/Commercial → optgroup visibility on the type select
   (function() {
     var cat = document.getElementById('sfCategory');
     var det = document.getElementById('sfType');
     if (!cat || !det) return;
-
-    function readList(key) {
-      var raw = det.getAttribute('data-details-' + key.toLowerCase());
-      if (!raw) return null;
-      try { return JSON.parse(raw.replace(/&amp;/g, '&')); } catch(e) { return null; }
-    }
-
     function filterGroups() {
       var v = cat.value;
       Array.from(det.querySelectorAll('optgroup')).forEach(function(g) {
@@ -496,19 +819,18 @@
         if (selGroup && selGroup.hidden) det.value = '';
       }
     }
-
     cat.addEventListener('change', filterGroups);
     filterGroups();
   })();
 
-  // Grid / List toggle
+  // Grid / List view toggle
   var grid = document.getElementById('plGrid');
   var btnGrid = document.getElementById('btnGrid');
   var btnList = document.getElementById('btnList');
   var savedView = localStorage.getItem('804-prop-view') || 'grid';
   function setView(v) {
     if (!grid) return;
-    grid.classList.toggle('pl-grid--list', v === 'list');
+    grid.classList.toggle('plx-grid--list', v === 'list');
     if (btnGrid) btnGrid.classList.toggle('active', v === 'grid');
     if (btnList) btnList.classList.toggle('active', v === 'list');
     localStorage.setItem('804-prop-view', v);
@@ -528,19 +850,17 @@
     });
   }
 
-  // Mobile sidebar toggle
+  // Mobile sidebar / "More filters" → drawer
   var sidebar = document.getElementById('plSidebar');
+  var scrim = document.getElementById('plSidebarScrim');
   var btnMobile = document.getElementById('btnMobileFilter');
-  if (btnMobile && sidebar) {
-    btnMobile.addEventListener('click', function() {
-      sidebar.classList.toggle('pl-sidebar--open');
-    });
-    document.addEventListener('click', function(e) {
-      if (sidebar && !sidebar.contains(e.target) && e.target !== btnMobile) {
-        sidebar.classList.remove('pl-sidebar--open');
-      }
-    });
-  }
+  var btnMore = document.getElementById('btnMoreFilters');
+  function openDrawer() { if (sidebar) sidebar.classList.add('is-open'); }
+  function closeDrawer() { if (sidebar) sidebar.classList.remove('is-open'); }
+  if (btnMobile) btnMobile.addEventListener('click', function(e){ e.preventDefault(); openDrawer(); });
+  if (btnMore) btnMore.addEventListener('click', function(e){ e.preventDefault(); openDrawer(); });
+  if (scrim) scrim.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeDrawer(); });
 
   // Sidebar radio auto-submit
   document.querySelectorAll('#sidebarFilterForm input[type="radio"]').forEach(function(r) {
@@ -549,7 +869,7 @@
     });
   });
 
-  // Recently viewed
+  // Recently viewed (sessionStorage)
   var viewed = JSON.parse(sessionStorage.getItem('804-viewed') || '[]');
   if (viewed.length) {
     var sec = document.getElementById('recentlyViewedSection');
@@ -559,9 +879,9 @@
       viewed.slice(0, 3).forEach(function(p) {
         var el = document.createElement('a');
         el.href = '/Properties/' + p.slug;
-        el.className = 'prop-card fade-up';
+        el.className = 'pcard fade-up';
         el.style.textDecoration = 'none';
-        el.innerHTML = '<div class="prop-card-img"><img src="' + p.img + '" alt="' + p.title + '" loading="lazy" /></div><div class="prop-card-body"><div class="prop-name">' + p.title + '</div></div>';
+        el.innerHTML = '<div class="pcard__img"><img src="' + p.img + '" alt="' + p.title + '" loading="lazy" /></div><div class="pcard__body"><div class="pcard__title">' + p.title + '</div></div>';
         g.appendChild(el);
       });
     }

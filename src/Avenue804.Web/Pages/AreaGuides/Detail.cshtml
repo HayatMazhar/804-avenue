@@ -3,26 +3,68 @@
 @using Avenue804.Web.Infrastructure
 @{
     var G = Model.Guide!;
-    ViewData["Title"] = G.Name + " Area Guide";
-    ViewData["NavActive"] = "areaguides";
-}
-<section class="page-hero" @(string.IsNullOrWhiteSpace(G.HeroImageUrl) ? "" : $"style=\"background-image:linear-gradient(165deg,rgba(15,23,42,.55),rgba(15,23,42,.75)),url('{G.HeroImageUrl}');background-size:cover;background-position:center\"")>
-  <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/AreaGuides/Index">@Cms[ContentBlockSlugs.FooterLinkAreaGuides, "Area Guides"]</a><span class="sep">/</span><span>@G.Name</span></div>
-    <h1 class="page-hero-title fade-up">@G.Name</h1>
-    @if (!string.IsNullOrWhiteSpace(G.Emirate))
+    ViewData["NavActive"] = "communities";
+    var location = string.IsNullOrWhiteSpace(G.City)
+        ? (G.Emirate ?? string.Empty)
+        : (string.IsNullOrWhiteSpace(G.Emirate) ? G.City : $"{G.City}, {G.Emirate}");
+
+    // Build the "Lifestyle & amenities" card list, skipping empty entries.
+    var lifestyleCards = new (string Title, string Icon, string? Body)[]
     {
-      <p class="page-hero-sub fade-up">@G.Emirate, UAE</p>
+        ("Amenities",        "M21 21h-18v-7l9-7 9 7v7zM9 21v-6h6v6", G.Amenities),
+        ("Attractions",      "M12 2l2.39 7.36H22l-6.19 4.5L18.18 22 12 17.27 5.82 22l2.37-8.14L2 9.36h7.61L12 2z", G.Attractions),
+        ("Lifestyle & services", "M20 7h-3V4a2 2 0 00-2-2H9a2 2 0 00-2 2v3H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM9 4h6v3H9V4z", G.LifestyleServices),
+        ("Shopping",         "M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4H6zM3 6h18M16 10a4 4 0 01-8 0", G.Shopping),
+        ("Education",        "M22 10L12 5 2 10l10 5 10-5zM6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5", G.Education),
+        ("Dining",           "M3 2v7c0 1.1.9 2 2 2h2v11h2V2H3zM15 2v9a2 2 0 002 2h2v9h2V2h-6z", G.Dining),
+        ("Healthcare",       "M19 14H14V19H10V14H5V10H10V5H14V10H19V14Z", G.Healthcare),
+        ("Transportation",   "M5 17h14v-7H5v7zm0-9h14V6a2 2 0 00-2-2H7a2 2 0 00-2 2v2zM7 21a1 1 0 100-2 1 1 0 000 2zm10 0a1 1 0 100-2 1 1 0 000 2z", G.Transportation)
+    };
+    var visibleCards = lifestyleCards.Where(c => !string.IsNullOrWhiteSpace(c.Body)).ToList();
+
+    var heroBg = string.IsNullOrWhiteSpace(G.HeroImageUrl)
+        ? string.Empty
+        : $"background-image:linear-gradient(165deg,rgba(15,23,42,.55),rgba(15,23,42,.75)),url('{G.HeroImageUrl}');background-size:cover;background-position:center";
+}
+
+<section class="page-hero community-hero" style="@heroBg">
+  <div class="container">
+    <div class="breadcrumb fade-up">
+      <a asp-page="/Index">Home</a>
+      <span class="sep">/</span>
+      <a asp-page="/AreaGuides/Index">Communities</a>
+      <span class="sep">/</span>
+      <span>@G.Name</span>
+    </div>
+    <h1 class="page-hero-title fade-up">@G.Name</h1>
+    @if (!string.IsNullOrWhiteSpace(location))
+    {
+      <p class="page-hero-sub fade-up">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        @location
+      </p>
+    }
+    @if (!string.IsNullOrWhiteSpace(G.ShortDescription))
+    {
+      <p class="page-hero-lede fade-up">@G.ShortDescription</p>
     }
   </div>
 </section>
 
-<section class="section-pad areaguides-section">
+<section class="section-pad community-detail">
   <div class="container">
     <div class="area-detail-layout">
-      <!-- Stats sidebar -->
+      <!-- Stats sidebar (existing market snapshot kept) -->
       <aside class="area-stats-card fade-up">
         <div class="area-stat-head">@Cms[ContentBlockSlugs.AreaGuideMarketTitle, "Market Snapshot"]</div>
+        @if (G.AverageRoiPercent.HasValue)
+        {
+          <div class="area-stat-row"><span>Avg ROI</span><strong>@G.AverageRoiPercent.Value.ToString("0.00")%</strong></div>
+        }
+        @if (G.RentalYieldPercent.HasValue)
+        {
+          <div class="area-stat-row"><span>Rental yield</span><strong>@G.RentalYieldPercent.Value.ToString("0.00")%</strong></div>
+        }
         @if (G.AvgPriceSaleSqft.HasValue)
         {
           <div class="area-stat-row"><span>@Cms[ContentBlockSlugs.AreaGuideAvgSale, "Avg sale price"]</span><strong>AED @G.AvgPriceSaleSqft.Value.ToString("N0") / sqft</strong></div>
@@ -30,7 +72,6 @@
         @if (G.AvgRentYearly.HasValue)
         {
           <div class="area-stat-row"><span>@Cms[ContentBlockSlugs.AreaGuideAvgRent, "Avg 1BR rent"]</span><strong>AED @G.AvgRentYearly.Value.ToString("N0") / yr</strong></div>
-          <div class="area-stat-row"><span>@Cms[ContentBlockSlugs.AreaGuideMonthly, "Monthly equiv."]</span><strong>AED @((G.AvgRentYearly.Value / 12).ToString("N0"))</strong></div>
         }
         @if (!string.IsNullOrWhiteSpace(G.PopularWith))
         {
@@ -58,13 +99,56 @@
       <div>
         @if (!string.IsNullOrWhiteSpace(G.Overview))
         {
+          <h2 class="cd-section-title fade-up">Overview</h2>
           <div class="area-overview fade-up">@Html.Raw(G.Overview)</div>
         }
 
-        <!-- Listings in this area -->
+        @if (visibleCards.Count > 0)
+        {
+          <h2 class="cd-section-title fade-up mt-5">Lifestyle &amp; amenities</h2>
+          <div class="cd-cards fade-up">
+            @foreach (var card in visibleCards)
+            {
+              <div class="cd-card">
+                <div class="cd-card__icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="@card.Icon"/></svg>
+                </div>
+                <h3 class="cd-card__title">@card.Title</h3>
+                <div class="cd-card__body">@card.Body</div>
+              </div>
+            }
+          </div>
+        }
+
+        @if (G.AverageRoiPercent.HasValue || G.RentalYieldPercent.HasValue || !string.IsNullOrWhiteSpace(G.InvestmentInsights))
+        {
+          <h2 class="cd-section-title fade-up mt-5">Investment information</h2>
+          <div class="cd-tiles fade-up">
+            <div class="cd-tile">
+              <div class="cd-tile__label">Average ROI</div>
+              <div class="cd-tile__value">@(G.AverageRoiPercent.HasValue ? G.AverageRoiPercent.Value.ToString("0.00") + "%" : "—")</div>
+              <div class="cd-tile__hint">Estimated annual return</div>
+            </div>
+            <div class="cd-tile">
+              <div class="cd-tile__label">Rental yield</div>
+              <div class="cd-tile__value">@(G.RentalYieldPercent.HasValue ? G.RentalYieldPercent.Value.ToString("0.00") + "%" : "—")</div>
+              <div class="cd-tile__hint">Gross yield estimate</div>
+            </div>
+            <div class="cd-tile cd-tile--accent">
+              <div class="cd-tile__label">Insights</div>
+              <div class="cd-tile__value cd-tile__value--small">Read below</div>
+              <div class="cd-tile__hint">Market trends &amp; demand drivers</div>
+            </div>
+          </div>
+          @if (!string.IsNullOrWhiteSpace(G.InvestmentInsights))
+          {
+            <div class="cd-insights fade-up">@G.InvestmentInsights</div>
+          }
+        }
+
         @if (Model.AreaListings.Count > 0)
         {
-          <h3 class="section-title fade-up mt-5 mb-4">@Cms[ContentBlockSlugs.AreaGuidePropertiesHeading, "Properties in"] <em>@G.Name</em></h3>
+          <h2 class="cd-section-title fade-up mt-5">Properties in <em>@G.Name</em></h2>
           <div class="feat-grid">
             @foreach (var p in Model.AreaListings)
             {
@@ -72,7 +156,7 @@
             }
           </div>
           <div style="text-align:center;margin-top:24px">
-            <a asp-page="/Properties/Index" asp-route-location="@G.Name" class="btn-outline fade-up">@Cms[ContentBlockSlugs.AreaGuideViewAllPrefix, "View all"] @G.Name @Cms[ContentBlockSlugs.AreaGuideViewAllSuffix, "properties →"]</a>
+            <a asp-page="/Properties/Index" asp-route-location="@G.Name" class="btn-outline fade-up">View all properties in @G.Name →</a>
           </div>
         }
       </div>
@@ -82,17 +166,42 @@
 
 @section Styles {
 <style>
-.area-detail-layout{display:grid;grid-template-columns:300px 1fr;gap:36px;align-items:start}
-.area-stats-card{background:var(--bg-card);border:1px solid var(--border-accent);border-radius:var(--radius-md);padding:22px;position:sticky;top:90px;box-shadow:0 8px 32px rgba(15,23,42,.06),inset 0 1px 0 rgba(255,255,255,.65)}
-.area-stat-head{font-family:var(--font-nav);font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
-.area-stat-row{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--text-secondary);padding:8px 0;border-bottom:1px solid var(--border-subtle)}
-.area-stat-row strong{color:var(--text-primary);font-weight:700}
-.area-stat-divider{height:1px;background:var(--border-subtle);margin:16px 0}
-.area-stat-label{font-family:var(--font-nav);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:4px}
-.area-stat-section p{font-size:.78rem;color:var(--text-secondary);line-height:1.55;margin:0 0 12px}
-.area-overview{font-size:.95rem;color:var(--text-secondary);line-height:1.8}
-.area-overview h3,.area-overview h4{font-family:var(--font-display);color:var(--text-primary);margin:20px 0 8px}
-.area-overview p{margin-bottom:14px}
-/* responsive handled separately */
+  .community-hero .page-hero-lede { max-width: 760px; margin-top: 14px; font-size: 1rem; opacity: .9; line-height: 1.55; }
+  .community-detail { background: var(--surface, #f7f7f5); }
+  .area-detail-layout { display: grid; grid-template-columns: 300px 1fr; gap: 36px; align-items: start; }
+  .area-stats-card { background: var(--bg-card); border: 1px solid var(--border-accent); border-radius: var(--radius-md); padding: 22px; position: sticky; top: 90px; box-shadow: 0 8px 32px rgba(15,23,42,.06), inset 0 1px 0 rgba(255,255,255,.65); }
+  .area-stat-head { font-family: var(--font-nav); font-size: .6rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .area-stat-row { display: flex; justify-content: space-between; align-items: center; font-size: .82rem; color: var(--text-secondary); padding: 8px 0; border-bottom: 1px solid var(--border-subtle); }
+  .area-stat-row strong { color: var(--text-primary); font-weight: 700; }
+  .area-stat-divider { height: 1px; background: var(--border-subtle); margin: 16px 0; }
+  .area-stat-label { font-family: var(--font-nav); font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 4px; }
+  .area-stat-section p { font-size: .78rem; color: var(--text-secondary); line-height: 1.55; margin: 0 0 12px; }
+  .area-overview { font-size: .95rem; color: var(--text-secondary); line-height: 1.8; }
+  .area-overview h3, .area-overview h4 { font-family: var(--font-display); color: var(--text-primary); margin: 20px 0 8px; }
+  .area-overview p { margin-bottom: 14px; }
+
+  .cd-section-title { font-family: var(--font-display); font-size: 1.55rem; margin: 0 0 14px; color: var(--text-primary); }
+  .cd-section-title em { font-style: normal; color: var(--accent, #b08a4e); }
+
+  .cd-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .cd-card { background: #fff; border: 1px solid var(--border-subtle, rgba(0,0,0,.06)); border-radius: 14px; padding: 18px; }
+  .cd-card__icon { width: 38px; height: 38px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: rgba(176,138,78,.12); color: var(--accent, #b08a4e); margin-bottom: 12px; }
+  .cd-card__title { font-size: 1rem; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }
+  .cd-card__body { font-size: .85rem; color: var(--text-secondary); line-height: 1.55; white-space: pre-line; }
+
+  .cd-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px; }
+  .cd-tile { background: #fff; border: 1px solid var(--border-subtle, rgba(0,0,0,.06)); border-radius: 14px; padding: 18px 20px; }
+  .cd-tile--accent { background: linear-gradient(135deg, rgba(176,138,78,.08), rgba(176,138,78,.16)); border-color: rgba(176,138,78,.25); }
+  .cd-tile__label { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-tertiary, rgba(0,0,0,.55)); font-weight: 700; }
+  .cd-tile__value { font-size: 1.8rem; font-family: var(--font-display); margin-top: 4px; color: var(--text-primary); }
+  .cd-tile__value--small { font-size: 1rem; font-family: inherit; }
+  .cd-tile__hint { font-size: .78rem; color: var(--text-secondary); margin-top: 4px; }
+
+  .cd-insights { background: #fff; border: 1px solid var(--border-subtle, rgba(0,0,0,.06)); border-radius: 14px; padding: 22px; font-size: .95rem; color: var(--text-secondary); line-height: 1.7; white-space: pre-line; }
+
+  @@media (max-width: 900px) {
+    .area-detail-layout { grid-template-columns: 1fr; }
+    .area-stats-card { position: static; }
+  }
 </style>
 }

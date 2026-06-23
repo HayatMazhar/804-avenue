@@ -33,6 +33,10 @@ public class SiteOptions
 
     public string? FacebookUrl { get; set; }
 
+    public string? TikTokUrl { get; set; }
+
+    public string? YouTubeUrl { get; set; }
+
     public string FooterTagline { get; set; } =
         "Delivering Excellence & Trust — Abu Dhabi's integrated partner for real estate, construction, and property maintenance.";
 

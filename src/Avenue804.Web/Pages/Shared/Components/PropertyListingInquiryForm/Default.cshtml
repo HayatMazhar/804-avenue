@@ -3,136 +3,125 @@
 @using Avenue804.Web.Configuration
 @inject Avenue804.Web.Services.ICmsTextProvider Cms
 @model PropertyListingInquiryFormViewModel
-<form method="post" asp-page="/Submit/PropertyListingInquiry" id="propertyListingInquiryForm" asp-antiforgery="true">
+@*
+   Property Listing Inquiry Form — pli3 redesign.
+   Matches the polished /Inquiry standalone page: numbered sections,
+   floating labels, clean amber accent. IDs and `name` attrs PRESERVED
+   so the cascade JS, autocomplete, listing-reference filler, and
+   server submit handler all keep working.
+*@
+<form method="post" asp-page="/Submit/PropertyListingInquiry" id="propertyListingInquiryForm" asp-antiforgery="true" class="pli3">
 
   <!-- Listing reference (populated automatically when opened from a property page) -->
-  <div id="pliListingRefBlock" class="pli-listing-ref" hidden>
-    <span class="pli-listing-ref__label">Inquiring about</span>
-    <span class="pli-listing-ref__value" id="pliListingRefText"></span>
+  <div id="pliListingRefBlock" class="pli3-ref" hidden>
+    <svg class="pli3-ref__ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    <span class="pli3-ref__label">Inquiring about</span>
+    <span class="pli3-ref__value" id="pliListingRefText"></span>
   </div>
 
-  <p class="modal-section-title">@Cms[ContentBlockSlugs.ModalInquiryContactSection, "Your contact details"]</p>
-  <div class="fields-2">
-    <div class="field">
-      <label class="label">Full name <span style="color:var(--accent)">*</span></label>
-      <div class="control has-icons-left">
-        <input class="input" id="pliName" name="Name" type="text" required autocomplete="name" maxlength="200" placeholder="Ahmed Al Mansoori" />
-        <span class="icon is-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-      </div>
+  <!-- ─── 1. Your details ───────────────────────────── -->
+  <div class="pli3-sec"><span class="pli3-sec__num">1</span>Your contact details</div>
+
+  <div class="pli3-row">
+    <div class="pli3-float">
+      <input class="pli3-float__input" id="pliName" name="Name" type="text" required autocomplete="name" maxlength="200" placeholder=" " />
+      <label for="pliName">Full name <span class="pli3-req">*</span></label>
     </div>
-    <div class="field">
-      <label class="label">Mobile number <span style="color:var(--accent)">*</span></label>
-      <div class="control has-icons-left">
-        <input class="input" id="pliPhone" name="Phone" type="tel" required autocomplete="tel" maxlength="50" placeholder="+971 50 000 0000" inputmode="tel" />
-        <span class="icon is-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></span>
-      </div>
-    </div>
-  </div>
-  <div class="fields-2">
-    <div class="field">
-      <label class="label">Email <span style="color:var(--accent)">*</span></label>
-      <div class="control has-icons-left">
-        <input class="input" id="pliEmail" name="Email" type="email" required autocomplete="email" maxlength="256" placeholder="you@example.com" />
-        <span class="icon is-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">I want to <span style="color:var(--accent)">*</span></label>
-      <div class="control">
-        <div class="select is-fullwidth">
-          <select id="pliWant" name="WantToLookupValueId" required>
-            <option value="">Select…</option>
-            @foreach (var v in Model.WantToOptions)
-            {
-              <option value="@v.Id">@v.DisplayName</option>
-            }
-          </select>
-        </div>
-      </div>
+    <div class="pli3-float">
+      <input class="pli3-float__input" id="pliPhone" name="Phone" type="tel" required autocomplete="tel" inputmode="tel" maxlength="50" placeholder=" " />
+      <label for="pliPhone">Mobile number <span class="pli3-req">*</span></label>
     </div>
   </div>
 
-  <p class="modal-section-title">@Cms[ContentBlockSlugs.ModalInquiryReqSection, "Property requirements"]</p>
-  <div class="fields-2">
-    <div class="field">
-      <label class="label">Property type <span style="color:var(--accent)">*</span></label>
-      <div class="control">
-        <div class="select is-fullwidth">
-          <select id="pliPropType" name="PropertyTypeLookupValueId" required class="no-ts">
-            <option value="">Select…</option>
-            @foreach (var v in Model.PropertyTypeOptions)
-            {
-              <option value="@v.Id" data-type-code="@v.Code.ToLowerInvariant()">@v.DisplayName</option>
-            }
-          </select>
-        </div>
-      </div>
+  <div class="pli3-row">
+    <div class="pli3-float">
+      <input class="pli3-float__input" id="pliEmail" name="Email" type="email" required autocomplete="email" maxlength="256" placeholder=" " />
+      <label for="pliEmail">Email address <span class="pli3-req">*</span></label>
     </div>
-    <div class="field">
-      <label class="label">Property details</label>
-      <div class="control">
-        <div class="select is-fullwidth">
-          <select id="pliDetail" name="PropertyDetailLookupValueId" class="no-ts">
-            <option value="">Select…</option>
-            @foreach (var v in Model.PropertyDetailOptions)
-            {
-              <option value="@v.Id" data-for-types='@PropertyDetailLookupMetadata.ForTypesDataAttribute(v.Metadata)'>@v.DisplayName</option>
-            }
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="fields-2">
-    <div class="field">
-      <label class="label">Area / location preference</label>
-      <div class="control has-icons-left">
-        <input class="input" id="pliArea" name="Area" type="text" maxlength="300" placeholder="e.g. Al Reem Island, Downtown" data-autocomplete="uae" autocomplete="off" />
-        <span class="icon is-left"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">Budget range <span style="color:var(--accent)">*</span></label>
-      <div class="control">
-        <div class="select is-fullwidth">
-          <select id="pliBudget" name="BudgetLookupValueId" required>
-            <option value="">Select range…</option>
-            @foreach (var v in Model.BudgetOptions)
-            {
-              <option value="@v.Id">@v.DisplayName</option>
-            }
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="fields-2">
-    <div class="field">
-      <label class="label">Expected move-in date</label>
-      <div class="control">
-        <input class="input" id="pliMoveIn" name="ExpectedMoveInDate" type="date" />
-      </div>
+    <div class="pli3-select">
+      <span class="pli3-select__lbl">I want to <span class="pli3-req">*</span></span>
+      <select class="pli3-select__input no-ts" id="pliWant" name="WantToLookupValueId" required>
+        <option value="">Select…</option>
+        @foreach (var v in Model.WantToOptions)
+        {
+          <option value="@v.Id">@v.DisplayName</option>
+        }
+      </select>
     </div>
   </div>
 
-  <p class="modal-section-title">@Cms[ContentBlockSlugs.ModalInquiryAddlSection, "Additional details"]</p>
-  <div class="field">
-    <label class="label">Describe your requirements</label>
-    <div class="control">
-      <textarea class="textarea" id="pliReq" name="RequirementDetails" rows="3" maxlength="8000" placeholder="Bedrooms, size, view, furnishing, timeline, specific features…"></textarea>
+  <!-- ─── 2. Property requirement ───────────────────── -->
+  <div class="pli3-sec"><span class="pli3-sec__num">2</span>Property requirement</div>
+
+  <div class="pli3-row">
+    <div class="pli3-select">
+      <span class="pli3-select__lbl">Property type <span class="pli3-req">*</span></span>
+      <select class="pli3-select__input no-ts" id="pliPropType" name="PropertyTypeLookupValueId" required>
+        <option value="">Select…</option>
+        @foreach (var v in Model.PropertyTypeOptions)
+        {
+          <option value="@v.Id" data-type-code="@v.Code.ToLowerInvariant()">@v.DisplayName</option>
+        }
+      </select>
+    </div>
+    <div class="pli3-select">
+      <span class="pli3-select__lbl">Property details</span>
+      <select class="pli3-select__input no-ts" id="pliDetail" name="PropertyDetailLookupValueId">
+        <option value="">Select…</option>
+        @foreach (var v in Model.PropertyDetailOptions)
+        {
+          <option value="@v.Id" data-for-types='@PropertyDetailLookupMetadata.ForTypesDataAttribute(v.Metadata)'>@v.DisplayName</option>
+        }
+      </select>
     </div>
   </div>
 
-  <!-- Auto-filled when the inquiry is opened from a property page (so admins know which listing it's about) -->
+  <div class="pli3-row">
+    <div class="pli3-float">
+      <input class="pli3-float__input" id="pliArea" name="Area" type="text" maxlength="300" placeholder=" " data-autocomplete="uae" autocomplete="off" />
+      <label for="pliArea">Area / location preference</label>
+    </div>
+    <div class="pli3-select">
+      <span class="pli3-select__lbl">Budget range <span class="pli3-req">*</span></span>
+      <select class="pli3-select__input no-ts" id="pliBudget" name="BudgetLookupValueId" required>
+        <option value="">Select range…</option>
+        @foreach (var v in Model.BudgetOptions)
+        {
+          <option value="@v.Id">@v.DisplayName</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="pli3-row">
+    <div class="pli3-select">
+      <span class="pli3-select__lbl">Expected move-in date</span>
+      <input class="pli3-select__input" id="pliMoveIn" name="ExpectedMoveInDate" type="date" />
+    </div>
+    <div></div>
+  </div>
+
+  <!-- ─── 3. Anything else ──────────────────────────── -->
+  <div class="pli3-sec"><span class="pli3-sec__num">3</span>Anything else?</div>
+
+  <div class="pli3-float">
+    <textarea class="pli3-float__input pli3-float__textarea" id="pliReq" name="RequirementDetails" rows="3" maxlength="8000" placeholder=" "></textarea>
+    <label for="pliReq">Requirement details — bedrooms, size, view, furnishing, timeline, features…</label>
+  </div>
+
   <input type="hidden" name="ListingReference" id="pliListingReference" value="" />
 
-  <div class="field" style="margin-top:1.25rem">
-    <div class="control">
-      <button type="submit" class="button is-primary is-fullwidth is-medium">
-        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></span>
-        <span>@Cms[ContentBlockSlugs.ModalInquirySend, "Send Inquiry"]</span>
-      </button>
-    </div>
-    <p class="help" style="text-align:center;margin-top:.5rem">We will contact you shortly for further details. <a href="/Privacy">Privacy Policy</a>.</p>
+  @* reCAPTCHA v3 token — renders nothing unless a SiteKey + the recaptcha flag are configured. *@
+  <partial name="_RecaptchaToken" model="@("property_inquiry")" />
+
+  <div class="pli3-actions">
+    <button type="submit" class="pli3-submit">
+      <span>@Cms[ContentBlockSlugs.ModalInquirySend, "Send Inquiry"]</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+    <p class="pli3-fineprint">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Secure submission — by submitting you agree to our <a href="/Privacy">Privacy Policy</a>.
+    </p>
   </div>
 </form>

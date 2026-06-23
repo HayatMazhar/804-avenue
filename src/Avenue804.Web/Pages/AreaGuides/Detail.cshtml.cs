@@ -19,9 +19,12 @@ public class AreaGuideDetailModel : PageModel
             .FirstOrDefaultAsync(g => g.IsPublished && g.Slug == slug.Trim(), ct);
         if (Guide == null) return NotFound();
 
-        ViewData["Title"] = Guide.Name + " — Area Guide";
+        ViewData["NavActive"] = "communities";
+        ViewData["Title"] = Guide.Name + " — Community Guide";
+        ViewData["MetaDescription"] = !string.IsNullOrWhiteSpace(Guide.ShortDescription)
+            ? Guide.ShortDescription
+            : $"Explore {Guide.Name}{(string.IsNullOrWhiteSpace(Guide.Emirate) ? string.Empty : $" in {Guide.Emirate}")} — amenities, lifestyle, schools, transport and average returns.";
 
-        // Listings in this area (partial name match)
         AreaListings = await _db.PropertyListings.AsNoTracking()
             .Where(p => p.IsPublished && p.Location != null && p.Location.Contains(Guide.Name))
             .OrderByDescending(p => p.UpdatedAt ?? p.CreatedAt)

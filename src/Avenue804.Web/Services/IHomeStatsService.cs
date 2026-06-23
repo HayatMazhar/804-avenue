@@ -8,6 +8,9 @@ namespace Avenue804.Web.Services;
 public interface IHomeStatsService
 {
     Task<HomeStats> GetAsync(CancellationToken ct = default);
+
+    /// <summary>Evicts the cached stats so the next request re-counts from the DB.</summary>
+    void InvalidateCache();
 }
 
 /// <param name="ProjectsDelivered">Published portfolio projects.</param>

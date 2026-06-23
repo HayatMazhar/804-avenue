@@ -19,6 +19,11 @@
     var shareUrl = $"{Request.Scheme}://{Request.Host}/Properties/{L.Slug}";
     var shareTitle = Uri.EscapeDataString(L.Title + " — 804 Avenue Properties");
     var shareUrlEnc = Uri.EscapeDataString(shareUrl);
+    // Convert a root-relative image path to absolute so social platforms
+    // (Facebook, WhatsApp, X) can fetch it for link preview thumbnails.
+    var ogImage = string.IsNullOrWhiteSpace(L.MainImageUrl) ? null
+        : L.MainImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? L.MainImageUrl
+        : $"{Request.Scheme}://{Request.Host}{(L.MainImageUrl.StartsWith('/') ? "" : "/")}{L.MainImageUrl}";
     bool currencyEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.CurrencyConverter);
     bool ratingsEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.PropertyRatings);
     bool mortgageEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.MortgageCalc);
@@ -60,13 +65,24 @@
   <meta property="og:description" content="@ViewData["MetaDescription"]" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="@shareUrl" />
-  @if (!string.IsNullOrWhiteSpace(L.MainImageUrl))
+  <meta property="og:site_name" content="804 Avenue Properties" />
+  @if (ogImage != null)
   {
-    <meta property="og:image" content="@L.MainImageUrl" />
+    <meta property="og:image" content="@ogImage" />
+    <meta property="og:image:secure_url" content="@ogImage" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="@L.Title" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="@L.MainImageUrl" />
+    <meta name="twitter:image" content="@ogImage" />
+  }
+  else
+  {
+    <meta name="twitter:card" content="summary" />
   }
   <meta name="twitter:title" content="@L.Title — 804 Avenue" />
+  <meta name="twitter:description" content="@ViewData["MetaDescription"]" />
+  <meta name="twitter:site" content="@@804avenue" />
   <meta name="twitter:description" content="@(ViewData["MetaDescription"] as string ?? "")" />
 }
 
@@ -198,28 +214,145 @@
           </div>
         }
 
-        <!-- Off-plan badge -->
+        <!-- Off-plan project detail page -->
         @if (L.IsOffPlan)
         {
+          @* ── Project introduction strip ──────────────────── *@
           <div class="offplan-strip fade-up">
-            <div class="offplan-item"><span>Status</span><strong>Off-Plan</strong></div>
+            <div class="offplan-item"><span>Status</span><strong>@(string.IsNullOrWhiteSpace(L.ProjectStatus) ? "Off-Plan" : L.ProjectStatus)</strong></div>
             @if (!string.IsNullOrWhiteSpace(L.HandoverDate)) { <div class="offplan-item"><span>Handover</span><strong>@L.HandoverDate</strong></div> }
             @if (L.CompletionPercent.HasValue) { <div class="offplan-item"><span>Completion</span><strong>@L.CompletionPercent%</strong><div class="offplan-bar"><div class="offplan-progress" style="width:@L.CompletionPercent%"></div></div></div> }
-            @if (!string.IsNullOrWhiteSpace(L.PaymentPlan)) { <div class="offplan-item offplan-item--wide"><span>Payment plan</span><strong>@L.PaymentPlan</strong></div> }
+            @if (L.Price.HasValue) { <div class="offplan-item"><span>Starting price</span><strong>AED @L.Price.Value.ToString("N0")</strong></div> }
           </div>
+
+          @if (!string.IsNullOrWhiteSpace(L.Subtitle) || !string.IsNullOrWhiteSpace(L.ProjectAddress))
+          {
+            <div class="opd-intro fade-up">
+              @if (!string.IsNullOrWhiteSpace(L.Subtitle)) { <p class="opd-tagline">@L.Subtitle</p> }
+              @if (!string.IsNullOrWhiteSpace(L.ProjectAddress))
+              {
+                <p class="opd-address">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  @L.ProjectAddress
+                </p>
+              }
+            </div>
+          }
+
+          @* ── Property Specifications ─────────────────────── *@
+          @if (!string.IsNullOrWhiteSpace(L.PropertyType)
+              || !string.IsNullOrWhiteSpace(L.UnitTypes)
+              || !string.IsNullOrWhiteSpace(L.BedroomOptions)
+              || !string.IsNullOrWhiteSpace(L.BathroomOptions)
+              || L.StartingSizeSqft.HasValue
+              || L.TotalFloors.HasValue
+              || L.TotalBuildings.HasValue
+              || L.TotalUnits.HasValue)
+          {
+            <div class="opd-section fade-up">
+              <h3 class="opd-section-title">Property Specifications</h3>
+              <div class="opd-spec-grid">
+                @if (!string.IsNullOrWhiteSpace(L.PropertyType)) { <div class="opd-spec"><span class="opd-spec-label">Property Type</span><span class="opd-spec-value">@L.PropertyType</span></div> }
+                @if (!string.IsNullOrWhiteSpace(L.BedroomOptions)) { <div class="opd-spec"><span class="opd-spec-label">Bedrooms</span><span class="opd-spec-value">@L.BedroomOptions</span></div> }
+                @if (!string.IsNullOrWhiteSpace(L.BathroomOptions)) { <div class="opd-spec"><span class="opd-spec-label">Bathrooms</span><span class="opd-spec-value">@L.BathroomOptions</span></div> }
+                @if (L.StartingSizeSqft.HasValue) { <div class="opd-spec"><span class="opd-spec-label">Starting size</span><span class="opd-spec-value">@L.StartingSizeSqft.Value.ToString("N0") sqft</span></div> }
+                @if (L.TotalFloors.HasValue) { <div class="opd-spec"><span class="opd-spec-label">Total floors</span><span class="opd-spec-value">@L.TotalFloors</span></div> }
+                @if (L.TotalBuildings.HasValue) { <div class="opd-spec"><span class="opd-spec-label">Total buildings</span><span class="opd-spec-value">@L.TotalBuildings</span></div> }
+                @if (L.TotalUnits.HasValue) { <div class="opd-spec"><span class="opd-spec-label">Total units</span><span class="opd-spec-value">@L.TotalUnits.Value.ToString("N0")</span></div> }
+              </div>
+              @if (!string.IsNullOrWhiteSpace(L.UnitTypes))
+              {
+                <p class="opd-spec-label" style="margin:20px 0 10px">Unit Types</p>
+                <div class="opd-chips">
+                  @foreach (var u in L.UnitTypes.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                  {
+                    <span class="opd-chip">@u</span>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          @* ── Payment & Financial Details ─────────────────── *@
+          @if ((L.DownPaymentPercent ?? 0) + (L.DuringConstructionPercent ?? 0) + (L.OnHandoverPercent ?? 0) > 0 || !string.IsNullOrWhiteSpace(L.PaymentPlan))
+          {
+            var dp = L.DownPaymentPercent ?? 0;
+            var dc = L.DuringConstructionPercent ?? 0;
+            var oh = L.OnHandoverPercent ?? 0;
+            var sum = dp + dc + oh;
+            <div class="opd-section fade-up">
+              <h3 class="opd-section-title">Payment Plan</h3>
+              @if (sum > 0)
+              {
+                <div class="opd-pay-grid">
+                  <div class="opd-pay-tile"><div class="opd-pay-pct">@dp%</div><div class="opd-pay-label">Down Payment</div></div>
+                  <div class="opd-pay-tile"><div class="opd-pay-pct">@dc%</div><div class="opd-pay-label">During Construction</div></div>
+                  <div class="opd-pay-tile opd-pay-tile--accent"><div class="opd-pay-pct">@oh%</div><div class="opd-pay-label">On Handover</div></div>
+                </div>
+                @if (sum != 100)
+                {
+                  <p class="opd-pay-note">Plan totals @sum% — contact us for the full schedule.</p>
+                }
+              }
+              else if (!string.IsNullOrWhiteSpace(L.PaymentPlan))
+              {
+                <p class="opd-pay-text">@L.PaymentPlan</p>
+              }
+            </div>
+          }
+
+          @* ── Key Features & Amenities ────────────────────── *@
+          @if (!string.IsNullOrWhiteSpace(L.KeyFeatures) || !string.IsNullOrWhiteSpace(L.AmenitiesDescription))
+          {
+            <div class="opd-section fade-up">
+              <h3 class="opd-section-title">Features &amp; Amenities</h3>
+              @if (!string.IsNullOrWhiteSpace(L.KeyFeatures))
+              {
+                <div class="opd-chips">
+                  @foreach (var f in L.KeyFeatures.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                  {
+                    <span class="opd-chip opd-chip--feature">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      @f
+                    </span>
+                  }
+                </div>
+              }
+              @if (!string.IsNullOrWhiteSpace(L.AmenitiesDescription))
+              {
+                <p class="opd-amenities-text">@L.AmenitiesDescription</p>
+              }
+            </div>
+          }
+
+          @* ── Nearby Landmarks ────────────────────────────── *@
+          @if (!string.IsNullOrWhiteSpace(L.NearbyLandmarks))
+          {
+            <div class="opd-section fade-up">
+              <h3 class="opd-section-title">Nearby Landmarks</h3>
+              <ul class="opd-landmarks">
+                @foreach (var line in L.NearbyLandmarks.Split(new[]{'\n','\r'}, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                {
+                  <li>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span>@line</span>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
         }
 
         <!-- Amenities -->
         @if (!string.IsNullOrWhiteSpace(L.AmenitiesJson))
         {
-          var amenityMap = new Dictionary<string,string>{{"pool","Swimming Pool"},{"gym","Gym"},{"parking","Covered Parking"},{"security","24/7 Security"},{"cctv","CCTV"},{"concierge","Concierge"},{"maid","Maid's Room"},{"balcony","Balcony"},{"pets","Pets Allowed"},{"view","Sea / City View"},{"furnished","Fully Furnished"},{"kitchen","Open Kitchen"},{"study","Study Room"},{"laundry","Laundry Room"},{"central_ac","Central A/C"},{"lift","Elevator"},{"bbq","BBQ Area"},{"kids","Kids Play Area"}};
           var codes = L.AmenitiesJson.Split(',', StringSplitOptions.RemoveEmptyEntries);
           <div class="amenities-section fade-up">
             <h3 class="amenities-title">@Cms[ContentBlockSlugs.PropertyDetailAmenitiesTitle, "Amenities & Features"]</h3>
             <div class="amenities-grid">
               @foreach (var code in codes)
               {
-                var label = amenityMap.TryGetValue(code, out var lbl) ? lbl : code;
+                var label = Avenue804.Web.Infrastructure.AmenityCatalog.LabelFor(code);
                 <div class="amenity-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
                   @label
@@ -425,6 +558,16 @@
         @if (L.OfferType == ListingOfferType.Sale)
         {
           <span class="prop-badge badge-sale" style="position:static;display:inline-block;margin-bottom:16px">For sale</span>
+        }
+        @if (L.AvailabilityStatus != Avenue804.Web.Domain.ListingAvailabilityStatus.Available)
+        {
+          var (detailStatusText, detailStatusBg) = L.AvailabilityStatus switch {
+            Avenue804.Web.Domain.ListingAvailabilityStatus.UnderOffer => ("Under Offer", "rgba(245,158,11,.9)"),
+            Avenue804.Web.Domain.ListingAvailabilityStatus.Rented     => ("Rented",      "rgba(5,150,105,.9)"),
+            Avenue804.Web.Domain.ListingAvailabilityStatus.Sold       => ("Sold",        "rgba(239,68,68,.9)"),
+            _ => ("", "transparent")
+          };
+          <span class="prop-badge" style="position:static;display:inline-block;margin-bottom:16px;background:@detailStatusBg;color:#fff;">@detailStatusText</span>
         }
         else
         {
@@ -650,15 +793,69 @@
   </section>
 }
 
+@section Styles {
+<style>
+  /* ── Off-plan project detail (opd-*) ─────────────────────── */
+  .opd-intro{margin:18px 0 24px}
+  .opd-tagline{font-family:var(--font-display);font-size:1.05rem;color:var(--text-secondary);font-style:italic;margin:0 0 8px;line-height:1.55}
+  .opd-address{font-size:.85rem;color:var(--text-tertiary);display:flex;align-items:center;gap:6px;margin:0}
+  .opd-section{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:26px 28px;margin-top:24px;box-shadow:0 4px 20px rgba(15,23,42,.04)}
+  .opd-section-title{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--text-primary);margin:0 0 18px;display:flex;align-items:center;gap:10px}
+  .opd-section-title::before{content:"";display:inline-block;width:4px;height:18px;background:var(--accent);border-radius:2px}
+  .opd-spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+  .opd-spec{display:flex;flex-direction:column;gap:4px;padding:12px 14px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-sm)}
+  .opd-spec-label{font-family:var(--font-nav);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-tertiary)}
+  .opd-spec-value{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text-primary)}
+  .opd-chips{display:flex;flex-wrap:wrap;gap:8px}
+  .opd-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:999px;font-size:.78rem;color:var(--text-secondary)}
+  .opd-chip--feature{background:var(--accent-soft,rgba(245,158,11,.1));border-color:var(--accent-50,rgba(245,158,11,.3));color:var(--accent)}
+  .opd-pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .opd-pay-tile{padding:22px 16px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);text-align:center}
+  .opd-pay-tile--accent{background:linear-gradient(135deg,var(--accent),var(--cyan,#0ea5e9));border-color:transparent;color:#fff}
+  .opd-pay-tile--accent .opd-pay-pct{color:#fff}
+  .opd-pay-tile--accent .opd-pay-label{color:rgba(255,255,255,.85)}
+  .opd-pay-pct{font-family:var(--font-display);font-size:2.2rem;font-weight:800;color:var(--accent);line-height:1.05}
+  .opd-pay-label{font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--text-tertiary);margin-top:6px}
+  .opd-pay-note{font-size:.78rem;color:var(--text-tertiary);margin:14px 0 0;text-align:center}
+  .opd-pay-text{font-size:.95rem;color:var(--text-secondary);line-height:1.7;margin:0;white-space:pre-line}
+  .opd-amenities-text{font-size:.9rem;color:var(--text-secondary);line-height:1.75;margin:18px 0 0;white-space:pre-line}
+  .opd-landmarks{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+  .opd-landmarks li{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);font-size:.85rem;color:var(--text-secondary)}
+  .opd-landmarks svg{flex-shrink:0;margin-top:2px;color:var(--accent)}
+  @@media(max-width:640px){
+    .opd-pay-grid{grid-template-columns:1fr}
+    .opd-spec-grid{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+}
+
 @section Scripts {
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 function copyLink(url, btn) {
-  navigator.clipboard.writeText(url).then(function() {
-    var orig = btn.innerHTML;
+  var orig = btn.innerHTML;
+  var ok = function() {
     btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Copied!';
-    setTimeout(function() { btn.innerHTML = orig; }, 2000);
-  });
+    btn.style.color = 'var(--accent, #c9a04f)';
+    setTimeout(function() { btn.innerHTML = orig; btn.style.color = ''; }, 2500);
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(ok).catch(function() {
+      // fallback for permission denied
+      var ta = document.createElement('textarea');
+      ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); ok(); } catch(e) { alert(url); }
+      document.body.removeChild(ta);
+    });
+  } else {
+    // HTTP or older browser fallback
+    var ta = document.createElement('textarea');
+    ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); ok(); } catch(e) { alert(url); }
+    document.body.removeChild(ta);
+  }
 }
 
 // Price history chart

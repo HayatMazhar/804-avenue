@@ -44,8 +44,64 @@
           </div>
         </div>
         <div class="as-field">
-          <label asp-for="F.Description">About</label>
+          <label asp-for="F.Description">Company overview (brief introduction)</label>
           <textarea asp-for="F.Description" rows="4"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Mission, vision &amp; philosophy</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="F.Mission">Company mission</label>
+          <textarea asp-for="F.Mission" rows="3" placeholder="Mission statement"></textarea>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.Vision">Company vision</label>
+          <textarea asp-for="F.Vision" rows="3" placeholder="Vision statement"></textarea>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.Philosophy">Company philosophy</label>
+          <textarea asp-for="F.Philosophy" rows="3" placeholder="Core values and philosophy"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M9 13.5L7 22l5-3 5 3-2-8.5"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Achievements &amp; statistics</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.YearsInBusiness">Years in business</label>
+            <input asp-for="F.YearsInBusiness" type="number" min="0" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.TotalProjects">Total projects</label>
+            <input asp-for="F.TotalProjects" type="number" min="0" />
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.UnitsDelivered">Units delivered</label>
+          <input asp-for="F.UnitsDelivered" type="number" min="0" />
+        </div>
+        <div class="as-field">
+          <label asp-for="F.AwardsRecognition">Awards &amp; recognition</label>
+          <textarea asp-for="F.AwardsRecognition" rows="3" placeholder="Industry awards and achievements (one per line)"></textarea>
         </div>
       </div>
     </section>

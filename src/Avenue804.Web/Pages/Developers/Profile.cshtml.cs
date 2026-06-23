@@ -13,15 +13,21 @@ public class DeveloperProfileModel : PageModel
     public Developer? Developer { get; private set; }
     public List<PropertyListing> Listings { get; private set; } = [];
 
+    public List<PropertyListing> OffPlanListings => Listings.Where(p => p.IsOffPlan).ToList();
+    public List<PropertyListing> OtherListings => Listings.Where(p => !p.IsOffPlan).ToList();
+
     public async Task<IActionResult> OnGetAsync(string slug, CancellationToken ct = default)
     {
+        if (string.IsNullOrWhiteSpace(slug)) return NotFound();
+
         Developer = await _db.Developers.AsNoTracking()
             .FirstOrDefaultAsync(d => d.IsActive && d.Slug == slug.Trim(), ct);
         if (Developer == null) return NotFound();
 
         Listings = await _db.PropertyListings.AsNoTracking()
             .Where(p => p.IsPublished && p.DeveloperId == Developer.Id)
-            .OrderByDescending(p => p.UpdatedAt ?? p.CreatedAt)
+            .OrderByDescending(p => p.IsOffPlan)
+            .ThenByDescending(p => p.UpdatedAt ?? p.CreatedAt)
             .ToListAsync(ct);
 
         return Page();

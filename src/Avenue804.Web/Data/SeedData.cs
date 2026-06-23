@@ -48,6 +48,8 @@ public static class SeedData
         await EnsureUaeAreasAsync(db, logger, ct);
 
         await TrySeedDemoCatalogAsync(db, config, logger, ct);
+        await EnsureBlogPostsAsync(db, logger, ct);
+        await EnsureCommunityAreaGuidesAsync(db, logger, ct);
 
         if (!await roleManager.RoleExistsAsync(AdminRole))
             await roleManager.CreateAsync(new IdentityRole(AdminRole));
@@ -500,6 +502,257 @@ public static class SeedData
             await db.SaveChangesAsync(cancellationToken);
             logger.LogInformation("Seeded {Count} body content blocks.", specs.Length);
         }
+    }
+
+    /// <summary>Seed a handful of sample blog posts (one per category) so /Blog is not empty on first run.</summary>
+    private static async Task EnsureBlogPostsAsync(ApplicationDbContext db, ILogger logger, CancellationToken ct)
+    {
+        if (await db.BlogPosts.AnyAsync(ct))
+            return;
+
+        var now = DateTimeOffset.UtcNow;
+        var samples = new[]
+        {
+            new Domain.BlogPost
+            {
+                Title = "Abu Dhabi Off-Plan: Why 2026 Is the Smart Investor's Year",
+                Slug = "abu-dhabi-off-plan-2026",
+                Category = Domain.BlogCategory.Investment,
+                Excerpt = "Yields are climbing, payment plans are friendlier than ever, and Vision 2030 infrastructure is going live. Here's our take on where to deploy capital.",
+                Content = "<p>Abu Dhabi's off-plan pipeline in 2026 looks meaningfully different to the 2014 cycle. Developer balance sheets are stronger, and payment plans now routinely run <strong>40/60</strong> or even <strong>20/80</strong>.</p><h2>Three communities to watch</h2><ul><li><strong>Saadiyat Island</strong> — branded residences trading at AED 2,400/sqft.</li><li><strong>Yas Island</strong> — leisure-led demand and a robust short-let market.</li><li><strong>Al Reem Island</strong> — the value play, with rental yields north of 7%.</li></ul><p>Pair these with a long handover horizon and you have a textbook off-plan thesis: <em>capital growth during construction + a rental engine on day one</em>.</p>",
+                Tags = "abu dhabi, off-plan, investment, 2026",
+                CoverImageUrl = "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=80",
+                AuthorName = "Sarah Khalifa",
+                FocusKeyword = "abu dhabi off-plan investment",
+                IsPublished = true,
+                PublishedAt = now.AddDays(-2),
+                CreatedAt = now.AddDays(-2)
+            },
+            new Domain.BlogPost
+            {
+                Title = "Q1 2026 Market Snapshot: Sale Prices, Rents and Hotspots",
+                Slug = "q1-2026-market-snapshot",
+                Category = Domain.BlogCategory.RealEstateNews,
+                Excerpt = "Our quarterly read on the UAE residential market — what moved, what stalled and what the next quarter looks like.",
+                Content = "<p>Q1 2026 closed with average sale prices in Abu Dhabi up <strong>4.2% YoY</strong>, with rentals on a similar trajectory.</p><h3>Headline numbers</h3><ul><li>Avg sale: AED 1,420/sqft (+4.2% YoY)</li><li>Avg 1BR rent: AED 78,000/yr (+6.1% YoY)</li><li>Net absorption: 3,100 units</li></ul><p>Off-plan launches accelerated, with developers responding to clear demand for branded residences and waterfront product.</p>",
+                Tags = "market trends, q1 2026, abu dhabi, dubai",
+                CoverImageUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600&q=80",
+                AuthorName = "Rashid Al Mansoori",
+                IsPublished = true,
+                PublishedAt = now.AddDays(-7),
+                CreatedAt = now.AddDays(-7)
+            },
+            new Domain.BlogPost
+            {
+                Title = "A Resident's Guide to Al Reem Island",
+                Slug = "al-reem-island-residents-guide",
+                Category = Domain.BlogCategory.CommunityGuide,
+                Excerpt = "Schools, transport, dining, beaches — everything you need before you sign a lease on Abu Dhabi's most popular waterfront community.",
+                Content = "<p>Al Reem Island has matured into one of Abu Dhabi's most balanced communities — close to the CBD, awash with new amenities, and increasingly well-served by schools.</p><h2>Schools</h2><p>Sorbonne Abu Dhabi, Repton, and Brighton College all have campuses within 10 minutes' drive.</p><h2>Transport</h2><p>Direct access via Sheikh Khalifa Bridge keeps the CBD a 6-minute commute outside peak.</p>",
+                Tags = "al reem island, abu dhabi, community guide",
+                CoverImageUrl = "https://images.unsplash.com/photo-1542621334-a254cf47733d?w=1600&q=80",
+                AuthorName = "Mariam Hassan",
+                IsPublished = true,
+                PublishedAt = now.AddDays(-12),
+                CreatedAt = now.AddDays(-12)
+            },
+            new Domain.BlogPost
+            {
+                Title = "804 Avenue Launches the Project Tracker for Clients",
+                Slug = "project-tracker-launch",
+                Category = Domain.BlogCategory.CompanyAnnouncements,
+                Excerpt = "Real-time fit-out progress, milestone updates and photo logs — now baked into every contract.",
+                Content = "<p>From this quarter, every 804 Avenue contracting client receives a unique <strong>Project Tracker</strong> link, sharing progress photos, milestones and the next-action list in one place.</p><p>It's the same view our PMs use day-to-day, exposed in a clean read-only portal so you always know exactly where your build stands.</p>",
+                Tags = "announcement, project tracker, contracting",
+                CoverImageUrl = "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1600&q=80",
+                AuthorName = "Ahmed Hassan",
+                IsPublished = true,
+                PublishedAt = now.AddDays(-21),
+                CreatedAt = now.AddDays(-21)
+            },
+            new Domain.BlogPost
+            {
+                Title = "Fit-Out 101: What Drives the Cost of a Villa Renovation",
+                Slug = "fit-out-101-villa-renovation-cost",
+                Category = Domain.BlogCategory.Contracting,
+                Excerpt = "MEP, finishes and structural changes — where the budget goes on a typical Abu Dhabi villa refresh.",
+                Content = "<p>The single biggest swing factor in a villa renovation is whether you touch the <strong>MEP</strong> (mechanical, electrical, plumbing) cores. Once you do, costs scale quickly.</p><h3>Rules of thumb</h3><ul><li>Light cosmetic refresh — AED 250–400/sqft</li><li>Full kitchen + bath gut + new flooring — AED 500–800/sqft</li><li>Major structural + smart-home + landscaping — AED 1,000+/sqft</li></ul>",
+                Tags = "fit-out, contracting, renovation, villa",
+                CoverImageUrl = "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&q=80",
+                AuthorName = "Faisal Rahman",
+                IsPublished = true,
+                PublishedAt = now.AddDays(-30),
+                CreatedAt = now.AddDays(-30)
+            },
+            new Domain.BlogPost
+            {
+                Title = "How AI Is Reshaping UAE Property Search in 2026",
+                Slug = "ai-uae-property-search-2026",
+                Category = Domain.BlogCategory.IndustryInsights,
+                Excerpt = "From valuation models to multi-modal search, here's how AI is rewiring the way buyers and tenants find their next home in the UAE.",
+                Content = "<p>AI-powered property search isn't just a marketing line anymore. The smartest portals are using vector embeddings to match natural-language briefs like <em>\"3BR within 20 minutes of ADGM, sub AED 3M, sea view\"</em> directly to listings — no rigid filters required.</p><p>Combined with portfolio-level investment scoring, this is starting to look like a genuinely better consumer experience.</p>",
+                Tags = "ai, proptech, industry insights, 2026",
+                CoverImageUrl = "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=1600&q=80",
+                AuthorName = "Editorial Team",
+                IsPublished = true,
+                PublishedAt = now.AddDays(-45),
+                CreatedAt = now.AddDays(-45)
+            }
+        };
+
+        db.BlogPosts.AddRange(samples);
+        await db.SaveChangesAsync(ct);
+        logger.LogInformation("Seeded {Count} sample blog posts.", samples.Length);
+    }
+
+    private static async Task EnsureCommunityAreaGuidesAsync(ApplicationDbContext db, ILogger logger, CancellationToken ct)
+    {
+        var seeds = new[]
+        {
+            new Domain.AreaGuide
+            {
+                Name = "Yas Island",
+                Slug = "yas-island",
+                Emirate = "Abu Dhabi",
+                City = "Abu Dhabi",
+                ShortDescription = "A leisure-led waterfront community wrapped around Yas Marina Circuit, Yas Bay and a deep bench of family attractions.",
+                Overview = "<p>Yas Island sits at the heart of Abu Dhabi's leisure economy. The community combines branded waterfront residences with a year-round calendar of motorsport, concerts, theme parks and beach clubs — making it an unusually defensive rental market. Connectivity is excellent: ten minutes to Abu Dhabi International Airport and around twenty-five minutes to the CBD via the Sheikh Khalifa Highway. Residents enjoy a mix of West Yas villas, Yas Acres townhouses and an expanding apartment inventory at Yas Park Views and Yas Bay. The pipeline of new launches keeps absorption healthy and rental yields competitive.</p>",
+                Amenities = "Community pools & beach\nTennis & padel courts\n24/7 security & smart access\nCycling and jogging tracks\nFamily parks & play areas",
+                Attractions = "Ferrari World Abu Dhabi\nYas Waterworld\nWarner Bros. World\nClymb adventure park\nYas Marina Circuit",
+                LifestyleServices = "Yas Marina Yacht Club\nGolf at Yas Links\nWellness spas & gyms\nConcert venue at Etihad Arena\nKidZania family programmes",
+                Shopping = "Yas Mall\nBoutique retail at Yas Bay Waterfront\nWeekend community markets",
+                Education = "West Yas Academy\nSABIS International School\nWest Yas Nursery\nNearby colleges on Saadiyat",
+                Dining = "Yas Bay Waterfront restaurants\nCafés along the marina\nWaldorf Astoria dining\nW Abu Dhabi steakhouse",
+                Healthcare = "HealthPoint Yas Clinic\nNMC Royal Hospital\nMediclinic primary care",
+                Transportation = "Yas Express shuttle\n10 min to Abu Dhabi International Airport\nDirect access via Sheikh Khalifa Highway\nBus routes to CBD and Reem",
+                AverageRoiPercent = 7.25m,
+                RentalYieldPercent = 6.40m,
+                InvestmentInsights = "Yas Island benefits from a deep short-let market that protects yields even off-season. Branded residences trade at a 12–18% premium to the rest of the island and lead capital appreciation. Long-term demand drivers include Yas Bay's expansion, the new Disneyland masterplan and continued investment from Aldar.",
+                IsPublished = true
+            },
+            new Domain.AreaGuide
+            {
+                Name = "Saadiyat Island",
+                Slug = "saadiyat-island",
+                Emirate = "Abu Dhabi",
+                City = "Abu Dhabi",
+                ShortDescription = "Abu Dhabi's cultural district — natural beaches, branded residences and the emirate's flagship museums on one nine-kilometre island.",
+                Overview = "<p>Saadiyat Island is the cultural anchor of Abu Dhabi, home to the Louvre Abu Dhabi, the forthcoming Guggenheim and Natural History Museum, plus pristine nine-kilometre beaches and protected hawksbill turtle habitats. The community is anchored by Saadiyat Beach, Saadiyat Reserve and Mamsha Al Saadiyat — branded waterfront residences that consistently command a premium. New launches at Saadiyat Lagoons and Saadiyat Grove broaden the family villa and mixed-use offer. Schools, golf and a clutch of five-star resorts make Saadiyat one of the most liveable communities in the UAE.</p>",
+                Amenities = "Private beach access\nLap & infinity pools\nResidents' clubhouses\nLandscaped jogging trails\nDedicated bike paths",
+                Attractions = "Louvre Abu Dhabi\nManarat Al Saadiyat\nSaadiyat Public Beach\nBerklee Abu Dhabi\nNYU Abu Dhabi campus",
+                LifestyleServices = "Saadiyat Beach Club\nMonte Carlo Beach Club\nFive-star spa & wellness\nMarina yacht concierge\nGolf at Saadiyat Beach Golf Club",
+                Shopping = "The Collection at St. Regis\nSaadiyat Plaza\nLouvre Abu Dhabi boutique\nSaadiyat Grove (planned)",
+                Education = "Cranleigh Abu Dhabi\nRedwood Montessori\nNew York University Abu Dhabi\nThe American Community School",
+                Dining = "Buddha-Bar Beach\nMare Mare\nLouvre's Aptitude\nBeachfront cafés at Mamsha",
+                Healthcare = "Cleveland Clinic Abu Dhabi (Al Maryah)\nSaadiyat Medical Center\nNMC pharmacies in the community",
+                Transportation = "10 min to Abu Dhabi CBD\n25 min to international airport\nSaadiyat Express bus loop\nDirect bridge access via Sheikh Khalifa Highway",
+                AverageRoiPercent = 6.80m,
+                RentalYieldPercent = 5.40m,
+                InvestmentInsights = "Saadiyat is positioned as Abu Dhabi's blue-chip address. Capital appreciation is led by branded beachfront product, with rental performance buoyed by NYU faculty demand, cultural-sector relocations and the diplomatic community. Supply remains constrained relative to demand, supporting stable values through cycles.",
+                IsPublished = true
+            },
+            new Domain.AreaGuide
+            {
+                Name = "Al Reem Island",
+                Slug = "al-reem-island",
+                Emirate = "Abu Dhabi",
+                City = "Abu Dhabi",
+                ShortDescription = "A high-density waterfront community minutes from the CBD — Abu Dhabi's most popular value play for yield-focused investors.",
+                Overview = "<p>Al Reem Island has matured into one of Abu Dhabi's most balanced communities — six minutes from the CBD via Sheikh Khalifa Bridge, packed with restaurants and supermarkets, and well-served by international schools. The Shams, Marina Square and Najmat sub-communities offer everything from studios to four-bedroom apartments, and the Reem Mall hub centralises retail, F&B and entertainment. With one of the highest residential transaction counts in the emirate, Reem is the default choice for first-time investors looking for liquidity and rental velocity.</p>",
+                Amenities = "Resident pools & gyms\nWaterfront promenade\n24/7 security\nKids' play areas\nCovered parking",
+                Attractions = "Reem Central Park\nGate Towers Sky Bridge\nReem Mall boardwalk\nParkviews lagoon walk\nSorbonne Abu Dhabi campus",
+                LifestyleServices = "Co-working at WeWork Reem\nBoutique fitness studios\nFamily spas & salons\nMarina-side cafés",
+                Shopping = "Reem Mall\nBoutik Mall\nSpinneys & Carrefour outlets\nPharmacies & convenience retail",
+                Education = "Repton School Abu Dhabi\nSorbonne University Abu Dhabi\nBrighton College Abu Dhabi\nKid's World Nursery",
+                Dining = "Marina Square waterfront restaurants\nReem Mall food hall\nCafé Bateel\nLocal Emirati and Levantine concepts",
+                Healthcare = "Burjeel Medical City\nCleveland Clinic specialty clinics\nHealthHub by Aldar\nPharmacy chains across all sub-communities",
+                Transportation = "6 min to CBD via Sheikh Khalifa Bridge\nMultiple bus routes to Corniche & Khalifa City\nReady connectivity to Saadiyat & Yas\nUpcoming Etihad Rail link to Maryah",
+                AverageRoiPercent = 7.85m,
+                RentalYieldPercent = 7.20m,
+                InvestmentInsights = "Al Reem leads Abu Dhabi on rental yield thanks to a large tenant base and competitive launch pricing. Watch for upgrades around Reem Central Park and the Marina Square waterfront — historically the catalysts for the strongest secondary-market appreciation on the island.",
+                IsPublished = true
+            },
+            new Domain.AreaGuide
+            {
+                Name = "Al Raha Beach",
+                Slug = "al-raha-beach",
+                Emirate = "Abu Dhabi",
+                City = "Abu Dhabi",
+                ShortDescription = "An eleven-kilometre waterfront masterplan along Sheikh Zayed Highway — established, family-friendly and exceptionally well connected.",
+                Overview = "<p>Al Raha Beach stretches along the mainland edge of Abu Dhabi, balancing waterfront living with quick access to Khalifa City, the airport and the Yas / Saadiyat circuit. The Al Bandar, Al Muneera and Al Zeina precincts are among the most established mid-to-high-end neighbourhoods in the capital, with mature retail, schools, beaches and marinas. New phases at Al Raha Lofts and Al Raha Gardens continue to refresh the supply pipeline. Demand is anchored by Etihad employees, Aldar staff and corporate tenants relocating from the CBD.</p>",
+                Amenities = "Private beach & marinas\nCommunity pools & tennis\nWalking and bike paths\nWaterfront parks\nBoat berths and kayaking",
+                Attractions = "Al Raha Beach Hotel\nAl Bandar Marina\nAldar HQ \"the coin\"\nKhalifa Park nearby\nYas Mall just 8 min away",
+                LifestyleServices = "Yacht charters & marinas\nBoutique spas\nFitness clubs across all precincts\nKids' clubs & nurseries",
+                Shopping = "Al Muneera Town Centre\nAl Zeina retail strip\nBawabat Al Sharq Mall\nDeerfields Mall nearby",
+                Education = "Al Yasmina Academy\nAl Muna Academy\nRaha International School\nGEMS American Academy",
+                Dining = "Beachside cafés at Al Bandar\nWaterfront restaurants at Al Muneera\nBoutique bakeries\nFamily-style Italian, Levantine and Asian options",
+                Healthcare = "Burjeel Medical City\nMediclinic Al Raha Beach\nNMC primary care\nResponse Plus paramedic services",
+                Transportation = "5 min to Abu Dhabi International Airport\nDirect access to Sheikh Zayed Highway\nQuick links to Yas, Saadiyat and CBD\nBus routes to Khalifa City",
+                AverageRoiPercent = 6.60m,
+                RentalYieldPercent = 5.95m,
+                InvestmentInsights = "Al Raha Beach trades at a premium thanks to scarcity of waterfront mainland inventory. Long-term tenants from Etihad and Aldar keep void rates low. Mid-2026 launches at Al Raha Lofts should refresh demand for the wider precinct.",
+                IsPublished = true
+            },
+            new Domain.AreaGuide
+            {
+                Name = "Abu Dhabi City",
+                Slug = "abu-dhabi-city",
+                Emirate = "Abu Dhabi",
+                City = "Abu Dhabi",
+                ShortDescription = "The historic heart of the capital — the Corniche, embassies, Etihad Towers and a deep, mature rental market.",
+                Overview = "<p>Abu Dhabi City — sometimes referred to as the downtown core — encompasses the central business district, the Corniche waterfront, Al Khalidiyah, Al Bateen and Tourist Club. It remains the financial and diplomatic centre of the emirate, with the densest concentration of grade-A offices, embassies and five-star hotels. Residential supply skews towards high-rise apartments and refurbished villas in the older sectors. Tenants benefit from extensive public realm investment along the Corniche, easy access to schools and a deep medical-services bench.</p>",
+                Amenities = "Corniche beach & promenade\nPublic pools and fitness parks\nFamily play areas\nRunning and cycling lanes\nDistrict mosques and community centres",
+                Attractions = "Emirates Palace\nQasr Al Hosn\nLouvre Abu Dhabi (15 min)\nMarina Mall\nThe Galleria on Al Maryah",
+                LifestyleServices = "Five-star hotel spas\nCorniche cycling\nFitness First and Gold's Gym chains\nGolf at Al Ghazal\nPrivate beach clubs at Emirates Palace",
+                Shopping = "Marina Mall\nAbu Dhabi Mall\nThe Galleria Al Maryah\nLocal souks and boutique strips",
+                Education = "American Community School\nSheikh Zayed Private Academy\nAl Bateen Academy\nNumerous nurseries across Khalidiyah",
+                Dining = "Hakkasan at Emirates Palace\nCafés along the Corniche\nLevantine restaurants in Al Bateen\nFine dining at Etihad Towers",
+                Healthcare = "Sheikh Khalifa Medical City\nNMC Specialty Hospital\nBurjeel Hospital Abu Dhabi\nMediclinic Corniche",
+                Transportation = "Central bus terminal\nWidespread taxi coverage\nDirect access to Maryah & Reem\nUpcoming metro alignment along the Corniche",
+                AverageRoiPercent = 6.20m,
+                RentalYieldPercent = 5.75m,
+                InvestmentInsights = "Downtown stock trades on stability rather than growth. Refurbished towers along the Corniche and refreshed inventory in Al Bateen offer the strongest capital story, while Khalidiyah remains the deepest rental market in the emirate.",
+                IsPublished = true
+            },
+            new Domain.AreaGuide
+            {
+                Name = "Al Maryah Island",
+                Slug = "al-maryah-island",
+                Emirate = "Abu Dhabi",
+                City = "Abu Dhabi",
+                ShortDescription = "Abu Dhabi's financial district — ADGM, Cleveland Clinic, The Galleria and ultra-low-density waterfront residences.",
+                Overview = "<p>Al Maryah Island is Abu Dhabi's financial free zone and the seat of the Abu Dhabi Global Market (ADGM). Despite its compact footprint, it punches well above its weight: Cleveland Clinic Abu Dhabi, The Galleria's luxury retail, the Rosewood and Four Seasons hotels and a curated set of branded residences (including Reflection and Pixel Walk) sit side-by-side on the Maryah waterfront. The community appeals to senior bankers, regulators and medical professionals — translating into low turnover and resilient pricing.</p>",
+                Amenities = "Waterfront promenade\nBranded residence amenities\nPrivate gyms and spas\nBoardwalk dining\nCovered residents' parking",
+                Attractions = "ADGM Square\nThe Galleria Mall\nCleveland Clinic plaza\nRosewood Spa\nMaryah Plaza events lawn",
+                LifestyleServices = "Members-only clubs\nFitness studios at Four Seasons\nBoutique salons and concierge\nFinance-focused co-working",
+                Shopping = "The Galleria Al Maryah (luxury anchor)\nGalleria fine-watch and jewellery cluster\nGourmet supermarkets",
+                Education = "American Community School (10 min)\nCranleigh Abu Dhabi (15 min)\nGEMS World Academy (planned)\nMontessori nurseries on-island",
+                Dining = "COYA Abu Dhabi\nZuma Abu Dhabi\nDai Pai Dong\nWaterfront cafés on the Promenade",
+                Healthcare = "Cleveland Clinic Abu Dhabi\nMediclinic Al Maryah\nPharmacy and dental clinics within The Galleria",
+                Transportation = "Direct links to CBD via Maryah Bridge\nConnection to Reem and Saadiyat\nFinance-district shuttle services\nUpcoming metro / Etihad Rail station",
+                AverageRoiPercent = 7.00m,
+                RentalYieldPercent = 5.85m,
+                InvestmentInsights = "Maryah is a low-supply, high-quality market — the closest Abu Dhabi gets to Dubai's DIFC. Branded inventory is scarce, with new launches absorbing in months rather than years. Demand from ADGM-licensed firms and Cleveland Clinic medical staff anchors long-term rental income.",
+                IsPublished = true
+            }
+        };
+
+        var slugs = seeds.Select(s => s.Slug).ToList();
+        var existing = await db.AreaGuides.AsNoTracking()
+            .Where(g => slugs.Contains(g.Slug))
+            .Select(g => g.Slug)
+            .ToListAsync(ct);
+
+        var missing = seeds.Where(s => !existing.Contains(s.Slug)).ToList();
+        if (missing.Count == 0)
+        {
+            logger.LogInformation("Community area guides already seeded.");
+            return;
+        }
+
+        db.AreaGuides.AddRange(missing);
+        await db.SaveChangesAsync(ct);
+        logger.LogInformation("Seeded {Count} Abu Dhabi community area guides.", missing.Count);
     }
 
     private static async Task TrySeedDemoCatalogAsync(

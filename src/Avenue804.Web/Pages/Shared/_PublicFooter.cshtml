@@ -29,6 +29,14 @@
           {
             <a href="@site.FacebookUrl" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
           }
+          @if (!string.IsNullOrWhiteSpace(site?.TikTokUrl))
+          {
+            <a href="@site.TikTokUrl" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="TikTok"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3a4.79 4.79 0 004.5 3.2v3.07a7.84 7.84 0 01-4.5-1.43v6.51a6 6 0 11-6-6c.2 0 .4.01.6.03v3.16a2.86 2.86 0 00-.6-.07 2.91 2.91 0 102.91 2.91V3z"/></svg></a>
+          }
+          @if (!string.IsNullOrWhiteSpace(site?.YouTubeUrl))
+          {
+            <a href="@site.YouTubeUrl" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="YouTube"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.2-.4-4.74a2.5 2.5 0 00-1.76-1.77C19.3 5.07 12 5.07 12 5.07s-7.3 0-8.84.42A2.5 2.5 0 001.4 7.26C1 8.8 1 12 1 12s0 3.2.4 4.74a2.5 2.5 0 001.76 1.77c1.54.42 8.84.42 8.84.42s7.3 0 8.84-.42a2.5 2.5 0 001.76-1.77C23 15.2 23 12 23 12zM9.75 15.02V8.98L15.5 12z"/></svg></a>
+          }
           <a href="@site?.WhatsAppHref" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="WhatsApp"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></a>
         </div>
       </div>
@@ -46,13 +54,14 @@
         <ul>
           <li><a asp-page="/Properties/Index" asp-route-offer="sale">@Cms[ContentBlockSlugs.FooterLinkBuy, "Buy"]</a></li>
           <li><a asp-page="/Properties/Index" asp-route-offer="rent">@Cms[ContentBlockSlugs.FooterLinkRent, "Rent"]</a></li>
-          <li><a asp-page="/AreaGuides/Index">@Cms[ContentBlockSlugs.FooterLinkAreaGuides, "Area Guides"]</a></li>
+          <li><a asp-page="/AreaGuides/Index">Communities</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>@Cms[ContentBlockSlugs.FooterColCompanyTitle, "Company"]</h4>
         <ul>
           <li><a asp-page="/About">@Cms[ContentBlockSlugs.FooterLinkAbout, "About Us"]</a></li>
+          <li><a asp-page="/Blog/Index">Blog</a></li>
           <li><a asp-page="/Contact">@Cms[ContentBlockSlugs.FooterLinkContact, "Contact"]</a></li>
           @if (!string.IsNullOrWhiteSpace(site?.PhoneDisplay)) { <li><a href="@site.TelHref">@site.PhoneDisplay</a></li> }
           @if (!string.IsNullOrWhiteSpace(site?.Email)) { <li><a href="mailto:@site.Email">@site.Email</a></li> }

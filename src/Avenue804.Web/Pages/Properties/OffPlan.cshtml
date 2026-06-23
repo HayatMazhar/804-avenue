@@ -114,6 +114,20 @@
             </div>
             <div class="offplan-card-body">
               <div class="offplan-card-name">@p.Title</div>
+              @if (p.Developer != null && p.Developer.IsActive)
+              {
+                <div class="offplan-card-dev" style="font-size:.72rem;color:var(--text-tertiary);margin:2px 0 4px;display:flex;align-items:center;gap:6px">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
+                  @if (!string.IsNullOrWhiteSpace(p.Developer.Slug))
+                  {
+                    <span>by <a asp-page="/Developers/Profile" asp-route-slug="@p.Developer.Slug" style="color:var(--accent);font-weight:600;text-decoration:none" onclick="event.stopPropagation()">@p.Developer.Name</a></span>
+                  }
+                  else
+                  {
+                    <span>by <strong style="color:var(--text-secondary)">@p.Developer.Name</strong></span>
+                  }
+                </div>
+              }
               @if (!string.IsNullOrWhiteSpace(p.Location))
               {
                 <div class="offplan-card-loc">

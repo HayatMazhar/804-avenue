@@ -1,0 +1,182 @@
+@page "{id:int}"
+@using Avenue804.Web.Domain
+@model Avenue804.Web.Areas.Admin.Pages.Blog.EditModel
+@{
+    ViewData["Title"] = "Edit blog post";
+    ViewData["AdminSection"] = "blog";
+}
+
+<div class="admin-back"><a asp-page="Index">← Blog</a></div>
+
+<div class="as-form-page">
+  <header class="as-form-page__head">
+    <div class="as-form-page__title-wrap">
+      <h1 class="as-form-page__title">@(string.IsNullOrWhiteSpace(Model.F.Title) ? "Edit blog post" : Model.F.Title)</h1>
+      <p class="as-form-page__sub">Update copy, category and SEO. Changes go live as soon as you save (if Published is on).</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      @if (!string.IsNullOrWhiteSpace(Model.F.Slug))
+      {
+        <a href="/Blog/@Model.F.Slug" target="_blank" rel="noopener" class="as-btn as-btn--ghost">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          View on site
+        </a>
+      }
+      <div class="as-form-page__pill">
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:@(Model.F.IsPublished ? "var(--as-success)" : "var(--as-mute)");"></span>
+        @(Model.F.IsPublished ? "Live" : "Draft")
+      </div>
+    </div>
+  </header>
+
+  <form method="post">
+    <div asp-validation-summary="ModelOnly" class="admin-validation-danger"></div>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Blog information</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.Category">Category <span class="req">*</span></label>
+            <select asp-for="F.Category">
+              @foreach (var c in BlogCategoryExtensions.All)
+              {
+                <option value="@((int)c)" selected="@(Model.F.Category == c)">@c.ToDisplayString()</option>
+              }
+            </select>
+          </div>
+          <div class="as-field">
+            <label asp-for="F.AuthorName">Author byline</label>
+            <input asp-for="F.AuthorName" />
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.Title">Title <span class="req">*</span></label>
+          <input asp-for="F.Title" />
+          <span asp-validation-for="F.Title" class="field-validation-error"></span>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.Slug">URL slug</label>
+          <input asp-for="F.Slug" />
+        </div>
+        <div class="as-field">
+          <label asp-for="F.Excerpt">Excerpt</label>
+          <textarea asp-for="F.Excerpt" rows="2"></textarea>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.Content">Content (HTML) <span class="req">*</span></label>
+          <textarea asp-for="F.Content" rows="14"></textarea>
+          <p class="as-field-hint">Admin-trusted: rendered with @@Html.Raw on the public detail page.</p>
+          <span asp-validation-for="F.Content" class="field-validation-error"></span>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.Tags">Tags</label>
+          <input asp-for="F.Tags" />
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Branding</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="F.CoverImageUrl">Cover image URL</label>
+          <input asp-for="F.CoverImageUrl" type="url" />
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">SEO settings</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="F.SeoTitle">SEO title <span class="as-field-hint" style="display:inline;font-weight:400;"><span id="seoTitleCount">0</span>/50</span></label>
+          <input asp-for="F.SeoTitle" maxlength="50" id="seoTitleField" oninput="updateSeoCounters()" />
+        </div>
+        <div class="as-field">
+          <label asp-for="F.SeoMetaDescription">Meta description <span class="as-field-hint" style="display:inline;font-weight:400;"><span id="seoMetaCount">0</span>/150</span></label>
+          <textarea asp-for="F.SeoMetaDescription" rows="2" maxlength="150" id="seoMetaField" oninput="updateSeoCounters()"></textarea>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.FocusKeyword">Focus keyword</label>
+          <input asp-for="F.FocusKeyword" />
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Visibility</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <label class="as-toggle">
+          <input asp-for="F.IsPublished" />
+          <span class="as-toggle__switch"></span>
+          <span class="as-toggle__text">
+            <span class="as-toggle__title">Published</span>
+            <span class="as-toggle__sub">Visible on /Blog as soon as you save.</span>
+          </span>
+        </label>
+        <div class="as-field">
+          <label asp-for="F.PublishedAt">Publish date</label>
+          <input asp-for="F.PublishedAt" type="datetime-local" />
+        </div>
+      </div>
+    </section>
+
+    <footer class="as-form-foot">
+      <div class="as-form-foot__info">
+        <span class="dot" style="background:@(Model.F.IsPublished ? "var(--as-success)" : "var(--as-mute)");"></span>
+        @(Model.F.IsPublished ? "Live on the public site" : "Currently in draft")
+      </div>
+      <div class="as-form-foot__actions">
+        <a class="as-btn as-btn--ghost" asp-page="Index">Cancel</a>
+        <button type="submit" class="as-btn as-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Save changes
+        </button>
+      </div>
+    </footer>
+  </form>
+</div>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+  <script>
+    function updateSeoCounters() {
+      var t = document.getElementById('seoTitleField');
+      var m = document.getElementById('seoMetaField');
+      var tc = document.getElementById('seoTitleCount');
+      var mc = document.getElementById('seoMetaCount');
+      if (t && tc) tc.textContent = (t.value || '').length;
+      if (m && mc) mc.textContent = (m.value || '').length;
+    }
+    updateSeoCounters();
+  </script>
+}

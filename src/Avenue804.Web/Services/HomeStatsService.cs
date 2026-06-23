@@ -7,8 +7,10 @@ namespace Avenue804.Web.Services;
 
 public sealed class HomeStatsService : IHomeStatsService
 {
-    public static readonly TimeSpan CacheTtl = TimeSpan.FromHours(1);
+    public static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(5);
     private const string CacheKey = "home:stats:v1";
+
+    public void InvalidateCache() => _cache.Remove(CacheKey);
     private const int FallbackFoundedYear = 2010;
 
     private readonly ApplicationDbContext _db;
@@ -34,8 +36,11 @@ public sealed class HomeStatsService : IHomeStatsService
         var resolvedCount = await _db.MaintenanceTickets.AsNoTracking()
             .CountAsync(t => t.Status == TicketStatus.Resolved || t.Status == TicketStatus.Closed, ct);
 
+        // Visibility is driven solely by IsPublished — the approval workflow
+        // (ApprovalStatus) only gates user/agent-submitted listings before an
+        // admin publishes them, and must not hide admin-published inventory.
         var listingsCount = await _db.PropertyListings.AsNoTracking()
-            .CountAsync(p => p.IsPublished && p.ApprovalStatus == ListingApprovalStatus.Approved, ct);
+            .CountAsync(p => p.IsPublished, ct);
 
         var foundedYearStr = await _db.SiteSettings.AsNoTracking()
             .Where(s => s.Key == "founded_year")

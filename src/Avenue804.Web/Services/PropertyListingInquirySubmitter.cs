@@ -12,14 +12,16 @@ public class PropertyListingInquirySubmitter : IPropertyListingInquirySubmitter
     private readonly IEmailSender _email;
     private readonly IConfiguration _cfg;
     private readonly IFeatureFlagService _flags;
+    private readonly ILogger<PropertyListingInquirySubmitter> _log;
 
-    public PropertyListingInquirySubmitter(ApplicationDbContext db, ILookupService lookups, IEmailSender email, IConfiguration cfg, IFeatureFlagService flags)
+    public PropertyListingInquirySubmitter(ApplicationDbContext db, ILookupService lookups, IEmailSender email, IConfiguration cfg, IFeatureFlagService flags, ILogger<PropertyListingInquirySubmitter> log)
     {
         _db = db;
         _lookups = lookups;
         _email = email;
         _cfg = cfg;
         _flags = flags;
+        _log = log;
     }
 
     public async Task<bool> TrySubmitAsync(PropertyListingInquiryFormModel input, CancellationToken cancellationToken = default)
@@ -29,10 +31,14 @@ public class PropertyListingInquirySubmitter : IPropertyListingInquirySubmitter
         int? pDetail = await ResolveOptionalAsync(input.PropertyDetailLookupValueId, LookupCategories.PropertyInquiryPropertyDetail, cancellationToken);
         int? budget = await ResolveRequiredAsync(input.BudgetLookupValueId, LookupCategories.PropertyInquiryBudget, cancellationToken);
 
-        if (input.WantToLookupValueId is int && want == null) return false;
-        if (input.PropertyTypeLookupValueId is int && pType == null) return false;
-        if (input.BudgetLookupValueId is int && budget == null) return false;
-        if (input.PropertyDetailLookupValueId is int && pDetail == null) return false;
+        if (input.WantToLookupValueId is int && want == null)
+        { _log.LogWarning("Inquiry rejected: WantTo id {Id} not found in category {Cat}.", input.WantToLookupValueId, LookupCategories.PropertyInquiryWantTo); return false; }
+        if (input.PropertyTypeLookupValueId is int && pType == null)
+        { _log.LogWarning("Inquiry rejected: PropertyType id {Id} not found in category {Cat}.", input.PropertyTypeLookupValueId, LookupCategories.PropertyInquiryPropertyType); return false; }
+        if (input.BudgetLookupValueId is int && budget == null)
+        { _log.LogWarning("Inquiry rejected: Budget id {Id} not found in category {Cat}.", input.BudgetLookupValueId, LookupCategories.PropertyInquiryBudget); return false; }
+        if (input.PropertyDetailLookupValueId is int && pDetail == null)
+        { _log.LogWarning("Inquiry rejected: PropertyDetail id {Id} not found in category {Cat}.", input.PropertyDetailLookupValueId, LookupCategories.PropertyInquiryPropertyDetail); return false; }
 
         DateOnly? moveIn = null;
         if (input.ExpectedMoveInDate is DateTime dt)

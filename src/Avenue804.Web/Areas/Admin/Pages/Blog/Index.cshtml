@@ -1,0 +1,59 @@
+@page
+@using Avenue804.Web.Domain
+@model Avenue804.Web.Areas.Admin.Pages.Blog.IndexModel
+@{
+    ViewData["Title"] = "Blog";
+    ViewData["AdminSection"] = "blog";
+}
+
+<p class="admin-back admin-back--tight"><a asp-page="Create">+ New post</a></p>
+
+<form method="get" class="admin-toolbar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:16px">
+  <div class="as-field" style="flex:1;min-width:180px;margin:0">
+    <label asp-for="Q">Search</label>
+    <input asp-for="Q" placeholder="Title, excerpt or tag…" />
+  </div>
+  <div class="as-field" style="min-width:200px;margin:0">
+    <label asp-for="Category">Category</label>
+    <select asp-for="Category">
+      <option value="">— Any —</option>
+      @foreach (var c in BlogCategoryExtensions.All)
+      {
+        <option value="@((int)c)" selected="@(Model.Category == c)">@c.ToDisplayString()</option>
+      }
+    </select>
+  </div>
+  <div class="as-field" style="min-width:140px;margin:0">
+    <label asp-for="Published">Status</label>
+    <select asp-for="Published">
+      <option value="">— Any —</option>
+      <option value="true" selected="@(Model.Published == true)">Published</option>
+      <option value="false" selected="@(Model.Published == false)">Draft</option>
+    </select>
+  </div>
+  <button type="submit" class="as-btn as-btn--ghost">Filter</button>
+</form>
+
+<div class="admin-table-wrap">
+  <table class="admin-table">
+    <thead><tr><th>Title</th><th>Category</th><th>Author</th><th>Published</th><th>Date</th><th></th></tr></thead>
+    <tbody>
+      @foreach (var p in Model.Items)
+      {
+        <tr>
+          <td><a asp-page="Edit" asp-route-id="@p.Id"><strong>@p.Title</strong></a>@if (!string.IsNullOrWhiteSpace(p.Excerpt)) { <div style="font-size:.78rem;color:var(--as-mute);margin-top:2px">@(p.Excerpt!.Length > 110 ? p.Excerpt[..110] + "…" : p.Excerpt)</div> }</td>
+          <td><span class="badge badge-progress">@p.Category.ToDisplayString()</span></td>
+          <td>@(p.AuthorName ?? "—")</td>
+          <td>@(p.IsPublished ? "✓ Live" : "Draft")</td>
+          <td>@((p.PublishedAt ?? p.CreatedAt).ToString("yyyy-MM-dd"))</td>
+          <td>
+            <form method="post" asp-page-handler="Delete" asp-route-id="@p.Id" onsubmit="return confirm('Delete this post? Cannot be undone.');" style="display:inline">
+              <button type="submit" class="as-btn as-btn--danger as-btn--sm" style="padding:4px 10px;font-size:.7rem">Delete</button>
+            </form>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (!Model.Items.Any()) { <p class="muted admin-empty">No blog posts match.</p> }

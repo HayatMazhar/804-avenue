@@ -60,7 +60,8 @@ body { background: var(--bg-deep, #EEF2FF); color: var(--text-secondary, #475569
 .select select {
   width: 100%;
   padding-right: 2.5em !important;
-  height: 2.5em !important;
+  /* Match .input height so text inputs and dropdowns line up on the same row */
+  height: 2.7em !important;
   cursor: pointer;
 }
 .select select option { background: var(--bg-card); color: var(--text-primary); padding: 8px; }
@@ -126,9 +127,28 @@ body { background: var(--bg-deep, #EEF2FF); color: var(--text-secondary, #475569
 .field { margin-bottom: 1.1rem; }
 .field.is-grouped { gap: .75rem; }
 .control { position: relative; }
-.control.has-icons-left .input { padding-left: 2.5em !important; }
+/* Base .icon rules (Bulma core was stripped from this theme, so the icon
+   positioning needs to be supplied here — otherwise input icons flow BELOW
+   the field instead of sitting inside it on the left/right). */
+.control .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Match the input height (2.7em) so the icon is vertically centred with
+     the field rather than sitting slightly above it. */
+  height: 2.7em;
+  width: 2.7em;
+  position: absolute;
+  top: 0;
+  z-index: 4;
+  pointer-events: none;
+  color: var(--text-tertiary);
+}
+.control.has-icons-left .icon.is-left { left: 0; }
+.control.has-icons-right .icon.is-right { right: 0; }
+.control.has-icons-left .input { padding-left: 2.7em !important; }
 .control.has-icons-left .icon.is-left { color: var(--text-tertiary); }
-.control.has-icons-right .input { padding-right: 2.5em !important; }
+.control.has-icons-right .input { padding-right: 2.7em !important; }
 .help { font-size: .75rem !important; margin-top: .35rem !important; }
 .help.is-danger { color: var(--danger) !important; }
 .help.is-success { color: var(--success) !important; }
@@ -308,3 +328,312 @@ h1.page-hero-title, h1.hero-headline {
 .button.is-apple:hover { background: #111 !important; }
 .button.is-whatsapp { background: #25D366 !important; border-color: transparent !important; color: #fff !important; }
 .button.is-whatsapp:hover { background: #128C7E !important; }
+
+/* ════════════════════════════════════════════════════════════
+   PROPERTY INQUIRY MODAL — pli3 styles now live INLINE in
+   _PublicModals.cshtml (scoped with #modal-inquiry + !important)
+   to prevent any external CSS from overriding the design.
+   The block below is intentionally minimal — kept as a fallback
+   only for non-modal contexts that might reuse pli3-* classes.
+   ════════════════════════════════════════════════════════════ */
+.pli3-modal { z-index: 1000; }
+.pli3 {
+  --pli3-ink:        #0F172A;
+  --pli3-ink-soft:   #475569;
+  --pli3-ink-faint:  #94A3B8;
+  --pli3-line:       #E5E7EB;
+  --pli3-line-soft:  #F1F5F9;
+  --pli3-accent:     var(--accent, #F59E0B);
+  --pli3-accent-08:  rgba(245,158,11,.08);
+  --pli3-accent-15:  rgba(245,158,11,.15);
+  --pli3-accent-30:  rgba(245,158,11,.30);
+  --pli3-radius:     12px;
+  --pli3-radius-sm:  10px;
+}
+
+/* Modal card */
+.pli3-card {
+  position: relative;
+  width: min(680px, 94vw);
+  max-height: calc(100vh - 40px);
+  margin: 20px auto;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 24px 60px -12px rgba(8,15,35,.30);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header — clean white card with amber left accent strip */
+.pli3-head {
+  position: relative;
+  padding: 18px 56px 16px 24px;
+  background: #fff;
+  border-bottom: 1px solid #F1F5F9;
+}
+.pli3-head::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--accent, #F59E0B);
+}
+.pli3-head__title { min-width: 0; }
+.pli3-head__h {
+  margin: 0;
+  font-family: var(--font-display, inherit);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -.005em;
+  color: #0F172A;
+  line-height: 1.25;
+}
+.pli3-head__sub {
+  margin: 4px 0 0;
+  font-size: .78rem;
+  color: #475569;
+  line-height: 1.45;
+}
+.pli3-head__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #F1F5F9;
+  background: #fff;
+  color: #475569;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.pli3-head__close:hover {
+  background: #F1F5F9;
+  color: #0F172A;
+  border-color: #E5E7EB;
+}
+
+/* Body — scrolls when content overflows */
+.pli3-body {
+  padding: 18px 24px 22px;
+  background: #fff;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(245,158,11,.25) transparent;
+}
+.pli3-body::-webkit-scrollbar { width: 6px; }
+.pli3-body::-webkit-scrollbar-thumb { background: rgba(245,158,11,.25); border-radius: 999px; }
+
+/* Listing reference banner */
+.pli3-ref {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin: 0 0 16px;
+  background: var(--pli3-accent-08);
+  border: 1px solid var(--pli3-accent-30);
+  border-radius: var(--pli3-radius-sm);
+  font-size: .82rem;
+}
+.pli3-ref[hidden] { display: none; }
+.pli3-ref__ico { color: var(--pli3-accent); flex: none; }
+.pli3-ref__label {
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--pli3-accent);
+}
+.pli3-ref__value {
+  font-weight: 600;
+  color: var(--pli3-ink);
+  min-width: 0;
+}
+
+/* Numbered section header — same pattern as /Inquiry */
+.pli3-sec {
+  display: flex; align-items: center; gap: 10px;
+  font-size: .68rem;
+  font-weight: 700;
+  color: var(--pli3-ink-soft);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin: 18px 0 14px;
+}
+.pli3-sec:first-child { margin-top: 0; }
+.pli3-sec__num {
+  width: 22px; height: 22px;
+  border-radius: 7px;
+  background: var(--pli3-accent-08);
+  color: var(--pli3-accent);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: .72rem; font-weight: 800;
+  letter-spacing: 0;
+}
+.pli3-sec::after {
+  content: ''; flex: 1;
+  height: 1px;
+  background: var(--pli3-line);
+  margin-left: 4px;
+}
+
+/* Field grid — 2-up */
+.pli3-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+@media (max-width: 600px) {
+  .pli3-row { grid-template-columns: 1fr; gap: 8px; }
+}
+
+/* Floating-label input — same pattern as /Inquiry */
+.pli3-float {
+  position: relative;
+  margin-bottom: 12px;
+}
+.pli3-float__input {
+  width: 100%; box-sizing: border-box;
+  padding: 20px 14px 6px;
+  font: inherit;
+  font-size: .92rem;
+  color: var(--pli3-ink);
+  background: #fff;
+  border: 1.5px solid var(--pli3-line);
+  border-radius: var(--pli3-radius-sm);
+  transition: border-color .15s ease, box-shadow .15s ease;
+  -webkit-appearance: none;
+  outline: none;
+}
+.pli3-float__textarea {
+  resize: vertical;
+  min-height: 92px;
+  padding-top: 24px;
+}
+.pli3-float__input::placeholder { color: transparent; }
+.pli3-float > label {
+  position: absolute;
+  top: 14px; left: 14px;
+  font-size: .9rem;
+  color: var(--pli3-ink-faint);
+  pointer-events: none;
+  transition: top .14s ease, font-size .14s ease, color .14s ease, font-weight .14s ease, letter-spacing .14s ease;
+  background: transparent;
+  padding: 0 2px;
+}
+.pli3-float__input:focus {
+  border-color: var(--pli3-accent);
+  box-shadow: 0 0 0 3px var(--pli3-accent-15);
+}
+.pli3-float__input:focus + label,
+.pli3-float__input:not(:placeholder-shown) + label {
+  top: 5px;
+  font-size: .62rem;
+  font-weight: 700;
+  color: var(--pli3-accent);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.pli3-req { color: var(--pli3-accent); margin-left: 2px; }
+
+/* Select / date wrappers — label above, clean dropdown */
+.pli3-select {
+  position: relative;
+  margin-bottom: 12px;
+}
+.pli3-select__lbl {
+  display: block;
+  font-size: .62rem;
+  font-weight: 700;
+  color: var(--pli3-ink-soft);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.pli3-select__lbl .pli3-req { color: var(--pli3-accent); margin-left: 2px; }
+.pli3-select__input {
+  width: 100%; box-sizing: border-box;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: .92rem;
+  color: var(--pli3-ink);
+  background: #fff;
+  border: 1.5px solid var(--pli3-line);
+  border-radius: var(--pli3-radius-sm);
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.pli3-select__input:focus {
+  border-color: var(--pli3-accent);
+  box-shadow: 0 0 0 3px var(--pli3-accent-15);
+}
+/* Native select arrow → single CSS chevron */
+select.pli3-select__input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 38px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 12px 12px;
+}
+select.pli3-select__input::-ms-expand { display: none; }
+input[type="date"].pli3-select__input { cursor: pointer; }
+input[type="date"].pli3-select__input::-webkit-calendar-picker-indicator {
+  cursor: pointer; opacity: .55; filter: invert(15%);
+}
+input[type="date"].pli3-select__input:hover::-webkit-calendar-picker-indicator { opacity: 1; }
+
+/* Actions */
+.pli3-actions {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pli3-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: var(--pli3-radius-sm);
+  background: var(--pli3-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  font-size: .98rem;
+  cursor: pointer;
+  transition: filter .15s ease, transform .1s ease;
+}
+.pli3-submit:hover { filter: brightness(.95); }
+.pli3-submit:active { transform: translateY(1px); }
+.pli3-submit svg { transition: transform .15s ease; }
+.pli3-submit:hover svg { transform: translateX(2px); }
+.pli3-fineprint {
+  margin: 0;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: .72rem;
+  color: var(--pli3-ink-faint);
+  text-align: center;
+}
+.pli3-fineprint svg { color: var(--pli3-accent); flex: none; }
+.pli3-fineprint a { color: var(--pli3-accent); font-weight: 600; text-decoration: none; }
+.pli3-fineprint a:hover { text-decoration: underline; }
+
+/* Mobile */
+@media (max-width: 600px) {
+  .pli3-card { width: 100%; margin: 8px auto; border-radius: 14px; max-height: calc(100vh - 16px); }
+  .pli3-head { padding: 14px 50px 12px 18px; }
+  .pli3-body { padding: 14px 16px 18px; }
+}

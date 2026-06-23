@@ -11,7 +11,7 @@
         if (string.IsNullOrEmpty(navKey)) return false;
         return navKey.ToUpperInvariant() switch
         {
-            "PROPERTIES" or "COMPARE" or "MARKET" or "VALUATION" or "MORTGAGE" or "AGENTS" or "DEVELOPERS" or "AREAGUIDES" => true,
+            "PROPERTIES" or "COMPARE" or "MARKET" or "VALUATION" or "MORTGAGE" or "AGENTS" => true,
             _ => false,
         };
     }
@@ -74,14 +74,46 @@
         </div>
       </li>
 
-      <!-- Properties (direct link → full listings page) -->
+      <!-- Properties dropdown — All / Off-Plan / Developers -->
+      <li class="pf-nav__item pf-nav__item--dd" id="ddProperties">
+        <button class="pf-nav__link pf-nav__link--dd @(IsPropertiesNav() ? "active" : "")" type="button" aria-expanded="false" aria-haspopup="true">
+          @Cms[ContentBlockSlugs.NavLabelProperties, "Properties"]
+          <svg class="pf-nav__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="pf-nav__dd-panel pf-nav__dd-panel--sm" role="menu">
+          <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/Properties/Index">
+            <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></span>
+            <span><strong>All Properties</strong><br><small>Browse the full inventory</small></span>
+          </a>
+          <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/Properties/OffPlan">
+            <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 22h20M4 22V10l8-6 8 6v12"/><path d="M9 22v-7h6v7"/></svg></span>
+            <span><strong>Off-Plan Projects</strong><br><small>Upcoming developments & launches</small></span>
+          </a>
+          <a class="pf-nav__dd-link pf-nav__dd-link--icon" asp-page="/Developers/Index">
+            <span class="pf-nav__dd-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+            <span><strong>Developers</strong><br><small>Trusted UAE developer profiles</small></span>
+          </a>
+        </div>
+      </li>
+
+      <!-- Developers (top-level) -->
       <li class="pf-nav__item">
-        <a class="pf-nav__link @(IsPropertiesNav() ? "active" : "")" asp-page="/Properties/Index">@Cms[ContentBlockSlugs.NavLabelProperties, "Properties"]</a>
+        <a class="pf-nav__link @Active("developers")" asp-page="/Developers/Index">Developers</a>
+      </li>
+
+      <!-- Communities (canonical href stays /AreaGuides) -->
+      <li class="pf-nav__item">
+        <a class="pf-nav__link @Active("communities")" asp-page="/AreaGuides/Index">Communities</a>
       </li>
 
       <!-- About -->
       <li class="pf-nav__item">
         <a class="pf-nav__link @Active("about")" asp-page="/About">@Cms[ContentBlockSlugs.NavLabelAbout, "About"]</a>
+      </li>
+
+      <!-- Blog -->
+      <li class="pf-nav__item">
+        <a class="pf-nav__link @Active("blog")" asp-page="/Blog/Index">Blog</a>
       </li>
 
       <!-- Contact -->
@@ -176,7 +208,11 @@
         <a class="pf-nav__mobile-link" asp-page="/Projects/Index">@Cms[ContentBlockSlugs.NavDdOurProjects, "Our Projects"]</a>
       </div>
       <div class="pf-nav__mobile-group">
-        <a class="pf-nav__mobile-link" asp-page="/Properties/Index">@Cms[ContentBlockSlugs.NavLabelProperties, "Properties"]</a>
+        <div class="pf-nav__mobile-label">@Cms[ContentBlockSlugs.NavLabelProperties, "Properties"]</div>
+        <a class="pf-nav__mobile-link" asp-page="/Properties/Index">All Properties</a>
+        <a class="pf-nav__mobile-link" asp-page="/Properties/OffPlan">Off-Plan Projects</a>
+        <a class="pf-nav__mobile-link" asp-page="/Developers/Index">Developers</a>
+        <a class="pf-nav__mobile-link" asp-page="/AreaGuides/Index">Communities</a>
       </div>
       <div class="pf-nav__mobile-group">
         <div class="pf-nav__mobile-label">@Cms[ContentBlockSlugs.NavMobileForOwnersLabel, "For Owners"]</div>
@@ -184,6 +220,7 @@
       </div>
       <div class="pf-nav__mobile-group">
         <a class="pf-nav__mobile-link" asp-page="/About">@Cms[ContentBlockSlugs.NavLabelAbout, "About"]</a>
+        <a class="pf-nav__mobile-link" asp-page="/Blog/Index">Blog</a>
         <a class="pf-nav__mobile-link" asp-page="/Inquiry">@Cms[ContentBlockSlugs.NavMobilePropertyInquiry, "Property Inquiry"]</a>
         <a class="pf-nav__mobile-link" asp-page="/Contact">@Cms[ContentBlockSlugs.NavLabelContact, "Contact"]</a>
       </div>

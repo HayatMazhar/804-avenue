@@ -2,6 +2,7 @@
 @inject Avenue804.Web.Services.IFeatureFlagService FeatureFlagService
 @using Avenue804.Web.Services
 @using Avenue804.Web.Configuration
+@using Avenue804.Web.Domain
 @{
     bool compareEnabled = await FeatureFlagService.IsEnabledAsync(FeatureFlags.PropertyCompare);
     var labelCss = Model.Label switch {
@@ -10,6 +11,12 @@
         "Price Reduced" => "pcard__label pcard__label--reduced",
         "Featured"      => "pcard__label pcard__label--featured",
         _ => null
+    };
+    var (statusText, statusCss) = Model.AvailabilityStatus switch {
+        ListingAvailabilityStatus.UnderOffer => ("Under Offer", "pcard__status pcard__status--offer"),
+        ListingAvailabilityStatus.Rented     => ("Rented",      "pcard__status pcard__status--rented"),
+        ListingAvailabilityStatus.Sold       => ("Sold",        "pcard__status pcard__status--sold"),
+        _                                    => (null, null)
     };
 }
 <a asp-page="/Properties/Detail" asp-route-slug="@Model.Slug" class="pcard fade-up" style="text-decoration:none;color:inherit;display:block">
@@ -23,6 +30,11 @@
     else
     {
       <span class="pcard__badge pcard__badge--rent">@Cms[ContentBlockSlugs.CardLabelForRent, "For Rent"]</span>
+    }
+    <!-- Availability status badge (Rented / Sold / Under Offer) -->
+    @if (statusText != null)
+    {
+      <span class="@statusCss">@statusText</span>
     }
     <!-- Label -->
     @if (labelCss != null)

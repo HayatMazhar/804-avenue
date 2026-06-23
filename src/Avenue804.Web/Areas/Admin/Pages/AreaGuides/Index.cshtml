@@ -4,15 +4,17 @@
 <p class="admin-back admin-back--tight"><a asp-page="Create">+ Add area guide</a></p>
 <div class="admin-table-wrap">
   <table class="admin-table">
-    <thead><tr><th>Name</th><th>Emirate</th><th>Avg sale/sqft</th><th>Avg rent/yr</th><th>Published</th></tr></thead>
+    <thead><tr><th>Name</th><th>City</th><th>Emirate</th><th>Avg ROI</th><th>Rental yield</th><th>Avg sale/sqft</th><th>Published</th></tr></thead>
     <tbody>
       @foreach (var g in Model.Items)
       {
         <tr>
           <td><a asp-page="Edit" asp-route-id="@g.Id">@g.Name</a></td>
+          <td>@(g.City ?? "—")</td>
           <td>@(g.Emirate ?? "—")</td>
+          <td>@(g.AverageRoiPercent.HasValue ? g.AverageRoiPercent.Value.ToString("0.00") + "%" : "—")</td>
+          <td>@(g.RentalYieldPercent.HasValue ? g.RentalYieldPercent.Value.ToString("0.00") + "%" : "—")</td>
           <td>@(g.AvgPriceSaleSqft.HasValue ? "AED " + g.AvgPriceSaleSqft.Value.ToString("N0") : "—")</td>
-          <td>@(g.AvgRentYearly.HasValue ? "AED " + g.AvgRentYearly.Value.ToString("N0") : "—")</td>
           <td>@(g.IsPublished ? "✓" : "—")</td>
         </tr>
       }

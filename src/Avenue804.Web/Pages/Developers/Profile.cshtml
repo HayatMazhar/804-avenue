@@ -3,20 +3,55 @@
 @using Avenue804.Web.Infrastructure
 @{
     var D = Model.Developer!;
-    ViewData["Title"] = D.Name + " — Properties & Projects";
+    ViewData["Title"] = D.Name + " — Developer Profile";
     ViewData["NavActive"] = "developers";
+
+    var yearsInBusiness = D.YearsInBusiness
+        ?? (D.EstablishedYear.HasValue ? DateTime.UtcNow.Year - D.EstablishedYear.Value : (int?)null);
+
+    var awards = string.IsNullOrWhiteSpace(D.AwardsRecognition)
+        ? new List<string>()
+        : D.AwardsRecognition.Split(new[] { '\n', '\r', '•', ';' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+
+    bool HasStats() => yearsInBusiness.HasValue || D.TotalProjects.HasValue || D.UnitsDelivered.HasValue || awards.Count > 0;
+    bool HasProfileBlocks() => !string.IsNullOrWhiteSpace(D.Mission) || !string.IsNullOrWhiteSpace(D.Vision) || !string.IsNullOrWhiteSpace(D.Philosophy);
 }
+
+@section Styles {
+<style>
+  .dev-page-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:28px}
+  .dev-stat{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:22px 20px;text-align:center;box-shadow:0 4px 20px rgba(15,23,42,.06)}
+  .dev-stat__value{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--accent);line-height:1.1}
+  .dev-stat__label{font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--text-tertiary);margin-top:8px}
+  .dev-blocks{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px}
+  .dev-block{background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:26px 24px}
+  .dev-block__icon{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--accent-soft,rgba(245,158,11,.12));display:flex;align-items:center;justify-content:center;color:var(--accent);margin-bottom:14px}
+  .dev-block__title{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text-primary);margin:0 0 8px}
+  .dev-block__text{font-size:.85rem;line-height:1.7;color:var(--text-secondary);margin:0;white-space:pre-line}
+  .dev-awards{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:10px}
+  .dev-awards li{display:flex;gap:10px;align-items:flex-start;font-size:.86rem;color:var(--text-secondary);line-height:1.6}
+  .dev-awards svg{flex-shrink:0;margin-top:2px;color:var(--accent)}
+  @@media(max-width:900px){.dev-page-stats{grid-template-columns:repeat(2,1fr)}.dev-blocks{grid-template-columns:1fr}}
+  @@media(max-width:520px){.dev-page-stats{grid-template-columns:1fr}}
+</style>
+}
+
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Properties/Index">Properties</a><span class="sep">/</span><span>@D.Name</span></div>
+    <div class="breadcrumb fade-up"><a asp-page="/Index">Home</a><span class="sep">/</span><a asp-page="/Properties/OffPlan">Off-Plan Projects</a><span class="sep">/</span><span>@D.Name</span></div>
     <h1 class="page-hero-title fade-up">@D.Name</h1>
-    @if (!string.IsNullOrWhiteSpace(D.Headquarters)) { <p class="page-hero-sub fade-up">@(D.EstablishedYear.HasValue ? "Est. " + D.EstablishedYear + " · " : "")@D.Headquarters</p> }
+    @if (!string.IsNullOrWhiteSpace(D.Headquarters) || D.EstablishedYear.HasValue)
+    {
+      <p class="page-hero-sub fade-up">@(D.EstablishedYear.HasValue ? "Est. " + D.EstablishedYear : "")@(D.EstablishedYear.HasValue && !string.IsNullOrWhiteSpace(D.Headquarters) ? " · " : "")@D.Headquarters</p>
+    }
   </div>
 </section>
 
 <section class="section-pad" style="background:var(--bg-surface)">
   <div class="container">
-    <div class="dev-profile-bar fade-up" style="margin-bottom:36px">
+
+    @* ── Company Profile ─────────────────────────────── *@
+    <div class="dev-profile-bar fade-up">
       @if (!string.IsNullOrWhiteSpace(D.LogoUrl))
       {
         <img src="@D.LogoUrl" alt="@D.Name" class="dev-logo" />
@@ -38,20 +73,107 @@
       </div>
     </div>
 
-    @if (Model.Listings.Count == 0)
+    @* ── Achievements & Statistics ───────────────────── *@
+    @if (HasStats())
     {
-      <p class="section-sub">No published listings from @D.Name at the moment. <a asp-page="/Properties/Index">Browse all properties</a>.</p>
-    }
-    else
-    {
-      <div class="section-tag fade-up">@Model.Listings.Count listing@(Model.Listings.Count != 1 ? "s" : "")</div>
-      <h2 class="section-title section-title--compact fade-up">Properties by <em>@D.Name</em></h2>
-      <div class="feat-grid">
-        @foreach (var p in Model.Listings)
+      <div class="dev-page-stats fade-up">
+        @if (yearsInBusiness.HasValue)
         {
-          <partial name="Shared/_PropertyCard" model="p" />
+          <div class="dev-stat"><div class="dev-stat__value">@yearsInBusiness<span style="font-size:1.1rem">+</span></div><div class="dev-stat__label">Years in Business</div></div>
+        }
+        @if (D.TotalProjects.HasValue)
+        {
+          <div class="dev-stat"><div class="dev-stat__value">@D.TotalProjects<span style="font-size:1.1rem">+</span></div><div class="dev-stat__label">Total Projects</div></div>
+        }
+        @if (D.UnitsDelivered.HasValue)
+        {
+          <div class="dev-stat"><div class="dev-stat__value">@D.UnitsDelivered.Value.ToString("N0")<span style="font-size:1.1rem">+</span></div><div class="dev-stat__label">Units Delivered</div></div>
+        }
+        @if (awards.Count > 0)
+        {
+          <div class="dev-stat"><div class="dev-stat__value">@awards.Count</div><div class="dev-stat__label">Awards &amp; Recognition</div></div>
         }
       </div>
+    }
+
+    @* ── Mission / Vision / Philosophy ───────────────── *@
+    @if (HasProfileBlocks())
+    {
+      <div class="dev-blocks fade-up">
+        @if (!string.IsNullOrWhiteSpace(D.Mission))
+        {
+          <div class="dev-block">
+            <div class="dev-block__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+            <h3 class="dev-block__title">Our Mission</h3>
+            <p class="dev-block__text">@D.Mission</p>
+          </div>
+        }
+        @if (!string.IsNullOrWhiteSpace(D.Vision))
+        {
+          <div class="dev-block">
+            <div class="dev-block__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <h3 class="dev-block__title">Our Vision</h3>
+            <p class="dev-block__text">@D.Vision</p>
+          </div>
+        }
+        @if (!string.IsNullOrWhiteSpace(D.Philosophy))
+        {
+          <div class="dev-block">
+            <div class="dev-block__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+            <h3 class="dev-block__title">Our Philosophy</h3>
+            <p class="dev-block__text">@D.Philosophy</p>
+          </div>
+        }
+      </div>
+    }
+
+    @* ── Awards & Recognition (detail) ───────────────── *@
+    @if (awards.Count > 0)
+    {
+      <div class="dev-block fade-up" style="margin-top:24px">
+        <h3 class="dev-block__title">Awards &amp; Recognition</h3>
+        <ul class="dev-awards">
+          @foreach (var a in awards)
+          {
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M9 13.5L7 22l5-3 5 3-2-8.5"/></svg><span>@a</span></li>
+          }
+        </ul>
+      </div>
+    }
+
+    @* ── Off-Plan Projects ───────────────────────────── *@
+    @if (Model.OffPlanListings.Count > 0)
+    {
+      <div style="margin-top:48px">
+        <div class="section-tag fade-up">@Model.OffPlanListings.Count off-plan project@(Model.OffPlanListings.Count != 1 ? "s" : "")</div>
+        <h2 class="section-title section-title--compact fade-up">Off-Plan Projects by <em>@D.Name</em></h2>
+        <div class="feat-grid">
+          @foreach (var p in Model.OffPlanListings)
+          {
+            <partial name="Shared/_PropertyCard" model="p" />
+          }
+        </div>
+      </div>
+    }
+
+    @* ── Other / Completed Projects ──────────────────── *@
+    @if (Model.OtherListings.Count > 0)
+    {
+      <div style="margin-top:48px">
+        <div class="section-tag fade-up">@Model.OtherListings.Count listing@(Model.OtherListings.Count != 1 ? "s" : "")</div>
+        <h2 class="section-title section-title--compact fade-up">More Properties by <em>@D.Name</em></h2>
+        <div class="feat-grid">
+          @foreach (var p in Model.OtherListings)
+          {
+            <partial name="Shared/_PropertyCard" model="p" />
+          }
+        </div>
+      </div>
+    }
+
+    @if (Model.Listings.Count == 0)
+    {
+      <p class="section-sub" style="margin-top:40px">No published projects from @D.Name at the moment. <a asp-page="/Properties/OffPlan">Browse all off-plan projects</a>.</p>
     }
   </div>
 </section>

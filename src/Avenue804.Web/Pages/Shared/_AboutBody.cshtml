@@ -16,6 +16,44 @@
   </div>
 </section>
 
+<!-- ═══ CEO MESSAGE ═══ -->
+<style>
+  .ceo-section { background:#fff; }
+  .ceo-grid { display:grid; grid-template-columns:1fr; gap:40px; align-items:center; }
+  @@media (min-width:900px){ .ceo-grid{ grid-template-columns:0.85fr 1.15fr; gap:56px; } }
+  .ceo-photo { position:relative; }
+  .ceo-photo img { width:100%; height:100%; max-height:520px; object-fit:cover; border-radius:18px; box-shadow:0 24px 60px -18px rgba(8,15,35,.4); }
+  .ceo-message { font-size:1.05rem; line-height:1.75; color:var(--text-secondary,#475569); margin:18px 0 24px; }
+  .ceo-message p { margin:0 0 14px; }
+  .ceo-signoff { display:flex; flex-direction:column; gap:2px; border-top:1px solid #e5e7eb; padding-top:18px; }
+  .ceo-signoff strong { font-size:1.05rem; color:var(--text-primary,#0f172a); }
+  .ceo-signoff span { font-size:.85rem; color:var(--accent,#c9a04f); font-weight:600; }
+</style>
+<section class="ceo-section section-pad">
+  <div class="container">
+    <div class="ceo-grid">
+      <div class="ceo-photo fade-up">
+        <img src="@Cms[ContentBlockSlugs.AboutCeoPhoto, "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=700&q=80&auto=format&fit=crop"]"
+             alt="@Cms[ContentBlockSlugs.AboutCeoName, "804 Avenue CEO"]" loading="lazy" decoding="async" />
+      </div>
+      <div class="ceo-content">
+        <span class="section-tag fade-up">@Cms[ContentBlockSlugs.AboutCeoTag, "Message from the CEO"]</span>
+        <h2 class="section-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.AboutCeoTitle, "A word from our <em>leadership</em>"])</h2>
+        <div class="ceo-message fade-up">
+          @Html.Raw(Cms[ContentBlockSlugs.AboutCeoMessage,
+            "<p>At 804 Avenue, we built this company on a simple belief: that real estate, construction, and property maintenance should be delivered with honesty, craftsmanship, and genuine care for every client.</p>" +
+            "<p>From a single office in Abu Dhabi to a trusted partner across the UAE, our growth has been driven by the relationships we've earned — one project, one home, and one satisfied client at a time.</p>" +
+            "<p>As we look ahead, our commitment remains unchanged: to deliver excellence and trust in everything we do. Thank you for being part of our journey.</p>"])
+        </div>
+        <div class="ceo-signoff fade-up">
+          <strong>@Cms[ContentBlockSlugs.AboutCeoName, "The 804 Avenue Leadership"]</strong>
+          <span>@Cms[ContentBlockSlugs.AboutCeoRole, "Chief Executive Officer, 804 Avenue"]</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ OUR STORY ═══ -->
 <section class="story-section section-pad">
   <div class="container">
@@ -120,6 +158,9 @@
   </div>
 </section>
 
+@* ═══ TEAM ═══ — hidden for initial launch (replaced by CEO Message section above). Re-enable when real team profiles are ready. *@
+@if (false)
+{
 <!-- ═══ TEAM ═══ -->
 <section class="team-section section-pad">
   <div class="container" style="text-align:center">
@@ -139,6 +180,8 @@
     </div>
   </div>
 </section>
+
+}
 
 <!-- ═══ WHY CHOOSE US ═══ -->
 <section class="wcu-section section-pad">

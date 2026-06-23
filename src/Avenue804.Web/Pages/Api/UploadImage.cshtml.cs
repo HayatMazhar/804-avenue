@@ -1,5 +1,6 @@
 using Avenue804.Web.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -11,6 +12,10 @@ namespace Avenue804.Web.Pages.Api;
 /// </summary>
 [Authorize(Policy = "AdminAccess")]
 [IgnoreAntiforgeryToken]
+// Allow up to 50 MB per file. These override the server-level defaults so
+// shared-hosting reverse proxies don't silently reject large photo uploads.
+[RequestSizeLimit(52_428_800)]
+[RequestFormLimits(MultipartBodyLengthLimit = 52_428_800)]
 public class UploadImageModel : PageModel
 {
     private readonly IStorageService _storage;

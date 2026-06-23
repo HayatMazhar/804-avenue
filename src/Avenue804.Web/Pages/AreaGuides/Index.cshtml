@@ -1,63 +1,161 @@
 @page "/AreaGuides"
 @model Avenue804.Web.Pages.AreaGuides.AreaGuidesIndexModel
 @{
-    ViewData["Title"] = Cms[ContentBlockSlugs.MetaAreaGuidesTitle, "Area Guides — UAE Communities"];
-    ViewData["NavActive"] = "areaguides";
-    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaAreaGuidesDescription, "Explore property communities across Abu Dhabi, Dubai and the UAE — average prices, lifestyle, transport and schools."];
+    ViewData["Title"] = Cms[ContentBlockSlugs.MetaAreaGuidesTitle, "Communities — UAE Locations"];
+    ViewData["NavActive"] = "communities";
+    ViewData["MetaDescription"] = Cms[ContentBlockSlugs.MetaAreaGuidesDescription, "Discover UAE communities — Abu Dhabi, Dubai and beyond. Compare amenities, lifestyle, schools, transport and investment returns."];
+    var allChip = string.IsNullOrWhiteSpace(Model.EmirateFilter);
 }
 
 <section class="page-hero">
   <div class="container">
     <div class="breadcrumb fade-up">
-      <a asp-page="/Index">Home</a><span class="sep">/</span><span>@Cms[ContentBlockSlugs.FooterLinkAreaGuides, "Area Guides"]</span>
+      <a asp-page="/Index">Home</a><span class="sep">/</span><span>Communities</span>
     </div>
-    <h1 class="page-hero-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.AreaGuidesHeroH1, "UAE <em>Area Guides</em>"])</h1>
-    <p class="page-hero-sub fade-up">@Cms[ContentBlockSlugs.AreaGuidesHeroSub, "Explore communities across Abu Dhabi, Dubai, and beyond — property prices, schools, transport, and lifestyle at a glance."]</p>
+    <h1 class="page-hero-title fade-up">@Html.Raw(Cms[ContentBlockSlugs.AreaGuidesHeroH1, "UAE <em>Communities</em>"])</h1>
+    <p class="page-hero-sub fade-up">@Cms[ContentBlockSlugs.AreaGuidesHeroSub, "Explore the neighbourhoods our investors love most — lifestyle, amenities, schools and average returns at a glance."]</p>
   </div>
 </section>
 
-<section class="section-pad areaguides-section">
+<section class="section-pad community-section">
   <div class="container">
-    @if (!Model.Grouped.Any())
+    <form method="get" class="community-toolbar fade-up">
+      <div class="community-search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="search" name="q" value="@Model.Keyword" placeholder="Search communities, city or lifestyle…" />
+      </div>
+      <div class="community-chips" role="tablist">
+        <a asp-page="/AreaGuides/Index" asp-route-q="@Model.Keyword" class="community-chip @(allChip ? "is-active" : null)">All</a>
+        @foreach (var em in Model.AvailableEmirates)
+        {
+          var active = string.Equals(em, Model.EmirateFilter, StringComparison.OrdinalIgnoreCase);
+          <a asp-page="/AreaGuides/Index" asp-route-q="@Model.Keyword" asp-route-emirate="@em" class="community-chip @(active ? "is-active" : null)">@em</a>
+        }
+      </div>
+      <button type="submit" class="community-submit" aria-label="Apply filters">Apply</button>
+    </form>
+
+    @if (Model.Guides.Count == 0)
     {
       <div class="pl-empty fade-up">
         <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <h3>@Cms[ContentBlockSlugs.AreaGuidesEmptyText, "No area guides yet"]</h3>
-        <p>Area guides are managed in <a asp-area="Admin" asp-page="/AreaGuides/Index">Admin → Area Guides</a>.</p>
+        <h3>No communities match your filters</h3>
+        <p>Try clearing the search box or choosing a different emirate.</p>
+        @if (Model.TotalCount == 0)
+        {
+          <p>Communities are managed in <a asp-area="Admin" asp-page="/AreaGuides/Index">Admin → Area Guides</a>.</p>
+        }
       </div>
     }
     else
     {
-      @foreach (var emirate in Model.Grouped.Keys.OrderBy(k => k))
-      {
-        <h2 class="areaguides-emirate fade-up">@emirate</h2>
-        <div class="areas-grid fade-up">
-          @foreach (var g in Model.Grouped[emirate])
-          {
-            <a asp-page="/AreaGuides/Detail" asp-route-slug="@g.Slug" class="area-card">
-              @if (!string.IsNullOrWhiteSpace(g.HeroImageUrl))
-              {
-                <div class="area-card-img" style="background-image:url('@g.HeroImageUrl')"></div>
+      <div class="community-grid fade-up">
+        @foreach (var g in Model.Guides)
+        {
+          var listingCount = Model.ListingCounts.TryGetValue(g.Id, out var c) ? c : 0;
+          <a asp-page="/AreaGuides/Detail" asp-route-slug="@g.Slug" class="community-card">
+            @if (!string.IsNullOrWhiteSpace(g.HeroImageUrl))
+            {
+              <div class="community-card__img" style="background-image:url('@g.HeroImageUrl')"></div>
+            }
+            else
+            {
+              <div class="community-card__img community-card__img--placeholder">
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M10 21v-6h4v6"/></svg>
+              </div>
+            }
+            <div class="community-card__body">
+              <h3 class="community-card__name">@g.Name</h3>
+              @{
+                var loc = string.IsNullOrWhiteSpace(g.City)
+                    ? (g.Emirate ?? string.Empty)
+                    : (string.IsNullOrWhiteSpace(g.Emirate) ? g.City : $"{g.City}, {g.Emirate}");
               }
-              else
+              @if (!string.IsNullOrWhiteSpace(loc))
               {
-                <div class="area-card-img area-card-img--placeholder"></div>
+                <div class="community-card__loc">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>@loc</span>
+                </div>
               }
-              <div class="area-card-body">
-                <div class="area-card-name">@g.Name</div>
-                @if (g.AvgPriceSaleSqft.HasValue)
+              @if (!string.IsNullOrWhiteSpace(g.ShortDescription))
+              {
+                <p class="community-card__desc">@g.ShortDescription</p>
+              }
+              <div class="community-card__stats">
+                @if (g.AverageRoiPercent.HasValue)
                 {
-                  <div class="area-card-stat">AED @g.AvgPriceSaleSqft.Value.ToString("N0") / sqft</div>
+                  <span class="community-stat" title="Average ROI">
+                    <strong>@g.AverageRoiPercent.Value.ToString("0.##")%</strong>
+                    <em>Avg ROI</em>
+                  </span>
                 }
-                @if (!string.IsNullOrWhiteSpace(g.PopularWith))
+                @if (g.RentalYieldPercent.HasValue)
                 {
-                  <div class="area-card-tags">@g.PopularWith</div>
+                  <span class="community-stat" title="Rental yield">
+                    <strong>@g.RentalYieldPercent.Value.ToString("0.##")%</strong>
+                    <em>Yield</em>
+                  </span>
+                }
+                @if (listingCount > 0)
+                {
+                  <span class="community-stat" title="Listings nearby">
+                    <strong>@listingCount</strong>
+                    <em>Listings</em>
+                  </span>
                 }
               </div>
-            </a>
-          }
-        </div>
-      }
+              <div class="community-card__cta">Explore <span aria-hidden="true">→</span></div>
+            </div>
+          </a>
+        }
+      </div>
     }
   </div>
 </section>
+
+@section Styles {
+  <style>
+    .community-section { background: var(--surface, #f7f7f5); }
+    .community-toolbar {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      background: #fff; padding: 14px; border-radius: 16px; border: 1px solid rgba(0,0,0,.06);
+      box-shadow: 0 1px 2px rgba(0,0,0,.04);
+      margin-bottom: 28px;
+    }
+    .community-search { display: flex; align-items: center; gap: 8px; flex: 1 1 280px; min-width: 220px; padding: 8px 12px; border: 1px solid rgba(0,0,0,.08); border-radius: 12px; background: #fafafa; }
+    .community-search input { border: 0; background: transparent; flex: 1; outline: none; font-size: .95rem; }
+    .community-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .community-chip {
+      display: inline-block; padding: 7px 14px; border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.08); color: #333; text-decoration: none; font-size: .85rem;
+      background: #fff; transition: all .15s ease;
+    }
+    .community-chip:hover { border-color: rgba(0,0,0,.2); }
+    .community-chip.is-active { background: #111; color: #fff; border-color: #111; }
+    .community-submit {
+      padding: 9px 18px; border: 0; border-radius: 999px;
+      background: #111; color: #fff; font-size: .85rem; cursor: pointer;
+    }
+
+    .community-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; }
+    .community-card {
+      display: flex; flex-direction: column; background: #fff; border-radius: 18px; overflow: hidden;
+      border: 1px solid rgba(0,0,0,.06); text-decoration: none; color: inherit;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .community-card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px rgba(0,0,0,.08); }
+    .community-card__img { aspect-ratio: 16/9; background: #eee center/cover no-repeat; }
+    .community-card__img--placeholder { display: flex; align-items: center; justify-content: center; color: rgba(0,0,0,.25); background: linear-gradient(135deg, #f3f3ef, #e9e9e3); }
+    .community-card__body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .community-card__name { font-size: 1.15rem; margin: 0; font-weight: 600; }
+    .community-card__loc { display: inline-flex; align-items: center; gap: 6px; color: rgba(0,0,0,.55); font-size: .82rem; }
+    .community-card__desc { color: rgba(0,0,0,.7); font-size: .9rem; margin: 4px 0 0; line-height: 1.45;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .community-card__stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .community-stat { display: inline-flex; flex-direction: column; padding: 6px 12px; border-radius: 10px; background: #f6f6f1; line-height: 1.1; }
+    .community-stat strong { font-size: .95rem; }
+    .community-stat em { font-style: normal; font-size: .68rem; color: rgba(0,0,0,.55); text-transform: uppercase; letter-spacing: .04em; }
+    .community-card__cta { margin-top: auto; padding-top: 12px; font-size: .9rem; color: var(--accent, #b08a4e); font-weight: 600; }
+  </style>
+}

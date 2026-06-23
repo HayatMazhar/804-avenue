@@ -78,7 +78,12 @@ public class ListingModel : PageModel
             Phone = input.Phone.Trim(),
             Intent = input.Intent,
             LocationOrTitle = string.IsNullOrWhiteSpace(input.LocationOrTitle) ? null : input.LocationOrTitle.Trim(),
-            Details = details
+            Details = details,
+            IAmRole = string.IsNullOrWhiteSpace(lpIAm) ? null : lpIAm.Trim(),
+            PropertyCategory = string.IsNullOrWhiteSpace(lpPropertyCategory) ? null : lpPropertyCategory.Trim(),
+            PropertySubType = string.IsNullOrWhiteSpace(lpPropertyDetails) ? null : lpPropertyDetails.Trim(),
+            Emirate = string.IsNullOrWhiteSpace(lpEmirate) ? null : lpEmirate.Trim(),
+            Area = string.IsNullOrWhiteSpace(lpArea) ? null : lpArea.Trim(),
         });
 
         await _db.SaveChangesAsync(cancellationToken);

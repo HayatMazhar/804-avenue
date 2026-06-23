@@ -43,8 +43,41 @@ public class PropertyListing
     // Off-plan / new projects
     public bool IsOffPlan { get; set; }
     public string? HandoverDate { get; set; }        // e.g. "Q4 2026"
-    public string? PaymentPlan { get; set; }         // e.g. "40/60 — 40% on booking"
+    public string? PaymentPlan { get; set; }         // e.g. "40/60 — 40% on booking" (free-text fallback)
     public int? CompletionPercent { get; set; }      // 0-100
+
+    // ── Off-plan project introduction ──────────────────
+    /// <summary>Marketing subtitle/tagline shown under the project name on the off-plan detail page.</summary>
+    public string? Subtitle { get; set; }
+    /// <summary>Upcoming / Launching / Under Construction / Ready</summary>
+    public string? ProjectStatus { get; set; }
+    /// <summary>Full project address (separate from the searchable Location field).</summary>
+    public string? ProjectAddress { get; set; }
+
+    // ── Off-plan property specifications ───────────────
+    /// <summary>Comma-separated unit types e.g. "1BR Apartments, 2BR Apartments, 3BR Villas"</summary>
+    public string? UnitTypes { get; set; }
+    /// <summary>Bedroom range e.g. "1-5"</summary>
+    public string? BedroomOptions { get; set; }
+    /// <summary>Bathroom range e.g. "1-6"</summary>
+    public string? BathroomOptions { get; set; }
+    public int? StartingSizeSqft { get; set; }
+    public int? TotalFloors { get; set; }
+    public int? TotalBuildings { get; set; }
+    public int? TotalUnits { get; set; }
+
+    // ── Off-plan payment plan (structured) ─────────────
+    public int? DownPaymentPercent { get; set; }
+    public int? DuringConstructionPercent { get; set; }
+    public int? OnHandoverPercent { get; set; }
+
+    // ── Off-plan features & amenities ──────────────────
+    /// <summary>Comma-separated short tags / key feature chips.</summary>
+    public string? KeyFeatures { get; set; }
+    /// <summary>Long-form amenities description (rendered as paragraph copy).</summary>
+    public string? AmenitiesDescription { get; set; }
+    /// <summary>One nearby landmark per line e.g. "Dubai Mall – 10 Min"</summary>
+    public string? NearbyLandmarks { get; set; }
 
     // Developer
     public int? DeveloperId { get; set; }
@@ -61,6 +94,12 @@ public class PropertyListing
     // Approval workflow
     public ListingApprovalStatus ApprovalStatus { get; set; } = ListingApprovalStatus.Draft;
     public string? RejectionReason { get; set; }
+
+    /// <summary>Market availability — shown as a public status badge (Under Offer / Rented / Sold).</summary>
+    public ListingAvailabilityStatus AvailabilityStatus { get; set; } = ListingAvailabilityStatus.Available;
+
+    /// <summary>Current occupancy of the property (Vacant / Occupied / Owner Occupied).</summary>
+    public OccupancyStatus? OccupancyStatus { get; set; }
 
     // SEO overrides
     public string? SeoTitle { get; set; }

@@ -13,6 +13,8 @@ public sealed class SiteBrandingSnapshot
     public string? InstagramUrl { get; init; }
     public string? LinkedInUrl { get; init; }
     public string? FacebookUrl { get; init; }
+    public string? TikTokUrl { get; init; }
+    public string? YouTubeUrl { get; init; }
     public required string FooterTagline { get; init; }
     public required string DefaultMetaDescription { get; init; }
     public required string DefaultListingCurrency { get; init; }

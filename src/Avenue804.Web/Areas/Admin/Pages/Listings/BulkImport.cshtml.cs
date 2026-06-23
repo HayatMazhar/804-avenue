@@ -40,6 +40,11 @@ public class BulkImportModel : PageModel
 
         if (download == "template")
         {
+            // TODO: extend CSV template + parser with the new off-plan project columns
+            // (Subtitle, ProjectStatus, ProjectAddress, UnitTypes, BedroomOptions, BathroomOptions,
+            //  StartingSizeSqft, TotalFloors, TotalBuildings, TotalUnits, DownPaymentPercent,
+            //  DuringConstructionPercent, OnHandoverPercent, KeyFeatures, AmenitiesDescription,
+            //  NearbyLandmarks). Left out for now to avoid widening this batch.
             var csv = new StringBuilder();
             csv.AppendLine("Title,OfferType,Price,Currency,Location,Description,Beds,Baths,AreaSqft,MainImageUrl,GalleryUrls,Label,IsOffPlan,HandoverDate,PaymentPlan,IsVerified,IsPublished,Amenities");
             csv.AppendLine("\"Luxury 2BR Apartment Al Reem\",Sale,1500000,AED,\"Al Reem Island, Abu Dhabi\",\"Spacious apartment with sea views\",2,2,1200,https://example.com/photo1.jpg,https://example.com/photo2.jpg|https://example.com/photo3.jpg,,false,,,false,false,\"pool,gym,parking\"");

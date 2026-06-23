@@ -82,6 +82,29 @@
     });
   }
 
+  // ── Emirate-aware community autocomplete ──────────────────
+  // When the Emirate select changes, update the area input's data-ac-emirate
+  // attribute so the next autocomplete fetch is scoped to that emirate.
+  // "Al Ain" is a city inside Abu Dhabi emirate in the DB.
+  (function wireEmirateFilter() {
+    var emirateSel = document.getElementById('heroReEmirate');
+    var areaInput  = document.getElementById('heroReArea');
+    if (!emirateSel || !areaInput) return;
+
+    function syncFilter() {
+      var v = emirateSel.value;
+      if (!v || v === 'any') {
+        areaInput.removeAttribute('data-ac-emirate');
+      } else {
+        // Al Ain is a city (City column) within Abu Dhabi emirate
+        areaInput.setAttribute('data-ac-emirate', v === 'Al Ain' ? 'Abu Dhabi' : v);
+      }
+    }
+
+    emirateSel.addEventListener('change', syncFilter);
+    syncFilter(); // apply on page load based on default selection
+  })();
+
   // ── Stats counter animation ────────────────────────────────
   var observed = new Set();
   var statsIo = new IntersectionObserver(function (entries) {

@@ -10,8 +10,15 @@
       <tr>
         <th>Date</th>
         <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
         <th>Intent</th>
-        <th>Location / title</th>
+        <th>Category</th>
+        <th>Sub-type</th>
+        <th>Emirate</th>
+        <th>Area</th>
+        <th>I am</th>
+        <th>Notes</th>
       </tr>
     </thead>
     <tbody>
@@ -20,8 +27,15 @@
       <tr>
         <td>@row.CreatedAt.LocalDateTime.ToString("g")</td>
         <td><a asp-page="Detail" asp-route-id="@row.Id">@row.Name</a></td>
+        <td>@(string.IsNullOrWhiteSpace(row.Phone) ? "—" : Html.Raw($"<a href=\"tel:{row.Phone}\">{row.Phone}</a>"))</td>
+        <td>@(string.IsNullOrWhiteSpace(row.Email) ? "—" : Html.Raw($"<a href=\"mailto:{row.Email}\">{row.Email}</a>"))</td>
         <td>@row.Intent</td>
-        <td class="muted">@(row.LocationOrTitle ?? "—")</td>
+        <td class="muted">@(row.PropertyCategory ?? "—")</td>
+        <td class="muted">@(row.PropertySubType ?? "—")</td>
+        <td class="muted">@(row.Emirate ?? "—")</td>
+        <td class="muted">@(row.Area ?? "—")</td>
+        <td class="muted">@(row.IAmRole ?? "—")</td>
+        <td class="muted" title="@row.Details">@(string.IsNullOrWhiteSpace(row.Details) ? "—" : (row.Details.Length > 60 ? row.Details[..60] + "…" : row.Details))</td>
       </tr>
     }
     </tbody>

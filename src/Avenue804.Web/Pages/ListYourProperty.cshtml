@@ -301,22 +301,28 @@
     }
     .float .req { color: var(--lyp-accent); margin-left: 2px; }
 
-    /* Native select dressed up */
+    /* Native select dressed up — uses the same floating-label pattern as .float inputs
+       so the dropdowns visually match the rest of the form (same height, border,
+       focus glow, and an inline floated label sitting in the top-left corner). */
     .lyp2-select-wrap {
       position: relative;
       margin-bottom: 14px;
     }
     .lyp2-select-wrap > .lbl {
-      display: block;
-      font-size: .68rem; font-weight: 700;
-      color: var(--lyp-ink-soft);
+      position: absolute;
+      top: 6px; left: 14px;
+      font-size: .66rem; font-weight: 700;
+      color: var(--lyp-accent);
       letter-spacing: .06em; text-transform: uppercase;
-      margin-bottom: 6px;
+      pointer-events: none;
+      z-index: 2;
+      background: transparent;
+      padding: 0 2px;
     }
     .lyp2-select-wrap > .lbl .req { color: var(--lyp-accent); margin-left: 2px; }
     .lyp2-select-wrap select {
       width: 100%; box-sizing: border-box;
-      padding: 14px 38px 14px 14px;
+      padding: 22px 38px 8px 14px;
       font: inherit;
       font-size: .95rem;
       color: var(--lyp-ink);
@@ -330,6 +336,8 @@
       background-repeat: no-repeat;
       background-position: right 14px center;
       transition: border-color .15s ease, box-shadow .15s ease;
+      min-height: 56px;
+      line-height: 1.2;
     }
     .lyp2-select-wrap select:focus {
       outline: none;
@@ -341,6 +349,11 @@
       color: var(--lyp-ink-faint);
       cursor: not-allowed;
     }
+    /* Label stays in the small uppercase amber state (matches the "filled" look of
+       the floating-label inputs). Using :has() to subtly dim it while the select is
+       empty/required-invalid — gracefully falls back to amber on older browsers. */
+    .lyp2-select-wrap:has(select:invalid) > .lbl { color: var(--lyp-ink-faint); }
+    .lyp2-select-wrap:has(select:focus) > .lbl { color: var(--lyp-accent); }
 
     /* Pill-segmented control (radios as pills) */
     .lyp2-seg-label {
@@ -770,6 +783,11 @@
                   <option value="">Select…</option>
                   <option value="Abu Dhabi">Abu Dhabi</option>
                   <option value="Dubai">Dubai</option>
+                  <option value="Sharjah">Sharjah</option>
+                  <option value="Ajman">Ajman</option>
+                  <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                  <option value="Fujairah">Fujairah</option>
+                  <option value="Umm Al Quwain">Umm Al Quwain</option>
                   <option value="Al Ain">Al Ain</option>
                 </select>
               </div>

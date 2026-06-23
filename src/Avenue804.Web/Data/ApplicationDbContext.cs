@@ -27,6 +27,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Developer> Developers => Set<Developer>();
     public DbSet<AreaGuide> AreaGuides => Set<AreaGuide>();
     public DbSet<Testimonial> Testimonials => Set<Testimonial>();
+    public DbSet<BlogPost> BlogPosts => Set<BlogPost>();
     public DbSet<ProjectProgress> ProjectProgressItems => Set<ProjectProgress>();
     public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
     public DbSet<ServiceReport> ServiceReports => Set<ServiceReport>();
@@ -132,6 +133,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             e.Property(x => x.WebsiteUrl).HasMaxLength(2000);
             e.Property(x => x.Headquarters).HasMaxLength(200);
             e.Property(x => x.Description).HasMaxLength(4000);
+            e.Property(x => x.Mission).HasMaxLength(4000);
+            e.Property(x => x.Vision).HasMaxLength(4000);
+            e.Property(x => x.Philosophy).HasMaxLength(4000);
+            e.Property(x => x.AwardsRecognition).HasMaxLength(4000);
             e.HasIndex(x => x.Slug).IsUnique().HasFilter("[Slug] IS NOT NULL");
         });
 
@@ -140,13 +145,45 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             e.Property(x => x.Name).HasMaxLength(200);
             e.Property(x => x.Slug).HasMaxLength(200);
             e.Property(x => x.Emirate).HasMaxLength(100);
+            e.Property(x => x.City).HasMaxLength(100);
             e.Property(x => x.HeroImageUrl).HasMaxLength(2000);
+            e.Property(x => x.ShortDescription).HasMaxLength(600);
             e.Property(x => x.Overview).HasMaxLength(20000);
             e.Property(x => x.PopularWith).HasMaxLength(300);
             e.Property(x => x.NearbyLandmarks).HasMaxLength(1000);
             e.Property(x => x.SchoolsNearby).HasMaxLength(1000);
             e.Property(x => x.TransportLinks).HasMaxLength(1000);
+            // Lifestyle & amenities
+            e.Property(x => x.Amenities).HasMaxLength(4000);
+            e.Property(x => x.Attractions).HasMaxLength(4000);
+            e.Property(x => x.LifestyleServices).HasMaxLength(4000);
+            e.Property(x => x.Shopping).HasMaxLength(4000);
+            e.Property(x => x.Education).HasMaxLength(4000);
+            e.Property(x => x.Dining).HasMaxLength(4000);
+            e.Property(x => x.Healthcare).HasMaxLength(4000);
+            e.Property(x => x.Transportation).HasMaxLength(4000);
+            // Investment
+            e.Property(x => x.AverageRoiPercent).HasPrecision(5, 2);
+            e.Property(x => x.RentalYieldPercent).HasPrecision(5, 2);
+            e.Property(x => x.InvestmentInsights).HasMaxLength(8000);
             e.HasIndex(x => x.Slug).IsUnique();
+        });
+
+        builder.Entity<BlogPost>(e =>
+        {
+            e.Property(x => x.Title).HasMaxLength(250);
+            e.Property(x => x.Slug).HasMaxLength(250);
+            e.Property(x => x.Excerpt).HasMaxLength(1000);
+            e.Property(x => x.Content).HasMaxLength(100000);
+            e.Property(x => x.Tags).HasMaxLength(1000);
+            e.Property(x => x.CoverImageUrl).HasMaxLength(2000);
+            e.Property(x => x.AuthorName).HasMaxLength(200);
+            e.Property(x => x.SeoTitle).HasMaxLength(60);
+            e.Property(x => x.SeoMetaDescription).HasMaxLength(200);
+            e.Property(x => x.FocusKeyword).HasMaxLength(100);
+            e.HasIndex(x => x.Slug).IsUnique().HasFilter("[Slug] IS NOT NULL");
+            e.HasIndex(x => x.Category);
+            e.HasIndex(x => x.IsPublished);
         });
 
         builder.Entity<Agent>(e =>
@@ -178,6 +215,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             e.Property(x => x.Label).HasMaxLength(50);
             e.Property(x => x.HandoverDate).HasMaxLength(50);
             e.Property(x => x.PaymentPlan).HasMaxLength(300);
+            // Off-plan project fields
+            e.Property(x => x.Subtitle).HasMaxLength(300);
+            e.Property(x => x.ProjectStatus).HasMaxLength(50);
+            e.Property(x => x.ProjectAddress).HasMaxLength(500);
+            e.Property(x => x.UnitTypes).HasMaxLength(1000);
+            e.Property(x => x.BedroomOptions).HasMaxLength(100);
+            e.Property(x => x.BathroomOptions).HasMaxLength(100);
+            e.Property(x => x.KeyFeatures).HasMaxLength(2000);
+            e.Property(x => x.AmenitiesDescription).HasMaxLength(8000);
+            e.Property(x => x.NearbyLandmarks).HasMaxLength(4000);
             e.HasIndex(x => x.Slug).IsUnique();
             e.HasOne(x => x.Agent).WithMany(a => a.Listings).HasForeignKey(x => x.AgentId).OnDelete(DeleteBehavior.SetNull);
             e.HasOne(x => x.Developer).WithMany(d => d.Listings).HasForeignKey(x => x.DeveloperId).OnDelete(DeleteBehavior.SetNull);

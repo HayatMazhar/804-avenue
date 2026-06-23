@@ -33,7 +33,7 @@ public class IndexModel : PageModel
     public async Task OnGetAsync(CancellationToken cancellationToken = default)
     {
         FeaturedListings = await _db.PropertyListings.AsNoTracking()
-            .Where(p => p.IsPublished && p.ApprovalStatus == ListingApprovalStatus.Approved && p.Slug != null && p.Slug != "")
+            .Where(p => p.IsPublished && p.Slug != null && p.Slug != "")
             .OrderByDescending(p => p.UpdatedAt ?? p.CreatedAt)
             .Take(3)
             .ToListAsync(cancellationToken);

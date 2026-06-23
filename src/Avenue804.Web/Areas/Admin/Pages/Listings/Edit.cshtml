@@ -281,31 +281,27 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
         </div>
         <div class="as-section__title-wrap">
-          <h2 class="as-section__title">Amenities</h2>
+          <h2 class="as-section__title">Amenities, features &amp; parking</h2>
           <p class="as-section__sub">Tick everything available — they show as feature pills on the listing.</p>
         </div>
       </header>
       <div class="as-section__body">
         @{
-          var amenities = new[] {
-            ("pool","Swimming Pool"),("gym","Gym / Fitness Centre"),("parking","Covered Parking"),
-            ("security","24/7 Security"),("cctv","CCTV"),("concierge","Concierge"),
-            ("maid","Maid's Room"),("balcony","Balcony"),("pets","Pets Allowed"),
-            ("view","Sea / City View"),("furnished","Fully Furnished"),("kitchen","Open Kitchen"),
-            ("study","Study / Home Office"),("laundry","Laundry Room"),("central_ac","Central A/C"),
-            ("lift","Elevator / Lift"),("bbq","BBQ Area"),("kids","Kids Play Area")
-          };
           var currentAmenities = (Model.Form.AmenitiesJson ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries).ToHashSet();
         }
-        <div class="admin-amenity-grid">
-          @foreach (var (code, label) in amenities)
-          {
-            <label class="admin-amenity-tile">
-              <input type="checkbox" name="amenityChecks" value="@code" @(currentAmenities.Contains(code) ? "checked" : "") />
-              @label
-            </label>
-          }
-        </div>
+        @foreach (var group in Avenue804.Web.Infrastructure.AmenityCatalog.Groups)
+        {
+          <p class="as-field-hint" style="font-weight:700;margin:18px 0 8px;color:var(--as-ink);">@group.Title</p>
+          <div class="admin-amenity-grid">
+            @foreach (var item in group.Items)
+            {
+              <label class="admin-amenity-tile">
+                <input type="checkbox" name="amenityChecks" value="@item.Code" @(currentAmenities.Contains(item.Code) ? "checked" : "") />
+                @item.Label
+              </label>
+            }
+          </div>
+        }
         <input type="hidden" asp-for="Form.AmenitiesJson" id="amenitiesHidden" />
       </div>
     </section>
@@ -366,10 +362,154 @@
               <input asp-for="Form.CompletionPercent" type="number" min="0" max="100" placeholder="0–100" />
             </div>
             <div class="as-field">
-              <label asp-for="Form.PaymentPlan">Payment plan</label>
+              <label asp-for="Form.PaymentPlan">Payment plan (free text)</label>
               <input asp-for="Form.PaymentPlan" placeholder="e.g. 40/60 — 40% on booking" />
+              <p class="as-field-hint">Shown when the structured percentages below are blank.</p>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Off-plan: Project introduction ─────────── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Project introduction</h2>
+          <p class="as-section__sub">Off-plan only — subtitle, status pill and the public-facing project address.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.Subtitle">Subtitle / tagline</label>
+          <input asp-for="Form.Subtitle" placeholder="e.g. Branded residences on the seafront promenade" />
+        </div>
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="Form.ProjectStatus">Project status</label>
+            <select asp-for="Form.ProjectStatus">
+              <option value="">— Not set —</option>
+              <option value="Upcoming">Upcoming</option>
+              <option value="Launching">Launching</option>
+              <option value="Under Construction">Under Construction</option>
+              <option value="Ready">Ready</option>
+            </select>
+            <p class="as-field-hint">Shown as a status pill on the off-plan project page.</p>
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.ProjectAddress">Project address</label>
+            <input asp-for="Form.ProjectAddress" placeholder="Full public-facing address" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Off-plan: Property specifications ──────── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Property specifications</h2>
+          <p class="as-section__sub">Off-plan only — unit mix, bedroom/bathroom ranges and project-level counts.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.UnitTypes">Unit types</label>
+          <input asp-for="Form.UnitTypes" placeholder="e.g. 1BR Apartments, 2BR Apartments, 3BR Villas" />
+          <p class="as-field-hint">Comma-separated — rendered as chips on the project page.</p>
+        </div>
+        <div class="as-row as-row--3">
+          <div class="as-field">
+            <label asp-for="Form.BedroomOptions">Bedroom options</label>
+            <input asp-for="Form.BedroomOptions" placeholder="e.g. 1-5" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.BathroomOptions">Bathroom options</label>
+            <input asp-for="Form.BathroomOptions" placeholder="e.g. 1-6" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.StartingSizeSqft">Starting size (sqft)</label>
+            <input asp-for="Form.StartingSizeSqft" type="number" min="0" placeholder="e.g. 650" />
+          </div>
+        </div>
+        <div class="as-row as-row--3">
+          <div class="as-field">
+            <label asp-for="Form.TotalFloors">Total floors</label>
+            <input asp-for="Form.TotalFloors" type="number" min="0" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.TotalBuildings">Total buildings</label>
+            <input asp-for="Form.TotalBuildings" type="number" min="0" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.TotalUnits">Total units</label>
+            <input asp-for="Form.TotalUnits" type="number" min="0" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Off-plan: Payment & financial details ──── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Payment &amp; financial details</h2>
+          <p class="as-section__sub">Off-plan only — structured percentages. Should sum to 100%.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--3">
+          <div class="as-field">
+            <label asp-for="Form.DownPaymentPercent">Down payment %</label>
+            <input asp-for="Form.DownPaymentPercent" type="number" min="0" max="100" placeholder="0–100" id="dpPct" oninput="updatePctSum()" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.DuringConstructionPercent">During construction %</label>
+            <input asp-for="Form.DuringConstructionPercent" type="number" min="0" max="100" placeholder="0–100" id="dcPct" oninput="updatePctSum()" />
+          </div>
+          <div class="as-field">
+            <label asp-for="Form.OnHandoverPercent">On handover %</label>
+            <input asp-for="Form.OnHandoverPercent" type="number" min="0" max="100" placeholder="0–100" id="ohPct" oninput="updatePctSum()" />
+          </div>
+        </div>
+        <p class="as-field-hint" id="pctSumHint" style="margin-top:6px;">Leave all three blank to fall back to the free-text "Payment plan" field above.</p>
+      </div>
+    </section>
+
+    <!-- ── Off-plan: Features & amenities ─────────── -->
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Key features &amp; landmarks</h2>
+          <p class="as-section__sub">Off-plan only — short feature chips, long-form amenities copy and nearby distances.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="Form.KeyFeatures">Key features &amp; amenities (chips)</label>
+          <textarea asp-for="Form.KeyFeatures" rows="2" placeholder="e.g. Sea View, Private Beach, Smart Home, Concierge"></textarea>
+          <p class="as-field-hint">Comma-separated — rendered as feature chips on the project page.</p>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.AmenitiesDescription">Amenities (long-form description)</label>
+          <textarea asp-for="Form.AmenitiesDescription" rows="4" placeholder="Describe community amenities — pool, gym, retail promenade, kid's play areas, etc."></textarea>
+        </div>
+        <div class="as-field">
+          <label asp-for="Form.NearbyLandmarks">Nearby landmarks &amp; distances</label>
+          <textarea asp-for="Form.NearbyLandmarks" rows="4" placeholder="One per line, e.g.&#10;Dubai Mall – 10 Min&#10;DXB Airport – 15 Min"></textarea>
+          <p class="as-field-hint">One entry per line. Use an em-dash (–) between the landmark and the travel time.</p>
         </div>
       </div>
     </section>
@@ -400,7 +540,31 @@
           }
         </div>
 
-        <label class="as-toggle">
+        <!-- Availability status -->
+        <div class="as-field" style="margin-top:18px;">
+          <label>Availability status</label>
+          <p class="as-field-hint">Shown as a coloured banner on the public listing card.</p>
+          <select asp-for="Form.AvailabilityStatus" style="max-width:260px;">
+            <option value="0" selected="@(Model.Form.AvailabilityStatus == Avenue804.Web.Domain.ListingAvailabilityStatus.Available)">Available</option>
+            <option value="1" selected="@(Model.Form.AvailabilityStatus == Avenue804.Web.Domain.ListingAvailabilityStatus.UnderOffer)">Under Offer</option>
+            <option value="2" selected="@(Model.Form.AvailabilityStatus == Avenue804.Web.Domain.ListingAvailabilityStatus.Rented)">Rented</option>
+            <option value="3" selected="@(Model.Form.AvailabilityStatus == Avenue804.Web.Domain.ListingAvailabilityStatus.Sold)">Sold</option>
+          </select>
+        </div>
+
+        <!-- Occupancy status -->
+        <div class="as-field" style="margin-top:14px;">
+          <label>Occupancy status</label>
+          <p class="as-field-hint">Internal tracking: whether the property is currently occupied.</p>
+          <select asp-for="Form.OccupancyStatus" style="max-width:260px;">
+            <option value="">— Not specified —</option>
+            <option value="0" selected="@(Model.Form.OccupancyStatus == Avenue804.Web.Domain.OccupancyStatus.Vacant)">Vacant</option>
+            <option value="1" selected="@(Model.Form.OccupancyStatus == Avenue804.Web.Domain.OccupancyStatus.Occupied)">Occupied</option>
+            <option value="2" selected="@(Model.Form.OccupancyStatus == Avenue804.Web.Domain.OccupancyStatus.OwnerOccupied)">Owner Occupied (Owner Living In)</option>
+          </select>
+        </div>
+
+        <label class="as-toggle" style="margin-top:18px;">
           <input asp-for="Form.IsVerified" />
           <span class="as-toggle__switch"></span>
           <span class="as-toggle__text">
@@ -587,6 +751,26 @@
     var el = document.getElementById('offPlanFields');
     el.classList.toggle('d-none', !document.getElementById('isOffPlanCheck').checked);
   }
+
+  function updatePctSum() {
+    var dp = parseInt(document.getElementById('dpPct')?.value || '0', 10) || 0;
+    var dc = parseInt(document.getElementById('dcPct')?.value || '0', 10) || 0;
+    var oh = parseInt(document.getElementById('ohPct')?.value || '0', 10) || 0;
+    var sum = dp + dc + oh;
+    var hint = document.getElementById('pctSumHint');
+    if (!hint) return;
+    if (sum === 0) {
+      hint.textContent = 'Leave all three blank to fall back to the free-text "Payment plan" field above.';
+      hint.style.color = '';
+    } else if (sum === 100) {
+      hint.textContent = '✓ Payment plan sums to 100%';
+      hint.style.color = 'var(--as-success, #16a34a)';
+    } else {
+      hint.textContent = 'Payment plan currently sums to ' + sum + '% — typical off-plan plans total 100%.';
+      hint.style.color = 'var(--as-warn, #b45309)';
+    }
+  }
+  updatePctSum();
 
   // ── Real Estate category → details cascade ─────────────
   (function() {

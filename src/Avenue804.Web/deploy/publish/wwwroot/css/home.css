@@ -1306,7 +1306,7 @@ body > .ts-dropdown .option.selected { font-weight: 600; color: var(--accent); b
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 2px 4px 12px;
+  padding: 0 4px 10px;
   flex-wrap: wrap;
 }
 .ph-search__re-title {
@@ -1366,9 +1366,10 @@ body > .ts-dropdown .option.selected { font-weight: 600; color: var(--accent); b
 }
 
 /* Tighten the fields row inside the Real Estate widget */
-.ph-search--re .ph-search__form { padding: 0 4px 12px; }
-.ph-search--re .ph-search__field { height: 58px; min-height: 58px; max-height: 58px; }
-.ph-search--re .ph-search__trust { padding: 8px 6px 12px; }
+.ph-search--re .ph-search__form { padding: 0 4px 10px; }
+.ph-search--re .ph-search__field { height: 56px; min-height: 56px; max-height: 56px; }
+.ph-search--re .ph-search__btn { height: 56px; min-height: 56px; max-height: 56px; }
+.ph-search--re .ph-search__trust { padding: 6px 6px 10px; }
 
 @media (max-width: 560px) {
   .ph-search__re-head { gap: 10px; padding-bottom: 10px; }
@@ -1469,23 +1470,45 @@ body > .ts-dropdown .option.selected { font-weight: 600; color: var(--accent); b
   /* EXACT height — not min-height. Tom Select wrappers and native number
      inputs have slightly different intrinsic heights, so we lock the
      field box and let the body vertically center its content. This
-     guarantees every panel and the CTA render at identical 64px. */
-  height: 64px;
-  min-height: 64px;
-  max-height: 64px;
+     guarantees every panel and the CTA render at identical height. */
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 16px;
+  gap: 10px;
+  padding: 0 12px;
   background: #f9fafb;
   border: 1.5px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 11px;
   transition: border-color .18s ease, background .18s ease, box-shadow .18s ease;
   position: relative;
   box-sizing: border-box;
   overflow: hidden;
 }
 .ph-search--v2 .ph-search__field--wide { flex: 1.6 1 0; }
+/* Community / area needs room for its placeholder, so give it extra width */
+.ph-search--v2 .ph-search__field--community { flex: 1.5 1 0; }
+
+/* ── Community / area autocomplete ───────────────────────────────────
+   The autocomplete script (autocomplete.js) injects an absolutely-
+   positioned dropdown (.ac-dropdown) just after the input. The field
+   box normally has overflow:hidden, which CLIPS that dropdown so it
+   never appears. Allow this one field to overflow and anchor the
+   dropdown to the whole field (full width, just below it). */
+.ph-search--v2 .ph-search__field--community { overflow: visible; }
+.ph-search--v2 .ph-search__field--community .ph-search__field-body { overflow: visible; }
+/* Make .ac-wrap transparent to layout/positioning so the dropdown
+   anchors to .ph-search__field (which is position:relative). */
+.ph-search--v2 .ph-search__field--community .ac-wrap { position: static; width: 100%; }
+.ph-search--v2 .ph-search__field--community .ac-dropdown {
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 16px 48px rgba(8, 15, 35, .16);
+}
 
 .ph-search--v2 .ph-search__field:hover {
   border-color: #d1d5db;
@@ -1501,15 +1524,16 @@ body > .ts-dropdown .option.selected { font-weight: 600; color: var(--accent); b
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  min-width: 38px;
-  max-height: 38px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  max-height: 32px;
+  border-radius: 9px;
   background: linear-gradient(135deg, var(--accent-10, rgba(245, 158, 11, .12)) 0%, rgba(255, 255, 255, .6) 100%);
   color: var(--accent);
   flex-shrink: 0;
 }
+.ph-search--v2 .ph-search__field-ico svg { width: 16px; height: 16px; }
 .ph-search--v2 .ph-search__field-ico svg { display: block; }
 
 .ph-search--v2 .ph-search__field-body {
@@ -1525,12 +1549,19 @@ body > .ts-dropdown .option.selected { font-weight: 600; color: var(--accent); b
 
 .ph-search--v2 .ph-search__label {
   display: block;
-  font-size: .65rem;
+  font-size: .62rem;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: .1em;
   text-transform: uppercase;
   color: #9ca3af;
   margin: 0;
+  /* Never wrap — long labels like "Community / Area" used to break to a
+     second line and get clipped by the field-body's overflow:hidden. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.3;
 }
 
 .ph-search--v2 .ph-search__input {
@@ -1538,7 +1569,7 @@ body > .ts-dropdown .option.selected { font-weight: 600; color: var(--accent); b
   border: none;
   background: transparent;
   outline: none;
-  font-size: .92rem;
+  font-size: .9rem;
   font-weight: 600;
   color: #0f172a;
   padding: 0;
@@ -1550,6 +1581,7 @@ body > .ts-dropdown .option.selected { font-weight: 600; color: var(--accent); b
   -moz-appearance: textfield; /* kill number-input spinner padding in Firefox */
   appearance: none;
   box-sizing: border-box;
+  text-overflow: ellipsis;
 }
 .ph-search--v2 .ph-search__input::placeholder { color: #9ca3af; font-weight: 500; }
 .ph-search--v2 input[type="number"].ph-search__input::-webkit-outer-spin-button,
@@ -1849,4 +1881,195 @@ body > .ts-dropdown .option.selected { font-weight: 600; color: var(--accent); b
   .ph-search--v2 .ph-search__tab { padding: 9px 8px; }
   .ph-search--v2 .ph-search__tab-ico { width: 26px; height: 26px; }
   .ph-search--v2 .ph-search__tab-ico svg { width: 15px; height: 15px; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   HOME SEARCH PANEL — compact rebuild (re2 v3)
+   - Capped, centered width (no edge-to-edge stretch)
+   - Single CSS-background chevron on selects (no double arrows)
+   - Tight heights: bar 50px, pills 36px
+   ════════════════════════════════════════════════════════════ */
+.re2 {
+  max-width: 920px;
+  margin: 0 auto;
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border-subtle, #eef0f3);
+  border-radius: 20px;
+  box-shadow: 0 18px 44px rgba(15, 23, 42, .12);
+  padding: 14px 16px 12px;
+  overflow: visible;
+}
+
+/* Buy / Rent tabs — compact segmented control */
+.re2__tabs {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--bg-muted, #f4f5f7);
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.re2__tab {
+  appearance: none;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  font-size: .82rem;
+  color: var(--text-secondary, #64748b);
+  padding: 6px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.re2__tab:hover { color: var(--text-primary, #0f172a); }
+.re2__tab.active {
+  background: var(--bg-card, #fff);
+  color: var(--accent, #f59e0b);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, .12);
+}
+
+/* Search bar — compact, single row */
+.re2__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  padding: 5px 5px 5px 14px;
+  height: 50px;
+  overflow: visible;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.re2__bar:focus-within {
+  border-color: var(--accent, #f59e0b);
+  box-shadow: 0 0 0 3px var(--accent-10, rgba(245, 158, 11, .12));
+}
+.re2__bar-ico {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary, #94a3b8);
+  flex: none;
+}
+.re2__bar-ico svg { width: 16px; height: 16px; }
+/* the input is wrapped in .ac-wrap by the autocomplete script */
+.re2__bar .ac-wrap { flex: 1 1 auto; min-width: 0; }
+.re2__bar-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  height: 38px;
+  border: none;
+  background: transparent;
+  outline: none;
+  font: inherit;
+  font-size: .92rem;
+  color: var(--text-primary, #0f172a);
+  padding: 0;
+}
+.re2__bar-input::placeholder { color: var(--text-tertiary, #94a3b8); }
+.re2__submit {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent, #f59e0b);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: filter .15s ease, transform .1s ease;
+}
+.re2__submit:hover { filter: brightness(.95); }
+.re2__submit:active { transform: translateY(1px); }
+.re2__submit-ico { display: none; }
+
+/* Filter pills — single-row, tight, single chevron */
+.re2__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.re2__pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 999px;
+  background: var(--bg-card, #fff);
+  transition: border-color .12s ease, box-shadow .12s ease;
+}
+.re2__pill:hover,
+.re2__pill:focus-within {
+  border-color: var(--accent, #f59e0b);
+  box-shadow: 0 0 0 2px var(--accent-10, rgba(245, 158, 11, .12));
+}
+/* Single chevron — pure CSS background SVG so no double arrows. */
+.re2__pill select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+  height: 34px;
+  line-height: 34px;
+  padding: 0 28px 0 14px;
+  max-width: 170px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 11px 11px;
+  border-radius: 999px;
+}
+/* Hide the legacy ::-ms-expand (IE/old Edge) just to be safe */
+.re2__pill select::-ms-expand { display: none; }
+
+/* Inquiry link — small, secondary */
+.re2__foot {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.re2__plan {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--accent, #f59e0b);
+  font-weight: 600;
+  font-size: .78rem;
+}
+.re2__plan:hover { text-decoration: underline; }
+
+/* Responsive */
+@media (max-width: 720px) {
+  .re2 { padding: 12px 12px 10px; border-radius: 16px; }
+  .re2__bar { padding: 4px 4px 4px 12px; height: 48px; }
+  .re2__submit { padding: 0 16px; font-size: .82rem; }
+  .re2__pill select { max-width: 140px; font-size: .8rem; }
+}
+@media (max-width: 480px) {
+  .re2__submit span { display: none; }
+  .re2__submit { width: 40px; padding: 0; }
+  .re2__submit-ico { display: inline-block; }
 }

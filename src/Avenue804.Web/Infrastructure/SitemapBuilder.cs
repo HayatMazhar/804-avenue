@@ -21,6 +21,7 @@ public static class SitemapBuilder
         ("/About", "monthly", "0.7"),
         ("/Contact", "monthly", "0.7"),
         ("/AreaGuides", "weekly", "0.8"),
+        ("/Blog", "weekly", "0.8"),
         ("/Projects", "monthly", "0.7"),
         ("/Privacy", "yearly", "0.3"),
     ];
@@ -58,6 +59,14 @@ public static class SitemapBuilder
             .ToListAsync(cancellationToken);
         foreach (var g in areaSlugs)
             AppendUrl(sb, $"{root}/AreaGuides/{g.Slug}", "weekly", "0.8", g.UpdatedAt);
+
+        // Blog posts
+        var blogSlugs = await db.BlogPosts.AsNoTracking()
+            .Where(p => p.IsPublished && p.Slug != null && p.Slug != "")
+            .Select(p => new { p.Slug, p.UpdatedAt, p.PublishedAt, p.CreatedAt })
+            .ToListAsync(cancellationToken);
+        foreach (var p in blogSlugs)
+            AppendUrl(sb, $"{root}/Blog/{p.Slug}", "weekly", "0.7", p.UpdatedAt ?? p.PublishedAt ?? p.CreatedAt);
 
         // Developer profiles
         var devSlugs = await db.Developers.AsNoTracking()

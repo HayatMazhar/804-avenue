@@ -51,6 +51,8 @@ public class SiteBrandingService : ISiteBrandingService
             InstagramUrl = NullIfEmpty(Pick(SiteSettingKeys.InstagramUrl, _defaults.InstagramUrl ?? "")),
             LinkedInUrl = NullIfEmpty(Pick(SiteSettingKeys.LinkedInUrl, _defaults.LinkedInUrl ?? "")),
             FacebookUrl = NullIfEmpty(Pick(SiteSettingKeys.FacebookUrl, _defaults.FacebookUrl ?? "")),
+            TikTokUrl = NullIfEmpty(Pick(SiteSettingKeys.TikTokUrl, _defaults.TikTokUrl ?? "")),
+            YouTubeUrl = NullIfEmpty(Pick(SiteSettingKeys.YouTubeUrl, _defaults.YouTubeUrl ?? "")),
             FooterTagline = Pick(SiteSettingKeys.FooterTagline, _defaults.FooterTagline),
             DefaultMetaDescription = Pick(SiteSettingKeys.DefaultMetaDescription, _defaults.DefaultMetaDescription),
             DefaultListingCurrency = Pick(SiteSettingKeys.DefaultListingCurrency, _defaults.DefaultListingCurrency),

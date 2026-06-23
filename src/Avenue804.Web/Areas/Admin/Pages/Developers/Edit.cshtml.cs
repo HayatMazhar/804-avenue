@@ -21,7 +21,15 @@ public class EditModel : PageModel
         ViewData["AdminSection"] = "developers";
         var d = await _db.Developers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == Id, ct);
         if (d == null) return NotFound();
-        F = new() { Name = d.Name, Headquarters = d.Headquarters, EstablishedYear = d.EstablishedYear, LogoUrl = d.LogoUrl, WebsiteUrl = d.WebsiteUrl, Description = d.Description, IsActive = d.IsActive };
+        F = new()
+        {
+            Name = d.Name, Headquarters = d.Headquarters, EstablishedYear = d.EstablishedYear,
+            LogoUrl = d.LogoUrl, WebsiteUrl = d.WebsiteUrl, Description = d.Description,
+            Mission = d.Mission, Vision = d.Vision, Philosophy = d.Philosophy,
+            YearsInBusiness = d.YearsInBusiness, TotalProjects = d.TotalProjects,
+            UnitsDelivered = d.UnitsDelivered, AwardsRecognition = d.AwardsRecognition,
+            IsActive = d.IsActive
+        };
         return Page();
     }
 
@@ -32,7 +40,11 @@ public class EditModel : PageModel
         if (d == null) return NotFound();
         d.Name = F.Name.Trim(); d.Headquarters = F.Headquarters?.Trim();
         d.EstablishedYear = F.EstablishedYear; d.LogoUrl = F.LogoUrl?.Trim();
-        d.WebsiteUrl = F.WebsiteUrl?.Trim(); d.Description = F.Description?.Trim(); d.IsActive = F.IsActive;
+        d.WebsiteUrl = F.WebsiteUrl?.Trim(); d.Description = F.Description?.Trim();
+        d.Mission = F.Mission?.Trim(); d.Vision = F.Vision?.Trim(); d.Philosophy = F.Philosophy?.Trim();
+        d.YearsInBusiness = F.YearsInBusiness; d.TotalProjects = F.TotalProjects;
+        d.UnitsDelivered = F.UnitsDelivered; d.AwardsRecognition = F.AwardsRecognition?.Trim();
+        d.IsActive = F.IsActive;
         await _db.SaveChangesAsync(ct);
         TempData["ToastOk"] = "Developer updated.";
         return RedirectToPage(new { id = Id });

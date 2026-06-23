@@ -17,6 +17,8 @@ public static class SiteSettingKeys
     public const string InstagramUrl = nameof(SiteOptions.InstagramUrl);
     public const string LinkedInUrl = nameof(SiteOptions.LinkedInUrl);
     public const string FacebookUrl = nameof(SiteOptions.FacebookUrl);
+    public const string TikTokUrl = nameof(SiteOptions.TikTokUrl);
+    public const string YouTubeUrl = nameof(SiteOptions.YouTubeUrl);
     public const string FooterTagline = nameof(SiteOptions.FooterTagline);
     public const string DefaultMetaDescription = nameof(SiteOptions.DefaultMetaDescription);
     public const string DefaultListingCurrency = nameof(SiteOptions.DefaultListingCurrency);

@@ -25,7 +25,11 @@ public class CreateModel : PageModel
         {
             Name = F.Name.Trim(), Slug = slug, Headquarters = F.Headquarters?.Trim(),
             EstablishedYear = F.EstablishedYear, LogoUrl = F.LogoUrl?.Trim(),
-            WebsiteUrl = F.WebsiteUrl?.Trim(), Description = F.Description?.Trim(), IsActive = F.IsActive
+            WebsiteUrl = F.WebsiteUrl?.Trim(), Description = F.Description?.Trim(),
+            Mission = F.Mission?.Trim(), Vision = F.Vision?.Trim(), Philosophy = F.Philosophy?.Trim(),
+            YearsInBusiness = F.YearsInBusiness, TotalProjects = F.TotalProjects,
+            UnitsDelivered = F.UnitsDelivered, AwardsRecognition = F.AwardsRecognition?.Trim(),
+            IsActive = F.IsActive
         });
         await _db.SaveChangesAsync(ct);
         TempData["ToastOk"] = "Developer added.";
@@ -39,7 +43,19 @@ public class CreateModel : PageModel
         public int? EstablishedYear { get; set; }
         [StringLength(2000), Url] public string? LogoUrl { get; set; }
         [StringLength(2000), Url] public string? WebsiteUrl { get; set; }
+
+        // Company profile
         [StringLength(4000)] public string? Description { get; set; }
+        [StringLength(4000)] public string? Mission { get; set; }
+        [StringLength(4000)] public string? Vision { get; set; }
+        [StringLength(4000)] public string? Philosophy { get; set; }
+
+        // Achievements & statistics
+        [Range(0, 1000)] public int? YearsInBusiness { get; set; }
+        [Range(0, 1000000)] public int? TotalProjects { get; set; }
+        [Range(0, 100000000)] public int? UnitsDelivered { get; set; }
+        [StringLength(4000)] public string? AwardsRecognition { get; set; }
+
         public bool IsActive { get; set; } = true;
     }
 }

@@ -26,10 +26,14 @@
         </div>
       </header>
       <div class="as-section__body">
+        <div class="as-field">
+          <label asp-for="F.Name">Community name <span class="req">*</span></label>
+          <input asp-for="F.Name" placeholder="e.g. Al Reem Island" />
+        </div>
         <div class="as-row as-row--2">
           <div class="as-field">
-            <label asp-for="F.Name">Area name <span class="req">*</span></label>
-            <input asp-for="F.Name" placeholder="e.g. Al Reem Island" />
+            <label asp-for="F.City">City</label>
+            <input asp-for="F.City" placeholder="e.g. Abu Dhabi" />
           </div>
           <div class="as-field">
             <label asp-for="F.Emirate">Emirate <span class="req">*</span></label>
@@ -47,6 +51,10 @@
           <label asp-for="F.HeroImageUrl">Hero image URL</label>
           <input asp-for="F.HeroImageUrl" type="url" placeholder="https://…" />
         </div>
+        <div class="as-field">
+          <label asp-for="F.ShortDescription">Short description</label>
+          <textarea asp-for="F.ShortDescription" rows="2" placeholder="1–2 sentence summary shown on the directory cards and the hero lede."></textarea>
+        </div>
       </div>
     </section>
 
@@ -62,7 +70,88 @@
       <div class="as-section__body">
         <div class="as-field">
           <label asp-for="F.Overview">Overview (HTML allowed)</label>
-          <textarea asp-for="F.Overview" rows="6" placeholder="Describe the area, lifestyle, what makes it popular…"></textarea>
+          <textarea asp-for="F.Overview" rows="6" placeholder="Long-form description of the community, lifestyle and what makes it popular…"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Lifestyle &amp; amenities</h2>
+          <p class="as-section__sub">One entry per line — rendered as bullets on the public page.</p>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.Amenities">Amenities</label>
+            <textarea asp-for="F.Amenities" rows="3" placeholder="Community pool&#10;Tennis courts&#10;24/7 security"></textarea>
+          </div>
+          <div class="as-field">
+            <label asp-for="F.Attractions">Attractions</label>
+            <textarea asp-for="F.Attractions" rows="3" placeholder="Yas Waterworld&#10;Ferrari World&#10;Yas Marina Circuit"></textarea>
+          </div>
+        </div>
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.LifestyleServices">Lifestyle &amp; services</label>
+            <textarea asp-for="F.LifestyleServices" rows="3" placeholder="Spas &amp; wellness&#10;Beach clubs&#10;Concierge services"></textarea>
+          </div>
+          <div class="as-field">
+            <label asp-for="F.Shopping">Shopping</label>
+            <textarea asp-for="F.Shopping" rows="3" placeholder="Yas Mall&#10;Boutique retail at the Marina"></textarea>
+          </div>
+        </div>
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.Education">Education</label>
+            <textarea asp-for="F.Education" rows="3" placeholder="West Yas Academy&#10;SABIS International School"></textarea>
+          </div>
+          <div class="as-field">
+            <label asp-for="F.Dining">Dining</label>
+            <textarea asp-for="F.Dining" rows="3" placeholder="Yas Bay Waterfront restaurants&#10;Cafés along the marina"></textarea>
+          </div>
+        </div>
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.Healthcare">Healthcare</label>
+            <textarea asp-for="F.Healthcare" rows="3" placeholder="HealthPoint Yas Clinic&#10;NMC Royal Hospital"></textarea>
+          </div>
+          <div class="as-field">
+            <label asp-for="F.Transportation">Transportation</label>
+            <textarea asp-for="F.Transportation" rows="3" placeholder="Yas Express shuttle&#10;15 min to Abu Dhabi International Airport"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section">
+      <header class="as-section__head">
+        <div class="as-section__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="as-section__title-wrap">
+          <h2 class="as-section__title">Investment information</h2>
+        </div>
+      </header>
+      <div class="as-section__body">
+        <div class="as-row as-row--2">
+          <div class="as-field">
+            <label asp-for="F.AverageRoiPercent">Average ROI %</label>
+            <input asp-for="F.AverageRoiPercent" type="number" step="0.01" min="0" max="100" placeholder="e.g. 6.50" />
+          </div>
+          <div class="as-field">
+            <label asp-for="F.RentalYieldPercent">Rental yield %</label>
+            <input asp-for="F.RentalYieldPercent" type="number" step="0.01" min="0" max="100" placeholder="e.g. 5.80" />
+          </div>
+        </div>
+        <div class="as-field">
+          <label asp-for="F.InvestmentInsights">Investment insights</label>
+          <textarea asp-for="F.InvestmentInsights" rows="4" placeholder="Market trends, upcoming developments, demand drivers, target buyer profile…"></textarea>
         </div>
       </div>
     </section>

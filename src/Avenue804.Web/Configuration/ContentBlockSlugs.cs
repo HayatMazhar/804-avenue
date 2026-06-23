@@ -63,6 +63,12 @@ public static class ContentBlockSlugs
     public const string AboutStoryTag = "page.about.story.tag";
     public const string AboutStoryTitle = "page.about.story.title";
     public const string AboutStoryBody = "page.about.story.body";
+    public const string AboutCeoTag = "page.about.ceo.tag";
+    public const string AboutCeoTitle = "page.about.ceo.title";
+    public const string AboutCeoName = "page.about.ceo.name";
+    public const string AboutCeoRole = "page.about.ceo.role";
+    public const string AboutCeoMessage = "page.about.ceo.message";
+    public const string AboutCeoPhoto = "page.about.ceo.photo";
     public const string AboutVmTag = "page.about.vm.tag";
     public const string AboutVisionBody = "page.about.vision";
     public const string AboutMissionBody = "page.about.mission";
@@ -213,6 +219,9 @@ public static class ContentBlockSlugs
     public const string HomeSearchPropertyDetails   = "home.search.label.property_details";
     public const string HomeSearchEmirate           = "home.search.label.emirate";
     public const string HomeSearchEmirateDefault    = "home.search.emirate.default";
+    public const string HomeSearchEmirateAll        = "home.search.emirate.all";
+    public const string HomeSearchCommunity         = "home.search.label.community";
+    public const string HomeSearchCommunityPlaceholder = "home.search.community.placeholder";
     public const string HomeSearchOptionResidential = "home.search.option.residential";
     public const string HomeSearchOptionCommercial  = "home.search.option.commercial";
     public const string HomeSearchButton            = "home.search.button";
@@ -815,6 +824,7 @@ public static class ContentBlockSlugs
         HomeCtaTitle,
 
         AboutStoryTag, AboutStoryTitle, AboutStoryBody,
+        AboutCeoTag, AboutCeoTitle, AboutCeoName, AboutCeoRole, AboutCeoMessage, AboutCeoPhoto,
         AboutVmTag, AboutVisionBody, AboutMissionBody,
         AboutValuesTag, AboutValuesItems,
         AboutExpertiseTag, AboutExpertiseLead, AboutExpertiseItems,
@@ -865,6 +875,7 @@ public static class ContentBlockSlugs
         MetaHomeTitle, MetaHomeDescription,
         HomeSearchSectionTitle, HomeSearchBuy, HomeSearchRent,
         HomeSearchPropertyType, HomeSearchPropertyDetails, HomeSearchEmirate, HomeSearchEmirateDefault,
+        HomeSearchEmirateAll, HomeSearchCommunity, HomeSearchCommunityPlaceholder,
         HomeSearchOptionResidential, HomeSearchOptionCommercial,
         HomeSearchButton, HomeSearchPlanningLink,
         HomeStatsLabelProjects, HomeStatsLabelYears, HomeStatsLabelTickets, HomeStatsLabelListings,

@@ -19,6 +19,22 @@ public class LocalStorageService : IStorageService
         _http = http;
         _log = log;
         _uploadRoot = Path.Combine(env.WebRootPath, "uploads");
+
+        // Ensure the uploads root exists at startup; log a clear error if the
+        // directory can't be created (e.g. read-only hosting) rather than
+        // failing silently on the first upload attempt.
+        try
+        {
+            Directory.CreateDirectory(_uploadRoot);
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex,
+                "LocalStorageService: cannot create uploads directory at {Path}. " +
+                "Photo uploads will fail until this is resolved. " +
+                "Check that the application has write permission to wwwroot/uploads.",
+                _uploadRoot);
+        }
     }
 
     public string BaseUrl
@@ -38,18 +54,39 @@ public class LocalStorageService : IStorageService
 
         var safeFolder = SanitiseFolder(folder);
         var dir = Path.Combine(_uploadRoot, safeFolder);
-        Directory.CreateDirectory(dir);
+
+        try
+        {
+            Directory.CreateDirectory(dir);
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "Cannot create upload directory {Dir}", dir);
+            throw new InvalidOperationException(
+                "The server could not create the upload folder. " +
+                "Please check that wwwroot/uploads is writable on the hosting environment.", ex);
+        }
 
         var fileName = FileUploadValidator.GenerateBlobName(file.FileName);
         var filePath = Path.Combine(dir, fileName);
 
-        await using (var stream = new FileStream(filePath, FileMode.CreateNew))
+        try
         {
+            await using var stream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None,
+                bufferSize: 81920, useAsync: true);
             await file.CopyToAsync(stream, ct);
         }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "Failed to write uploaded file to {Path}", filePath);
+            throw new InvalidOperationException(
+                "The server could not save the uploaded file. " +
+                "Please check disk space and write permissions on wwwroot/uploads.", ex);
+        }
 
-        _log.LogInformation("Uploaded file to local disk: {Path}", filePath);
-        return $"{BaseUrl}/uploads/{safeFolder}/{fileName}";
+        _log.LogInformation("Uploaded {Name} ({Bytes} bytes) → {Path}", file.FileName, file.Length, filePath);
+        // Root-relative URL — works regardless of host, domain or scheme.
+        return $"/uploads/{safeFolder}/{fileName}";
     }
 
     private static string SanitiseFolder(string folder)
@@ -64,9 +101,12 @@ public class LocalStorageService : IStorageService
         if (string.IsNullOrWhiteSpace(url)) return Task.CompletedTask;
         try
         {
-            // Extract path from URL: /uploads/listings/filename.jpg
-            var uri = new Uri(url);
-            var relativePath = uri.AbsolutePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+            // Handles both root-relative ("/uploads/listings/x.jpg") and legacy
+            // absolute ("https://host/uploads/listings/x.jpg") stored URLs.
+            var absolutePath = Uri.TryCreate(url, UriKind.Absolute, out var abs)
+                ? abs.AbsolutePath
+                : url;
+            var relativePath = absolutePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
             var fullPath = Path.Combine(_env.WebRootPath, relativePath);
             if (File.Exists(fullPath)) File.Delete(fullPath);
         }

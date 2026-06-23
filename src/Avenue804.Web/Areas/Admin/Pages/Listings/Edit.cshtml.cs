@@ -20,10 +20,11 @@ public class EditModel : PageModel
     private readonly IConfiguration _cfg;
     private readonly IFeatureFlagService _flags;
     private readonly SavedSearchAlertService _alerts;
+    private readonly IHomeStatsService _homeStats;
 
-    public EditModel(ApplicationDbContext db, IEmailSender email, IConfiguration cfg, IFeatureFlagService flags, SavedSearchAlertService alerts)
+    public EditModel(ApplicationDbContext db, IEmailSender email, IConfiguration cfg, IFeatureFlagService flags, SavedSearchAlertService alerts, IHomeStatsService homeStats)
     {
-        _db = db; _email = email; _cfg = cfg; _flags = flags; _alerts = alerts;
+        _db = db; _email = email; _cfg = cfg; _flags = flags; _alerts = alerts; _homeStats = homeStats;
     }
 
     [BindProperty(SupportsGet = true)]
@@ -100,6 +101,29 @@ public class EditModel : PageModel
         entity.HandoverDate = Form.IsOffPlan ? Form.HandoverDate?.Trim() : null;
         entity.PaymentPlan = Form.IsOffPlan ? Form.PaymentPlan?.Trim() : null;
         entity.CompletionPercent = Form.IsOffPlan ? Form.CompletionPercent : null;
+
+        // ProjectStatus + Subtitle + ProjectAddress remain available for non-off-plan listings too
+        // (they're harmless empty for regular listings) — but we treat them as part of the off-plan profile.
+        entity.Subtitle = string.IsNullOrWhiteSpace(Form.Subtitle) ? null : Form.Subtitle.Trim();
+        entity.ProjectStatus = string.IsNullOrWhiteSpace(Form.ProjectStatus) ? null : Form.ProjectStatus.Trim();
+        entity.ProjectAddress = string.IsNullOrWhiteSpace(Form.ProjectAddress) ? null : Form.ProjectAddress.Trim();
+
+        entity.UnitTypes = Form.IsOffPlan ? (string.IsNullOrWhiteSpace(Form.UnitTypes) ? null : Form.UnitTypes.Trim()) : null;
+        entity.BedroomOptions = Form.IsOffPlan ? (string.IsNullOrWhiteSpace(Form.BedroomOptions) ? null : Form.BedroomOptions.Trim()) : null;
+        entity.BathroomOptions = Form.IsOffPlan ? (string.IsNullOrWhiteSpace(Form.BathroomOptions) ? null : Form.BathroomOptions.Trim()) : null;
+        entity.StartingSizeSqft = Form.IsOffPlan ? Form.StartingSizeSqft : null;
+        entity.TotalFloors = Form.IsOffPlan ? Form.TotalFloors : null;
+        entity.TotalBuildings = Form.IsOffPlan ? Form.TotalBuildings : null;
+        entity.TotalUnits = Form.IsOffPlan ? Form.TotalUnits : null;
+
+        entity.DownPaymentPercent = Form.IsOffPlan ? Form.DownPaymentPercent : null;
+        entity.DuringConstructionPercent = Form.IsOffPlan ? Form.DuringConstructionPercent : null;
+        entity.OnHandoverPercent = Form.IsOffPlan ? Form.OnHandoverPercent : null;
+
+        entity.KeyFeatures = Form.IsOffPlan ? (string.IsNullOrWhiteSpace(Form.KeyFeatures) ? null : Form.KeyFeatures.Trim()) : null;
+        entity.AmenitiesDescription = Form.IsOffPlan ? (string.IsNullOrWhiteSpace(Form.AmenitiesDescription) ? null : Form.AmenitiesDescription.Trim()) : null;
+        entity.NearbyLandmarks = Form.IsOffPlan ? (string.IsNullOrWhiteSpace(Form.NearbyLandmarks) ? null : Form.NearbyLandmarks.Trim()) : null;
+
         entity.DeveloperId = Form.DeveloperId == 0 ? null : Form.DeveloperId;
         entity.IsVerified = Form.IsVerified;
         entity.SeoTitle = string.IsNullOrWhiteSpace(Form.SeoTitle) ? null : Form.SeoTitle.Trim();
@@ -109,6 +133,8 @@ public class EditModel : PageModel
         if (Form.ApprovalStatus == ListingApprovalStatus.Approved) entity.IsPublished = Form.IsPublished;
         else if (Form.ApprovalStatus == ListingApprovalStatus.Rejected) entity.IsPublished = false;
         else entity.IsPublished = Form.IsPublished;
+        entity.AvailabilityStatus = Form.AvailabilityStatus;
+        entity.OccupancyStatus = Form.OccupancyStatus;
         entity.UpdatedAt = DateTimeOffset.UtcNow;
 
         // Track whether this publish is new (to trigger saved search alerts)
@@ -116,6 +142,9 @@ public class EditModel : PageModel
         var nowPublishing = Form.IsPublished;
 
         await _db.SaveChangesAsync(cancellationToken);
+
+        // Evict the home-page stats cache so the property counter updates immediately.
+        _homeStats.InvalidateCache();
 
         // Saved search alerts — when listing goes live for the first time
         if (wasUnpublished && nowPublishing && !string.IsNullOrWhiteSpace(entity.Slug))
@@ -162,7 +191,7 @@ public class EditModel : PageModel
     public async Task<IActionResult> OnPostDeleteAsync(CancellationToken cancellationToken = default)
     {
         var entity = await _db.PropertyListings.FirstOrDefaultAsync(x => x.Id == Id, cancellationToken);
-        if (entity != null) { _db.PropertyListings.Remove(entity); await _db.SaveChangesAsync(cancellationToken); }
+        if (entity != null) { _db.PropertyListings.Remove(entity); await _db.SaveChangesAsync(cancellationToken); _homeStats.InvalidateCache(); }
         TempData["ToastOk"] = "Listing deleted.";
         return RedirectToPage("./Index");
     }
@@ -192,10 +221,28 @@ public class EditModel : PageModel
         HandoverDate = e.HandoverDate,
         PaymentPlan = e.PaymentPlan,
         CompletionPercent = e.CompletionPercent,
+        Subtitle = e.Subtitle,
+        ProjectStatus = e.ProjectStatus,
+        ProjectAddress = e.ProjectAddress,
+        UnitTypes = e.UnitTypes,
+        BedroomOptions = e.BedroomOptions,
+        BathroomOptions = e.BathroomOptions,
+        StartingSizeSqft = e.StartingSizeSqft,
+        TotalFloors = e.TotalFloors,
+        TotalBuildings = e.TotalBuildings,
+        TotalUnits = e.TotalUnits,
+        DownPaymentPercent = e.DownPaymentPercent,
+        DuringConstructionPercent = e.DuringConstructionPercent,
+        OnHandoverPercent = e.OnHandoverPercent,
+        KeyFeatures = e.KeyFeatures,
+        AmenitiesDescription = e.AmenitiesDescription,
+        NearbyLandmarks = e.NearbyLandmarks,
         DeveloperId = e.DeveloperId,
         IsVerified = e.IsVerified,
         ApprovalStatus = e.ApprovalStatus,
         RejectionReason = e.RejectionReason,
+        AvailabilityStatus = e.AvailabilityStatus,
+        OccupancyStatus = e.OccupancyStatus,
         SeoTitle = e.SeoTitle,
         SeoDescription = e.SeoDescription,
         IsPublished = e.IsPublished

@@ -20,6 +20,7 @@ public class OffPlanModel : PageModel
         Keyword = q;
 
         var query = _db.PropertyListings.AsNoTracking()
+            .Include(p => p.Developer)
             .Where(p => p.IsPublished && p.IsOffPlan && p.Slug != null);
 
         if (!string.IsNullOrWhiteSpace(q))
