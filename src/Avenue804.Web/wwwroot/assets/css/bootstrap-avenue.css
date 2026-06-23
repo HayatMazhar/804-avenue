@@ -149,7 +149,7 @@ body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__link:hover { color: #fff; back
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 12px 40px rgba(8,15,35,.13), 0 0 0 1px #e5e7eb;
-  padding: 18px 12px 12px;
+  padding: 10px 8px;
   min-width: 320px;
   z-index: 200;
   animation: navDdIn .18s ease;
@@ -166,7 +166,7 @@ body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__link:hover { color: #fff; back
   right: -20px;
   height: 14px;
 }
-.pf-nav__dd-panel--sm { min-width: 280px; }
+.pf-nav__dd-panel--sm { min-width: 300px; }
 @keyframes navDdIn { from { opacity:0; transform:translateY(-6px) } to { opacity:1; transform:translateY(0) } }
 
 .pf-nav__dd-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -183,8 +183,8 @@ body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__link:hover { color: #fff; back
 .pf-nav__dd-link {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: 9px;
+  padding: 6px 8px;
   border-radius: 8px;
   font-size: .82rem;
   color: #374151;
@@ -195,9 +195,9 @@ body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__link:hover { color: #fff; back
 .pf-nav__dd-link:hover { background: var(--accent-10, rgba(0,102,255,.06)); color: var(--accent); }
 .pf-nav__dd-link--icon { align-items: center; }
 .pf-nav__dd-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
   background: var(--accent-10, rgba(0,102,255,.08));
   display: flex;
   align-items: center;
@@ -205,9 +205,20 @@ body.home .pf-nav:not(.pf-nav--scrolled) .pf-nav__link:hover { color: #fff; back
   color: var(--accent);
   flex-shrink: 0;
 }
-.pf-nav__dd-link--icon strong { font-size: .82rem; font-weight: 700; color: #111827; display: block; }
-.pf-nav__dd-link--icon small { font-size: .7rem; color: #9ca3af; }
-.pf-nav__dd-divider { height: 1px; background: #f3f4f6; margin: 8px 0; }
+.pf-nav__dd-icon svg { width: 14px; height: 14px; }
+/* Compact two-line item: title + truncated description on one line each */
+.pf-nav__dd-link--icon > span:last-child { min-width: 0; flex: 1; line-height: 1.25; }
+.pf-nav__dd-link--icon strong {
+  font-size: .82rem; font-weight: 700; color: #111827;
+  display: block; line-height: 1.2;
+}
+.pf-nav__dd-link--icon br { display: none; }
+.pf-nav__dd-link--icon small {
+  font-size: .68rem; color: #9ca3af;
+  display: block; line-height: 1.25; margin-top: 1px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pf-nav__dd-divider { height: 1px; background: #f3f4f6; margin: 6px 4px; }
 
 /* Right-side actions */
 .pf-nav__actions {
